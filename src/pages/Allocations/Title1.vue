@@ -60,34 +60,80 @@
       </q-card-section>
     </q-card>
     
-    <q-card>
-      <q-card-section>
-        <div class="text-h6 text-grey-8">
-          Title 1
-        </div>
-      </q-card-section>
-      <q-card-section class="q-pa-none">
-        <q-table
-          title="Treats"
-          :data="data2"
-          :columns="columns3"
-          row-key="name"
-          :filter="filter"
-        >
-          <template v-slot:top-right>
-            <q-input v-if="show_filter" filled borderless dense debounce="300" v-model="filter" placeholder="Search">
-              <template v-slot:append>
-                <q-icon name="search"/>
-              </template>
-            </q-input>
+  <div class="q-pa-sm q-gutter-sm">
+    <q-table title="Treats" :data="data" :columns="columns" row-key="name" binary-state-sort>
+      
+      <template v-slot:top>
+        <q-btn dense color="secondary" label="Add Row" @click="show_dialog = true" no-caps></q-btn>
+          
+        <div class="q-pa-sm q-gutter-sm">
+        <q-dialog v-model="show_dialog">
+        <q-card>
+          <q-card-section>
+            <div class="text-h6">Add new item!</div>
+          </q-card-section>
 
-            <q-btn class="q-ml-sm" icon="filter_list" @click="show_filter=!show_filter" flat/>
-          </template>
+          <q-card-section>
+            <div class="row">
+              <q-input v-model="editedItem.name" label="Dessert Name"></q-input>
+              <q-input v-model="editedItem.calories" label="Calories"></q-input>
+              <q-input v-model="editedItem.fat" label="Fat"></q-input>
+              <q-input v-model="editedItem.carbs" label="Carbs"></q-input>
+              <q-input v-model="editedItem.protein" label="Protein"></q-input>
+              <q-input v-model="editedItem.sodium" label="Sodium"></q-input>
+              <q-input v-model="editedItem.calcium" label="Calcium"></q-input>
+              <q-input v-model="editedItem.iron" label="Iron"></q-input>
+            </div>
+          </q-card-section>
+          
+          <q-card-actions align="right">
+            <q-btn flat label="OK" color="primary" v-close-popup @click="addRow" ></q-btn>
+          </q-card-actions>
+          </q-card>
+        </q-dialog>
+          </div>
+        
+      </template>
 
+      <template v-slot:body="props">
+          <q-tr :props="props">
+            <q-td key="desc" :props="props">
+              {{ props.row.name }}
+              <q-popup-edit v-model="props.row.name">
+                <q-input v-model="props.row.name" dense autofocus counter ></q-input>
+              </q-popup-edit>
+            </q-td>
+            <q-td key="calories" :props="props">
+              {{ props.row.calories }}
+              <q-popup-edit v-model="props.row.calories" title="Update calories" buttons>
+                <q-input type="number" v-model="props.row.calories" dense autofocus ></q-input>
+              </q-popup-edit>
+            </q-td>
+            <q-td key="fat" :props="props">
+              <div class="text-pre-wrap">{{ props.row.fat }}</div>
+              <q-popup-edit v-model="props.row.fat">
+                <q-input type="textarea" v-model="props.row.fat" dense autofocus ></q-input>
+              </q-popup-edit>
+            </q-td>
+            <q-td key="carbs" :props="props">
+              {{ props.row.carbs }}
+              <q-popup-edit v-model="props.row.carbs" title="Update carbs" buttons persistent>
+                <q-input type="number" v-model="props.row.carbs" dense autofocus hint="Use buttons to close" ></q-input>
+              </q-popup-edit>
+            </q-td>
+            <q-td key="protein" :props="props">{{ props.row.protein }}</q-td>
+            <q-td key="sodium" :props="props">{{ props.row.sodium }}</q-td>
+            <q-td key="calcium" :props="props">{{ props.row.calcium }}</q-td>
+            <q-td key="iron" :props="props">{{ props.row.iron }}</q-td>
+            <q-td key="actions" :props="props">
+              <q-btn color="blue" label="Update" @click="editItem(props.row)" size=sm no-caps></q-btn>
+              <q-btn color="red" label="Delete"  @click="deleteItem(props.row)" size=sm no-caps></q-btn>
+            </q-td>
+          </q-tr>
+      </template>
 
-        </q-table>
-      </q-card-section>
-    </q-card>
+    </q-table>
+  </div>
 
   </q-page>
 </template>
@@ -96,247 +142,207 @@
     export default {
         name: "Tables",
         data() {
-            return {
-                columns: [
-                    {name: 'Name', label: 'Name', field: 'name', sortable: true, align: 'left'},
-                    {name: 'Crated Date', label: 'Crated Date', field: 'Crated_Date', sortable: true, align: 'left'},
-                    {name: 'Project', label: 'Project', field: 'Project', sortable: true, align: 'left'},
-                    {name: 'Action', label: '', field: 'Action', sortable: false, align: 'center'}
-                ],
-                columns2: [
-                    {name: 'Name', label: 'Name', field: 'name', sortable: true, align: 'left'},
-                    {name: 'Crated Date', label: 'Crated Date', field: 'Crated_Date', sortable: true, align: 'left'},
-                    {name: 'Project', label: 'Project', field: 'Project', sortable: true, align: 'left'},
-                    {name: 'Progress', label: 'Progress', field: 'Progress', sortable: true, align: 'left'},
-                    {name: 'Action', label: '', field: 'Action', sortable: false, align: 'center'}
-                ],
-                data: [
-                    {
-                        name: 'Pratik Patel',
-                        Crated_Date: '15/3/2020',
-                        Project: 'Quasar Admin',
-                        avatar: 'https://avatars3.githubusercontent.com/u/34883558?s=400&u=09455019882ac53dc69b23df570629fd84d37dd1&v=4',
-                        progress: 80,
-                        des: 'Solutions Developer'
-                    },
-                    {
-                        name: 'Mayank Patel',
-                        Crated_Date: '10/2/2018',
-                        Project: 'Quasar QDraggableTree',
-                        avatar: 'https://avatars2.githubusercontent.com/u/27857088?s=400&u=a898efbc753d93cf4c2070a7cf3b05544b50deea&v=4',
-                        progress: 50,
-                        des: 'Solutions Developer'
-                    },
-                    {
-                        name: 'Mayur Patel',
-                        Crated_Date: '10/2/2018',
-                        Project: 'Quasar Shopping',
-                        avatar: 'https://avatars0.githubusercontent.com/u/55240045?s=400&u=cf9bffc2bd2d8e42ca6e5abf40ddd6c1a03ce2860&v=4',
-                        progress: 100,
-                        des: 'Solutions Developer'
-                    },
-                    {
-                        name: 'Jeff Galbraith',
-                        Crated_Date: '10/2/2019',
-                        Project: 'Quasar QMarkdown',
-                        avatar: 'https://avatars1.githubusercontent.com/u/10262924?s=400&u=9f601b344d597ed76581e3a6a10f3c149cb5f6dc&v=4',
-                        progress: 60,
-                        des: 'Solutions Developer'
-                    },
-                    {
-                        name: 'Pratik Patel',
-                        Crated_Date: '10/1/2020',
-                        Project: 'Quasar QGrid',
-                        avatar: 'https://avatars3.githubusercontent.com/u/34883558?s=400&u=09455019882ac53dc69b23df570629fd84d37dd1&v=4',
-                        progress: 30,
-                        des: 'Solutions Developer'
-                    },
-                ],
-                filter: '',
-                show_filter: false,
-                columns3: [
-                    {
-                        name: 'name',
-                        required: true,
-                        label: 'Dessert (100g serving)',
-                        align: 'left',
-                        field: row => row.name,
-                        format: val => `${val}`,
-                        sortable: true
-                    },
-                    {name: 'calories', align: 'center', label: 'Calories', field: 'calories', sortable: true},
-                    {name: 'fat', label: 'Fat (g)', field: 'fat', sortable: true},
-                    {name: 'carbs', label: 'Carbs (g)', field: 'carbs'},
-                    {name: 'protein', label: 'Protein (g)', field: 'protein'},
-                    {name: 'sodium', label: 'Sodium (mg)', field: 'sodium'},
-                    {
-                        name: 'calcium',
-                        label: 'Calcium (%)',
-                        field: 'calcium',
-                        sortable: true,
-                        sort: (a, b) => parseInt(a, 10) - parseInt(b, 10)
-                    },
-                    {
-                        name: 'iron',
-                        label: 'Iron (%)',
-                        field: 'iron',
-                        sortable: true,
-                        sort: (a, b) => parseInt(a, 10) - parseInt(b, 10)
-                    }
-                ],
-                data2: [
-                    {
-                        name: 'Frozen Yogurt',
-                        calories: 159,
-                        fat: 6.0,
-                        carbs: 24,
-                        protein: 4.0,
-                        sodium: 87,
-                        calcium: '14%',
-                        iron: '1%'
-                    },
-                    {
-                        name: 'Ice cream sandwich',
-                        calories: 237,
-                        fat: 9.0,
-                        carbs: 37,
-                        protein: 4.3,
-                        sodium: 129,
-                        calcium: '8%',
-                        iron: '1%'
-                    },
-                    {
-                        name: 'Eclair',
-                        calories: 262,
-                        fat: 16.0,
-                        carbs: 23,
-                        protein: 6.0,
-                        sodium: 337,
-                        calcium: '6%',
-                        iron: '7%'
-                    },
-                    {
-                        name: 'Cupcake',
-                        calories: 305,
-                        fat: 3.7,
-                        carbs: 67,
-                        protein: 4.3,
-                        sodium: 413,
-                        calcium: '3%',
-                        iron: '8%'
-                    },
-                    {
-                        name: 'Gingerbread',
-                        calories: 356,
-                        fat: 16.0,
-                        carbs: 49,
-                        protein: 3.9,
-                        sodium: 327,
-                        calcium: '7%',
-                        iron: '16%'
-                    },
-                    {
-                        name: 'Jelly bean',
-                        calories: 375,
-                        fat: 0.0,
-                        carbs: 94,
-                        protein: 0.0,
-                        sodium: 50,
-                        calcium: '0%',
-                        iron: '0%'
-                    },
-                    {
-                        name: 'Lollipop',
-                        calories: 392,
-                        fat: 0.2,
-                        carbs: 98,
-                        protein: 0,
-                        sodium: 38,
-                        calcium: '0%',
-                        iron: '2%'
-                    },
-                    {
-                        name: 'Honeycomb',
-                        calories: 408,
-                        fat: 3.2,
-                        carbs: 87,
-                        protein: 6.5,
-                        sodium: 562,
-                        calcium: '0%',
-                        iron: '45%'
-                    },
-                    {
-                        name: 'Donut',
-                        calories: 452,
-                        fat: 25.0,
-                        carbs: 51,
-                        protein: 4.9,
-                        sodium: 326,
-                        calcium: '2%',
-                        iron: '22%'
-                    },
-                    {
-                        name: 'KitKat',
-                        calories: 518,
-                        fat: 26.0,
-                        carbs: 65,
-                        protein: 7,
-                        sodium: 54,
-                        calcium: '12%',
-                        iron: '6%'
-                    }
-                ],
-                column4: [
-                    {name: 'Name', label: 'Name', field: 'name', sortable: true, align: 'left'},
-                    {name: 'Task', label: 'Task', field: 'task', sortable: true, align: 'left'},
-                ],
-                data3: [
-                    {
-                        name: 'Pratik Patel',
-                        des: 'Developer',
-                        Progress: 70,
-                        type: 'info',
-                        issue: '#125',
-                        avatar: 'https://avatars3.githubusercontent.com/u/34883558?s=400&u=09455019882ac53dc69b23df570629fd84d37dd1&v=4',
-
-                    },
-                    {
-                        name: 'Mayank Patel',
-                        des: 'Developer',
-                        Progress: 60,
-                        type: 'success',
-                        issue: '#1425',
-                        avatar: 'https://avatars2.githubusercontent.com/u/27857088?s=400&u=a898efbc753d93cf4c2070a7cf3b05544b50deea&v=4',
-                    },
-                    {
-                        name: 'Mayur Patel',
-                        des: 'Developer',
-                        Progress: 30,
-                        type: 'warning',
-                        issue: '#1475',
-                        avatar: 'https://avatars0.githubusercontent.com/u/55240045?s=400&u=cf9bffc2bd2d8e42ca6e5abf40ddd6c1a03ce2860&v=4',
-                    },
-                    {
-                        name: 'Jeff Galbraith',
-                        des: 'Developer',
-                        Progress: 100,
-                        type: 'success',
-                        issue: '#134',
-                        avatar: 'https://avatars1.githubusercontent.com/u/10262924?s=400&u=9f601b344d597ed76581e3a6a10f3c149cb5f6dc&v=4',
-                    }
-                ]
-            }
+          return {
+            show_dialog: false,
+            editedIndex: -1,
+            editedItem: {
+              name: "",
+              calories: 0,
+              fat: 0,
+              carbs: 0,
+              protein: 0,
+              sodium: 0,
+              calcium: "0%",
+              iron: "0%"
+            },
+            defaultItem: {
+              name: "",
+              calories: 0,
+              fat: 0,
+              carbs: 0,
+              protein: 0,
+              sodium: 0,
+              calcium: "0%",
+              iron: "0%"
+            },
+            columns: [
+              {
+                name: "desc",
+                required: true,
+                label: "Dessert (100g serving)",
+                align: "left",
+                field: row => row.name,
+                format: val => `${val}`,
+                sortable: true
+              },
+              {
+                name: "calories",
+                align: "center",
+                label: "Calories",
+                field: "calories",
+                sortable: true
+              },
+              {
+                name: "fat",
+                label: "Fat (g)",
+                field: "fat",
+                sortable: true,
+                style: "width: 10px"
+              },
+              { name: "carbs", label: "Carbs (g)", field: "carbs" },
+              { name: "protein", label: "Protein (g)", field: "protein" },
+              { name: "sodium", label: "Sodium (mg)", field: "sodium" },
+              {
+                name: "calcium",
+                label: "Calcium (%)",
+                field: "calcium",
+                sortable: true,
+                sort: (a, b) => parseInt(a, 10) - parseInt(b, 10)
+              },
+              {
+                name: "iron",
+                label: "Iron (%)",
+                field: "iron",
+                sortable: true,
+                sort: (a, b) => parseInt(a, 10) - parseInt(b, 10)
+              },
+              {
+                name: "actions",
+                label: "Actions",
+                field: "actions"
+              }
+            ],
+            data: [
+              {
+                name: "Frozen Yogurt",
+                calories: 159,
+                fat: 6.0,
+                carbs: 24,
+                protein: 4.0,
+                sodium: 87,
+                calcium: "14%",
+                iron: "1%"
+              },
+              {
+                name: "Ice cream sandwich",
+                calories: 237,
+                fat: 9.0,
+                carbs: 37,
+                protein: 4.3,
+                sodium: 129,
+                calcium: "8%",
+                iron: "1%"
+              },
+              {
+                name: "Eclair",
+                calories: 262,
+                fat: 16.0,
+                carbs: 23,
+                protein: 6.0,
+                sodium: 337,
+                calcium: "6%",
+                iron: "7%"
+              },
+              {
+                name: "Cupcake",
+                calories: 305,
+                fat: 3.7,
+                carbs: 67,
+                protein: 4.3,
+                sodium: 413,
+                calcium: "3%",
+                iron: "8%"
+              },
+              {
+                name: "Gingerbread",
+                calories: 356,
+                fat: 16.0,
+                carbs: 49,
+                protein: 3.9,
+                sodium: 327,
+                calcium: "7%",
+                iron: "16%"
+              },
+              {
+                name: "Jelly bean",
+                calories: 375,
+                fat: 0.0,
+                carbs: 94,
+                protein: 0.0,
+                sodium: 50,
+                calcium: "0%",
+                iron: "0%"
+              },
+              {
+                name: "Lollipop",
+                calories: 392,
+                fat: 0.2,
+                carbs: 98,
+                protein: 0,
+                sodium: 38,
+                calcium: "0%",
+                iron: "2%"
+              },
+              {
+                name: "Honeycomb",
+                calories: 408,
+                fat: 3.2,
+                carbs: 87,
+                protein: 6.5,
+                sodium: 562,
+                calcium: "0%",
+                iron: "45%"
+              },
+              {
+                name: "Donut",
+                calories: 452,
+                fat: 25.0,
+                carbs: 51,
+                protein: 4.9,
+                sodium: 326,
+                calcium: "2%",
+                iron: "22%"
+              },
+              {
+                name: "KitKat",
+                calories: 518,
+                fat: 26.0,
+                carbs: 65,
+                protein: 7,
+                sodium: 54,
+                calcium: "12%",
+                iron: "6%"
+              }
+            ]
+          };
         },
         methods: {
-            getColor(val) {
-                if (val > 70 && val <= 100) {
-                    return 'green'
-                } else if (val > 50 && val <= 70) {
-                    return 'blue'
-                }
-                return 'red'
-            }
+        addRow() {
+          if (this.editedIndex > -1) {
+            Object.assign(this.data[this.editedIndex], this.editedItem);
+          } else {
+            this.data.push(this.editedItem);
+          }
+          this.close()
+        },
+        deleteItem(item) {
+          const index = this.data.indexOf(item);
+          confirm("Are you sure you want to delete this item?") &&
+            this.data.splice(index, 1);
+        },
+        editItem(item) {
+          this.editedIndex = this.data.indexOf(item);
+          this.editedItem = Object.assign({}, item);
+          this.show_dialog = true;
+        },
+        close () {
+          this.show_dialog = false
+          setTimeout(() => {
+            this.editedItem = Object.assign({}, this.defaultItem)
+            this.editedIndex = -1
+          }, 300)
         }
+      },
     }
 </script>
 

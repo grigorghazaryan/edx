@@ -88,7 +88,7 @@
           <q-list class="q-pl-lg">
             <q-item to="/Title1" active-class="q-item-no-link-highlighting">
               <q-item-section avatar>
-                <q-icon name="person"/>
+                <q-icon name="text_format"/>
               </q-item-section>
               <q-item-section>
                 <q-item-label>Title 1</q-item-label>
@@ -120,7 +120,7 @@
           <q-list class="q-pl-lg">
             <q-item to="/TeacherCosts" active-class="q-item-no-link-highlighting">
               <q-item-section avatar>
-                <q-icon name="person"/>
+                <q-icon name="school"/>
               </q-item-section>
               <q-item-section>
                 <q-item-label>Teacher Costs</q-item-label>
@@ -136,7 +136,7 @@
           <q-list class="q-pl-lg">
             <q-item to="/Expenses" active-class="q-item-no-link-highlighting">
               <q-item-section avatar>
-                <q-icon name="person"/>
+                <q-icon name="attach_money"/>
               </q-item-section>
               <q-item-section>
                 <q-item-label>Expenses</q-item-label>
@@ -152,7 +152,7 @@
           <q-list class="q-pl-lg">
             <q-item to="/Budget" active-class="q-item-no-link-highlighting">
               <q-item-section avatar>
-                <q-icon name="person"/>
+                <q-icon name="account_balance"/>
               </q-item-section>
               <q-item-section>
                 <q-item-label>Budget</q-item-label>
@@ -168,7 +168,7 @@
           <q-list class="q-pl-lg">
             <q-item to="/Reimbursement" active-class="q-item-no-link-highlighting">
               <q-item-section avatar>
-                <q-icon name="person"/>
+                <q-icon name="money"/>
               </q-item-section>
               <q-item-section>
                 <q-item-label>Reimbursement</q-item-label>
@@ -178,7 +178,6 @@
         </q-expansion-item>
 
         <hr>
-
 
         <q-expansion-item
           icon="pages"
