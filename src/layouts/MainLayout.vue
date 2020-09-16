@@ -12,7 +12,7 @@
         />
 
         <q-toolbar-title>
-          Quasar App
+          EDXChange 
         </q-toolbar-title>
 
 
@@ -22,7 +22,6 @@
           <q-btn round dense flat color="white" :icon="$q.fullscreen.isActive ? 'fullscreen_exit' : 'fullscreen'"
                  @click="$q.fullscreen.toggle()"
                  v-if="$q.screen.gt.sm">
-            <!--            <q-tooltip>Messages</q-tooltip>-->
           </q-btn>
           <q-btn round dense flat color="white" icon="notifications">
             <q-badge color="red" text-color="white" floating>
@@ -65,6 +64,121 @@
             <q-item-label>Dashboard</q-item-label>
           </q-item-section>
         </q-item>
+
+        <q-expansion-item
+          icon="person"
+          label="Administration"
+        >
+          <q-list class="q-pl-lg">
+            <q-item to="/Administration1" active-class="q-item-no-link-highlighting">
+              <q-item-section avatar>
+                <q-icon name="person"/>
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>Administration 1</q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-expansion-item>
+
+        <q-expansion-item
+          icon="text_format"
+          label="Allocations"
+        >
+          <q-list class="q-pl-lg">
+            <q-item to="/Title1" active-class="q-item-no-link-highlighting">
+              <q-item-section avatar>
+                <q-icon name="person"/>
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>Title 1</q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-expansion-item>
+
+        <q-expansion-item
+          icon="person"
+          label="Inventory"
+        >
+          <q-list class="q-pl-lg">
+            <q-item to="/Inventory1" active-class="q-item-no-link-highlighting">
+              <q-item-section avatar>
+                <q-icon name="person"/>
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>Inventory 1</q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-expansion-item>
+
+        <q-expansion-item
+          icon="school"
+          label="Teacher Costs"
+        >
+          <q-list class="q-pl-lg">
+            <q-item to="/TeacherCosts" active-class="q-item-no-link-highlighting">
+              <q-item-section avatar>
+                <q-icon name="person"/>
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>Teacher Costs</q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-expansion-item>
+
+        <q-expansion-item
+          icon="attach_money"
+          label="Expenses"
+        >
+          <q-list class="q-pl-lg">
+            <q-item to="/Expenses" active-class="q-item-no-link-highlighting">
+              <q-item-section avatar>
+                <q-icon name="person"/>
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>Expenses</q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-expansion-item>
+
+        <q-expansion-item
+          icon="account_balance"
+          label="Budget"
+        >
+          <q-list class="q-pl-lg">
+            <q-item to="/Budget" active-class="q-item-no-link-highlighting">
+              <q-item-section avatar>
+                <q-icon name="person"/>
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>Budget</q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-expansion-item>
+
+        <q-expansion-item
+          icon="money"
+          label="Reimbursement"
+        >
+          <q-list class="q-pl-lg">
+            <q-item to="/Reimbursement" active-class="q-item-no-link-highlighting">
+              <q-item-section avatar>
+                <q-icon name="person"/>
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>Reimbursement</q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-expansion-item>
+
+        <hr>
+
 
         <q-expansion-item
           icon="pages"
