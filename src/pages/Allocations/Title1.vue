@@ -345,10 +345,3 @@
       },
     }
 </script>
-
-<style>
-
-  .table-bg {
-    background-color: #162b4d;
-  }
-</style>

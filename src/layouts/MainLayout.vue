@@ -86,12 +86,36 @@
           label="Allocations"
         >
           <q-list class="q-pl-lg">
-            <q-item to="/Title1" active-class="q-item-no-link-highlighting">
+            <q-item to="/Allocations/Title1" active-class="q-item-no-link-highlighting">
               <q-item-section avatar>
                 <q-icon name="text_format"/>
               </q-item-section>
               <q-item-section>
                 <q-item-label>Title 1</q-item-label>
+              </q-item-section>
+            </q-item>
+            <q-item to="/Allocations/Title2" active-class="q-item-no-link-highlighting">
+              <q-item-section avatar>
+                <q-icon name="text_format"/>
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>Title 2</q-item-label>
+              </q-item-section>
+            </q-item>
+            <q-item to="/Allocations/Title3" active-class="q-item-no-link-highlighting">
+              <q-item-section avatar>
+                <q-icon name="text_format"/>
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>Title 3</q-item-label>
+              </q-item-section>
+            </q-item>
+            <q-item to="/Allocations/Title4" active-class="q-item-no-link-highlighting">
+              <q-item-section avatar>
+                <q-icon name="text_format"/>
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>Title 4</q-item-label>
               </q-item-section>
             </q-item>
           </q-list>

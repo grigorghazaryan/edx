@@ -1,5 +1,6 @@
 <template>
   <q-page class="q-pa-sm">
+
     <q-card class="bg-transparent no-shadow no-border">
       <q-card-section class="q-pa-none">
         <div class="row q-col-gutter-sm ">
@@ -50,6 +51,7 @@
         </div>
       </q-card-section>
     </q-card>
+
     <div class="row q-col-gutter-sm  q-py-sm">
       <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
         <q-card class="q-ma-xs" style="background-color: #38b1c5">
@@ -82,7 +84,6 @@
         </q-card>
       </div>
     </div>
-
 
     <div class="row q-col-gutter-sm  q-py-sm">
       <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
@@ -314,6 +315,7 @@
         </q-card>
       </div>
     </div>
+    
   </q-page>
 </template>
 

@@ -148,10 +148,3 @@
         }
     }
 </script>
-
-<style scoped>
-
-  .card-bg {
-    background-color: #162b4d;
-  }
-</style>

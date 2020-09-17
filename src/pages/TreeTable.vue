@@ -43,7 +43,3 @@
         components: {SimpleHierarchy, CustomHierarchy}
     }
 </script>
-
-<style scoped>
-
-</style>
