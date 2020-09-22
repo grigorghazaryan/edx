@@ -342,14 +342,14 @@
               allocation: ""
             },
             defaultItem: {
-              name: "",
-              calories: 0,
-              fat: 0,
-              carbs: 0,
-              protein: 0,
-              sodium: 0,
-              calcium: "0%",
-              iron: "0%"
+              dpi: "",
+              date: "",
+              school: "",
+              instruction: "",
+              profDev: "",
+              totalInstruction: "",
+              familyEngagemenet: "",
+              allocation: ""
             },
             columns: [
               {
