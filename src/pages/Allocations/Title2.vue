@@ -7,8 +7,8 @@
             <q-card>
               <q-item style="background-color: #546bfa" class="q-pa-none">
                 <q-item-section class="q-pa-md q-ml-none  text-white">
-                  <q-item-label class="text-white text-h6 text-weight-bolder">$ 8,258</q-item-label>
-                  <q-item-label>Instruction</q-item-label>
+                  <q-item-label class="text-white text-h6 text-weight-bolder">$ 45789</q-item-label>
+                  <q-item-label>PD</q-item-label>
                 </q-item-section>
                 <q-item-section side class="q-mr-md text-white">
                   <q-icon name="fas fa-dollar-sign" color="white" size="44px"></q-icon>
@@ -20,8 +20,8 @@
             <q-card>
               <q-item style="background-color: #3a9688" class="q-pa-none">
                 <q-item-section class=" q-pa-md q-ml-none  text-white">
-                  <q-item-label class="text-white text-h6 text-weight-bolder">$ 4418</q-item-label>
-                  <q-item-label>PD</q-item-label>
+                  <q-item-label class="text-white text-h6 text-weight-bolder">$ 47218</q-item-label>
+                  <q-item-label>Materials</q-item-label>
                 </q-item-section>
                 <q-item-section side class="q-mr-md text-white">
                   <q-icon name="fas fa-chart-bar" color="white" size="44px"></q-icon>
@@ -33,8 +33,8 @@
             <q-card>
               <q-item style="background-color: #7cb342" class="q-pa-none ">
                 <q-item-section class=" q-pa-md q-ml-none  text-white">
-                  <q-item-label class="text-white text-h6 text-weight-bolder">$ 8778</q-item-label>
-                  <q-item-label>Total Instructions</q-item-label>
+                  <q-item-label class="text-white text-h6 text-weight-bolder">$ 94789</q-item-label>
+                  <q-item-label>Grand Total</q-item-label>
                 </q-item-section>
                 <q-item-section side class="q-mr-md text-white">
                   <q-icon name="fas fa-chart-line" color="white" size="44px"></q-icon>
@@ -46,8 +46,8 @@
             <q-card>
               <q-item style="background-color: #f88c2b" class="q-pa-none">
                 <q-item-section class=" q-pa-md q-ml-none  text-white">
-                  <q-item-label class="text-white text-h6 text-weight-bolder">$ 7600</q-item-label>
-                  <q-item-label>Total Engagement</q-item-label>
+                  <q-item-label class="text-white text-h6 text-weight-bolder">% 13.34</q-item-label>
+                  <q-item-label>Total PD (+/-)</q-item-label>
                 </q-item-section>
                 <q-item-section side class="q-mr-md text-white">
                   <q-icon name="person" color="white" size="44px"></q-icon>
@@ -59,8 +59,8 @@
             <q-card>
               <q-item style="background-color: #f88c2b" class="q-pa-none">
                 <q-item-section class=" q-pa-md q-ml-none  text-white">
-                  <q-item-label class="text-white text-h6 text-weight-bolder">% 1.04</q-item-label>
-                  <q-item-label>Final/Est Ratio (+/-)</q-item-label>
+                  <q-item-label class="text-white text-h6 text-weight-bolder">% 20.40</q-item-label>
+                  <q-item-label>Materials (+/-)</q-item-label>
                 </q-item-section>
                 <q-item-section side class="q-mr-md text-white">
                   <q-icon name="person" color="white" size="44px"></q-icon>
@@ -72,8 +72,8 @@
             <q-card>
               <q-item style="background-color: #f88c2b" class="q-pa-none">
                 <q-item-section class=" q-pa-md q-ml-none  text-white">
-                  <q-item-label class="text-white text-h6 text-weight-bolder">% 9.42</q-item-label>
-                  <q-item-label>Last Year (+/-)</q-item-label>
+                  <q-item-label class="text-white text-h6 text-weight-bolder">% 13.38</q-item-label>
+                  <q-item-label>From Last Year (+/-)</q-item-label>
                 </q-item-section>
                 <q-item-section side class="q-mr-md text-white">
                   <q-icon name="person" color="white" size="44px"></q-icon>
@@ -87,7 +87,7 @@
     
     <div class="q-pa-sm q-gutter-sm">
       <q-table
-        title="Title 1" 
+        title="Title 2" 
         :data="data" 
         :hide-header="mode === 'grid'"
         :columns="columns" 
@@ -110,28 +110,24 @@
                 <div class="text-pre-wrap">{{ props.row.school }}</div>
               </q-td>
 
-              <q-td key="instruction" :props="props">
-                {{ props.row.instruction }}
-              </q-td>
-
               <q-td key="profDev" :props="props">
                 {{ props.row.profDev }}
               </q-td>
               
-              <q-td key="totalInstruction" :props="props">
-                {{ props.row.totalInstruction }}
+              <q-td key="materials" :props="props">
+                {{ props.row.materials }}
               </q-td>
               
-              <q-td key="familyEngagemenet" :props="props">
-                {{ props.row.familyEngagemenet }}
+              <q-td key="grandTotal" :props="props">
+                {{ props.row.grandTotal }}
               </q-td>
               
-              <q-td key="allocation" :props="props">
-                <q-chip square color="orange" text-color="white" v-if="props.row.allocation == 'Preliminary'">
-                  {{ props.row.allocation }}
+              <q-td key="status" :props="props">
+                <q-chip square color="orange" text-color="white" v-if="props.row.status == 'Preliminary'">
+                  {{ props.row.status }}
                 </q-chip>
                 <q-chip class="glossy" square color="teal" text-color="white" v-else>
-                  {{ props.row.allocation }}
+                  {{ props.row.status }}
                 </q-chip>
               </q-td>
               
@@ -240,11 +236,11 @@
                     </div>
 
                     <div class="col-md-6 q-pr-sm">
-                      <q-input :disable="isFinal" outlined v-model="editedItem.totalInstruction" label="Total Instruction" />
+                      <q-input :disable="isFinal" outlined v-model="editedItem.profDev" label="Professional Dev" />
                     </div>
 
                     <div class="col-md-6">
-                      <q-input :disable="isFinal" outlined v-model="editedItem.familyEngagemenet" label="Family Engagemenet" />
+                      <q-input :disable="isFinal" outlined v-model="editedItem.materials" label="Materials" />
                     </div>
 
                     <div class="col-md-12 q-mt-md">
@@ -252,11 +248,11 @@
                     </div>
 
                     <div class="col-md-6 q-pr-sm">
-                      <q-input :disable="!isFinal" outlined v-model="editedItem.totalInstruction" label="Total Instruction" />
+                      <q-input :disable="!isFinal"  outlined v-model="editedItem.profDev" label="Professional Dev" />
                     </div>
 
                     <div class="col-md-6">
-                      <q-input :disable="!isFinal" outlined v-model="editedItem.familyEngagemenet" label="Family Engagemenet" />
+                      <q-input :disable="!isFinal"  outlined v-model="editedItem.materials" label="Materials" />
                     </div>
 
                     <div class="col-md-12 q-mt-md q-mb-md">
@@ -265,13 +261,11 @@
                       </div>
                     </div>
 
-                    <div class="col-md-12 q-mb-sm">
-                      <q-input outlined label="PD Percentage %" />
-                    </div>
-
                     <div class="col-md-12">
                       <q-input type="textarea" outlined label="Notes" />
                     </div>
+
+                    <q-chip outline square class="q-mt-md" color="blue" text-color="white" label="Previous Year PD: $45835.58 Previous Year Materials: $185.38" />
                   
                   </div>
                 </q-card-section>
@@ -335,10 +329,9 @@
               dpi: "",
               date: "",
               school: "",
-              instruction: "",
               profDev: "",
-              totalInstruction: "",
-              familyEngagemenet: "",
+              materials: "",
+              grandTotal: "",
               allocation: ""
             },
             defaultItem: {
@@ -376,13 +369,6 @@
                 sortable: true
               },
               { 
-                name: "instruction", 
-                align: "left",
-                label: "Instruction", 
-                field: "instruction",
-                sortable: true
-              },
-              { 
                 name: "profDev", 
                 align: "left",
                 label: "Professional Development", 
@@ -390,24 +376,24 @@
                 sortable: true
               },
               { 
-                name: "totalInstruction", 
+                name: "materials", 
                 align: "left",
-                label: "Total Instruction", 
-                field: "totalInstruction",
+                label: "Materials", 
+                field: "materials",
                 sortable: true
               },
               {
-                name: "familyEngagemenet",
+                name: "grandTotal",
                 align: "left",
-                label: "Family Engagemenet",
-                field: "familyEngagemenet",
+                label: "Grand Total",
+                field: "grandTotal",
                 sortable: true
               },
               {
-                name: "allocation",
+                name: "status",
                 align: "left",
-                label: "Allocation",
-                field: "allocation",
+                label: "Status",
+                field: "status",
                 sortable: true
               },
               {
@@ -424,9 +410,9 @@
                 school: "American School N1",
                 instruction: "$ 189.78",
                 profDev: "$ 10.22",
-                totalInstruction: "$ 200.00",
-                familyEngagemenet: "$ 4455.00",
-                allocation: "Preliminary"
+                materials: "$ 200.00",
+                grandTotal: "$ 4455.00",
+                status: "Preliminary"
               },
               {
                 dpi: 102,
@@ -434,9 +420,9 @@
                 school: "American School N2",
                 instruction: "$ 174.78",
                 profDev: "$ 17.22",
-                totalInstruction: "$ 240.00",
-                familyEngagemenet: "$ 7855.00",
-                allocation: "Final"
+                materials: "$ 240.00",
+                grandTotal: "$ 7855.00",
+                status: "Final"
               },
             ]
           };
