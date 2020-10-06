@@ -52,7 +52,7 @@
       v-model="leftDrawerOpen"
       show-if-above
       bordered
-      content-class="bg-primary text-white"
+      content-class="bg-grey-sidebar text-white"
     >
       <q-list>
 
@@ -69,8 +69,8 @@
           icon="person"
           label="Administration"
         >
-          <q-list class="q-pl-lg">
-            <q-item to="/Administration1" active-class="q-item-no-link-highlighting">
+          <q-list class="bg-sidebar-opened">
+            <q-item to="/Administration1" class="q-pl-lg" active-class="q-item-no-link-highlighting">
               <q-item-section avatar>
                 <q-icon name="person"/>
               </q-item-section>
@@ -85,8 +85,8 @@
           icon="text_format"
           label="Allocations"
         >
-          <q-list class="q-pl-lg">
-            <q-item to="/Allocations/Title1" active-class="q-item-no-link-highlighting">
+          <q-list class="bg-sidebar-opened">
+            <q-item to="/Allocations/Title1" class="q-pl-lg" active-class="q-item-no-link-highlighting">
               <q-item-section avatar>
                 <q-icon name="text_format"/>
               </q-item-section>
@@ -94,7 +94,7 @@
                 <q-item-label>Title 1</q-item-label>
               </q-item-section>
             </q-item>
-            <q-item to="/Allocations/Title2" active-class="q-item-no-link-highlighting">
+            <q-item to="/Allocations/Title2" class="q-pl-lg" active-class="q-item-no-link-highlighting">
               <q-item-section avatar>
                 <q-icon name="text_format"/>
               </q-item-section>
@@ -102,7 +102,7 @@
                 <q-item-label>Title 2</q-item-label>
               </q-item-section>
             </q-item>
-            <q-item to="/Allocations/Title3" active-class="q-item-no-link-highlighting">
+            <q-item to="/Allocations/Title3" class="q-pl-lg" active-class="q-item-no-link-highlighting">
               <q-item-section avatar>
                 <q-icon name="text_format"/>
               </q-item-section>
@@ -110,12 +110,20 @@
                 <q-item-label>Title 3</q-item-label>
               </q-item-section>
             </q-item>
-            <q-item to="/Allocations/Title4" active-class="q-item-no-link-highlighting">
+            <q-item to="/Allocations/Title4" class="q-pl-lg" active-class="q-item-no-link-highlighting">
               <q-item-section avatar>
                 <q-icon name="text_format"/>
               </q-item-section>
               <q-item-section>
                 <q-item-label>Title 4</q-item-label>
+              </q-item-section>
+            </q-item>
+            <q-item to="/Allocations/esser" class="q-pl-lg" active-class="q-item-no-link-highlighting">
+              <q-item-section avatar>
+                <q-icon name="text_format"/>
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>ESSER</q-item-label>
               </q-item-section>
             </q-item>
           </q-list>
@@ -125,8 +133,8 @@
           icon="person"
           label="Inventory"
         >
-          <q-list class="q-pl-lg">
-            <q-item to="/Inventory1" active-class="q-item-no-link-highlighting">
+          <q-list class="bg-sidebar-opened">
+            <q-item to="/Inventory1" class="q-pl-lg" active-class="q-item-no-link-highlighting">
               <q-item-section avatar>
                 <q-icon name="person"/>
               </q-item-section>
@@ -141,8 +149,8 @@
           icon="school"
           label="Teacher Costs"
         >
-          <q-list class="q-pl-lg">
-            <q-item to="/TeacherCosts" active-class="q-item-no-link-highlighting">
+          <q-list class="bg-sidebar-opened">
+            <q-item to="/TeacherCosts" class="q-pl-lg" active-class="q-item-no-link-highlighting">
               <q-item-section avatar>
                 <q-icon name="school"/>
               </q-item-section>
@@ -157,8 +165,8 @@
           icon="attach_money"
           label="Expenses"
         >
-          <q-list class="q-pl-lg">
-            <q-item to="/Expenses" active-class="q-item-no-link-highlighting">
+          <q-list class="bg-sidebar-opened">
+            <q-item to="/Expenses" class="q-pl-lg" active-class="q-item-no-link-highlighting">
               <q-item-section avatar>
                 <q-icon name="attach_money"/>
               </q-item-section>
@@ -173,8 +181,8 @@
           icon="account_balance"
           label="Budget"
         >
-          <q-list class="q-pl-lg">
-            <q-item to="/Budget" active-class="q-item-no-link-highlighting">
+          <q-list class="bg-sidebar-opened">
+            <q-item to="/Budget" class="q-pl-lg" active-class="q-item-no-link-highlighting">
               <q-item-section avatar>
                 <q-icon name="account_balance"/>
               </q-item-section>
@@ -189,8 +197,8 @@
           icon="money"
           label="Reimbursement"
         >
-          <q-list class="q-pl-lg">
-            <q-item to="/Reimbursement" active-class="q-item-no-link-highlighting">
+          <q-list class="bg-sidebar-opened">
+            <q-item to="/Reimbursement" class="q-pl-lg" active-class="q-item-no-link-highlighting">
               <q-item-section avatar>
                 <q-icon name="money"/>
               </q-item-section>
@@ -207,8 +215,8 @@
           icon="pages"
           label="Pages ( for use later) "
         >
-          <q-list class="q-pl-lg">
-            <q-item to="/Login-1" active-class="q-item-no-link-highlighting">
+          <q-list class="bg-sidebar-opened">
+            <q-item to="/Login-1" class="q-pl-lg" active-class="q-item-no-link-highlighting">
               <q-item-section avatar>
                 <q-icon name="email"/>
               </q-item-section>
@@ -265,3 +273,15 @@
         }
     }
 </script>
+
+<style lang="scss">
+
+.bg-grey-sidebar {
+  background: #304156 !important;
+}
+
+.bg-sidebar-opened {
+  background: #1f2d3d !important;
+}
+
+</style>

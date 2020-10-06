@@ -472,12 +472,12 @@
               notes: this.editedItem.notes
             }
 
-            console.log(obj)
             if (this.editedIndex > -1) {
               Object.assign(this.data[this.editedIndex], obj);
             } else {
               this.data.unshift(obj);
             }
+            
             this.close()
           },
           openDeleteModal(item) {
@@ -540,48 +540,48 @@
               if(r % 2) r = true 
               else r = false
 
-          let profDev, profDevFinal,
-              materials, materialsFinal,
-              grandTotal;
+              let profDev, profDevFinal,
+                  materials, materialsFinal,
+                  grandTotal;
 
-          if (r) {
-            profDevFinal = parseFloat( Math.floor(Math.random() * 1000) ).toFixed(2);
-          } else {
-            profDev = parseFloat( Math.floor(Math.random() * 1000) ).toFixed(2);
-          }
-
-          if (r) {
-            materialsFinal = parseFloat( Math.floor(Math.random() * 1000)).toFixed(2);
-          } else {
-             materials = parseFloat( Math.floor(Math.random() * 1000)).toFixed(2);
-          }
-
-          // Grand Total
-          if (r) {
-            grandTotal = ( parseFloat(profDevFinal) - parseFloat(materialsFinal)  ).toFixed(2);
-          } else {
-            grandTotal = ( parseFloat(profDev) - parseFloat(materials)   ).toFixed(2);
-          }
-          
-          
-          let obj = {
-            date: "2020-09-1" + i+1,
-            school: "American School N" + i+1,
-
-            profDev: profDev,
-            profDevFinal: profDevFinal,
-
-            materials: materials,
-            materialsFinal: materialsFinal,
-
-            grandTotal: grandTotal,
-            allocation: r,
-            notes: "",
-          }
-
-          dataTest.push(obj)
-
+              if (r) {
+                profDevFinal = parseFloat( Math.floor(Math.random() * 1000) ).toFixed(2);
+              } else {
+                profDev = parseFloat( Math.floor(Math.random() * 1000) ).toFixed(2);
               }
+
+              if (r) {
+                materialsFinal = parseFloat( Math.floor(Math.random() * 1000)).toFixed(2);
+              } else {
+                materials = parseFloat( Math.floor(Math.random() * 1000)).toFixed(2);
+              }
+
+              // Grand Total
+              if (r) {
+                grandTotal = ( parseFloat(profDevFinal) - parseFloat(materialsFinal)  ).toFixed(2);
+              } else {
+                grandTotal = ( parseFloat(profDev) - parseFloat(materials)   ).toFixed(2);
+              }
+          
+          
+              let obj = {
+                date: "2020-09-1" + i+1,
+                school: "American School N" + i+1,
+
+                profDev: profDev,
+                profDevFinal: profDevFinal,
+
+                materials: materials,
+                materialsFinal: materialsFinal,
+
+                grandTotal: grandTotal,
+                allocation: r,
+                notes: "",
+              }
+
+              dataTest.push(obj)
+
+            }
 
               this.data = dataTest
               this.tempData = dataTest

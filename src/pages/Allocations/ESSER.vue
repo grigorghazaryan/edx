@@ -35,7 +35,7 @@
     
     <div class="q-pa-sm q-gutter-sm">
       <q-table
-        title="Title 3" 
+        title="ESSER" 
         :data="data" 
         :columns="columns" 
         :filter="filter"

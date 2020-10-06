@@ -259,8 +259,6 @@
               <q-td key="profDev" :props="props">
                 $ {{ props.row.profDev }}
               </q-td>
-
-
               
               <q-td key="totalInstruction" :props="props">
                 <div v-if="props.row.allocation">$ {{ props.row.totalInstructionFinal }} </div>
@@ -271,8 +269,6 @@
                 <div v-if="props.row.allocation">$  {{ props.row.familyEngagemenetFinal }} </div>
                 <div v-else> $ {{ props.row.familyEngagemenet }} </div>
               </q-td>
-
-
               
               <q-td key="allocation" :props="props">
                 <q-chip square color="orange" text-color="white" v-if="props.row.allocation != true">
@@ -561,6 +557,7 @@
             } else {
               this.data.unshift(obj);
             }
+            
             this.close()
           },
           openDeleteModal(item) {
@@ -699,7 +696,7 @@
       },
       created() {
         let dataTest = []
-        
+
         for(let i=0; i<5; i++) {
 
           let r = Math.floor(Math.random() * 10)

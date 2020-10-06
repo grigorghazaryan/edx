@@ -7,8 +7,8 @@
             <q-card>
               <q-item style="background-color: #546bfa" class="q-pa-none">
                 <q-item-section class="q-pa-md q-ml-none  text-white">
-                  <q-item-label class="text-white text-h6 text-weight-bolder">$ 45789</q-item-label>
-                  <q-item-label>Total</q-item-label>
+                  <q-item-label class="text-white text-h6 text-weight-bolder">$ {{ total }}</q-item-label>
+                  <q-item-label>Total Allocation</q-item-label>
                 </q-item-section>
                 <q-item-section side class="q-mr-md text-white">
                   <q-icon name="fas fa-dollar-sign" color="white" size="44px"></q-icon>
@@ -21,7 +21,7 @@
               <q-item style="background-color: #3a9688" class="q-pa-none">
                 <q-item-section class=" q-pa-md q-ml-none  text-white">
                   <q-item-label class="text-white text-h6 text-weight-bolder">$ 0.0</q-item-label>
-                  <q-item-label>Ratio (+/-)</q-item-label>
+                  <q-item-label>From Last Year (+/-)</q-item-label>
                 </q-item-section>
                 <q-item-section side class="q-mr-md text-white">
                   <q-icon name="fas fa-chart-bar" color="white" size="44px"></q-icon>
@@ -37,71 +37,19 @@
       <q-table
         title="Title 4" 
         :data="data" 
-        :hide-header="mode === 'grid'"
         :columns="columns" 
         :filter="filter"
         row-key="name" 
+        :loading="loading"
         binary-state-sort
       >
-        <template v-slot:body="props">
-            <q-tr :props="props">
 
-              <q-td key="dpi" :props="props">
-                {{ props.row.dpi }}
-              </q-td>
-
-              <q-td key="date" :props="props">
-                {{ props.row.date }}
-              </q-td>
-              
-              <q-td key="school" :props="props">
-                <div class="text-pre-wrap">{{ props.row.school }}</div>
-              </q-td>
-
-              <q-td key="allocation" :props="props">
-                {{ props.row.allocation }}
-              </q-td>
-              
-              <q-td key="previousYear" :props="props">
-                {{ props.row.previousYear }}
-              </q-td>
-              
-              <q-td key="difference" :props="props">
-                {{ props.row.difference }}
-              </q-td>
-              
-              <q-td key="status" :props="props">
-                <q-chip square color="orange" text-color="white" v-if="props.row.status == 'Preliminary'">
-                  {{ props.row.status }}
-                </q-chip>
-                <q-chip class="glossy" square color="teal" text-color="white" v-else>
-                  {{ props.row.status }}
-                </q-chip>
-              </q-td>
-              
-              <q-td key="actions" :props="props">
-                <q-btn 
-                  icon="edit"
-                  color="blue"
-                  @click="editItem(props.row)" 
-                  size=sm 
-                  no-caps
-                  class="q-mr-sm"
-                >
-                </q-btn>
-                <q-btn 
-                  icon="delete_forever"
-                  color="red" 
-                  @click="deleteItem(props.row)" 
-                  size=sm 
-                  no-caps
-                >
-                </q-btn>
-              </q-td>
-
-            </q-tr>
+        <!-- Loading -->
+        <template v-slot:loading>
+          <q-inner-loading showing color="primary" />
         </template>
 
+        <!-- Table Header -->
         <template v-slot:top-right="props">
 
           <q-input class="q-mr-md" outlines dense v-model="filter" placeholder="Search">
@@ -109,8 +57,8 @@
               <q-icon name="search"/>
             </template>
           </q-input>
-          <q-select class="q-mr-md" style="min-width: 200px; max-width: 200px" dense outlines clearable v-model="model" :options="options" label="Allocation" />
-          <q-select class="q-mr-md" style="min-width: 150px; max-width: 150px" dense outlines clearable v-model="modelDescending" :options="optionsDescending" label="ID Descending" />
+
+          <q-select class="q-mr-md" style="min-width: 200px; max-width: 200px" dense outlines clearable v-model="model" :options="options" label="Allocation" @input="filterAllocation"/>
 
           <q-btn square class="q-mr-md" style="background-color: #546bfa" text-color="white" icon="add" @click="show_dialog = true" no-caps>Add</q-btn>
           <q-btn
@@ -147,16 +95,17 @@
                 <q-card-section>
                   <div class="row">
 
-                    <div class="col-md-6 q-mb-sm q-pr-sm">
-                      <q-input outlined v-model="editedItem.school" label="School" />
+                    <div class="col-sm-6 col-xs-12 q-mb-sm q-pr-sm">
+                      <q-select outlined v-model="editedItem.school" :options="schools" label="Choose a school" />
                     </div>
 
                     <div class="col-md-6">
                       <q-input outlined v-model="editedItem.date">
+                        
                         <template v-slot:prepend>
                           <q-icon name="event" class="cursor-pointer">
                             <q-popup-proxy transition-show="scale" transition-hide="scale">
-                              <q-date v-model="editedItem.date" mask="YYYY-MM-DD HH:mm">
+                              <q-date v-model="editedItem.date" mask="YYYY-MM-DD">
                                 <div class="row items-center justify-end">
                                   <q-btn v-close-popup label="Close" color="primary" flat />
                                 </div>
@@ -165,39 +114,30 @@
                           </q-icon>
                         </template>
 
-                        <template v-slot:append>
-                          <q-icon name="access_time" class="cursor-pointer">
-                            <q-popup-proxy transition-show="scale" transition-hide="scale">
-                              <q-time v-model="editedItem.date" mask="YYYY-MM-DD HH:mm" format24h>
-                                <div class="row items-center justify-end">
-                                  <q-btn v-close-popup label="Close" color="primary" flat />
-                                </div>
-                              </q-time>
-                            </q-popup-proxy>
-                          </q-icon>
-                        </template>
                       </q-input>
                     </div>
 
                     <div class="col-md-6 q-pr-sm">
-                      <q-input :disable="isFinal" outlined v-model="editedItem.allocation" label="Preliminary Allocations" />
+                      <q-input :disable="editedItem.status" outlined v-model="editedItem.allocation" label="Preliminary Allocations" />
                     </div>
 
                     <div class="col-md-6">
-                      <q-input :disable="!isFinal" outlined v-model="editedItem.allocation" label="Final Allocations" />
+                      <q-input :disable="!editedItem.status" outlined v-model="editedItem.finalAllocation" label="Final Allocations" />
                     </div>
 
                     <div class="col-md-12 q-mt-md q-mb-md">
                       <div class="q-gutter-sm text-right">
-                        <q-checkbox v-model="isFinal" label="Allocation is Final" />
+                        <q-checkbox v-model="editedItem.status" label="Allocation is Final" />
                       </div>
                     </div>
 
                     <div class="col-md-12">
-                      <q-input type="textarea" outlined label="Notes" />
+                      <q-input type="textarea" v-model="editedItem.notes" outlined label="Notes" />
                     </div>
 
-                    <q-chip outline square class="q-mt-md" color="blue" text-color="white" label="Previous Year Allocations: $2792.84" />
+                    <q-chip outline square class="q-mt-md" color="blue" text-color="white">
+                      Previous Year Allocations: $ {{editedItem.previousYear}}
+                    </q-chip>
                   
                   </div>
                 </q-card-section>
@@ -208,8 +148,111 @@
 
               </q-card>
             </q-dialog>
+            
+            <q-dialog v-model="confirm" persistent>
+              <q-card>
+                <q-card-section class="row items-center">
+                  <span class="q-ml-sm">Are you sure to delete this item?</span>
+                </q-card-section>
+
+                <q-card-actions align="right">
+                  <q-btn flat label="No, thanks" color="primary" v-close-popup />
+                  <q-btn label="Yes" color="red" v-close-popup @click="deleteItem" />
+                </q-card-actions>
+              </q-card>
+            </q-dialog>
           </div>
      
+        </template>
+
+        <!-- Table Body -->
+        <template v-slot:body="props">
+            <q-tr :props="props">
+
+              <q-td key="date" :props="props">
+                {{ props.row.date }}
+              </q-td>
+              
+              <q-td key="school" :props="props">
+                <div class="text-pre-wrap">{{ props.row.school }}</div>
+              </q-td>
+
+              <q-td key="allocation" :props="props">
+                <div v-if="props.row.status">$ {{ props.row.finalAllocation }} </div>
+                <div v-else> $ {{ props.row.allocation }} </div>
+              </q-td>
+              
+              <q-td key="previousYear" :props="props">
+                $ {{ props.row.previousYear }}
+              </q-td>
+              
+              <q-td key="difference" :props="props">
+                <div :style="{ color: props.row.difference < 0 ? 'red' : 'green' }">
+                  {{props.row.difference }}
+                </div>
+              </q-td>
+
+              <q-td key="roundedEducation" :props="props">
+                $ {{ props.row.roundedEducation }}
+              </q-td>
+
+              <q-td key="healthyStudents" :props="props">
+                $ {{ props.row.healthyStudents }}
+              </q-td>
+
+              <q-td key="techPD" :props="props">
+                $ {{ props.row.techPD }}
+              </q-td>
+
+              <q-td key="teachInfrastructure" :props="props">
+                $ {{ props.row.teachInfrastructure }}
+              </q-td>
+              
+              <q-td key="status" :props="props">
+                <q-chip square color="orange" text-color="white" v-if="props.row.status != true">
+                  Preliminary
+                </q-chip>
+                <q-chip class="glossy" square color="teal" text-color="white" v-else>
+                  Final
+                </q-chip>
+              </q-td>
+              
+              <q-td key="actions" :props="props">
+                <q-btn 
+                  icon="edit"
+                  color="blue"
+                  @click="editItem(props.row)" 
+                  size=sm 
+                  no-caps
+                  class="q-mr-sm"
+                >
+                </q-btn>
+                <q-btn 
+                  icon="delete_forever"
+                  color="red" 
+                  @click="openDeleteModal(props.row)" 
+                  size=sm 
+                  no-caps
+                >
+                </q-btn>
+              </q-td>
+
+            </q-tr>
+        </template>
+
+        <!-- Pagination -->
+        <template v-slot:bottom class="justify-end">
+          <div class="q-pa-md flex flex-center">
+            <q-pagination
+              v-model="pagination.page"
+              :max="pages"
+              :max-pages="5"
+              ellipsess
+              :direction-links="true"
+              @input="changePagination"
+            >
+            </q-pagination>
+          </div>
         </template>
 
       </q-table>
@@ -244,13 +287,19 @@
     export default {
         data() {
           return {
+            confirm: false,
+            loading: false,
+            pages: 3,
+            currentPage: 1,
+            pagination: {
+              sortBy: 'name',
+              page: 1,
+              rowsPerPage: 5,
+              // rowsNumber: 5
+            },
             model: null,
             options: [
               'Preliminary', 'Final'
-            ],
-            modelDescending: null,
-            optionsDescending: [
-              'ID Ascending', 'ID Descending'
             ],
             filter: '',
             mode: 'list',
@@ -258,33 +307,26 @@
             show_dialog: false,
             editedIndex: -1,
             editedItem: {
-              dpi: "",
               date: "",
               school: "",
-              profDev: "",
-              materials: "",
-              grandTotal: "",
-              allocation: ""
+              previousYear: "",
+              difference: "",
+              roundedEducation: "",
+              healthyStudents: "",
+              techPD: "",
+              teachInfrastructure: "",
+              status: false,
+              notes: ""
             },
             defaultItem: {
-              dpi: "",
               date: "",
               school: "",
-              profDev: "",
-              materials: "",
-              grandTotal: "",
-              allocation: ""
+              previousYear: "",
+              difference: "",
+              status: false,
+              notes: ""
             },
             columns: [
-              {
-                name: "dpi",
-                required: true,
-                label: "DPI",
-                align: "left",
-                field: row => row.dpi,
-                format: val => `${val}`,
-                sortable: true
-              },
               {
                 name: "date",
                 align: "left",
@@ -321,6 +363,34 @@
                 sortable: true
               },
               {
+                name: "roundedEducation",
+                align: "left",
+                label: "Rounded Education",
+                field: "roundedEducation",
+                sortable: true
+              },
+              {
+                name: "healthyStudents",
+                align: "left",
+                label: "Healthy Students",
+                field: "healthyStudents",
+                sortable: true
+              },
+              {
+                name: "techPD",
+                align: "left",
+                label: "Tech PD",
+                field: "techPD",
+                sortable: true
+              },
+              {
+                name: "teachInfrastructure",
+                align: "left",
+                label: "Teach Infrastructure",
+                field: "teachInfrastructure",
+                sortable: true
+              },
+              {
                 name: "status",
                 align: "left",
                 label: "Status",
@@ -334,43 +404,57 @@
                 field: "actions"
               }
             ],
-            data: [
-              {
-                dpi: 101,
-                date: "21/09/2020",
-                school: "American School N1",
-                instruction: "$ 189.78",
-                allocation: "$ 10.22",
-                previousYear: "$ 200.00",
-                difference: "$ 4455.00",
-                status: "Preliminary"
-              },
-              {
-                dpi: 102,
-                date: "21/09/2020",
-                school: "American School N2",
-                instruction: "$ 174.78",
-                allocation: "$ 17.22",
-                previousYear: "$ 240.00",
-                difference: "$ 7855.00",
-                status: "Final"
-              },
-            ]
+            data: [],
+            tempData: [],
+            schools: [],
           };
         },
         methods: {
           addRow() {
-            if (this.editedIndex > -1) {
-              Object.assign(this.data[this.editedIndex], this.editedItem);
+
+            let previousYear = this.editedIndex > -1 ? this.editedItem.previousYear :  Math.floor(Math.random() * 100),
+                allocation,
+                finalAllocation,
+                difference = allocation - previousYear
+
+            if(this.editedItem.status) {
+              finalAllocation = this.editedItem.finalAllocation
+              difference = finalAllocation - previousYear
             } else {
-              this.data.push(this.editedItem);
+              allocation = this.editedItem.allocation
+              difference = allocation - previousYear
             }
+
+          
+            let obj = {
+              date: this.editedItem.date,
+              school: this.editedItem.school,
+
+              allocation: allocation,
+              finalAllocation: finalAllocation,
+
+              previousYear: previousYear,
+              difference: difference,
+              status: this.editedItem.status,
+              notes: this.editedItem.notes
+            }
+
+            if (this.editedIndex > -1) {
+              Object.assign(this.data[this.editedIndex], obj);
+            } else {
+              this.data.unshift(obj);
+            }
+            
             this.close()
           },
-          deleteItem(item) {
-            const index = this.data.indexOf(item);
-            confirm("Are you sure you want to delete this item?") &&
-              this.data.splice(index, 1);
+          openDeleteModal(item) {
+            this.confirm = true
+            this.item = item
+          },
+          deleteItem() {
+            let item = this.item
+            const index = this.data.indexOf(item)
+            this.data.splice(index, 1)
           },
           editItem(item) {
               this.editedIndex = this.data.indexOf(item);
@@ -408,9 +492,140 @@
                         icon: 'warning'
                     })
                 }
+          },
+          changePagination(val) {
+            this.currentPage = val
+            this.loading = true
+            this.pagination.page = val
+
+            setTimeout(()=> {
+
+              this.loading = false
+              let dataTest = []
+              for(let i=0; i<5; i++) {
+                let r = Math.floor(Math.random() * 10)
+                if(r % 2) r = true 
+                else r = false
+
+                let previousYear = Math.floor(Math.random() * 100),
+                    allocation,
+                    finalAllocation,
+                    difference = allocation - previousYear
+
+                if(r) {
+                  finalAllocation = Math.floor(Math.random() * 100)
+                  difference = finalAllocation - previousYear
+                } else {
+                  allocation = Math.floor(Math.random() * 100)
+                  difference = allocation - previousYear
+                }
+
+          
+                let obj = {
+                  date: "2020-09-1" + i+1,
+                  school: "American School N" + i+1,
+
+                  allocation: allocation,
+                  finalAllocation: finalAllocation,
+
+                  previousYear: previousYear,
+                  difference: difference,
+                  status: r,
+                  notes: "",
+                }
+
+                  dataTest.push(obj)
+              }
+              
+              this.data = dataTest
+              this.tempData = dataTest
+
+            }, 650)
+          },
+          filterAllocation() {
+            if(this.model) {
+              if(this.model == 'Preliminary') {
+                this.data = this.tempData.filter(a => a.status == false);
+              }else {
+                this.data = this.tempData.filter(a => a.status == true);
+              }
+            }else {
+              this.data = this.tempData
             }
+          },
       },
+      created() {
+        let dataTest = []
+        for(let i=0; i<5; i++) {
+
+          let r = Math.floor(Math.random() * 10)
+          if(r % 2) r = true 
+          else r = false
+
+          let previousYear = Math.floor(Math.random() * 100),
+              allocation,
+              finalAllocation,
+              difference = allocation - previousYear
+
+          if(r) {
+            finalAllocation = Math.floor(Math.random() * 100)
+            difference = finalAllocation - previousYear
+          } else {
+            allocation = Math.floor(Math.random() * 100)
+            difference = allocation - previousYear
+          }
+
+          
+          let obj = {
+            date: "2020-09-1" + i+1,
+            school: "American School N" + i+1,
+
+            allocation: allocation,
+            finalAllocation: finalAllocation,
+
+            previousYear: previousYear,
+            difference: difference,
+
+            roundedEducation: "",
+            healthyStudents: "",
+            techPD: "",
+            teachInfrastructure: "",
+
+            status: r,
+            notes: "",
+          }
+
+          dataTest.push(obj)
+
+        }
+        this.data = dataTest
+        this.tempData = dataTest
+
+        let schoolArr = []
+        for(let j=0; j<this.data.length; j++) {
+          schoolArr.push(this.data[j].school)
+        }
+        this.schools = schoolArr
+      },
+      computed: {
+        total() {
+          let total = 0;
+          for(let i=0; i<this.data.length; i++) {
+
+            let allocation
+            if(this.data[i].status) {
+              allocation = parseFloat( this.data[i].finalAllocation )
+            }else {
+              allocation = parseFloat( this.data[i].allocation )
+            }
+            total += allocation
+
+          }
+          return total.toFixed(2)
+        }
+      }
     }
+
 </script>
 
 <style lang="scss" scoped>

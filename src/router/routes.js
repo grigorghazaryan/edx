@@ -13,6 +13,7 @@ const routes = [
       {path: '/Allocations/Title2', component: () => import('pages/Allocations/Title2.vue')},
       {path: '/Allocations/Title3', component: () => import('pages/Allocations/Title3.vue')},
       {path: '/Allocations/Title4', component: () => import('pages/Allocations/Title4.vue')},
+      {path: '/Allocations/esser', component: () => import('pages/Allocations/ESSER.vue')},
       // ------------------------------------------------------------------------------------
       {path: '/Inventory1', component: () => import('pages/Inventory/Inventory1.vue')},
       {path: '/TeacherCosts', component: () => import('pages/TeacherCosts/TeacherCosts.vue')},
