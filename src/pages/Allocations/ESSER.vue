@@ -182,16 +182,6 @@
                 <div v-else> $ {{ props.row.allocation }} </div>
               </q-td>
               
-              <q-td key="previousYear" :props="props">
-                $ {{ props.row.previousYear }}
-              </q-td>
-              
-              <q-td key="difference" :props="props">
-                <div :style="{ color: props.row.difference < 0 ? 'red' : 'green' }">
-                  {{props.row.difference }}
-                </div>
-              </q-td>
-              
               <q-td key="status" :props="props">
                 <q-chip square color="orange" text-color="white" v-if="props.row.status != true">
                   Preliminary
@@ -328,20 +318,6 @@
                 field: "allocation",
                 sortable: true
               },
-              { 
-                name: "previousYear", 
-                align: "left",
-                label: "Previous Year", 
-                field: "previousYear",
-                sortable: true
-              },
-              {
-                name: "difference",
-                align: "left",
-                label: "Difference",
-                field: "difference",
-                sortable: true
-              },
               {
                 name: "status",
                 align: "left",
@@ -364,20 +340,14 @@
         methods: {
           addRow() {
 
-            let previousYear = this.editedIndex > -1 ? this.editedItem.previousYear :  Math.floor(Math.random() * 100),
-                allocation,
-                finalAllocation,
-                difference = allocation - previousYear
+            let allocation, finalAllocation
 
             if(this.editedItem.status) {
               finalAllocation = this.editedItem.finalAllocation
-              difference = finalAllocation - previousYear
             } else {
               allocation = this.editedItem.allocation
-              difference = allocation - previousYear
             }
 
-          
             let obj = {
               date: this.editedItem.date,
               school: this.editedItem.school,
@@ -385,8 +355,6 @@
               allocation: allocation,
               finalAllocation: finalAllocation,
 
-              previousYear: previousYear,
-              difference: difference,
               status: this.editedItem.status,
               notes: this.editedItem.notes
             }
@@ -459,17 +427,12 @@
                 if(r % 2) r = true 
                 else r = false
 
-                let previousYear = Math.floor(Math.random() * 100),
-                    allocation,
-                    finalAllocation,
-                    difference = allocation - previousYear
+                let allocation, finalAllocation
 
                 if(r) {
                   finalAllocation = Math.floor(Math.random() * 100)
-                  difference = finalAllocation - previousYear
                 } else {
                   allocation = Math.floor(Math.random() * 100)
-                  difference = allocation - previousYear
                 }
 
           
@@ -480,8 +443,6 @@
                   allocation: allocation,
                   finalAllocation: finalAllocation,
 
-                  previousYear: previousYear,
-                  difference: difference,
                   status: r,
                   notes: "",
                 }
@@ -505,55 +466,47 @@
               this.data = this.tempData
             }
           },
-      },
-      created() {
-        let dataTest = []
-        for(let i=0; i<5; i++) {
+        },
+        created() {
+            let dataTest = []
+            for(let i=0; i<5; i++) {
 
-          let r = Math.floor(Math.random() * 10)
-          if(r % 2) r = true 
-          else r = false
+            let r = Math.floor(Math.random() * 10)
+            if(r % 2) r = true 
+            else r = false
 
-          let previousYear = Math.floor(Math.random() * 100),
-              allocation,
-              finalAllocation,
-              difference = allocation - previousYear
+            let allocation, finalAllocation
 
-          if(r) {
-            finalAllocation = Math.floor(Math.random() * 100)
-            difference = finalAllocation - previousYear
-          } else {
-            allocation = Math.floor(Math.random() * 100)
-            difference = allocation - previousYear
-          }
+            if(r) {
+                finalAllocation = Math.floor(Math.random() * 100)
+            } else {
+                allocation = Math.floor(Math.random() * 100)
+            }
+            
+            let obj = {
+                date: "2020-09-1" + i+1,
+                school: "American School N" + i+1,
 
-          
-          let obj = {
-            date: "2020-09-1" + i+1,
-            school: "American School N" + i+1,
+                allocation: allocation,
+                finalAllocation: finalAllocation,
 
-            allocation: allocation,
-            finalAllocation: finalAllocation,
+                status: r,
+                notes: "",
+            }
 
-            previousYear: previousYear,
-            difference: difference,
-            status: r,
-            notes: "",
-          }
+            dataTest.push(obj)
 
-          dataTest.push(obj)
+            }
+            this.data = dataTest
+            this.tempData = dataTest
 
-        }
-        this.data = dataTest
-        this.tempData = dataTest
-
-        let schoolArr = []
-        for(let j=0; j<this.data.length; j++) {
-          schoolArr.push(this.data[j].school)
-        }
-        this.schools = schoolArr
-      },
-      computed: {
+            let schoolArr = []
+            for(let j=0; j<this.data.length; j++) {
+            schoolArr.push(this.data[j].school)
+            }
+            this.schools = schoolArr
+        },
+        computed: {
         total() {
           let total = 0;
           for(let i=0; i<this.data.length; i++) {

@@ -413,16 +413,30 @@
           addRow() {
 
             let previousYear = this.editedIndex > -1 ? this.editedItem.previousYear :  Math.floor(Math.random() * 100),
-                allocation,
+                 allocation,
                 finalAllocation,
+                roundedEducation,
+                healthyStudents,
+                techPD,
+                teachInfrastructure,
                 difference = allocation - previousYear
 
             if(this.editedItem.status) {
               finalAllocation = this.editedItem.finalAllocation
               difference = finalAllocation - previousYear
+
+              roundedEducation = finalAllocation * 20 / 100
+              healthyStudents = finalAllocation * 20 / 100
+              techPD = finalAllocation * 51 / 100
+              teachInfrastructure = finalAllocation * 9 / 100
             } else {
               allocation = this.editedItem.allocation
               difference = allocation - previousYear
+
+              roundedEducation = allocation * 20 / 100
+              healthyStudents = allocation * 20 / 100
+              techPD = allocation * 51 / 100
+              teachInfrastructure = allocation * 9 / 100
             }
 
           
@@ -435,6 +449,12 @@
 
               previousYear: previousYear,
               difference: difference,
+              
+              roundedEducation: roundedEducation,
+              healthyStudents: healthyStudents,
+              techPD: techPD,
+              teachInfrastructure: teachInfrastructure,
+
               status: this.editedItem.status,
               notes: this.editedItem.notes
             }
@@ -510,14 +530,28 @@
                 let previousYear = Math.floor(Math.random() * 100),
                     allocation,
                     finalAllocation,
+                    roundedEducation,
+                    healthyStudents,
+                    techPD,
+                    teachInfrastructure,
                     difference = allocation - previousYear
 
                 if(r) {
                   finalAllocation = Math.floor(Math.random() * 100)
                   difference = finalAllocation - previousYear
+
+                  roundedEducation = finalAllocation * 20 / 100
+                  healthyStudents = finalAllocation * 20 / 100
+                  techPD = finalAllocation * 51 / 100
+                  teachInfrastructure = finalAllocation * 9 / 100
                 } else {
                   allocation = Math.floor(Math.random() * 100)
                   difference = allocation - previousYear
+
+                  roundedEducation = allocation * 20 / 100
+                  healthyStudents = allocation * 20 / 100
+                  techPD = allocation * 51 / 100
+                  teachInfrastructure = allocation * 9 / 100
                 }
 
           
@@ -530,6 +564,12 @@
 
                   previousYear: previousYear,
                   difference: difference,
+
+                  roundedEducation: roundedEducation,
+                  healthyStudents: healthyStudents,
+                  techPD: techPD,
+                  teachInfrastructure: teachInfrastructure,
+
                   status: r,
                   notes: "",
                 }
@@ -565,14 +605,28 @@
           let previousYear = Math.floor(Math.random() * 100),
               allocation,
               finalAllocation,
+              roundedEducation,
+              healthyStudents,
+              techPD,
+              teachInfrastructure,
               difference = allocation - previousYear
 
           if(r) {
             finalAllocation = Math.floor(Math.random() * 100)
             difference = finalAllocation - previousYear
+
+            roundedEducation = finalAllocation * 20 / 100
+            healthyStudents = finalAllocation * 20 / 100
+            techPD = finalAllocation * 51 / 100
+            teachInfrastructure = finalAllocation * 9 / 100
           } else {
             allocation = Math.floor(Math.random() * 100)
             difference = allocation - previousYear
+
+            roundedEducation = allocation * 20 / 100
+            healthyStudents = allocation * 20 / 100
+            techPD = allocation * 51 / 100
+            teachInfrastructure = allocation * 9 / 100
           }
 
           
@@ -586,10 +640,10 @@
             previousYear: previousYear,
             difference: difference,
 
-            roundedEducation: "",
-            healthyStudents: "",
-            techPD: "",
-            teachInfrastructure: "",
+            roundedEducation: roundedEducation,
+            healthyStudents: healthyStudents,
+            techPD: techPD,
+            teachInfrastructure: teachInfrastructure,
 
             status: r,
             notes: "",
