@@ -4,6 +4,7 @@
     <q-card class="bg-transparent no-shadow no-border">
       <q-card-section class="q-pa-none">
         <div class="row q-col-gutter-sm ">
+          
           <div class="col-md-3 col-sm-12 col-xs-12">
             <q-item style="background-color: #5064b5" class="q-pa-none q-ml-xs">
               <q-item-section side style="background-color: #3e51b5" class=" q-pa-lg q-mr-none text-white">
@@ -15,6 +16,7 @@
               </q-item-section>
             </q-item>
           </div>
+
           <div class="col-md-3 col-sm-12 col-xs-12">
             <q-item style="background-color: #f37169" class="q-pa-none q-ml-xs ">
               <q-item-section side style="background-color: #f34636" class=" q-pa-lg q-mr-none text-white">
@@ -26,6 +28,7 @@
               </q-item-section>
             </q-item>
           </div>
+
           <div class="col-md-3 col-sm-12 col-xs-12">
             <q-item style="background-color: #ea6a7f" class="q-pa-none q-ml-xs">
               <q-item-section side style="background-color: #ea4b64" class=" q-pa-lg q-mr-none text-white">
@@ -37,6 +40,7 @@
               </q-item-section>
             </q-item>
           </div>
+
           <div class="col-md-3 col-sm-12 col-xs-12">
             <q-item style="background-color: #a270b1" class="q-pa-none q-ml-xs q-mr-xs">
               <q-item-section side style="background-color: #9f52b1" class=" q-pa-lg q-mr-none text-white">
@@ -48,6 +52,7 @@
               </q-item-section>
             </q-item>
           </div>
+
         </div>
       </q-card-section>
     </q-card>

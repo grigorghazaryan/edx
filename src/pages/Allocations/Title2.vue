@@ -1,95 +1,95 @@
 <template>
   <q-page class="q-pa-sm">    
-    <q-card class="bg-transparent no-shadow no-border q-mb-md q-mt-md">
+
+    <div class="q-pa-md q-gutter-sm">
+      <q-breadcrumbs>
+        <q-breadcrumbs-el icon="dashboard" label="Dashboard" to="/" />
+        <q-breadcrumbs-el label="Allocations"/>
+        <q-breadcrumbs-el label="Title 2"/>
+      </q-breadcrumbs>
+    </div>
+
+    <q-card class="bg-transparent no-shadow no-border">
       <q-card-section class="q-pa-none">
         <div class="row q-col-gutter-sm ">
+          
           <div class="col-md-2 col-sm-12 col-xs-12">
-            <q-card>
-              <q-item style="background-color: #3a9688" class="q-pa-none">
-                <q-item-section class=" q-pa-md q-ml-none  text-white">
-                  <q-item-label class="text-white text-h6 text-weight-bolder">$ {{ pd }}</q-item-label>
-                  <q-item-label>PD</q-item-label>
-                </q-item-section>
-                <q-item-section side class="q-mr-md text-white">
-                  <q-icon name="fas fa-chart-bar" color="white" size="44px"></q-icon>
-                </q-item-section>
-              </q-item>
-            </q-card>
-          </div>
-          <div class="col-md-2 col-sm-12 col-xs-12">
-            <q-card>
-              <q-item style="background-color: #7cb342" class="q-pa-none ">
-                <q-item-section class=" q-pa-md q-ml-none  text-white">
-                  <q-item-label class="text-white text-h6 text-weight-bolder">$ {{ materials }}</q-item-label>
-                  <q-item-label>Materials</q-item-label>
-                </q-item-section>
-                <q-item-section side class="q-mr-md text-white">
-                  <q-icon name="fas fa-chart-line" color="white" size="44px"></q-icon>
-                </q-item-section>
-              </q-item>
-            </q-card>
-          </div>
-          <div class="col-md-2 col-sm-12 col-xs-12">
-            <q-card>
-              <q-item style="background-color: #f88c2b" class="q-pa-none">
-                <q-item-section class=" q-pa-md q-ml-none  text-white">
-                  <q-item-label class="text-white text-h6 text-weight-bolder">$ {{ grandTotal }}</q-item-label>
-                  <q-item-label>Grand total</q-item-label>
-                </q-item-section>
-                <q-item-section side class="q-mr-md text-white">
-                  <q-icon name="person" color="white" size="44px"></q-icon>
-                </q-item-section>
-              </q-item>
-            </q-card>
+            <q-item style="background-color: #fff" class="q-pa-none q-ml-xs">
+              <q-item-section side style="background-color: #fff" class=" q-pa-lg q-mr-none text-white">
+                <q-icon name="groups" color="light-blue" size="24px"></q-icon>
+              </q-item-section>
+              <q-item-section class="q-ml-none">
+                <q-item-label class="text-grey-7">PD</q-item-label>
+                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{ pd }}</q-item-label>
+              </q-item-section>
+            </q-item>
           </div>
 
           <div class="col-md-2 col-sm-12 col-xs-12">
-            <q-card>
-              <q-item style="background-color: #f88c2b" class="q-pa-none">
-                <q-item-section class=" q-pa-md q-ml-none  text-white">
-                  <q-item-label class="text-white text-h6 text-weight-bolder">% 9.04</q-item-label>
-                  <q-item-label>Total PD (+/-)</q-item-label>
-                </q-item-section>
-                <q-item-section side class="q-mr-md text-white">
-                  <q-icon name="person" color="white" size="44px"></q-icon>
-                </q-item-section>
-              </q-item>
-            </q-card>
+            <q-item style="background-color: #fff" class="q-pa-none q-ml-xs">
+              <q-item-section side style="background-color: #fff" class=" q-pa-lg q-mr-none text-white">
+                <q-icon name="menu_book" color="pink" size="24px"></q-icon>
+              </q-item-section>
+              <q-item-section class="q-ml-none">
+                <q-item-label class="text-grey-7">Materials</q-item-label>
+                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{ materials }}</q-item-label>
+              </q-item-section>
+            </q-item>
           </div>
 
           <div class="col-md-2 col-sm-12 col-xs-12">
-            <q-card>
-              <q-item style="background-color: #f88c2b" class="q-pa-none">
-                <q-item-section class=" q-pa-md q-ml-none  text-white">
-                  <q-item-label class="text-white text-h6 text-weight-bolder">% 8.42</q-item-label>
-                  <q-item-label>Materials (+/-)</q-item-label>
-                </q-item-section>
-                <q-item-section side class="q-mr-md text-white">
-                  <q-icon name="person" color="white" size="44px"></q-icon>
-                </q-item-section>
-              </q-item>
-            </q-card>
+            <q-item style="background-color: #fff" class="q-pa-none q-ml-xs">
+              <q-item-section side style="background-color: #fff" class=" q-pa-lg q-mr-none text-white">
+                <q-icon name="local_atm" color="green" size="24px"></q-icon>
+              </q-item-section>
+              <q-item-section class="q-ml-none">
+                <q-item-label class="text-grey-7">Grand Total</q-item-label>
+                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{ grandTotal }}</q-item-label>
+              </q-item-section>
+            </q-item>
           </div>
 
           <div class="col-md-2 col-sm-12 col-xs-12">
-            <q-card>
-              <q-item style="background-color: #9c27b0" class="q-pa-none">
-                <q-item-section class=" q-pa-md q-ml-none  text-white">
-                  <q-item-label class="text-white text-h6 text-weight-bolder">% 8.42</q-item-label>
-                  <q-item-label>From Last Year (+/-)</q-item-label>
-                </q-item-section>
-                <q-item-section side class="q-mr-md text-white">
-                  <q-icon name="person" color="white" size="44px"></q-icon>
-                </q-item-section>
-              </q-item>
-            </q-card>
+            <q-item style="background-color: #fff" class="q-pa-none q-ml-xs">
+              <q-item-section side style="background-color: #fff" class=" q-pa-lg q-mr-none text-white">
+                <q-icon name="search" color="pink" size="24px"></q-icon>
+              </q-item-section>
+              <q-item-section class="q-ml-none">
+                <q-item-label class="text-grey-7">Total PD (+/-)</q-item-label>
+                <q-item-label class="text-dark text-h6 text-weight-bolder">% 9.04</q-item-label>
+              </q-item-section>
+            </q-item>
+          </div>
+
+          <div class="col-md-2 col-sm-12 col-xs-12">
+            <q-item style="background-color: #fff" class="q-pa-none q-ml-xs">
+              <q-item-section side style="background-color: #fff" class=" q-pa-lg q-mr-none text-white">
+                <q-icon name="timeline" color="purple" size="24px"></q-icon>
+              </q-item-section>
+              <q-item-section class="q-ml-none">
+                <q-item-label class="text-grey-7">Last Year (+/-)</q-item-label>
+                <q-item-label class="text-dark text-h6 text-weight-bolder">% 9.42</q-item-label>
+              </q-item-section>
+            </q-item>
+          </div>
+
+          <div class="col-md-2 col-sm-12 col-xs-12">
+            <q-item style="background-color: #fff" class="q-pa-none q-ml-xs">
+              <q-item-section side style="background-color: #fff" class=" q-pa-lg q-mr-none text-white">
+                <q-icon name="timeline" color="orange" size="24px"></q-icon>
+              </q-item-section>
+              <q-item-section class="q-ml-none">
+                <q-item-label class="text-grey-7">From Last Year (+/-)</q-item-label>
+                <q-item-label class="text-dark text-h6 text-weight-bolder">% 8.42</q-item-label>
+              </q-item-section>
+            </q-item>
           </div>
 
         </div>
       </q-card-section>
     </q-card>
     
-    <div class="q-pa-sm q-gutter-sm">
+    <div class="q-pa-sm q-mt-sm q-gutter-sm">
       <q-table
         title="Title 2" 
         :data="data"
@@ -699,11 +699,6 @@
 </script>
 
 <style lang="scss" scoped>
-
-// Refactor needed
-.q-item__section--side {
-  display: none
-}
 
 .q-pr-sm {
   @media (max-width: 599px) {
