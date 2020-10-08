@@ -107,6 +107,8 @@
         <!-- Table Header -->
         <template v-slot:top-right="props">
 
+          <q-select class="q-mr-md" style="min-width: 200px; max-width: 200px" dense outlines clearable v-model="schoolYear" :options="schoolYears" label="School year" @input="filterAllocation"/>
+
           <q-input class="q-mr-md" outlines dense v-model="filter" placeholder="Search">
             <template v-slot:append>
               <q-icon name="search"/>
@@ -265,10 +267,10 @@
               </q-td>
               
               <q-td key="allocation" :props="props">
-                <q-chip square color="orange" text-color="white" v-if="props.row.allocation != true">
+                <q-chip square class="edx-q-chip-button" text-color="orange" v-if="props.row.allocation != true">
                   Preliminary
                 </q-chip>
-                <q-chip class="glossy" square color="teal" text-color="white" v-else>
+                <q-chip square class="edx-q-chip-button" text-color="green" v-else>
                   Final
                 </q-chip>
               </q-td>
@@ -361,6 +363,12 @@
           model: null,
           options: [
             'Preliminary', 'Final'
+          ],
+          schoolYear: null,
+          schoolYears: [
+            'School Year 20-21',
+            'School Year 19-20',
+            'School Year 18-19'
           ],
           isFinal: false,
           filter: '',

@@ -11,6 +11,7 @@ export default {
 </script>
 
 <style lang="scss">
+
   .q-router-link--exact-active {
     .q-item__section {
       .q-item__label, i {
@@ -18,4 +19,12 @@ export default {
       }
     }
   }
+
+  // Global colors
+  .edx-q-chip-button {
+    background-color: #e8f4ff;
+    border-color: #d1e9ff;
+    border: 1px solid #d1e9ff;
+  }
+
 </style>

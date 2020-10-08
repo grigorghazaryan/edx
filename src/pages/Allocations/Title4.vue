@@ -60,6 +60,8 @@
         <!-- Table Header -->
         <template v-slot:top-right="props">
 
+          <q-select class="q-mr-md" style="min-width: 200px; max-width: 200px" dense outlines clearable v-model="schoolYear" :options="schoolYears" label="School year" @input="filterAllocation"/>
+
           <q-input class="q-mr-md" outlines dense v-model="filter" placeholder="Search">
             <template v-slot:append>
               <q-icon name="search"/>
@@ -217,13 +219,15 @@
               </q-td>
               
               <q-td key="status" :props="props">
-                <q-chip square color="orange" text-color="white" v-if="props.row.status != true">
+                <q-chip  square class="edx-q-chip-button" text-color="orange" v-if="props.row.status != true">
                   Preliminary
                 </q-chip>
-                <q-chip class="glossy" square color="teal" text-color="white" v-else>
+                <q-chip square class="edx-q-chip-button" text-color="green" v-else>
                   Final
                 </q-chip>
               </q-td>
+
+              
               
               <q-td key="actions" :props="props">
                 <q-btn 
@@ -308,6 +312,12 @@
             model: null,
             options: [
               'Preliminary', 'Final'
+            ],
+            schoolYear: null,
+            schoolYears: [
+              'School Year 20-21',
+              'School Year 19-20',
+              'School Year 18-19'
             ],
             filter: '',
             mode: 'list',
@@ -602,90 +612,90 @@
             }
           },
       },
-      created() {
-        let dataTest = []
-        for(let i=0; i<5; i++) {
+        created() {
+          let dataTest = []
+          for(let i=0; i<5; i++) {
 
-          let r = Math.floor(Math.random() * 10)
-          if(r % 2) r = true 
-          else r = false
+            let r = Math.floor(Math.random() * 10)
+            if(r % 2) r = true 
+            else r = false
 
-          let previousYear = Math.floor(Math.random() * 100),
-              allocation,
-              finalAllocation,
-              roundedEducation,
-              healthyStudents,
-              techPD,
-              teachInfrastructure,
+            let previousYear = Math.floor(Math.random() * 100),
+                allocation,
+                finalAllocation,
+                roundedEducation,
+                healthyStudents,
+                techPD,
+                teachInfrastructure,
+                difference = allocation - previousYear
+
+            if(r) {
+              finalAllocation = Math.floor(Math.random() * 100)
+              difference = finalAllocation - previousYear
+
+              roundedEducation = finalAllocation * 20 / 100
+              healthyStudents = finalAllocation * 20 / 100
+              techPD = finalAllocation * 51 / 100
+              teachInfrastructure = finalAllocation * 9 / 100
+            } else {
+              allocation = Math.floor(Math.random() * 100)
               difference = allocation - previousYear
 
-          if(r) {
-            finalAllocation = Math.floor(Math.random() * 100)
-            difference = finalAllocation - previousYear
-
-            roundedEducation = finalAllocation * 20 / 100
-            healthyStudents = finalAllocation * 20 / 100
-            techPD = finalAllocation * 51 / 100
-            teachInfrastructure = finalAllocation * 9 / 100
-          } else {
-            allocation = Math.floor(Math.random() * 100)
-            difference = allocation - previousYear
-
-            roundedEducation = allocation * 20 / 100
-            healthyStudents = allocation * 20 / 100
-            techPD = allocation * 51 / 100
-            teachInfrastructure = allocation * 9 / 100
-          }
-
-          
-          let obj = {
-            date: "2020-09-1" + i+1,
-            school: "American School N" + i+1,
-
-            allocation: allocation,
-            finalAllocation: finalAllocation,
-
-            previousYear: previousYear,
-            difference: difference,
-
-            roundedEducation: roundedEducation,
-            healthyStudents: healthyStudents,
-            techPD: techPD,
-            teachInfrastructure: teachInfrastructure,
-
-            status: r,
-            notes: "",
-          }
-
-          dataTest.push(obj)
-
-        }
-        this.data = dataTest
-        this.tempData = dataTest
-
-        let schoolArr = []
-        for(let j=0; j<this.data.length; j++) {
-          schoolArr.push(this.data[j].school)
-        }
-        this.schools = schoolArr
-      },
-      computed: {
-        total() {
-          let total = 0;
-          for(let i=0; i<this.data.length; i++) {
-
-            let allocation
-            if(this.data[i].status) {
-              allocation = parseFloat( this.data[i].finalAllocation )
-            }else {
-              allocation = parseFloat( this.data[i].allocation )
+              roundedEducation = allocation * 20 / 100
+              healthyStudents = allocation * 20 / 100
+              techPD = allocation * 51 / 100
+              teachInfrastructure = allocation * 9 / 100
             }
-            total += allocation
+
+            
+            let obj = {
+              date: "2020-09-1" + i+1,
+              school: "American School N" + i+1,
+
+              allocation: allocation,
+              finalAllocation: finalAllocation,
+
+              previousYear: previousYear,
+              difference: difference,
+
+              roundedEducation: roundedEducation,
+              healthyStudents: healthyStudents,
+              techPD: techPD,
+              teachInfrastructure: teachInfrastructure,
+
+              status: r,
+              notes: "",
+            }
+
+            dataTest.push(obj)
 
           }
-          return total.toFixed(2)
+          this.data = dataTest
+          this.tempData = dataTest
+
+          let schoolArr = []
+          for(let j=0; j<this.data.length; j++) {
+            schoolArr.push(this.data[j].school)
+          }
+          this.schools = schoolArr
+        },
+        computed: {
+          total() {
+            let total = 0;
+            for(let i=0; i<this.data.length; i++) {
+
+              let allocation
+              if(this.data[i].status) {
+                allocation = parseFloat( this.data[i].finalAllocation )
+              }else {
+                allocation = parseFloat( this.data[i].allocation )
+              }
+              total += allocation
+
+            }
+            return total.toFixed(2)
+          }
         }
-      }
     }
 
 </script>

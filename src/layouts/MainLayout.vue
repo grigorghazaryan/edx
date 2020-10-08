@@ -150,12 +150,12 @@
           label="Teacher Costs"
         >
           <q-list class="bg-sidebar-opened">
-            <q-item to="/TeacherCosts" class="q-pl-lg" active-class="q-item-no-link-highlighting">
+            <q-item to="/TeacherCosts/BudgetEstimates" class="q-pl-lg" active-class="q-item-no-link-highlighting">
               <q-item-section avatar>
                 <q-icon name="school"/>
               </q-item-section>
               <q-item-section>
-                <q-item-label>Teacher Costs</q-item-label>
+                <q-item-label>Budget Estimates</q-item-label>
               </q-item-section>
             </q-item>
           </q-list>

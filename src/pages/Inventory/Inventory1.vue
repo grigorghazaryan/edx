@@ -21,6 +21,7 @@
       </template>
 
       <template v-slot:body="props">
+
         <q-tr :props="props">
           <q-td auto-width>
             <q-btn size="sm" color="purple" round dense @click="props.expand = !props.expand" :icon="props.expand ? 'remove' : 'add'" />
@@ -33,27 +34,11 @@
             {{ col.value }}
           </q-td>
         </q-tr>
+
         <q-tr v-show="props.expand" :props="props">
           <q-td colspan="100%">
-            <div class="text-left">This is expand slot for row above: {{ props.row.name }}.</div>
-            <p>
-              Lorem, ipsum. Lorem, ipsum. Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Lorem, ipsum. Lorem, ipsum. Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Lorem, ipsum. Lorem, ipsum. Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Lorem, ipsum. Lorem, ipsum. Lorem ipsum dolor sit amet consectetur adipisicing elit.
-            </p>
-            <p>
-              Lorem, ipsum. Lorem, ipsum. Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Lorem, ipsum. Lorem, ipsum. Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Lorem, ipsum. Lorem, ipsum. Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Lorem, ipsum. Lorem, ipsum. Lorem ipsum dolor sit amet consectetur adipisicing elit.
-            </p>
-            <p>
-              Lorem, ipsum. Lorem, ipsum. Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Lorem, ipsum. Lorem, ipsum. Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Lorem, ipsum. Lorem, ipsum. Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Lorem, ipsum. Lorem, ipsum. Lorem ipsum dolor sit amet consectetur adipisicing elit.
-            </p>
+           4444
+           
           </q-td>
         </q-tr>
       </template>

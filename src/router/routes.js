@@ -16,7 +16,7 @@ const routes = [
       {path: '/Allocations/esser', component: () => import('pages/Allocations/ESSER.vue')},
       // ------------------------------------------------------------------------------------
       {path: '/Inventory1', component: () => import('pages/Inventory/Inventory1.vue')},
-      {path: '/TeacherCosts', component: () => import('pages/TeacherCosts/TeacherCosts.vue')},
+      {path: '/TeacherCosts/BudgetEstimates', component: () => import('pages/TeacherCosts/BudgetEstimates.vue')},
       {path: '/Expenses', component: () => import('pages/Expenses/Expenses.vue')},
       {path: '/Budget', component: () => import('pages/Budget/Budget.vue')},
       {path: '/Budget', component: () => import('pages/Budget/Budget.vue')},
