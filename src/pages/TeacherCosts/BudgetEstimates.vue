@@ -76,10 +76,10 @@
 
             <q-table
               :data="data" 
-              :columns="columns" 
-              row-key="name" 
+              :columns="columns"
               :loading="loading"
               class="no-shadow"
+              row-key="teacher"
             >
 
               <!-- Loading -->
@@ -123,17 +123,17 @@
                   <q-dialog v-model="show_dialog" >
                     <q-card>
                       <q-card-section>
-                        <div class="text-h6">Create</div>
+                        <div class="text-h6">Add Teacher</div>
                       </q-card-section>
 
                       <q-card-section>
                         <div class="row">
 
-                          <div class="col-sm-6 col-xs-12 q-mb-sm q-pr-sm">
-                            <q-select outlined v-model="editedItem.school" :options="schools" label="Choose a school" />
+                          <div class="col-md-6 q-pr-sm q-pb-md">
+                            <q-input outlined v-model="editedItem.employee" label="Employee" />
                           </div>
 
-                          <div class="col-md-6">
+                          <div class="col-md-6 q-pb-md">
                             <q-input outlined v-model="editedItem.date">
                               
                               <template v-slot:prepend>
@@ -151,27 +151,17 @@
                             </q-input>
                           </div>
 
-                          <div class="col-md-6 q-pr-sm">
-                            <q-input :disable="editedItem.status" outlined v-model="editedItem.allocation" label="Preliminary Allocations" />
+                          <div class="col-md-6 q-pr-sm q-pb-md">
+                            <q-input outlined v-model="editedItem.firstName" label="First Name" />
                           </div>
 
-                          <div class="col-md-6">
-                            <q-input :disable="!editedItem.status" outlined v-model="editedItem.finalAllocation" label="Final Allocations" />
-                          </div>
-
-                          <div class="col-md-12 q-mt-md q-mb-md">
-                            <div class="q-gutter-sm text-right">
-                              <q-checkbox v-model="editedItem.status" label="Allocation is Final" />
-                            </div>
+                          <div class="col-md-6 q-pr-sm q-pb-md">
+                            <q-input outlined v-model="editedItem.lastName" label="Last Name" />
                           </div>
 
                           <div class="col-md-12">
                             <q-input type="textarea" v-model="editedItem.notes" outlined label="Notes" />
                           </div>
-
-                          <q-chip outline square class="q-mt-md" color="blue" text-color="white">
-                            Previous Year Allocations: $ {{editedItem.previousYear}}
-                          </q-chip>
                         
                         </div>
                       </q-card-section>
@@ -205,8 +195,10 @@
                   <q-tr :props="props">
 
                     <q-td auto-width>
-                      <q-btn size="sm" round 
-                        @click="props.expand = !props.expand" :icon="props.expand ? 'remove' : 'add'">
+                      <q-btn size="sm" flat
+                        color="black"
+                        @click="props.expand = !props.expand" 
+                        :icon="props.expand ? 'keyboard_arrow_down' : 'keyboard_arrow_right'">
                       </q-btn>
                     </q-td>
 
@@ -215,31 +207,46 @@
                     </q-td>
                     
                     <q-td key="title" :props="props">
-                      <div>{{ props.row.title }}</div>
+                        <q-select class="q-mr-md" outlined dense  v-model="props.row.title" :options="titleSelect"/>
                     </q-td>
 
                     <q-td key="benefits" :props="props">
-                      <div>$ {{ props.row.benefits }} </div>
+                      <q-toggle v-model="props.row.benefits" color="blue" />
                     </q-td>
                     
                     <q-td key="workMonth" :props="props">
                       <div>{{ props.row.workMonth }}</div>
+                      <q-popup-edit v-model="props.row.workMonth" title="Update Work Month" buttons>
+                        <q-input type="number" v-model="props.row.workMonth" dense autofocus />
+                      </q-popup-edit>
                     </q-td>
 
                     <q-td key="allocation" :props="props">
                       <div>{{ props.row.allocation }} %</div>
+                      <q-popup-edit v-model="props.row.allocation" title="Update allocation" buttons>
+                        <q-input type="number" v-model="props.row.allocation" dense autofocus />
+                      </q-popup-edit>
                     </q-td>
 
                     <q-td key="increase" :props="props">
                       <div>{{ props.row.increase }} %</div>
+                      <q-popup-edit v-model="props.row.increase" title="Update increase" buttons>
+                        <q-input type="number" v-model="props.row.increase" dense autofocus />
+                      </q-popup-edit>
                     </q-td>
 
                     <q-td key="currentSalary" :props="props">
                       <div>$ {{ props.row.currentSalary }}</div>
+                      <q-popup-edit v-model="props.row.currentSalary" title="Update Current Salary" buttons>
+                        <q-input type="number" v-model="props.row.currentSalary" dense autofocus />
+                      </q-popup-edit>
                     </q-td>
 
                     <q-td key="fringe" :props="props">
                       <div>$ {{ props.row.fringe }}</div>
+                      <q-popup-edit v-model="props.row.fringe" title="Update Fringe" buttons>
+                        <q-input type="number" v-model="props.row.fringe" dense autofocus />
+                      </q-popup-edit>
                     </q-td>
 
                     <q-td key="semiMonthly" :props="props">
@@ -251,15 +258,6 @@
                     </q-td>
                     
                     <q-td key="actions" :props="props">
-                      <q-btn 
-                        icon="edit"
-                        color="blue"
-                        @click="editItem(props.row)" 
-                        size=sm 
-                        no-caps
-                        class="q-mr-sm"
-                      >
-                      </q-btn>
                       <q-btn 
                         icon="delete_forever"
                         color="red" 
@@ -273,8 +271,65 @@
                   </q-tr>
 
                   <q-tr v-show="props.expand" :props="props">
-                    <q-td colspan="100%">
-                      <div class="text-left">4444.</div>
+                    <q-td colspan="100%" class="q-td--no-hover">
+                      <div class="q-mt-md">
+                        <div class="row">
+
+                          <div class="col-9">
+                            <div class="text-subtitle2">Monthly Breakdown</div>
+                            <q-table
+                              class="q-mt-md q-mb-md no-shadow border"
+                              :data="teacherSubData"
+                              :columns="teacherSubColumns"
+                              row-key="id"
+                              hide-bottom
+                            >
+                              <template v-slot:body="props">
+                                <q-tr :props="props">
+                                  <q-td key="workMonths" :props="props">
+                                    {{ props.row.workMonths }}
+                                  </q-td>
+                                  <q-td key="payPeriod" :props="props">
+                                    {{ props.row.payPeriod }}
+                                  </q-td>
+                                  <q-td key="charge" :props="props">
+                                    {{ props.row.charge }}
+                                  </q-td>
+                                  <q-td key="gross" :props="props">
+                                    {{ props.row.gross }}
+                                  </q-td>
+                                  <q-td key="totalAdmin" :props="props">
+                                    {{ props.row.totalAdmin }}
+                                  </q-td>
+                                  <q-td key="hourlyRate" :props="props">
+                                    {{ props.row.hourlyRate }}
+                                  </q-td>
+                                  <q-td key="notes" :props="props">
+                                    {{ props.row.notes }}
+                                    <q-popup-edit v-model="props.row.notes" title="Notes" buttons>
+                                      <q-input type="textarea" v-model="props.row.notes" dense autofocus />
+                                    </q-popup-edit>
+                                  </q-td>
+                                </q-tr>
+                              </template>
+
+                            </q-table>
+                          </div>
+
+                          <div class="col-4">
+                            <div class="text-subtitle2">Salary History</div>
+                            <q-table
+                              class="q-mt-md q-mb-md no-shadow border" 
+                              hide-bottom
+                              :data="salaryHistoryData"
+                              :columns="salaryHistoryColumns"
+                              row-key="year"
+                              separator="cell"
+                            />
+                          </div>
+                        </div>
+
+                      </div> 
                     </q-td>
                   </q-tr>
 
@@ -286,7 +341,7 @@
                   <q-pagination
                     v-model="pagination.page"
                     :max="pages"
-                    :max-pages="5"
+                    :max-pages="6"
                     ellipsess
                     :direction-links="true"
                     @input="changePagination"
@@ -299,9 +354,286 @@
             
           </q-tab-panel>
 
-          <q-tab-panel name="Hourly">
-            <div class="text-h6">Hourly</div>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
+          <q-tab-panel name="Hourly" class="q-p-sm">
+
+            <q-table
+              :data="hourlyData" 
+              :columns="hourlyColumns"
+              :loading="loading"
+              class="no-shadow"
+              row-key="teacher"
+            >
+
+              <!-- Loading -->
+              <template v-slot:loading>
+                <q-inner-loading showing color="primary" />
+              </template>
+
+              <!-- Table Header -->
+              <template v-slot:top-right="props">
+
+                <q-select class="q-mr-md" style="min-width: 200px; max-width: 200px" dense outlines clearable v-model="schoolYear" :options="schoolYears" label="School year"/>
+
+                <q-select class="q-mr-md" style="min-width: 200px; max-width: 200px" dense outlines clearable v-model="selectedSchool" :options="schools" label="Schools"/>
+
+                <q-btn square class="q-mr-md" style="background-color: #546bfa" text-color="white" icon="add" @click="show_dialog = true" no-caps>Assign Teacher</q-btn>
+                <q-btn
+                  icon-right="archive"
+                  label="Export to Excel"
+                  color="teal" 
+                  text-color="white"
+                  no-caps
+                  @click="exportTable"
+                />
+
+                <q-btn
+                  flat
+                  round
+                  dense
+                  :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+                  @click="props.toggleFullscreen"
+                  v-if="mode === 'list'" class="q-px-sm"
+                >
+                  <q-tooltip
+                    :disable="$q.platform.is.mobile"
+                    v-close-popup
+                  >{{props.inFullscreen ? 'Exit Fullscreen' : 'Toggle Fullscreen'}}
+                  </q-tooltip>
+                </q-btn>
+
+                <div class="q-pa-sm q-gutter-sm">
+                  <q-dialog v-model="show_dialog" >
+                    <q-card>
+                      <q-card-section>
+                        <div class="text-h6">Add Teacher</div>
+                      </q-card-section>
+
+                      <q-card-section>
+                        <div class="row">
+
+                          <div class="col-md-6 q-pr-sm q-pb-md">
+                            <q-input outlined v-model="editedItem.employee" label="Employee" />
+                          </div>
+
+                          <div class="col-md-6 q-pb-md">
+                            <q-input outlined v-model="editedItem.date">
+                              
+                              <template v-slot:prepend>
+                                <q-icon name="event" class="cursor-pointer">
+                                  <q-popup-proxy transition-show="scale" transition-hide="scale">
+                                    <q-date v-model="editedItem.date" mask="YYYY-MM-DD">
+                                      <div class="row items-center justify-end">
+                                        <q-btn v-close-popup label="Close" color="primary" flat />
+                                      </div>
+                                    </q-date>
+                                  </q-popup-proxy>
+                                </q-icon>
+                              </template>
+
+                            </q-input>
+                          </div>
+
+                          <div class="col-md-6 q-pr-sm q-pb-md">
+                            <q-input outlined v-model="editedItem.firstName" label="First Name" />
+                          </div>
+
+                          <div class="col-md-6 q-pr-sm q-pb-md">
+                            <q-input outlined v-model="editedItem.lastName" label="Last Name" />
+                          </div>
+
+                          <div class="col-md-12">
+                            <q-input type="textarea" v-model="editedItem.notes" outlined label="Notes" />
+                          </div>
+                        
+                        </div>
+                      </q-card-section>
+                    
+                      <q-card-actions align="right">
+                        <q-btn flat label="Confirm" color="primary" v-close-popup @click="addRow"></q-btn>
+                      </q-card-actions>
+
+                    </q-card>
+                  </q-dialog>
+                  
+                  <q-dialog v-model="confirm" persistent>
+                    <q-card>
+                      <q-card-section class="row items-center">
+                        <span class="q-ml-sm">Are you sure to delete this item?</span>
+                      </q-card-section>
+
+                      <q-card-actions align="right">
+                        <q-btn flat label="No, thanks" color="primary" v-close-popup />
+                        <q-btn label="Yes" color="red" v-close-popup @click="deleteItem" />
+                      </q-card-actions>
+                    </q-card>
+                  </q-dialog>
+                </div>
+          
+              </template>
+
+              <!-- Table Body -->
+              <template v-slot:body="props">
+                
+                  <q-tr :props="props">
+
+                    <q-td auto-width>
+                      <q-btn size="sm" flat
+                        color="black"
+                        @click="props.expand = !props.expand" 
+                        :icon="props.expand ? 'keyboard_arrow_down' : 'keyboard_arrow_right'">
+                      </q-btn>
+                    </q-td>
+
+                    <q-td key="teacher" :props="props">
+                      {{ props.row.teacher }}
+                    </q-td>
+                    
+                    <q-td key="title" :props="props">
+                        <q-select class="q-mr-md" outlined dense  v-model="props.row.title" :options="titleSelect"/>
+                    </q-td>
+
+                    <q-td key="benefits" :props="props">
+                      <q-toggle v-model="props.row.benefits" color="blue" />
+                    </q-td>
+
+                    <q-td key="hoursWeek" :props="props">
+                      <div>{{ props.row.hoursWeek }}</div>
+                      <q-popup-edit v-model="props.row.hoursWeek" title="Update Hours Week" buttons>
+                        <q-input type="number" v-model="props.row.hoursWeek" dense autofocus />
+                      </q-popup-edit>
+                    </q-td>
+                    
+                    <q-td key="workMonth" :props="props">
+                      <div>{{ props.row.workMonth }}</div>
+                      <q-popup-edit v-model="props.row.workMonth" title="Update Work Month" buttons>
+                        <q-input type="number" v-model="props.row.workMonth" dense autofocus />
+                      </q-popup-edit>
+                    </q-td>
+
+                    <q-td key="increase" :props="props">
+                      <div>{{ props.row.increase }} %</div>
+                      <q-popup-edit v-model="props.row.increase" title="Update increase" buttons>
+                        <q-input type="number" v-model="props.row.increase" dense autofocus />
+                      </q-popup-edit>
+                    </q-td>
+
+                    <q-td key="hourlyRate" :props="props">
+                      <div>$ {{ props.row.hourlyRate }}</div>
+                      <q-popup-edit v-model="props.row.hourlyRate" title="Update Hourly Rate" buttons>
+                        <q-input type="number" v-model="props.row.hourlyRate" dense autofocus />
+                      </q-popup-edit>
+                    </q-td>
+
+                    <q-td key="fringe" :props="props">
+                      <div>$ {{ props.row.fringe }}</div>
+                      <q-popup-edit v-model="props.row.fringe" title="Update Fringe" buttons>
+                        <q-input type="number" v-model="props.row.fringe" dense autofocus />
+                      </q-popup-edit>
+                    </q-td>
+
+                    <q-td key="semiMonthly" :props="props">
+                      <div>$ {{ props.row.semiMonthly }}</div>
+                    </q-td>
+
+                    <q-td key="annualCharge" :props="props">
+                      <div>$ {{ props.row.annualCharge }}</div>
+                    </q-td>
+                    
+                    <q-td key="actions" :props="props">
+                      <q-btn 
+                        icon="delete_forever"
+                        color="red" 
+                        @click="openDeleteModal(props.row)" 
+                        size=sm 
+                        no-caps
+                      >
+                      </q-btn>
+                    </q-td>
+
+                  </q-tr>
+
+                  <q-tr v-show="props.expand" :props="props">
+                    <q-td colspan="100%" class="q-td--no-hover">
+                      <div class="q-mt-md">
+                        <div class="row">
+
+                          <div class="col-9">
+                            <div class="text-subtitle2">Monthly Breakdown</div>
+                            <q-table
+                              class="q-mt-md q-mb-md no-shadow border"
+                              :data="teacherSubData"
+                              :columns="teacherSubColumns"
+                              row-key="id"
+                              hide-bottom
+                            >
+                              <template v-slot:body="props">
+                                <q-tr :props="props">
+                                  <q-td key="workMonths" :props="props">
+                                    {{ props.row.workMonths }}
+                                  </q-td>
+                                  <q-td key="payPeriod" :props="props">
+                                    {{ props.row.payPeriod }}
+                                  </q-td>
+                                  <q-td key="charge" :props="props">
+                                    {{ props.row.charge }}
+                                  </q-td>
+                                  <q-td key="gross" :props="props">
+                                    {{ props.row.gross }}
+                                  </q-td>
+                                  <q-td key="totalAdmin" :props="props">
+                                    {{ props.row.totalAdmin }}
+                                  </q-td>
+                                  <q-td key="hourlyRate" :props="props">
+                                    {{ props.row.hourlyRate }}
+                                  </q-td>
+                                  <q-td key="notes" :props="props">
+                                    {{ props.row.notes }}
+                                    <q-popup-edit v-model="props.row.notes" title="Notes" buttons>
+                                      <q-input type="textarea" v-model="props.row.notes" dense autofocus />
+                                    </q-popup-edit>
+                                  </q-td>
+                                </q-tr>
+                              </template>
+
+                            </q-table>
+                          </div>
+
+                          <div class="col-4">
+                            <div class="text-subtitle2">Salary History</div>
+                            <q-table
+                              class="q-mt-md q-mb-md no-shadow border" 
+                              hide-bottom
+                              :data="salaryHistoryData"
+                              :columns="salaryHistoryColumns"
+                              row-key="year"
+                              separator="cell"
+                            />
+                          </div>
+                        </div>
+
+                      </div> 
+                    </q-td>
+                  </q-tr>
+
+              </template>
+
+              <!-- Pagination -->
+              <template v-slot:bottom class="justify-end">
+                <div class="q-pa-md flex flex-center">
+                  <q-pagination
+                    v-model="pagination.page"
+                    :max="pages"
+                    :max-pages="6"
+                    ellipsess
+                    :direction-links="true"
+                    @input="changePagination"
+                  >
+                  </q-pagination>
+                </div>
+              </template>
+
+            </q-table>
+            
           </q-tab-panel>
 
         </q-tab-panels>
@@ -314,7 +646,6 @@
 
 <script>
     import {exportFile} from 'quasar'
-
     function wrapCsvValue(val, formatFn) {
         let formatted = formatFn !== void 0
             ? formatFn(val)
@@ -341,13 +672,13 @@
             tab: 'Salaried',
             confirm: false,
             loading: false,
-            pages: 3,
+            pages: 10,
             currentPage: 1,
             pagination: {
               sortBy: 'name',
               page: 1,
-              rowsPerPage: 5,
-              // rowsNumber: 5
+              rowsPerPage: 10,
+              // rowsNumber: 10
             },
             selectedSchool: null,
             schools: [
@@ -381,7 +712,8 @@
             },
             columns: [
               {
-                name: "toggle"
+                name: "toggle",
+                field: row => row.name,
               },
               {
                 name: "teacher",
@@ -455,37 +787,208 @@
               },
             ],
             data: [],
+
+            hourlyColumns: [
+              {
+                name: "toggle",
+                field: row => row.name,
+              },
+              {
+                name: "teacher",
+                align: "left",
+                label: "Teacher",
+                field: "teacher",
+                sortable: true
+              },
+              {
+                name: "title",
+                align: "left",
+                label: "Title",
+                field: "title",
+                sortable: true
+              },
+              { 
+                name: "benefits", 
+                align: "left",
+                label: "Benefits", 
+                field: "benefits",
+                sortable: true
+              },
+              {
+                name: "hoursWeek",
+                align: "left",
+                label: "Hours/Week",
+                field: "hoursWeek",
+                sortable: true
+              },
+              {
+                name: "workMonth",
+                align: "left",
+                label: "Work Month",
+                field: "workMonth",
+                sortable: true
+              },
+              {
+                name: "increase",
+                align: "left",
+                label: "Increase",
+                field: "increase"
+              },
+              {
+                name: "hourlyRate",
+                align: "left",
+                label: "Hourly Rate",
+                field: "hourlyRate"
+              },
+              {
+                name: "fringe",
+                align: "left",
+                label: "Fringe",
+                field: "fringe"
+              },
+              {
+                name: "annualCharge",
+                align: "left",
+                label: "Annual Charge",
+                field: "annualCharge"
+              },
+              {
+                name: "actions",
+                align: "left",
+                label: "Actions",
+                field: "actions"
+              },
+            ],
+            hourlyData: [
+            ],
+            teacherSubColumns: [
+              { 
+                name: "workMonths", 
+                align: "left",
+                label: "Work months", 
+                field: "workMonths"
+              },
+              { 
+                name: "payPeriod", 
+                align: "left",
+                label: "Pay Period", 
+                field: "payPeriod"
+              },
+              { 
+                name: "charge", 
+                align: "left",
+                label: "Charge", 
+                field: "charge"
+              },
+              { 
+                name: "gross", 
+                align: "left",
+                label: "Gross", 
+                field: "gross"
+              },
+              { 
+                name: "totalAdmin", 
+                align: "left",
+                label: "Total w/Admin", 
+                field: "totalAdmin"
+              },
+              { 
+                name: "hourlyRate", 
+                align: "left",
+                label: "Hourly Rate", 
+                field: "hourlyRate"
+              },
+              { 
+                name: "notes", 
+                align: "left",
+                label: "Notes", 
+                field: "notes"
+              },
+            ],
+            teacherSubData: [
+              {
+                workMonths: 805,
+                payPeriod: 1650,
+                charge: 59,
+                gross: 202,
+                totalAdmin: 258,
+                hourlyRate: 652,
+                notes: "Notes example"
+              }
+            ],
+            
+            salaryHistoryColumns: [
+              { 
+                name: "year", 
+                align: "left",
+                label: "Year", 
+                field: "year"
+              },
+              { 
+                name: "increase", 
+                align: "left",
+                label: "Increase %", 
+                field: "increase"
+              },
+              { 
+                name: "finalSalary", 
+                align: "left",
+                label: "Final Salary", 
+                field: "finalSalary"
+              },
+            ],
+            salaryHistoryData: [
+              {
+                year: 2019,
+                increase: 16.5,
+                finalSalary: 597895
+              },
+              {
+                year: 2020,
+                increase: 45.5,
+                finalSalary: 12589
+              },
+              {
+                year: 2021,
+                increase: 78.22,
+                finalSalary: 78631
+              },
+            ],
+            
             tempData: [],
             schools: [],
+            titleSelect: [
+              "T", "S", "U"
+            ]
           };
         },
         methods: {
           addRow() {
 
-            let allocation, finalAllocation
+            // let allocation, finalAllocation
 
-            if(this.editedItem.status) {
-              finalAllocation = this.editedItem.finalAllocation
-            } else {
-              allocation = this.editedItem.allocation
-            }
+            // if(this.editedItem.status) {
+            //   finalAllocation = this.editedItem.finalAllocation
+            // } else {
+            //   allocation = this.editedItem.allocation
+            // }
 
-            let obj = {
-              date: this.editedItem.date,
-              school: this.editedItem.school,
+            // let obj = {
+            //   date: this.editedItem.date,
+            //   school: this.editedItem.school,
 
-              allocation: allocation,
-              finalAllocation: finalAllocation,
+            //   allocation: allocation,
+            //   finalAllocation: finalAllocation,
 
-              status: this.editedItem.status,
-              notes: this.editedItem.notes
-            }
+            //   status: this.editedItem.status,
+            //   notes: this.editedItem.notes
+            // }
 
-            if (this.editedIndex > -1) {
-              Object.assign(this.data[this.editedIndex], obj);
-            } else {
-              this.data.unshift(obj);
-            }
+            // if (this.editedIndex > -1) {
+            //   Object.assign(this.data[this.editedIndex], obj);
+            // } else {
+            //   this.data.unshift(obj);
+            // }
             
             this.close()
           },
@@ -535,75 +1038,92 @@
                     })
                 }
           },
-          changePagination(val) {
-            this.currentPage = val
-            this.loading = true
-            this.pagination.page = val
+          // changePagination(val) {
+          //   this.currentPage = val
+          //   this.loading = true
+          //   this.pagination.page = val
 
-            setTimeout(()=> {
+          //   setTimeout(()=> {
 
-              this.loading = false
-              let dataTest = []
-              for(let i=0; i<5; i++) {
-                let r = Math.floor(Math.random() * 10)
-                if(r % 2) r = true 
-                else r = false
+          //     this.loading = false
+          //     let dataTest = []
+          //     for(let i=0; i<5; i++) {
+          //       let r = Math.floor(Math.random() * 10)
+          //       if(r % 2) r = true 
+          //       else r = false
 
-                let allocation, finalAllocation
+          //       let allocation, finalAllocation
 
-                if(r) {
-                  finalAllocation = Math.floor(Math.random() * 100)
-                } else {
-                  allocation = Math.floor(Math.random() * 100)
-                }
+          //       if(r) {
+          //         finalAllocation = Math.floor(Math.random() * 100)
+          //       } else {
+          //         allocation = Math.floor(Math.random() * 100)
+          //       }
 
           
-                let obj = {
-                  date: "2020-09-1" + i+1,
-                  school: "American School N" + i+1,
+          //       let obj = {
+          //         date: "2020-09-1" + i+1,
+          //         school: "American School N" + i+1,
 
-                  allocation: allocation,
-                  finalAllocation: finalAllocation,
+          //         allocation: allocation,
+          //         finalAllocation: finalAllocation,
 
-                  status: r,
-                  notes: "",
-                }
+          //         status: r,
+          //         notes: "",
+          //       }
 
-                  dataTest.push(obj)
-              }
+          //         dataTest.push(obj)
+          //     }
               
-              this.data = dataTest
-              this.tempData = dataTest
+          //     this.data = dataTest
+          //     this.tempData = dataTest
 
-            }, 650)
-          },
+          //   }, 650)
+          // },
         },
         created() {
             let dataTest = []
+            let hourlyDataSet = []
+
             for(let i=0; i<5; i++) {
-            
-            let obj = {
-                teacher: 'Frank Hall',
-                title: 'T',
-                benefits: false,
-                workMonth: 10,
-                allocation: 45,
-                increase: 4.22,
-                currentSalary: 487,
-                fringe: 37,
-                semiMonthly: 105,
-                annualCharge: 369
+
+              let hourlyObj = {
+                  teacher: 'Frank Hall' + i,
+                  title: 'T',
+                  benefits: false,
+                  hoursWeek: 5,
+                  workMonth: 10,
+                  increase: 4.22,
+                  hourlyRate: 487,
+                  fringe: 37,
+                  semiMonthly: 105,
+                  annualCharge: 369
+              }
+
+              let obj = {
+                  teacher: 'Frank Hall' + i*4,
+                  title: 'T',
+                  benefits: false,
+                  workMonth: 10,
+                  allocation: 789,
+                  increase: 4.22,
+                  currentSalary: 487,
+                  fringe: 37,
+                  semiMonthly: 105,
+                  annualCharge: 369
+              }
+
+              dataTest.push(obj)
+              hourlyDataSet.push(hourlyObj)
+
             }
 
-            dataTest.push(obj)
-
-            }
             this.data = dataTest
-            this.tempData = dataTest
+            this.hourlyData = hourlyDataSet
 
             let schoolArr = []
             for(let j=0; j<this.data.length; j++) {
-            schoolArr.push(this.data[j].school)
+              schoolArr.push('School N'+j+1)
             }
             this.schools = schoolArr
         },
@@ -627,3 +1147,12 @@
     }
 
 </script>
+
+<style lang="scss" scoped>
+
+.border {
+  border: 1px solid #e0e0e0;
+}
+
+
+</style>
