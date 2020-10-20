@@ -48,6 +48,94 @@
               >{{props.inFullscreen ? 'Exit Fullscreen' : 'Toggle Fullscreen'}}
               </q-tooltip>
             </q-btn>
+
+
+            <div class="q-pa-sm q-gutter-sm">
+              <q-dialog v-model="show_dialog">
+                <q-card>
+
+                  <q-card-section style="width: 450px">
+                    <div class="text-h6">Date of activity</div>
+                  </q-card-section>
+
+                  <q-card-section>
+                    <div class="row">
+
+                      <div class="col-md-12 q-pr-sm q-pb-md">
+                        <div class="q-mt-md q-mb-md">
+                          <div class="row">
+                            <div class="col-12">
+
+                              <div class="q-m-md"> 
+                                <q-btn class="q-mb-md">
+                                  {{model.from }} - {{ model.to}}
+                                  <q-popup-proxy transition-show="scale" transition-hide="scale">
+                                    <q-date v-model="model" range landscape today-btn>
+                                      <div class="row items-center justify-end">
+                                        <q-btn v-close-popup label="Close" color="primary" flat />
+                                      </div>
+                                    </q-date>
+                                  </q-popup-proxy>
+                                </q-btn>
+
+                                  <div style="width: 300px;display: flex; justify-content-center; align-items: center">
+                                    <span style="margin-right: 20px">on</span> 
+                                    <q-select dense outlined v-model="selectWeekDay" :options="selectOptionsWeekDays" />
+                                    <span class="q-mr-md q-ml-md">(</span>
+                                      <q-select dense outlined v-model="numbersX" :options="selectOptionsNumbersX"  /> 
+                                      <span class="q-mr-md q-ml-md">a</span>
+                                      <q-select dense outlined v-model="selectDayWeekMonth" :options="selectOptionsDayWeekMonth"  />
+                                    <span class="q-mr-md q-ml-md">)</span>
+                                  </div>
+
+                                  <div style="width: 300px;display: flex; justify-content-center; align-items: center" class="q-mt-md">
+                                    <span style="margin-right: 20px">at</span> <q-select dense outlined v-model="select" :options="selectOptions" />
+                                  </div>
+
+                                  <div class="q-mt-md">
+                                    from 
+                                    <q-btn>
+                                      {{time1}}
+                                      <q-popup-proxy transition-show="scale" transition-hide="scale">
+                                        <q-time v-model="time1" mask="HH:mm" format24h>
+                                          <div class="row items-center justify-end">
+                                            <q-btn v-close-popup label="Close" color="primary" flat />
+                                          </div>
+                                        </q-time>
+                                      </q-popup-proxy>
+                                    </q-btn> 
+                                    - 
+                                    <q-btn>
+                                      {{time2}}
+                                      <q-popup-proxy transition-show="scale" transition-hide="scale">
+                                        <q-time v-model="time2" mask="HH:mm" format24h>
+                                          <div class="row items-center justify-end">
+                                            <q-btn v-close-popup label="Close" color="primary" flat />
+                                          </div>
+                                        </q-time>
+                                      </q-popup-proxy>
+                                    </q-btn> 
+                                    - 
+                                    {{timeTotal}} hours a {{selectDayWeekMonth}}
+                                  </div>
+
+                              </div>
+
+                            </div>
+                          </div>
+                        </div> 
+                      </div>
+                    
+                    </div>
+                  </q-card-section>
+                
+                  <q-card-actions align="right">
+                    <q-btn flat label="Confirm" color="primary" v-close-popup @click="alert()"></q-btn>
+                  </q-card-actions>
+
+                </q-card>
+              </q-dialog>
+            </div>
           </template>
 
           <!-- Table Body -->
@@ -74,7 +162,7 @@
                 <q-td key="dateOfActivity" :props="props" 
                   :style="{width: '300px', whiteSpace: 'normal'}"
                 > 
-                  <div>{{ props.row.dateOfActivity }}</div>
+                  <div @click="editItem(props.row)" >{{ props.row.dateOfActivity }}</div>
                 </q-td>
 
                 <q-td key="noAttending" :props="props">
@@ -229,6 +317,7 @@
             selectOptionsDayWeekMonth: ['day', 'week', 'month'],
             time1: '00:00',
             time2: '00:00',
+            show_dialog: false,
 
 
 
@@ -328,6 +417,11 @@
                         icon: 'warning'
                     })
                 }
+          },
+          editItem(item) {
+              // this.editedIndex = this.data.indexOf(item);
+              // this.editedItem = Object.assign({}, item);
+              this.show_dialog = true;
           },
          
         },
