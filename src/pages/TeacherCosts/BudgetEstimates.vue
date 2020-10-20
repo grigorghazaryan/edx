@@ -1811,7 +1811,6 @@
                 notes: "Notes example."
               }
 
-
               let utilityPersonnelObj = {
                   teacher: 'Name Surname ' + i+1,
                   benefits: r,
@@ -1883,6 +1882,4 @@
 .border {
   border: 1px solid #e0e0e0;
 }
-
-
 </style>
