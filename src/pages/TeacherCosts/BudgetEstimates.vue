@@ -55,6 +55,7 @@
 
     <div class="q-pa-sm q-mt-sm q-gutter-sm">
       <q-card>
+
         <q-tabs
           v-model="tab"
           dense

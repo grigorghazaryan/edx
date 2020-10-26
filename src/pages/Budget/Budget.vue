@@ -9,269 +9,422 @@
       </q-breadcrumbs>
     </div>
 
+    <q-card class="bg-transparent no-shadow no-border">
+      <q-card-section class="q-pa-none">
+        <div class="row q-col-gutter-sm ">
+
+          <div class="col-md-2 col-sm-12 col-xs-12">
+            <q-item style="background-color: #fff" class="q-pa-none q-ml-xs">
+              <q-item-section side style="background-color: #fff" class=" q-pa-lg q-mr-none text-white">
+                <q-icon name="attach_money" color="red" size="24px"></q-icon>
+              </q-item-section>
+              <q-item-section class="q-ml-none">
+                <q-item-label class="text-grey-7">Total PD</q-item-label>
+                <q-item-label class="text-dark text-h6 text-weight-bolder">$ 900</q-item-label>
+              </q-item-section>
+            </q-item>
+          </div>
+
+          <div class="col-md-2 col-sm-12 col-xs-12">
+            <q-item style="background-color: #fff" class="q-pa-none q-ml-xs">
+              <q-item-section side style="background-color: #fff" class=" q-pa-lg q-mr-none text-white">
+                <q-icon name="attach_money" color="red" size="24px"></q-icon>
+              </q-item-section>
+              <q-item-section class="q-ml-none">
+                <q-item-label class="text-grey-7">Total FE</q-item-label>
+                <q-item-label class="text-dark text-h6 text-weight-bolder">$ 900</q-item-label>
+              </q-item-section>
+            </q-item>
+          </div>
+
+          <div class="col-md-2 col-sm-12 col-xs-12">
+            <q-item style="background-color: #fff" class="q-pa-none q-ml-xs">
+              <q-item-section side style="background-color: #fff" class=" q-pa-lg q-mr-none text-white">
+                <q-icon name="attach_money" color="green" size="24px"></q-icon>
+              </q-item-section>
+              <q-item-section class="q-ml-none">
+                <q-item-label class="text-grey-7">Used PD</q-item-label>
+                <q-item-label class="text-dark text-h6 text-weight-bolder">$ 900</q-item-label>
+              </q-item-section>
+            </q-item>
+          </div>
+
+          <div class="col-md-2 col-sm-12 col-xs-12">
+            <q-item style="background-color: #fff" class="q-pa-none q-ml-xs">
+              <q-item-section side style="background-color: #fff" class=" q-pa-lg q-mr-none text-white">
+                <q-icon name="attach_money" color="green" size="24px"></q-icon>
+              </q-item-section>
+              <q-item-section class="q-ml-none">
+                <q-item-label class="text-grey-7">Used FE</q-item-label>
+                <q-item-label class="text-dark text-h6 text-weight-bolder">$ 900</q-item-label>
+              </q-item-section>
+            </q-item>
+          </div>
+
+          <div class="col-md-2 col-sm-12 col-xs-12">
+            <q-item style="background-color: #fff" class="q-pa-none q-ml-xs">
+              <q-item-section side style="background-color: #fff" class=" q-pa-lg q-mr-none text-white">
+                <q-icon name="attach_money" color="purple" size="24px"></q-icon>
+              </q-item-section>
+              <q-item-section class="q-ml-none">
+                <q-item-label class="text-grey-7">Remaining PD</q-item-label>
+                <q-item-label class="text-dark text-h6 text-weight-bolder">$ 900</q-item-label>
+              </q-item-section>
+            </q-item>
+          </div>
+
+          <div class="col-md-2 col-sm-12 col-xs-12">
+            <q-item style="background-color: #fff" class="q-pa-none q-ml-xs">
+              <q-item-section side style="background-color: #fff" class=" q-pa-lg q-mr-none text-white">
+                <q-icon name="attach_money" color="purple" size="24px"></q-icon>
+              </q-item-section>
+              <q-item-section class="q-ml-none">
+                <q-item-label class="text-grey-7">Remaining FE</q-item-label>
+                <q-item-label class="text-dark text-h6 text-weight-bolder">$ 900</q-item-label>
+              </q-item-section>
+            </q-item>
+          </div>
+         
+
+        </div>
+      </q-card-section>
+    </q-card>
+
     <div class="q-pa-sm q-mt-sm q-gutter-sm">
       <q-card>
-        <q-table
-          :data="data" 
-          :columns="columns"
-          :loading="loading"
-          class="no-shadow"
-          row-key="provider"
+
+        <q-tabs
+          v-model="tab"
+          dense
+          class="text-grey"
+          active-color="primary"
+          indicator-color="primary"
+          align="left"
+          narrow-indicator
         >
+          <q-tab name="Title1" label="Title I" />
+          <q-tab name="Title2" label="Title II" />
+          <q-tab name="Title3" label="Title III" />
+          <q-tab name="Title4" label="Title IV" />
+          <q-tab name="ESSER" label="ESSER" />
 
-          <!-- Loading -->
-          <template v-slot:loading>
-            <q-inner-loading showing color="primary" />
-          </template>
+        </q-tabs>
 
-          <!-- Table Header -->
-          <template v-slot:top-right="props">
-            <q-btn
-              icon-right="archive"
-              label="Export to Excel"
-              color="teal" 
-              text-color="white"
-              no-caps
-              @click="exportTable"
-            />
-            <q-btn
-              flat
-              round
-              dense
-              :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-              @click="props.toggleFullscreen"
-              v-if="mode === 'list'" class="q-px-sm"
+        <q-separator />
+
+        <q-tab-panels v-model="tab" animated>
+
+          <q-tab-panel name="Title1" class="q-p-sm">
+            <q-table
+              :data="data" 
+              :columns="columns"
+              :loading="loading"
+              class="no-shadow"
+              row-key="provider"
             >
-              <q-tooltip
-                :disable="$q.platform.is.mobile"
-                v-close-popup
-              >{{props.inFullscreen ? 'Exit Fullscreen' : 'Toggle Fullscreen'}}
-              </q-tooltip>
-            </q-btn>
+
+              <!-- Loading -->
+              <template v-slot:loading>
+                <q-inner-loading showing color="primary" />
+              </template>
+
+              <!-- Table Header -->
+              <template v-slot:top-right="props">
+                <q-btn
+                  icon-right="archive"
+                  label="Export to Excel"
+                  color="teal" 
+                  text-color="white"
+                  no-caps
+                  @click="exportTable"
+                />
+                <q-btn
+                  flat
+                  round
+                  dense
+                  :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+                  @click="props.toggleFullscreen"
+                  v-if="mode === 'list'" class="q-px-sm"
+                >
+                  <q-tooltip
+                    :disable="$q.platform.is.mobile"
+                    v-close-popup
+                  >{{props.inFullscreen ? 'Exit Fullscreen' : 'Toggle Fullscreen'}}
+                  </q-tooltip>
+                </q-btn>
 
 
-            <div class="q-pa-sm q-gutter-sm">
-              <q-dialog v-model="show_dialog">
-                <q-card>
+                <div class="q-pa-sm q-gutter-sm">
 
-                  <q-card-section style="width: 450px">
-                    <div class="text-h6">Date of activity</div>
-                  </q-card-section>
+                  <q-dialog v-model="show_dialog">
+                    <q-card>
 
-                  <q-card-section>
-                    <div class="row">
+                      <q-card-section style="width: 500px">
+                        <div class="text-h6">Date of activity</div>
+                      </q-card-section>
 
-                      <div class="col-md-12 q-pr-sm q-pb-md">
-                        <div class="q-mt-md q-mb-md">
-                          <div class="row">
-                            <div class="col-12">
+                      <q-card-section class="q-pt-none q-pb-none q-pr-none q-pl-none">
 
-                              <div class="q-m-md"> 
-                                <q-btn class="q-mb-md">
-                                  {{model.from }} - {{ model.to}}
-                                  <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                    <q-date v-model="model" range landscape today-btn>
-                                      <div class="row items-center justify-end">
-                                        <q-btn v-close-popup label="Close" color="primary" flat />
-                                      </div>
-                                    </q-date>
-                                  </q-popup-proxy>
-                                </q-btn>
+                        <div class="row">
 
-                                  <div style="width: 300px;display: flex; justify-content-center; align-items: center">
-                                    <span style="margin-right: 20px">on</span> 
-                                    <q-select dense outlined v-model="selectWeekDay" :options="selectOptionsWeekDays" />
-                                    <span class="q-mr-md q-ml-md">(</span>
-                                      <q-select dense outlined v-model="numbersX" :options="selectOptionsNumbersX"  /> 
-                                      <span class="q-mr-md q-ml-md">a</span>
-                                      <q-select dense outlined v-model="selectDayWeekMonth" :options="selectOptionsDayWeekMonth"  />
-                                    <span class="q-mr-md q-ml-md">)</span>
-                                  </div>
+                          <div class="col-12">
+                            <div class="q-mt-sm q-mb-md">
 
-                                  <div style="width: 300px;display: flex; justify-content-center; align-items: center" class="q-mt-md">
-                                    <span style="margin-right: 20px">at</span> <q-select dense outlined v-model="select" :options="selectOptions" />
-                                  </div>
-
-                                  <div class="q-mt-md">
-                                    from 
-                                    <q-btn>
-                                      {{time1}}
-                                      <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                        <q-time v-model="time1" mask="HH:mm" format24h>
-                                          <div class="row items-center justify-end">
-                                            <q-btn v-close-popup label="Close" color="primary" flat />
-                                          </div>
-                                        </q-time>
-                                      </q-popup-proxy>
-                                    </q-btn> 
-                                    - 
-                                    <q-btn>
-                                      {{time2}}
-                                      <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                        <q-time v-model="time2" mask="HH:mm" format24h>
-                                          <div class="row items-center justify-end">
-                                            <q-btn v-close-popup label="Close" color="primary" flat />
-                                          </div>
-                                        </q-time>
-                                      </q-popup-proxy>
-                                    </q-btn> 
-                                    - 
-                                    {{timeTotal}} hours a {{selectDayWeekMonth}}
-                                  </div>
-
+                              <div class="row">
+                                <div class="col-3 q-pr-md row items-center justify-end"><b>Duration: </b></div>
+                                <div class="col-9">
+                                    {{timeTotal}} Hour(s) {{totalMinute}} Minute(s)
+                                    <span class="q-ml-sm"><q-checkbox v-model="allDayEvent" label="All day event" /></span>
+                                </div> 
                               </div>
 
-                            </div>
-                          </div>
-                        </div> 
-                      </div>
-                    
-                    </div>
-                  </q-card-section>
-                
-                  <q-card-actions align="right">
-                    <q-btn flat label="Confirm" color="primary" v-close-popup @click="alert()"></q-btn>
-                  </q-card-actions>
-
-                </q-card>
-              </q-dialog>
-            </div>
-          </template>
-
-          <!-- Table Body -->
-          <template v-slot:body="props">
-            
-              <q-tr :props="props">
-
-                <q-td auto-width>
-                  <q-btn size="sm" flat
-                    color="black"
-                    @click="props.expand = !props.expand" 
-                    :icon="props.expand ? 'keyboard_arrow_down' : 'keyboard_arrow_right'">
-                  </q-btn>
-                </q-td>
-
-                <q-td key="provider" :props="props">
-                  {{ props.row.provider }}
-                </q-td>
-
-                <q-td key="PDActivity" :props="props">
-                  {{ props.row.PDActivity }}
-                </q-td>
-                
-                <q-td key="dateOfActivity" :props="props" 
-                  :style="{width: '300px', whiteSpace: 'normal'}"
-                > 
-                  <div @click="editItem(props.row)" >{{ props.row.dateOfActivity }}</div>
-                </q-td>
-
-                <q-td key="noAttending" :props="props">
-                  <div>{{ props.row.noAttending }} %</div>
-                </q-td>
-
-                <q-td key="school" :props="props">
-                  <div>{{ props.row.school }}</div>
-                </q-td>
-
-                <q-td key="amount" :props="props">
-                  <div>$ {{ props.row.amount }}</div>
-                </q-td>
-
-                <q-td key="pdHub" :props="props">
-                  <div>$ {{ props.row.pdHub }}</div>
-                </q-td>
-
-                <q-td key="grossPD" :props="props">
-                  <div>$ {{ props.row.grossPD }}</div>
-                </q-td>
-
-              </q-tr>
-
-              <q-tr v-show="props.expand" :props="props">
-                <q-td colspan="100%" class="q-td--no-hover">
-                  <q-separator />
-                  <div class="q-mt-md q-mb-md">
-                    <div class="row">
-                      <div class="col-12">
-                        <div class="text-subtitle2 q-mb-md">Date of activity</div>
-                        <div class="q-m-md"> 
-                           <q-btn class="q-mb-md">
-                            {{model.from }} - {{ model.to}}
-                            <q-popup-proxy transition-show="scale" transition-hide="scale">
-                              <q-date v-model="model" range landscape today-btn>
-                                <div class="row items-center justify-end">
-                                  <q-btn v-close-popup label="Close" color="primary" flat />
+                              <div class="row">
+                                <div class="col-3 text-right q-pr-md"><b>Starts:</b></div>
+                                <div class="col-9">
+                                  <span>{{ startdate }}</span>, <span>{{time1}}</span>
                                 </div>
-                              </q-date>
-                            </q-popup-proxy>
-                          </q-btn>
+                              </div>
+                              <div class="row">
+                                <div class="col-3 text-right q-pr-md"><b>Ends:</b></div>
+                                <div class="col-9">
+                                  <span>{{ endDate }}</span>, <span>{{time2}}</span>
+                                </div>
+                              </div>
 
-                            <div style="width: 300px;display: flex; justify-content-center; align-items: center">
-                              <span style="margin-right: 20px">on</span> 
-                              <q-select dense outlined v-model="selectWeekDay" :options="selectOptionsWeekDays" />
-                              <span class="q-mr-md q-ml-md">(</span>
-                                <q-select dense outlined v-model="numbersX" :options="selectOptionsNumbersX"  /> 
-                                <span class="q-mr-md q-ml-md">a</span>
-                                <q-select dense outlined v-model="selectDayWeekMonth" :options="selectOptionsDayWeekMonth"  />
-                              <span class="q-mr-md q-ml-md">)</span>
-                            </div>
+                              <q-separator class="q-mt-md q-mb-md"/>
 
-                            <div style="width: 300px;display: flex; justify-content-center; align-items: center" class="q-mt-md">
-                              <span style="margin-right: 20px">at</span> <q-select dense outlined v-model="select" :options="selectOptions" />
-                            </div>
+                                <div class="row q-mt-lg">
 
-                            <div class="q-mt-md">
-                              from 
-                              <q-btn>
-                                {{time1}}
-                                <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                  <q-time v-model="time1" mask="HH:mm" format24h>
-                                    <div class="row items-center justify-end">
-                                      <q-btn v-close-popup label="Close" color="primary" flat />
-                                    </div>
-                                  </q-time>
-                                </q-popup-proxy>
-                              </q-btn> 
-                              - 
-                              <q-btn>
-                                {{time2}}
-                                <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                  <q-time v-model="time2" mask="HH:mm" format24h>
-                                    <div class="row items-center justify-end">
-                                      <q-btn v-close-popup label="Close" color="primary" flat />
-                                    </div>
-                                  </q-time>
-                                </q-popup-proxy>
-                              </q-btn> 
-                              - 
-                              {{timeTotal}} hours a {{selectDayWeekMonth}}
-                            </div>
+                                  <div class="col-3 q-pr-md row items-center justify-end">Start date:</div>
+                                  <div class="col-3">
+                                    <q-input outlined dense v-model="startdate">
+                                      <template v-slot:append>
+                                        <q-icon name="event" class="cursor-pointer">
+                                          <q-popup-proxy transition-show="scale" transition-hide="scale">
+                                            <q-date v-model="startdate" mask="YYYY-MM-DD">
+                                              <div class="row items-center justify-end">
+                                                <q-btn v-close-popup label="Close" color="primary" flat />
+                                              </div>
+                                            </q-date>
+                                          </q-popup-proxy>
+                                        </q-icon>
+                                      </template>
+                                    </q-input>
+                                  </div>
 
+                                  <div class="col-2 q-pr-md row items-center justify-end">End date:</div>
+                                  <div class="col-3">
+                                    <q-input outlined dense v-model="endDate">
+                                      <template v-slot:append>
+                                        <q-icon name="event" class="cursor-pointer">
+                                          <q-popup-proxy transition-show="scale" transition-hide="scale">
+                                            <q-date v-model="endDate" mask="YYYY-MM-DD">
+                                              <div class="row items-center justify-end">
+                                                <q-btn v-close-popup label="Close" color="primary" flat />
+                                              </div>
+                                            </q-date>
+                                          </q-popup-proxy>
+                                        </q-icon>
+                                      </template>
+                                    </q-input>
+                                  </div>
+
+                                </div>
+
+                              
+
+                                
+
+                                <div class="row q-mt-md q-mt-md">
+
+                                  <div class="col-3 q-pr-md row items-center justify-end">Start time:</div>
+                                  <div class="col-3">
+                                    <q-input outlined dense v-model="time1">
+                                      <template v-slot:append>
+                                        <q-icon name="access_time" class="cursor-pointer">
+                                          <q-popup-proxy transition-show="scale" transition-hide="scale">
+                                            <q-time v-model="time1">
+                                              <div class="row items-center justify-end">
+                                                <q-btn v-close-popup label="Close" color="primary" flat />
+                                              </div>
+                                            </q-time>
+                                          </q-popup-proxy>
+                                        </q-icon>
+                                      </template>
+                                    </q-input>
+                                  </div>
+
+                                  <div class="col-2 q-pr-md row items-center justify-end">End time:</div>
+                                  <div class="col-3">
+                                    <q-input outlined dense v-model="time2">
+                                      <template v-slot:append>
+                                        <q-icon name="access_time" class="cursor-pointer">
+                                          <q-popup-proxy transition-show="scale" transition-hide="scale">
+                                            <q-time v-model="time2">
+                                              <div class="row items-center justify-end">
+                                                <q-btn v-close-popup label="Close" color="primary" flat />
+                                              </div>
+                                            </q-time>
+                                          </q-popup-proxy>
+                                        </q-icon>
+                                      </template>
+                                    </q-input>
+                                  </div>
+
+                                </div>
+
+                              <q-separator class="q-mt-md q-mb-md"/>
+
+                              <div class="row">
+                                <div class="col-3 text-right q-pr-md">
+                                  <q-checkbox v-model="repeat" label="Repeat" />
+                                </div>
+                              </div>
+
+                              <div v-if="repeat">
+
+                                <div class="row q-mt-md">
+                                  <div class="col-3 q-pr-md row items-center justify-end">
+                                    Repeats:
+                                  </div>
+                                  <div class="col-3">
+                                    <q-select dense outlined v-model="selectDayWeekMonth" :options="selectOptionsDayWeekMonth"  />
+                                  </div>
+                                </div>
+
+                                <div class="row q-mt-md">
+                                  <div class="col-3 q-pr-md row items-center justify-end">Every:</div>
+                                  <div class="col-2">
+                                    <q-input outlined v-model="selectWeekDay" dense/>
+                                  </div>
+                                  <div class="col-2 row items-center justify-start q-pl-sm"><span>week(s)</span></div>
+                                </div>
+
+                                <div class="row q-mt-md">
+                                  <div class="col-3 q-pr-md row items-center justify-end">On:</div>
+                                  <div class="col-9">
+                                    <q-btn-group push>
+                                      <q-btn color="yellow" glossy text-color="black" push label="S"/>
+                                      <q-btn color="yellow" glossy text-color="black" push label="M" />
+                                      <q-btn color="yellow" glossy text-color="black" push label="T"/>
+                                      <q-btn color="amber" glossy text-color="black" push label="W" />
+                                      <q-btn color="yellow" glossy text-color="black" push label="T"/>
+                                      <q-btn color="yellow" glossy text-color="black" push label="F" />
+                                      <q-btn color="yellow" glossy text-color="black" push label="S"/>
+                                    </q-btn-group>
+                                  </div>
+                                </div>
+
+                              </div>
+                            </div> 
+                          </div>
+                        
                         </div>
-                      </div>
-                    </div>
-                  </div> 
-                  <q-separator />
-                </q-td>
-              </q-tr>
+                      </q-card-section>
+                    
+                      <q-card-actions class="row justify-between">
+                        <q-btn flat label="Remove recurrence" style="color: red"></q-btn>
+                        <div>
+                          <q-btn flat label="Cancel" color="primary" v-close-popup></q-btn>
+                          <q-btn flat label="Confirm" color="primary" v-close-popup @click="alert()"></q-btn>
+                        </div>
+                      </q-card-actions>
 
-          </template>
+                    </q-card>
+                  </q-dialog>
 
-          <!-- Pagination -->
-          <template v-slot:bottom class="justify-end">
-            <div class="q-pa-md flex flex-center">
-              <q-pagination
-                v-model="pagination.page"
-                :max="pages"
-                :max-pages="6"
-                ellipsess
-                :direction-links="true"
-              >
-              </q-pagination>
-            </div>
-          </template>
+                  <q-dialog v-model="show_attending_dialog">
+                    <q-card>
+                      <q-card-section style="width: 500px">
+                        <div class="text-h6">No attending</div>
+                      </q-card-section>
+                      <q-card-section>
+                        <p>
+                          Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis ab quaerat quos, at nisi fugit exercitationem pariatur nemo, voluptate veniam eaque commodi. Nihil totam tenetur repellendus, accusamus doloremque temporibus eum, rerum vel nobis, eius atque molestiae possimus sequi laudantium ipsum.
+                        </p>
+                        <p>
+                          Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis ab quaerat quos, at nisi fugit exercitationem pariatur nemo, voluptate veniam eaque commodi. Nihil totam tenetur repellendus, accusamus doloremque temporibus eum, rerum vel nobis, eius atque molestiae possimus sequi laudantium ipsum.
+                        </p>
+                      </q-card-section>
+                      
+                      <q-card-actions class="row justify-end">
+                          <q-btn flat label="Cancel" color="primary" v-close-popup></q-btn>
+                          <q-btn flat label="Confirm" color="primary" v-close-popup @click="alert()"></q-btn>
+                      </q-card-actions>
 
-        </q-table>
+                    </q-card>
+                  </q-dialog>
+
+                </div>
+              </template>
+
+              <!-- Table Body -->
+              <template v-slot:body="props">
+                
+                  <q-tr :props="props">
+
+                    <q-td key="provider" :props="props">
+                      {{ props.row.provider }}
+                    </q-td>
+
+                    <q-td key="PDActivity" :props="props">
+                      {{ props.row.PDActivity }}
+                    </q-td>
+                    
+                    <q-td key="dateOfActivity" :props="props" 
+                      :style="{width: '300px', whiteSpace: 'normal'}"
+                    > 
+                      <div @click="editItem(props.row)" >{{ props.row.dateOfActivity }}</div>
+                    </q-td>
+
+                    <q-td key="noAttending" :props="props">
+                      <div @click="editAttendingitem(props.row)">{{ props.row.noAttending }} %</div>
+                    </q-td>
+
+                    <q-td key="amount" :props="props">
+                      <div>$ {{ props.row.amount }}</div>
+                    </q-td>
+
+                    <q-td key="pdHub" :props="props">
+                      <div>$ {{ props.row.pdHub }}</div>
+                    </q-td>
+
+                    <q-td key="grossPD" :props="props">
+                      <div>$ {{ props.row.grossPD }}</div>
+                    </q-td>
+
+                  </q-tr>
+
+              </template>
+
+              <!-- Pagination -->
+              <template v-slot:bottom class="justify-end">
+                <div class="q-pa-md flex flex-center">
+                  <q-pagination
+                    v-model="pagination.page"
+                    :max="pages"
+                    :max-pages="6"
+                    ellipsess
+                    :direction-links="true"
+                  >
+                  </q-pagination>
+                </div>
+              </template>
+
+            </q-table>
+          </q-tab-panel>
+
+          <q-tab-panel name="Title2" class="q-p-sm">Title 2</q-tab-panel>
+
+          <q-tab-panel name="Title3" class="q-p-sm">Title 3</q-tab-panel>
+
+          <q-tab-panel name="Title4" class="q-p-sm">Title 4</q-tab-panel>
+
+          <q-tab-panel name="ESSER" class="q-p-sm">ESSER</q-tab-panel>
+
+
+        </q-tab-panels>
+
       </q-card>
     </div>
   
@@ -302,10 +455,15 @@
 
         return `"${formatted}"`
     }
+    const adminFee = 12;
 
     export default {
         data() {
           return {
+            tab: 'Title1',
+            mode: 'list',
+            startdate: '2019-02-01',
+            endDate: '2019-02-01',
             model: { from: '2020/07/08', to: '2020/07/17' },
             select: "",
             selectOptions: ['Kansas', 'New York', 'Yerevan'],
@@ -314,10 +472,13 @@
             numbersX: '',
             selectOptionsNumbersX: ['1x', '2x', '3x', '31x'],
             selectDayWeekMonth: "",
-            selectOptionsDayWeekMonth: ['day', 'week', 'month'],
+            selectOptionsDayWeekMonth: ['Daily', 'Weekly', 'Monthly'],
             time1: '00:00',
             time2: '00:00',
+            allDayEvent: false,
             show_dialog: false,
+            show_attending_dialog: false,
+            repeat: false,
 
 
 
@@ -332,9 +493,9 @@
             },
             
             columns: [
-              {
-                label: "",
-              },
+              // {
+              //   label: "",
+              // },
               {
                 name: "provider",
                 align: "left",
@@ -345,7 +506,7 @@
               { 
                 name: "PDActivity", 
                 align: "left",
-                label: "T-I PD Activity", 
+                label: "Activity", 
                 field: "PDActivity",
                 sortable: true
               },
@@ -365,12 +526,6 @@
                 field: "noAttending"
               },
               {
-                name: "school",
-                align: "left",
-                label: "School",
-                field: "school"
-              },
-              {
                 name: "amount",
                 align: "left",
                 label: "Amount",
@@ -385,7 +540,7 @@
               {
                 name: "grossPD",
                 align: "left",
-                label: "Gross PD",
+                label: "Charge",
                 field: "grossPD"
               }
             ],
@@ -423,6 +578,10 @@
               // this.editedItem = Object.assign({}, item);
               this.show_dialog = true;
           },
+          editAttendingitem(item) {
+            console.log('editAttendingitem', item)
+            this.show_attending_dialog = true;
+          }
          
         },
         created() {
@@ -433,18 +592,17 @@
 
               let amount = Math.floor(Math.random() * 600),
                   pdHub = Math.floor(Math.random() * 1400),
-                  grossPd = Math.floor(Math.random() * 1400);
+                  charge = amount + ((amount * adminFee) / 100);
 
               let obj = {
-                  toggle: '',
+                  // toggle: '',
                   provider: 'WEI ' + i+1,
                   PDActivity: 'Balanced Literacy for Readers, #2-133 with Chris VB',
-                  dateOfActivity: 'August, 2019 - May 2020 on Mondays (2 X a month) at Kansas from 8am - 12pm - 7.5 hours a month',
+                  dateOfActivity: 'August, 2019 - May 2020 on Mondays (R/NR)',
                   noAttending: '12 TI teachers and 30 TII Teachers',
-                  school: 'APA',
                   amount: amount,
                   pdHub: pdHub,
-                  grossPD: grossPd
+                  grossPD: charge.toFixed(2)
               }
 
               dataTest.push(obj)
@@ -458,7 +616,29 @@
           timeTotal() {
             let t1 = parseInt(this.time1.substring(0,2))
             let t2 = parseInt(this.time2.substring(0,2))
+
             let result = t2 - t1
+            return result
+          },
+          totalMinute() {
+            let m1 = parseInt(this.time1.substring(3,5));
+            let m2= parseInt(this.time2.substring(3,5));
+
+            console.log(m1)
+            console.log(m2)
+
+            let m1res = 0, m2res = 0;
+
+            if(m1 != 0) {
+              m1res = 60 - m1
+            }         
+
+            if(m2 != 0) {
+              m2res = 60 - m2
+            }  
+
+            let result =   m1res - m2res
+
             return result
           }
         }

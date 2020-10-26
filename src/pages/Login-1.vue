@@ -36,7 +36,7 @@
               />
 
               <div>
-                <q-btn label="Login" to="/" type="button" color="primary"/>
+                <q-btn label="Login" type="button" color="primary" @click="login" />
               </div>
             </q-form>
           </q-card-section>
@@ -47,13 +47,31 @@
 </template>
 
 <script>
+    import config from '../../config';
+    import axios from 'axios';
+
     export default {
         data() {
             return {
-                username: 'Pratik',
-                password: '12345'
+                username: '',
+                password: ''
             }
         },
+        methods: {
+          login() {
+            let body = {
+              email:    this.username,
+              password: this.password
+            }
+            axios.post(config.login, body)
+              .then(res => {
+                console.log('LOGIN RESPONSE : ', res)
+              })
+              .catch(e => {
+                console.log('ERROR : ', e)
+              })
+          }
+        }
     }
 </script>
 
