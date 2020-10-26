@@ -20,7 +20,7 @@
               </q-item-section>
               <q-item-section class="q-ml-none">
                 <q-item-label class="text-grey-7">Total PD</q-item-label>
-                <q-item-label class="text-dark text-h6 text-weight-bolder">$ 900</q-item-label>
+                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{totalPD}}</q-item-label>
               </q-item-section>
             </q-item>
           </div>
@@ -32,7 +32,7 @@
               </q-item-section>
               <q-item-section class="q-ml-none">
                 <q-item-label class="text-grey-7">Total FE</q-item-label>
-                <q-item-label class="text-dark text-h6 text-weight-bolder">$ 900</q-item-label>
+                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{totalFE}}</q-item-label>
               </q-item-section>
             </q-item>
           </div>
@@ -44,7 +44,7 @@
               </q-item-section>
               <q-item-section class="q-ml-none">
                 <q-item-label class="text-grey-7">Used PD</q-item-label>
-                <q-item-label class="text-dark text-h6 text-weight-bolder">$ 900</q-item-label>
+                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{usedPD}}</q-item-label>
               </q-item-section>
             </q-item>
           </div>
@@ -56,7 +56,7 @@
               </q-item-section>
               <q-item-section class="q-ml-none">
                 <q-item-label class="text-grey-7">Used FE</q-item-label>
-                <q-item-label class="text-dark text-h6 text-weight-bolder">$ 900</q-item-label>
+                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{usedPE}}</q-item-label>
               </q-item-section>
             </q-item>
           </div>
@@ -68,7 +68,7 @@
               </q-item-section>
               <q-item-section class="q-ml-none">
                 <q-item-label class="text-grey-7">Remaining PD</q-item-label>
-                <q-item-label class="text-dark text-h6 text-weight-bolder">$ 900</q-item-label>
+                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{remainingPD}}</q-item-label>
               </q-item-section>
             </q-item>
           </div>
@@ -80,7 +80,7 @@
               </q-item-section>
               <q-item-section class="q-ml-none">
                 <q-item-label class="text-grey-7">Remaining FE</q-item-label>
-                <q-item-label class="text-dark text-h6 text-weight-bolder">$ 900</q-item-label>
+                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{remainingFE}}</q-item-label>
               </q-item-section>
             </q-item>
           </div>
@@ -119,6 +119,7 @@
               :data="data" 
               :columns="columns"
               :loading="loading"
+              :filter="filter"
               class="no-shadow"
               row-key="provider"
             >
@@ -130,6 +131,21 @@
 
               <!-- Table Header -->
               <template v-slot:top-right="props">
+                
+                <q-select class="q-mr-md" style="min-width: 200px; max-width: 200px" dense outlines clearable v-model="schoolYear" :options="schoolYears" label="School year"/>
+
+
+                <q-input class="q-mr-md" outlines dense v-model="filter" placeholder="Search">
+                  <template v-slot:append>
+                    <q-icon name="search"/>
+                  </template>
+                </q-input>
+
+                <q-select class="q-mr-md" style="min-width: 250px; max-width: 250px" dense outlines clearable 
+                v-model="typeModel" :options="options" label="Type" @input="filterType"/>
+
+
+
                 <q-btn
                   icon-right="archive"
                   label="Export to Excel"
@@ -231,10 +247,6 @@
 
                                 </div>
 
-                              
-
-                                
-
                                 <div class="row q-mt-md q-mt-md">
 
                                   <div class="col-3 q-pr-md row items-center justify-end">Start time:</div>
@@ -277,11 +289,11 @@
 
                               <div class="row">
                                 <div class="col-3 text-right q-pr-md">
-                                  <q-checkbox v-model="repeat" label="Repeat" />
+                                  <q-checkbox v-model="editedItem.repeat" label="Repeat" />
                                 </div>
                               </div>
 
-                              <div v-if="repeat">
+                              <div v-if="editedItem.repeat">
 
                                 <div class="row q-mt-md">
                                   <div class="col-3 q-pr-md row items-center justify-end">
@@ -326,7 +338,7 @@
                         <q-btn flat label="Remove recurrence" style="color: red"></q-btn>
                         <div>
                           <q-btn flat label="Cancel" color="primary" v-close-popup></q-btn>
-                          <q-btn flat label="Confirm" color="primary" v-close-popup @click="alert()"></q-btn>
+                          <q-btn flat label="Confirm" color="primary" v-close-popup  @click="confirmDateOfActivity"></q-btn>
                         </div>
                       </q-card-actions>
 
@@ -339,12 +351,34 @@
                         <div class="text-h6">No attending</div>
                       </q-card-section>
                       <q-card-section>
-                        <p>
-                          Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis ab quaerat quos, at nisi fugit exercitationem pariatur nemo, voluptate veniam eaque commodi. Nihil totam tenetur repellendus, accusamus doloremque temporibus eum, rerum vel nobis, eius atque molestiae possimus sequi laudantium ipsum.
-                        </p>
-                        <p>
-                          Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis ab quaerat quos, at nisi fugit exercitationem pariatur nemo, voluptate veniam eaque commodi. Nihil totam tenetur repellendus, accusamus doloremque temporibus eum, rerum vel nobis, eius atque molestiae possimus sequi laudantium ipsum.
-                        </p>
+
+                        <div class="row q-mt-md">
+                          <div class="col-4 q-pr-md row items-center justify-end">
+                            Number of attendees:
+                          </div>
+                          <div class="col-2">
+                            <q-select dense outlined v-model="attendees" :options="numbersOfAttendees"  />
+                          </div>
+                        </div>
+                        <div class="row q-mt-md">
+                          <div class="col-12 text-left">
+                            <span class="q-ml-sm"><q-checkbox v-model="splitActivity" label="Split activity and attendees:"/></span>
+                          </div>
+                        </div>
+
+                        <!-- <q-separator v-if="splitActivity" class="q-mt-md q-mb-md"/> -->
+
+                        <div class="q-mt-md" v-if="splitActivity">
+                            <div class="q-pa-md">
+                              <q-table
+                                :data="attendeesData"
+                                :columns="attendeesColumn"
+                                row-key="attendees"
+                                hide-bottom
+                              />
+                            </div>
+                        </div>
+
                       </q-card-section>
                       
                       <q-card-actions class="row justify-end">
@@ -374,7 +408,8 @@
                     <q-td key="dateOfActivity" :props="props" 
                       :style="{width: '300px', whiteSpace: 'normal'}"
                     > 
-                      <div @click="editItem(props.row)" >{{ props.row.dateOfActivity }}</div>
+                      <span @click="editItem(props.row)" >{{ props.row.dateOfActivity }}</span>
+                      <span class="q-ml-sm"><q-icon name="repeat" color="green" style="font-size: 20px" v-if="props.row.repeat" /></span>
                     </q-td>
 
                     <q-td key="noAttending" :props="props">
@@ -385,8 +420,12 @@
                       <div>$ {{ props.row.amount }}</div>
                     </q-td>
 
-                    <q-td key="pdHub" :props="props">
-                      <div>$ {{ props.row.pdHub }}</div>
+                    <q-td key="type" :props="props">
+                      <!-- <div></div> -->
+
+                      <q-chip square color="green" text-color="white" v-if="props.row.typeTest">{{ props.row.type }}</q-chip>
+                      <q-chip square color="purple" text-color="white" v-else>{{ props.row.type }}</q-chip>
+
                     </q-td>
 
                     <q-td key="grossPD" :props="props">
@@ -414,13 +453,21 @@
             </q-table>
           </q-tab-panel>
 
-          <q-tab-panel name="Title2" class="q-p-sm">Title 2</q-tab-panel>
+          <q-tab-panel name="Title2" class="q-p-sm">
+            <BudgetTableTitle2 />
+          </q-tab-panel>
 
-          <q-tab-panel name="Title3" class="q-p-sm">Title 3</q-tab-panel>
+          <q-tab-panel name="Title3" class="q-p-sm">
+            <BudgetTableTitle3 />
+          </q-tab-panel>
 
-          <q-tab-panel name="Title4" class="q-p-sm">Title 4</q-tab-panel>
+          <q-tab-panel name="Title4" class="q-p-sm">
+            <BudgetTableTitle4 />
+          </q-tab-panel>
 
-          <q-tab-panel name="ESSER" class="q-p-sm">ESSER</q-tab-panel>
+          <q-tab-panel name="ESSER" class="q-p-sm">
+            <BudgetTableEsser />
+          </q-tab-panel>
 
 
         </q-tab-panels>
@@ -435,6 +482,13 @@
 <script>
     import {exportFile} from 'quasar'
     import router from 'src/router'
+
+    import BudgetTableTitle2 from '../../components/budget/BudgetTableTitle2'
+    import BudgetTableTitle3 from '../../components/budget/BudgetTableTitle3'
+    import BudgetTableTitle4 from '../../components/budget/BudgetTableTitle4'
+    import BudgetTableEsser from '../../components/budget/BudgetTableEsser'
+    
+
 
     function wrapCsvValue(val, formatFn) {
         let formatted = formatFn !== void 0
@@ -458,6 +512,9 @@
     const adminFee = 12;
 
     export default {
+        components: {
+          BudgetTableTitle2,BudgetTableTitle3,BudgetTableTitle4, BudgetTableEsser
+        },
         data() {
           return {
             tab: 'Title1',
@@ -478,7 +535,44 @@
             allDayEvent: false,
             show_dialog: false,
             show_attending_dialog: false,
-            repeat: false,
+            splitActivity: false,
+            attendees: '',
+            numbersOfAttendees: [1, 2, 3],
+            attendeesColumn: [
+              {
+                name: "attendees",
+                align: "left",
+                label: "Attendees",
+                field: "attendees",
+                sortable: true
+              },
+              {
+                name: "allocation",
+                align: "left",
+                label: "Allocation",
+                field: "allocation",
+                sortable: true
+              },
+              {
+                name: "attendeeList",
+                align: "left",
+                label: "Attendee List",
+                field: "attendeeList",
+                sortable: true
+              },
+            ],
+            attendeesData: [
+              {
+                attendees: 8,
+                allocation: 'Title 1',
+                attendeeList: 'View'
+              },
+              {
+                attendees: 12,
+                allocation: 'Title 6',
+                attendeeList: 'View'
+              }
+            ],
 
 
 
@@ -493,9 +587,6 @@
             },
             
             columns: [
-              // {
-              //   label: "",
-              // },
               {
                 name: "provider",
                 align: "left",
@@ -532,10 +623,10 @@
                 field: "amount"
               },
               {
-                name: "pdHub",
+                name: "type",
                 align: "left",
-                label: "PD Hub",
-                field: "pdHub"
+                label: "Type",
+                field: "type"
               },
               {
                 name: "grossPD",
@@ -544,7 +635,33 @@
                 field: "grossPD"
               }
             ],
-            data: []
+            data: [],
+            tempData: [],
+
+            editedIndex: null,
+            editedItem: {
+              provider: '',
+              PDActivity: '',
+              dateOfActivity: '',
+              noAttending: '',
+              amount:'',
+              pdHub:'',
+              grossPD: '',
+              repeat: ''
+            },
+
+            schoolYear: null,
+            schoolYears: [
+              'School Year 20-21',
+              'School Year 19-20',
+              'School Year 18-19'
+            ],
+            filter: "",
+            options: [
+              'Professional Development', 
+              'Family Engagement'
+            ],
+            typeModel: '',
           };
         },
         methods: {
@@ -574,13 +691,42 @@
                 }
           },
           editItem(item) {
-              // this.editedIndex = this.data.indexOf(item);
-              // this.editedItem = Object.assign({}, item);
+              
+              this.editedIndex = this.data.indexOf(item);
+              this.editedItem = Object.assign({}, item);
               this.show_dialog = true;
+
+          },
+          confirmDateOfActivity() {
+
+            if (this.editedIndex > -1) {
+              Object.assign(this.data[this.editedIndex], this.editedItem);
+            } 
+            // Comment for now
+            // else {
+            //   this.data.unshift(obj);
+            // }
+            this.close()
+
           },
           editAttendingitem(item) {
             console.log('editAttendingitem', item)
             this.show_attending_dialog = true;
+          },
+          close () {
+            this.show_dialog = false
+          },
+          filterType() {
+            console.log(this.typeModel)
+            if(this.typeModel) {
+              if(this.typeModel == 'Professional Development') {
+                this.data = this.tempData.filter(a => a.typeTest == true);
+              }else {
+                this.data = this.tempData.filter(a => a.typeTest == false);
+              }
+            }else {
+              this.data = this.tempData
+            }
           }
          
         },
@@ -590,6 +736,15 @@
 
             for(let i=0; i<5; i++) {
 
+              let r = Math.floor(Math.random() * 10), 
+                  pd = Math.floor(Math.random() * 10);
+
+                if(r % 2) r = true 
+                else r = false
+
+                if(pd % 2) pd = true 
+                else pd = false
+
               let amount = Math.floor(Math.random() * 600),
                   pdHub = Math.floor(Math.random() * 1400),
                   charge = amount + ((amount * adminFee) / 100);
@@ -598,19 +753,20 @@
                   // toggle: '',
                   provider: 'WEI ' + i+1,
                   PDActivity: 'Balanced Literacy for Readers, #2-133 with Chris VB',
-                  dateOfActivity: 'August, 2019 - May 2020 on Mondays (R/NR)',
+                  dateOfActivity: 'August, 2019 - May 2020 on Mondays',
                   noAttending: '12 TI teachers and 30 TII Teachers',
                   amount: amount,
-                  pdHub: pdHub,
-                  grossPD: charge.toFixed(2)
+                  type: pd ? 'PD' : 'FE',
+                  typeTest: pd,
+                  grossPD: charge.toFixed(2),
+                  repeat: r
               }
 
               dataTest.push(obj)
             }
 
             this.data = dataTest
-        },
-        computed: {
+            this.tempData = dataTest
         },
         computed: {
           timeTotal() {
@@ -640,7 +796,31 @@
             let result =   m1res - m2res
 
             return result
-          }
+          },
+          totalPD() {
+            let pd = 0;
+            for(let i=0; i<this.data.length; i++) {
+              let amount = parseFloat( this.data[i].amount )
+              pd += amount
+            }
+            return pd.toFixed(2)
+          },
+          totalFE() {
+            return Math.floor(Math.random() * 1000).toFixed(2)
+          },
+          usedPD() {
+            return Math.floor(Math.random() * 1000).toFixed(2)
+          },
+          usedPE() {
+            return Math.floor(Math.random() * 1000).toFixed(2)
+          },
+          remainingPD() {
+            return Math.floor(Math.random() * 1000).toFixed(2)
+          },
+          remainingFE() {
+            return Math.floor(Math.random() * 1000).toFixed(2)
+          },
+
         }
     }
 
@@ -651,4 +831,5 @@
 .border {
   border: 1px solid #e0e0e0;
 }
+
 </style>

@@ -121,6 +121,7 @@
                 </q-btn>
 
                 <div class="q-pa-sm q-gutter-sm">
+                  
                   <q-dialog v-model="show_dialog" >
                     <q-card>
                       <q-card-section>
@@ -186,6 +187,7 @@
                       </q-card-actions>
                     </q-card>
                   </q-dialog>
+
                 </div>
           
               </template>

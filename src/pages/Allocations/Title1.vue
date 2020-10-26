@@ -5,7 +5,7 @@
       <q-breadcrumbs>
         <q-breadcrumbs-el icon="dashboard" label="Dashboard" to="/" />
         <q-breadcrumbs-el label="Allocations"/>
-        <q-breadcrumbs-el label="Title 1"/>
+        <q-breadcrumbs-el label="Title I"/>
       </q-breadcrumbs>
     </div>
 
@@ -91,7 +91,7 @@
 
     <div class="q-pa-sm q-mt-sm q-gutter-sm">
       <q-table
-        title="Title 1" 
+        title="Title I" 
         :data="data"
         :columns="columns"
         :visible-columns="visibleColumns"
