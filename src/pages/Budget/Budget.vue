@@ -9,7 +9,8 @@
       </q-breadcrumbs>
     </div>
 
-    <q-card class="bg-transparent no-shadow no-border">
+
+    <q-card v-if='tab == "Title1" ' class="bg-transparent no-shadow no-border">
       <q-card-section class="q-pa-none">
         <div class="row q-col-gutter-sm ">
 
@@ -90,6 +91,213 @@
       </q-card-section>
     </q-card>
 
+    <q-card v-if='tab == "Title2" ' class="bg-transparent no-shadow no-border">
+      <q-card-section class="q-pa-none">
+        <div class="row q-col-gutter-sm ">
+
+          <div class="col-md-2 col-sm-12 col-xs-12">
+            <q-item style="background-color: #fff" class="q-pa-none q-ml-xs">
+              <q-item-section side style="background-color: #fff" class=" q-pa-lg q-mr-none text-white">
+                <q-icon name="attach_money" color="red" size="24px"></q-icon>
+              </q-item-section>
+              <q-item-section class="q-ml-none">
+                <q-item-label class="text-grey-7"> Total PD</q-item-label>
+                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{ Math.floor(Math.random() * 1000) }}</q-item-label>
+              </q-item-section>
+            </q-item>
+          </div>
+
+          <div class="col-md-2 col-sm-12 col-xs-12">
+            <q-item style="background-color: #fff" class="q-pa-none q-ml-xs">
+              <q-item-section side style="background-color: #fff" class=" q-pa-lg q-mr-none text-white">
+                <q-icon name="attach_money" color="red" size="24px"></q-icon>
+              </q-item-section>
+              <q-item-section class="q-ml-none">
+                <q-item-label class="text-grey-7">Total Material</q-item-label>
+                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{ Math.floor(Math.random() * 1000) }}</q-item-label>
+              </q-item-section>
+            </q-item>
+          </div>
+
+          <div class="col-md-2 col-sm-12 col-xs-12">
+            <q-item style="background-color: #fff" class="q-pa-none q-ml-xs">
+              <q-item-section side style="background-color: #fff" class=" q-pa-lg q-mr-none text-white">
+                <q-icon name="attach_money" color="green" size="24px"></q-icon>
+              </q-item-section>
+              <q-item-section class="q-ml-none">
+                <q-item-label class="text-grey-7">Used PD</q-item-label>
+                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{ Math.floor(Math.random() * 1000) }}</q-item-label>
+              </q-item-section>
+            </q-item>
+          </div>
+
+          <div class="col-md-2 col-sm-12 col-xs-12">
+            <q-item style="background-color: #fff" class="q-pa-none q-ml-xs">
+              <q-item-section side style="background-color: #fff" class=" q-pa-lg q-mr-none text-white">
+                <q-icon name="attach_money" color="green" size="24px"></q-icon>
+              </q-item-section>
+              <q-item-section class="q-ml-none">
+                <q-item-label class="text-grey-7">Used Material</q-item-label>
+                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{ Math.floor(Math.random() * 1000) }}</q-item-label>
+              </q-item-section>
+            </q-item>
+          </div>
+
+          <div class="col-md-2 col-sm-12 col-xs-12">
+            <q-item style="background-color: #fff" class="q-pa-none q-ml-xs">
+              <q-item-section side style="background-color: #fff" class=" q-pa-lg q-mr-none text-white">
+                <q-icon name="attach_money" color="purple" size="24px"></q-icon>
+              </q-item-section>
+              <q-item-section class="q-ml-none">
+                <q-item-label class="text-grey-7">Remaining PD</q-item-label>
+                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{ Math.floor(Math.random() * 1000) }}</q-item-label>
+              </q-item-section>
+            </q-item>
+          </div>
+
+          <div class="col-md-2 col-sm-12 col-xs-12">
+            <q-item style="background-color: #fff" class="q-pa-none q-ml-xs">
+              <q-item-section side style="background-color: #fff" class=" q-pa-lg q-mr-none text-white">
+                <q-icon name="attach_money" color="purple" size="24px"></q-icon>
+              </q-item-section>
+              <q-item-section class="q-ml-none">
+                <q-item-label class="text-grey-7">Remaining Material</q-item-label>
+                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{ Math.floor(Math.random() * 1000) }}</q-item-label>
+              </q-item-section>
+            </q-item>
+          </div>
+         
+
+        </div>
+      </q-card-section>
+    </q-card>
+
+    <q-card v-if='tab == "Title3" ' class="bg-transparent no-shadow no-border">
+      <q-card-section class="q-pa-none">
+        <div class="row q-col-gutter-sm ">
+
+          <div class="col-md-2 col-sm-12 col-xs-12">
+            <q-item style="background-color: #fff" class="q-pa-none q-ml-xs">
+              <q-item-section side style="background-color: #fff" class=" q-pa-lg q-mr-none text-white">
+                <q-icon name="attach_money" color="red" size="24px"></q-icon>
+              </q-item-section>
+              <q-item-section class="q-ml-none">
+                <q-item-label class="text-grey-7">Total Allocation</q-item-label>
+                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{ Math.floor(Math.random() * 1000) }}</q-item-label>
+              </q-item-section>
+            </q-item>
+          </div>
+
+          <div class="col-md-2 col-sm-12 col-xs-12">
+            <q-item style="background-color: #fff" class="q-pa-none q-ml-xs">
+              <q-item-section side style="background-color: #fff" class=" q-pa-lg q-mr-none text-white">
+                <q-icon name="attach_money" color="red" size="24px"></q-icon>
+              </q-item-section>
+              <q-item-section class="q-ml-none">
+                <q-item-label class="text-grey-7">Used PD</q-item-label>
+                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{ Math.floor(Math.random() * 1000) }}</q-item-label>
+              </q-item-section>
+            </q-item>
+          </div>
+
+          <div class="col-md-2 col-sm-12 col-xs-12">
+            <q-item style="background-color: #fff" class="q-pa-none q-ml-xs">
+              <q-item-section side style="background-color: #fff" class=" q-pa-lg q-mr-none text-white">
+                <q-icon name="attach_money" color="green" size="24px"></q-icon>
+              </q-item-section>
+              <q-item-section class="q-ml-none">
+                <q-item-label class="text-grey-7">Used Instruction</q-item-label>
+                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{ Math.floor(Math.random() * 1000) }}</q-item-label>
+              </q-item-section>
+            </q-item>
+          </div>
+
+          <div class="col-md-2 col-sm-12 col-xs-12">
+            <q-item style="background-color: #fff" class="q-pa-none q-ml-xs">
+              <q-item-section side style="background-color: #fff" class=" q-pa-lg q-mr-none text-white">
+                <q-icon name="attach_money" color="green" size="24px"></q-icon>
+              </q-item-section>
+              <q-item-section class="q-ml-none">
+                <q-item-label class="text-grey-7">Remaining Allocation</q-item-label>
+                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{ Math.floor(Math.random() * 1000) }}</q-item-label>
+              </q-item-section>
+            </q-item>
+          </div>
+
+        </div>
+      </q-card-section>
+    </q-card>
+
+    <q-card v-if='tab == "Title4" ' class="bg-transparent no-shadow no-border">
+      <q-card-section class="q-pa-none">
+        <div class="row q-col-gutter-sm ">
+
+          <div class="col-md-2 col-sm-12 col-xs-12">
+            <q-item style="background-color: #fff" class="q-pa-none q-ml-xs">
+              <q-item-section side style="background-color: #fff" class=" q-pa-lg q-mr-none text-white">
+                <q-icon name="attach_money" color="red" size="24px"></q-icon>
+              </q-item-section>
+              <q-item-section class="q-ml-none">
+                <q-item-label class="text-grey-7">Total Allocation</q-item-label>
+                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{ Math.floor(Math.random() * 1000) }}</q-item-label>
+              </q-item-section>
+            </q-item>
+          </div>
+
+          <div class="col-md-2 col-sm-12 col-xs-12">
+            <q-item style="background-color: #fff" class="q-pa-none q-ml-xs">
+              <q-item-section side style="background-color: #fff" class=" q-pa-lg q-mr-none text-white">
+                <q-icon name="attach_money" color="red" size="24px"></q-icon>
+              </q-item-section>
+              <q-item-section class="q-ml-none">
+                <q-item-label class="text-grey-7">Used Well Rounded</q-item-label>
+                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{ Math.floor(Math.random() * 1000) }}</q-item-label>
+              </q-item-section>
+            </q-item>
+          </div>
+
+          <div class="col-md-2 col-sm-12 col-xs-12">
+            <q-item style="background-color: #fff" class="q-pa-none q-ml-xs">
+              <q-item-section side style="background-color: #fff" class=" q-pa-lg q-mr-none text-white">
+                <q-icon name="attach_money" color="green" size="24px"></q-icon>
+              </q-item-section>
+              <q-item-section class="q-ml-none">
+                <q-item-label class="text-grey-7">Used Safe Healthy</q-item-label>
+                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{ Math.floor(Math.random() * 1000) }}</q-item-label>
+              </q-item-section>
+            </q-item>
+          </div>
+
+          <div class="col-md-2 col-sm-12 col-xs-12">
+            <q-item style="background-color: #fff" class="q-pa-none q-ml-xs">
+              <q-item-section side style="background-color: #fff" class=" q-pa-lg q-mr-none text-white">
+                <q-icon name="attach_money" color="green" size="24px"></q-icon>
+              </q-item-section>
+              <q-item-section class="q-ml-none">
+                <q-item-label class="text-grey-7">Used TechPD</q-item-label>
+                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{ Math.floor(Math.random() * 1000) }} </q-item-label>
+              </q-item-section>
+            </q-item>
+          </div>
+
+          <div class="col-md-2 col-sm-12 col-xs-12">
+            <q-item style="background-color: #fff" class="q-pa-none q-ml-xs">
+              <q-item-section side style="background-color: #fff" class=" q-pa-lg q-mr-none text-white">
+                <q-icon name="attach_money" color="purple" size="24px"></q-icon>
+              </q-item-section>
+              <q-item-section class="q-ml-none">
+                <q-item-label class="text-grey-7">Used Tech Instruction</q-item-label>
+                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{ Math.floor(Math.random() * 1000) }} </q-item-label>
+              </q-item-section>
+            </q-item>
+          </div>
+
+        </div>
+      </q-card-section>
+    </q-card>
+
+
+
     <div class="q-pa-sm q-mt-sm q-gutter-sm">
       <q-card>
 
@@ -102,11 +310,11 @@
           align="left"
           narrow-indicator
         >
-          <q-tab name="Title1" label="Title I" />
-          <q-tab name="Title2" label="Title II" />
-          <q-tab name="Title3" label="Title III" />
-          <q-tab name="Title4" label="Title IV" />
-          <q-tab name="ESSER" label="ESSER" />
+          <q-tab name="Title1" label="Title I"/>
+          <q-tab name="Title2" label="Title II"/>
+          <q-tab name="Title3" label="Title III"/>
+          <q-tab name="Title4" label="Title IV"/>
+          <q-tab name="ESSER" label="ESSER"/>
 
         </q-tabs>
 
@@ -134,7 +342,6 @@
                 
                 <q-select class="q-mr-md" style="min-width: 200px; max-width: 200px" dense outlines clearable v-model="schoolYear" :options="schoolYears" label="School year"/>
 
-
                 <q-input class="q-mr-md" outlines dense v-model="filter" placeholder="Search">
                   <template v-slot:append>
                     <q-icon name="search"/>
@@ -143,8 +350,6 @@
 
                 <q-select class="q-mr-md" style="min-width: 250px; max-width: 250px" dense outlines clearable 
                 v-model="typeModel" :options="options" label="Type" @input="filterType"/>
-
-
 
                 <q-btn
                   icon-right="archive"
@@ -168,7 +373,6 @@
                   >{{props.inFullscreen ? 'Exit Fullscreen' : 'Toggle Fullscreen'}}
                   </q-tooltip>
                 </q-btn>
-
 
                 <div class="q-pa-sm q-gutter-sm">
 
@@ -366,8 +570,6 @@
                           </div>
                         </div>
 
-                        <!-- <q-separator v-if="splitActivity" class="q-mt-md q-mb-md"/> -->
-
                         <div class="q-mt-md" v-if="splitActivity">
                             <div class="q-pa-md">
                               <q-table
@@ -375,7 +577,62 @@
                                 :columns="attendeesColumn"
                                 row-key="attendees"
                                 hide-bottom
-                              />
+                              >
+                                <template v-slot:body="props">
+                                  <q-tr :props="props">
+                                    
+                                    <q-td key="attendees" :props="props">
+                                      {{ props.row.attendees }}
+                                    </q-td>
+
+                                    <q-td key="allocation" :props="props">
+                                      {{ props.row.allocation }}
+                                    </q-td>
+
+                                    <q-td key="attendeeList" :props="props">
+                                      <div @click="props.expand = !props.expand" class="cursor-pointer" > 
+                                        {{ props.row.attendeeList }}
+                                      </div>
+                                    </q-td>
+
+                                  </q-tr>
+
+                                  <q-tr v-show="props.expand" :props="props">
+                                    <q-td colspan="100%" class="q-td--no-hover">
+
+                                        <q-input outlined dense 
+                                          v-on:keyup.enter="searchEnter"
+                                          v-model="attendingSearch"
+                                          label="Search" class="q-mt-lg q-mb-sm">
+
+                                          <template v-slot:prepend>
+                                            <q-icon name="search" />
+                                          </template>
+
+                                        </q-input>
+
+                                        <q-list separator class="q-mb-lg">
+
+                                          <q-item v-for="teacher in filteredList" :key="teacher.id">
+                                            <q-item-section>{{ teacher.name }}</q-item-section>
+                                          </q-item>
+                                          
+                                        
+
+                                          <div v-if="teachersSearchLength == 0">
+                                              <p class="q-mt-md">
+                                                <q-icon name="warning" style="font-size: 1.5em"/>
+                                                No matching records found 
+                                              </p>
+                                          </div>
+                                        
+                                        </q-list>
+
+                                    </q-td>
+                                  </q-tr>
+
+                                </template>
+                              </q-table>
                             </div>
                         </div>
 
@@ -383,9 +640,22 @@
                       
                       <q-card-actions class="row justify-end">
                           <q-btn flat label="Cancel" color="primary" v-close-popup></q-btn>
-                          <q-btn flat label="Confirm" color="primary" v-close-popup @click="alert()"></q-btn>
+                          <q-btn flat label="Confirm" color="primary" v-close-popup></q-btn>
                       </q-card-actions>
 
+                    </q-card>
+                  </q-dialog>
+
+                  <q-dialog v-model="confirm" persistent>
+                    <q-card>
+                      <q-card-section class="row items-center">
+                        <span class="q-ml-sm">Are you sure to delete this item?</span>
+                      </q-card-section>
+
+                      <q-card-actions align="right">
+                        <q-btn flat label="No, thanks" color="primary" v-close-popup />
+                        <q-btn label="Yes" color="red" v-close-popup @click="deleteItem" />
+                      </q-card-actions>
                     </q-card>
                   </q-dialog>
 
@@ -397,19 +667,35 @@
                 
                   <q-tr :props="props">
 
+                    <q-td auto-width>
+                      <q-btn size="sm" flat
+                        color="black"
+                        @click="props.expand = !props.expand" 
+                        :icon="props.expand ? 'keyboard_arrow_down' : 'keyboard_arrow_right'">
+                      </q-btn>
+                    </q-td>
+
                     <q-td key="provider" :props="props">
                       {{ props.row.provider }}
+                    </q-td>
+
+                    <q-td key="status" :props="props">
+                      <q-icon v-if="props.row.status" name="done" color="green" style="font-size: 1.5em"/>
+                      <q-icon v-else name="clear" color="red" style="font-size: 2em"/>
                     </q-td>
 
                     <q-td key="PDActivity" :props="props">
                       {{ props.row.PDActivity }}
                     </q-td>
                     
-                    <q-td key="dateOfActivity" :props="props" 
-                      :style="{width: '300px', whiteSpace: 'normal'}"
+                    <q-td key="dateOfActivity" :props="props"
+                      :style="{maxWidth: '320px', width: '320px'}"
                     > 
                       <span @click="editItem(props.row)" >{{ props.row.dateOfActivity }}</span>
-                      <span class="q-ml-sm"><q-icon name="repeat" color="green" style="font-size: 20px" v-if="props.row.repeat" /></span>
+                      <span class="q-ml-sm">
+                        <q-icon name="autorenew" color="green" style="font-size: 1.5em" v-if="props.row.repeat" />
+                      </span>
+
                     </q-td>
 
                     <q-td key="noAttending" :props="props">
@@ -432,6 +718,32 @@
                       <div>$ {{ props.row.grossPD }}</div>
                     </q-td>
 
+                    <q-td key="actions" :props="props">
+                      <!-- <q-btn 
+                        icon="edit"
+                        color="blue"
+                        @click="editItem(props.row)" 
+                        size=sm 
+                        no-caps
+                        class="q-mr-sm"
+                      >
+                      </q-btn> -->
+                      <q-btn 
+                        icon="delete_forever"
+                        color="red" 
+                        @click="openDeleteModal(props.row)" 
+                        size=sm 
+                        no-caps
+                      >
+                      </q-btn>
+                    </q-td>
+
+                  </q-tr>
+
+                  <q-tr v-show="props.expand" :props="props">
+                    <q-td colspan="100%" class="q-td--no-hover">
+                      <q-input type="textarea" outlined v-model="props.row.notes" label="Notes" class="q-mt-md q-mb-md"/>
+                    </q-td>
                   </q-tr>
 
               </template>
@@ -474,8 +786,9 @@
 
       </q-card>
     </div>
-  
 
+
+  
   </q-page>
 </template>
 
@@ -574,8 +887,6 @@
               }
             ],
 
-
-
             loading: false,
             pages: 10,
             currentPage: 1,
@@ -588,10 +899,20 @@
             
             columns: [
               {
+                name: "toggle",
+              },
+              {
                 name: "provider",
                 align: "left",
                 label: "Provider",
                 field: "provider",
+                sortable: true
+              },
+              {
+                name: "status",
+                align: "left",
+                label: "Status",
+                field: "status",
                 sortable: true
               },
               { 
@@ -633,6 +954,12 @@
                 align: "left",
                 label: "Charge",
                 field: "grossPD"
+              },
+              {
+                name: "actions",
+                align: "left",
+                label: "Actions",
+                field: "actions"
               }
             ],
             data: [],
@@ -662,9 +989,32 @@
               'Family Engagement'
             ],
             typeModel: '',
+
+            attendingTeacherList: [
+              // {id: 1, name: 'Luke Skywalker'},
+              // {id: 2, name: 'Han Solo'},
+              // {id: 3, name: 'Jar Jar Binks'},
+              // {id: 4, name: 'R2-D2'},
+              // {id: 5, name: 'Yoda'}
+            ],
+            attendingSearch: '',
+            teachersSearchLength: 0,
+
+            item: '',
+            confirm: false,
           };
         },
         methods: {
+          searchEnter() {
+            if(this.teachersSearchLength == 0) {
+              let obj = {
+                id: Math.floor(Math.random() * 1000),
+                name: this.attendingSearch
+              }
+              this.attendingTeacherList.push(obj)
+              this.attendingSearch = ''
+            }
+          },
           exportTable() {
                 // naive encoding to csv format
                 const content = [this.columns.map(col => wrapCsvValue(col.label))].concat(
@@ -710,14 +1060,12 @@
 
           },
           editAttendingitem(item) {
-            console.log('editAttendingitem', item)
             this.show_attending_dialog = true;
           },
           close () {
             this.show_dialog = false
           },
           filterType() {
-            console.log(this.typeModel)
             if(this.typeModel) {
               if(this.typeModel == 'Professional Development') {
                 this.data = this.tempData.filter(a => a.typeTest == true);
@@ -727,7 +1075,16 @@
             }else {
               this.data = this.tempData
             }
-          }
+          },
+          openDeleteModal(item) {
+            this.item = item
+            this.confirm = true
+          },
+          deleteItem() {
+            let item = this.item
+            const index = this.data.indexOf(item)
+            this.data.splice(index, 1)
+          },
          
         },
         created() {
@@ -752,6 +1109,7 @@
               let obj = {
                   // toggle: '',
                   provider: 'WEI ' + i+1,
+                  status: r,
                   PDActivity: 'Balanced Literacy for Readers, #2-133 with Chris VB',
                   dateOfActivity: 'August, 2019 - May 2020 on Mondays',
                   noAttending: '12 TI teachers and 30 TII Teachers',
@@ -759,7 +1117,8 @@
                   type: pd ? 'PD' : 'FE',
                   typeTest: pd,
                   grossPD: charge.toFixed(2),
-                  repeat: r
+                  repeat: r,
+                  notes: 'Lorem Ipsum – Generator, Origins and Meaning'
               }
 
               dataTest.push(obj)
@@ -769,6 +1128,13 @@
             this.tempData = dataTest
         },
         computed: {
+          filteredList() {
+              let searchString = this.attendingSearch.toLowerCase();
+              let x = this.attendingTeacherList.filter(item => item.name.toLowerCase().includes(searchString));
+              this.teachersSearchLength = x.length
+              console.log('teachersSearchLength', this.teachersSearchLength )
+              return x
+          },
           timeTotal() {
             let t1 = parseInt(this.time1.substring(0,2))
             let t2 = parseInt(this.time2.substring(0,2))
@@ -779,9 +1145,6 @@
           totalMinute() {
             let m1 = parseInt(this.time1.substring(3,5));
             let m2= parseInt(this.time2.substring(3,5));
-
-            console.log(m1)
-            console.log(m2)
 
             let m1res = 0, m2res = 0;
 
@@ -823,6 +1186,11 @@
 
         }
     }
+
+   // No attending
+   // on click show teacher lastname firstname 
+   // approved - not approved
+
 
 </script>
 

@@ -255,8 +255,12 @@
 </template>
 
 <script>
+    
     import EssentialLink from 'components/EssentialLink'
     import Messages from "./Messages";
+
+    import config from '../../config';
+    import axios from 'axios';
 
     export default {
         name: 'MainLayout',
@@ -270,6 +274,32 @@
             return {
                 leftDrawerOpen: false,
             }
+        },
+
+        methods: {
+          getMenus() {
+
+            console.log('Get menus request -----')
+
+              let roleId = JSON.parse(localStorage.getItem('user-info')).role_id,
+                  token = localStorage.getItem('access-token');
+
+            let url = config.getMenus + roleId
+              
+            const header = `Authorization: Bearer ${token}`;
+
+            axios.get(url, { headers: { header, 'Content-Type': 'application/json' } })
+              .then(res => {
+                console.log('RESPONSE : ', res)
+              })
+              .catch(e => {
+                console.log('ERROR : ------- ', e)
+              })
+          }
+        },
+
+        created() {
+          // this.getMenus()
         }
     }
 </script>

@@ -1,7 +1,10 @@
-const host = 'http://edxchange-back.local'
+const host = 'https://edxchange-backend.aimtech.am/api/v1';
 
 const config = {
-    login: host + '/webapi/auth-user',
+    login: host + '/user/sign-in',
+
+    // Get menus
+    getMenus: host + '/menu-list?role_id=', // + role id
 }
 
 export default config

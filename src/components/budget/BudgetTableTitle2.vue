@@ -285,6 +285,11 @@
                 {{ props.row.provider }}
             </q-td>
 
+            <q-td key="status" :props="props">
+                <q-icon v-if="props.row.status" name="done" color="green" style="font-size: 1.5em"/>
+                <q-icon v-else name="clear" color="red" style="font-size: 2em"/>
+            </q-td>
+
             <q-td key="PDActivity" :props="props">
                 {{ props.row.PDActivity }}
             </q-td>
@@ -293,7 +298,9 @@
                 :style="{width: '300px', whiteSpace: 'normal'}"
             > 
                 <span @click="editItem(props.row)" >{{ props.row.dateOfActivity }}</span>
-                <span class="q-ml-sm"><q-icon name="repeat" color="green" style="font-size: 20px" v-if="props.row.repeat" /></span>
+                <span class="q-ml-sm">
+                    <q-icon name="autorenew" color="green" style="font-size: 1.5em" v-if="props.row.repeat" />
+                </span>
             </q-td>
 
             <q-td key="noAttending" :props="props">
@@ -436,18 +443,25 @@ export default {
         
         columns: [
             {
-            name: "provider",
-            align: "left",
-            label: "Provider",
-            field: "provider",
-            sortable: true
+                name: "provider",
+                align: "left",
+                label: "Provider",
+                field: "provider",
+                sortable: true
+            },
+            {
+                name: "status",
+                align: "left",
+                label: "Status",
+                field: "status",
+                sortable: true
             },
             { 
-            name: "PDActivity", 
-            align: "left",
-            label: "Activity", 
-            field: "PDActivity",
-            sortable: true
+                name: "PDActivity", 
+                align: "left",
+                label: "Activity", 
+                field: "PDActivity",
+                sortable: true
             },
             {
             name: "dateOfActivity",
@@ -600,6 +614,7 @@ export default {
             let obj = {
                 // toggle: '',
                 provider: 'WEI ' + i+1,
+                status: r,
                 PDActivity: 'Balanced Literacy for Readers, #2-133 with Chris VB',
                 dateOfActivity: 'August, 2019 - May 2020 on Mondays',
                 noAttending: '12 TI teachers and 30 TII Teachers',
