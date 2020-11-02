@@ -821,22 +821,22 @@
 
                     <q-td key="status" :props="props">
 
-                      <q-icon v-if="props.row.status == 'Approved'" name="done" color="green" style="font-size: 1.5em"/>
-                      <q-icon v-else-if="props.row.status == 'Pending'" name="access_time" color="amber-7" style="font-size: 1.5em"/>
-                      <q-icon v-else name="clear" color="red" style="font-size: 2em"/>
-
-                      <q-popup-edit v-model="props.row.status" title="Update status" buttons>
-                        <q-select outlined v-model="props.row.status" :options="status"/>
+                      <q-icon v-if="props.row.status == 'Active'" name="done" color="green" style="font-size: 1.5em"/>
+                      <q-icon v-else name="cancel" color="red" style="font-size: 2em"/>
+                      
+                      <q-popup-edit  v-model="props.row.status" title="Update status" buttons>
+                        <q-select dense outlined v-model="props.row.status" :options="status"/>
                       </q-popup-edit>
 
                     </q-td>
 
                     <q-td key="approvals" :props="props">
-                      <q-icon v-if="props.row.approvals == 'Active'" name="done" color="green" style="font-size: 1.5em"/>
-                      <q-icon v-else name="cancel" color="red" style="font-size: 2em"/>
-                      
+                      <q-icon v-if="props.row.approvals == 'Approved'" name="done" color="green" style="font-size: 1.5em"/>
+                      <q-icon v-else-if="props.row.approvals == 'Pending'" name="access_time" color="amber-7" style="font-size: 1.5em"/>
+                      <q-icon v-else name="clear" color="red" style="font-size: 2em"/>
+
                       <q-popup-edit v-model="props.row.approvals" title="Update status" buttons>
-                        <q-select outlined v-model="props.row.approvals" :options="approval"/>
+                        <q-select dense outlined v-model="props.row.approvals" :options="approval"/>
                       </q-popup-edit>
                     </q-td>
 
@@ -1053,8 +1053,8 @@
             splitActivity: false,
             confirmAttendeeModal: false,
 
-            status: ['Approved', 'Declined', 'Pending'],
-            approval: ['Active', 'Canceled'],
+            approval : ['Approved', 'Declined', 'Pending'],
+            status : ['Active', 'Canceled'],
             
             numbersOfAttendees: [1, 2, 3],
             attendeesColumn: [
