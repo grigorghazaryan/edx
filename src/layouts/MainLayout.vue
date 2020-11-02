@@ -187,7 +187,7 @@
                 <q-icon name="account_balance"/>
               </q-item-section>
               <q-item-section>
-                <q-item-label>Budget</q-item-label>
+                <q-item-label>Activity</q-item-label>
               </q-item-section>
             </q-item>
           </q-list>
