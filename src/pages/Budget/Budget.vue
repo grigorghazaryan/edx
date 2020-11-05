@@ -5,7 +5,7 @@
       <q-breadcrumbs>
         <q-breadcrumbs-el icon="dashboard" label="Dashboard" to="/" />
         <q-breadcrumbs-el label="Budget"/>
-        <q-breadcrumbs-el label="Budget"/>
+        <q-breadcrumbs-el label="Activity"/>
       </q-breadcrumbs>
     </div>
 
@@ -373,7 +373,8 @@
               :loading="loading"
               :filter="filter"
               class="no-shadow"
-              row-key="provider"
+              row-key="id"
+              :pagination.sync="pagination"
             >
 
               <!-- Loading -->
@@ -802,7 +803,10 @@
               <!-- Table Body -->
               <template v-slot:body="props">
                 
-                  <q-tr :props="props">
+                  <q-tr :props="props" :class="{ 'bg-red-2' : props.row.changed }" 
+                    @mouseover="props.row.showEditButton = true"
+                    @mouseout="props.row.showEditButton = false"
+                  >
 
                     <q-td auto-width>
                       <q-btn size="sm" flat
@@ -812,42 +816,150 @@
                       </q-btn>
                     </q-td>
 
-                    <q-td key="provider" :props="props">
-                      {{ props.row.provider }}
+                    <q-td key="provider" :props="props" @click="copyRowData(props.rowIndex)">
+
+                      <div>{{ props.row.provider }}</div>
+
                       <q-popup-edit v-model="props.row.provider" title="Update provider" buttons>
-                        <q-input type="text" v-model="props.row.provider" dense autofocus />
+                        <q-input type="text" v-model="props.row.provider" dense autofocus 
+                          @input="detectChange(props.rowIndex)"
+                        />
                       </q-popup-edit>
+
                     </q-td>
 
-                    <q-td key="status" :props="props">
+                    <q-td key="status" :props="props" @click="copyRowData(props.rowIndex)">
 
-                      <q-icon v-if="props.row.status == 'Active'" name="done" color="green" style="font-size: 1.5em"/>
-                      <q-icon v-else name="cancel" color="red" style="font-size: 2em"/>
+                      <q-icon v-if="props.row.status == 'Active'" name="done" color="green" style="font-size: 1.5em">
+                        <q-tooltip 
+                            anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                            transition-show="flip-right"
+                            transition-hide="flip-left"
+                        >
+                          <strong>Active</strong>
+                        </q-tooltip>
+                      </q-icon>
+                      <q-icon v-else name="cancel" color="red" style="font-size: 2em">
+                        <q-tooltip 
+                            anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                            transition-show="flip-right"
+                            transition-hide="flip-left"
+                        >
+                          <strong>Canceled</strong>
+                        </q-tooltip>
+                      </q-icon>
                       
-                      <q-popup-edit  v-model="props.row.status" title="Update status" buttons>
-                        <q-select dense outlined v-model="props.row.status" :options="status"/>
+                      <q-popup-edit  v-model="props.row.status" title="Status" buttons>
+                        <q-select @input="detectChange(props.rowIndex)" dense outlined v-model="props.row.status" :options="status"/>
                       </q-popup-edit>
 
                     </q-td>
 
-                    <q-td key="approvals" :props="props">
-                      <q-icon v-if="props.row.approvals == 'Approved'" name="done" color="green" style="font-size: 1.5em"/>
-                      <q-icon v-else-if="props.row.approvals == 'Pending'" name="access_time" color="amber-7" style="font-size: 1.5em"/>
-                      <q-icon v-else name="clear" color="red" style="font-size: 2em"/>
+                    <q-td key="approvals" :props="props"  @click="copyRowData(props.rowIndex)">
 
-                      <q-popup-edit v-model="props.row.approvals" title="Update status" buttons>
-                        <q-select dense outlined v-model="props.row.approvals" :options="approval"/>
+                      <q-icon v-if="props.row.approvals == 'Approved'" name="done" color="green" style="font-size: 1.5em">
+                        <q-tooltip 
+                            anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                            transition-show="flip-right"
+                            transition-hide="flip-left"
+                        >
+                          <strong>Approved</strong>
+                        </q-tooltip>
+                      </q-icon>
+                      <q-icon v-else-if="props.row.approvals == 'Pending'" name="access_time" color="amber-7" style="font-size: 1.5em">
+                        <q-tooltip 
+                            anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                            transition-show="flip-right"
+                            transition-hide="flip-left"
+                        >
+                          <strong>Pending</strong>
+                        </q-tooltip>
+                      </q-icon>
+                      <q-icon v-else name="clear" color="red" style="font-size: 2em">
+                        <q-tooltip 
+                            anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                            transition-show="flip-right"
+                            transition-hide="flip-left"
+                        >
+                          <strong>Declined</strong>
+                        </q-tooltip>
+                      </q-icon>
+
+
+                      <q-icon v-if="props.row.approvalStatus == 'Needs Assessment'" name="psychology" color="blue" style="font-size: 1.5em">
+                        <q-tooltip 
+                            anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                            transition-show="flip-right"
+                            transition-hide="flip-left"
+                        >
+                          <strong>{{props.row.approvalStatus}}</strong>
+                        </q-tooltip>
+                      </q-icon>
+                      <q-icon v-else-if="props.row.approvalStatus == 'Catalog'" name="category" color="blue" style="font-size: 1.5em">
+                        <q-tooltip 
+                            anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                            transition-show="flip-right"
+                            transition-hide="flip-left"
+                        >
+                          <strong>{{props.row.approvalStatus}}</strong>
+                        </q-tooltip>
+                      </q-icon>
+                      <q-icon v-else-if="props.row.approvalStatus == 'Blanket Approval'" name="touch_app" color="blue" style="font-size: 1.5em">
+                        <q-tooltip 
+                            anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                            transition-show="flip-right"
+                            transition-hide="flip-left"
+                        >
+                          <strong>{{props.row.approvalStatus}}</strong>
+                        </q-tooltip>
+                      </q-icon>
+                      <q-icon v-else-if="props.row.approvalStatus == 'Pre Approval'" name="how_to_reg" color="blue" style="font-size: 1.5em">
+                        <q-tooltip 
+                            anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                            transition-show="flip-right"
+                            transition-hide="flip-left"
+                        >
+                          <strong>{{props.row.approvalStatus}}</strong>
+                        </q-tooltip>
+                      </q-icon>
+
+                      <q-popup-edit v-model="props.row.approvals" title="Approvals" buttons >
+                        
+                        <div style="width: 450px !important;max-width: 450px !important;">
+
+                          <div class="row">
+                            <div class="col-md-4">
+                              <q-select @input="detectChange(props.rowIndex)" dense outlined v-model="props.row.approvals" :options="approval"/>
+                            </div>
+                            <div class="col-md-7 q-ml-md">
+                              
+                                <q-option-group
+                                  @input="detectChange(props.rowIndex)"
+                                  :options="optionsApp"
+                                  label="Notifications"
+                                  type="radio"
+                                  v-model="props.row.approvalStatus"
+                                />
+
+                                <q-input :disable="props.row.approvalStatus !== 'Pre-Approved'" class="q-mt-md q-mb-lg" dense outlined v-model="approvedName" label="Approved Name" />
+                        
+                           </div>
+                           <q-separator />
+                          </div>
+                        
+                        </div>
                       </q-popup-edit>
+
                     </q-td>
 
-                    <q-td key="PDActivity" :props="props">
+                    <q-td key="PDActivity" :props="props" @click="copyRowData(props.rowIndex)">
                       {{ props.row.PDActivity }}
                       <q-popup-edit v-model="props.row.PDActivity" title="Update activity" buttons>
-                        <q-input type="text" v-model="props.row.PDActivity" dense autofocus />
+                        <q-input @input="detectChange(props.rowIndex)" type="text" v-model="props.row.PDActivity" dense autofocus />
                       </q-popup-edit>
                     </q-td>
                     
-                    <q-td key="dateOfActivity" :props="props"
+                    <q-td key="dateOfActivity" :props="props" @click="copyRowData(props.rowIndex)"
                       :style="{maxWidth: '200px', width: '200px'}"
                     > 
                       <span @click="editDateOfActivity(props.row)" >{{ props.row.dateOfActivityArr.startdate }} - {{ props.row.dateOfActivityArr.endDate }}</span>
@@ -857,7 +969,7 @@
 
                     </q-td>
 
-                    <q-td key="noAttending" :props="props">
+                    <q-td key="noAttending" :props="props" @click="copyRowData(props.rowIndex)">
                       <div @click="editAttendingitem(props.row)">
                         <!-- {{ props.row.noAttendingArr.attendees }}  -->
                         {{ props.row.noAttendingArr.teacherCount }}
@@ -868,37 +980,99 @@
                       </div>
                     </q-td>
 
-                    <q-td key="amount" :props="props">
+                    <q-td key="amount" :props="props" @click="copyRowData(props.rowIndex)">
                       <div>$ {{ props.row.amount }}</div>
                       <q-popup-edit v-model="props.row.amount" title="Update amount" buttons>
-                        <q-input type="text" v-model="props.row.amount" dense autofocus />
+                        <q-input @input="detectChange(props.rowIndex)" type="text" v-model="props.row.amount" dense autofocus />
                       </q-popup-edit>
                     </q-td>
 
-                    <q-td key="type" :props="props">
+                    <q-td key="type" :props="props" @click="copyRowData(props.rowIndex)">
                       <!-- <div></div> -->
 
-                      <q-chip square color="green" text-color="white" v-if="props.row.type.label == 'FE'">{{props.row.type.label}}</q-chip>
-                      <q-chip square color="purple" text-color="white" v-else>{{props.row.type.label}}</q-chip>
+                      <q-chip square color="green" text-color="white" v-if="props.row.type.label == 'FE'">
+                        {{props.row.type.label}}
+                        <q-tooltip 
+                            anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                            transition-show="flip-right"
+                            transition-hide="flip-left"
+                        >
+                          <strong>Family Engagement</strong>
+                        </q-tooltip>
+                      </q-chip>
+                      <q-chip square color="purple" text-color="white" v-else>
+                        {{props.row.type.label}}
+                        <q-tooltip 
+                            anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                            transition-show="flip-right"
+                            transition-hide="flip-left"
+                        >
+                          <strong>Professional Development</strong>
+                        </q-tooltip>
+                      </q-chip>
 
                       <q-popup-edit v-model="props.row.type" title="Update type" buttons>
-                        <q-select v-model="props.row.type" :options="type1test"/>
+                        <q-select @input="detectChange(props.rowIndex)" v-model="props.row.type" :options="type1test"/>
                       </q-popup-edit>  
 
                     </q-td>
 
                     <q-td key="grossPD" :props="props">
-                      <div>$ {{ parseFloat(props.row.amount) + parseFloat(((props.row.amount * 12) / 100)) }}</div>
+                      <div>$ {{ (parseFloat(props.row.amount) + parseFloat(((props.row.amount * 12) / 100))).toFixed(2) }}</div>
                     </q-td>
 
                     <q-td key="actions" :props="props">
+                      <q-btn 
+                        v-if="props.row.changed"
+                        @click="props.row.changed = false"
+                        class="q-mr-sm"
+                        icon="save"
+                        color="green" 
+                        size=sm 
+                        no-caps
+                        round 
+                      >
+                        <q-tooltip 
+                            anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                            transition-show="flip-right"
+                            transition-hide="flip-left"
+                        >
+                          <strong>Save</strong>
+                        </q-tooltip>
+                      </q-btn>
+                      <q-btn 
+                        v-show="props.row.showEditButton && !props.row.changed"
+                        class="q-mr-sm"
+                        icon="content_copy"
+                        color="orange" 
+                        @click="copyRow(props.row, props.rowIndex)"
+                        size=sm 
+                        no-caps
+                        round 
+                      >
+                        <q-tooltip 
+                            anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                            transition-show="flip-right"
+                            transition-hide="flip-left"
+                        >
+                          <strong>Duplicate</strong>
+                        </q-tooltip>
+                      </q-btn>
                       <q-btn 
                         icon="delete_forever"
                         color="red" 
                         @click="openDeleteModal(props.row)" 
                         size=sm 
                         no-caps
+                        round 
                       >
+                        <q-tooltip 
+                            anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                            transition-show="flip-right"
+                            transition-hide="flip-left"
+                        >
+                          <strong>Delete</strong>
+                        </q-tooltip>
                       </q-btn>
                     </q-td>
 
@@ -949,7 +1123,7 @@
               </template>
 
               <!-- Pagination -->
-              <template v-slot:bottom class="justify-end">
+              <!-- <template v-slot:bottom class="justify-end">
                 <div class="q-pa-md flex flex-center">
                   <q-pagination
                     v-model="pagination.page"
@@ -960,7 +1134,7 @@
                   >
                   </q-pagination>
                 </div>
-              </template>
+              </template> -->
 
             </q-table>
           </q-tab-panel>
@@ -987,14 +1161,14 @@
       </q-card>
     </div>
 
-
-  
   </q-page>
 </template>
 
 <script>
     import {exportFile} from 'quasar'
     import router from 'src/router'
+    import lodash from 'lodash'
+
 
     import BudgetTableTitle2 from '../../components/budget/BudgetTableTitle2'
     import BudgetTableTitle3 from '../../components/budget/BudgetTableTitle3'
@@ -1023,6 +1197,7 @@
         return `"${formatted}"`
     }
     const adminFee = 12;
+    let oldObject = {}
 
     export default {
         components: {
@@ -1030,6 +1205,7 @@
         },
         data() {
           return {
+            detectChangeOldData: {},
             tab: 'Title1',
             mode: 'list',
 
@@ -1055,6 +1231,15 @@
 
             approval : ['Approved', 'Declined', 'Pending'],
             status : ['Active', 'Canceled'],
+
+            optionsApp: [
+              { label: 'Needs Assessment', value: 'Needs Assessment' },
+              { label: 'Catalog', value: 'Catalog', color: 'green' },
+              { label: 'Blanket Approval', value: 'Blanket Approval', color: 'red' },
+              { label: 'Pre Approval', value: 'Pre-Approved', color: 'green' },
+              { label: 'None', value: 'None'}
+            ],
+            approvedName: '',
             
             numbersOfAttendees: [1, 2, 3],
             attendeesColumn: [
@@ -1098,18 +1283,19 @@
             ],
 
             loading: false,
-            pages: 10,
-            currentPage: 1,
+            // pages: 10,
+            // currentPage: 1,
             pagination: {
-              sortBy: 'name',
-              page: 1,
-              rowsPerPage: 10,
+              // sortBy: 'name',
+              // page: 1,
+              rowsPerPage: -1,
               // rowsNumber: 10
             },
             
             columns: [
               {
                 name: "toggle",
+                style: 'width: 30px'
               },
               {
                 name: "provider",
@@ -1180,7 +1366,8 @@
               }
             ],
             data: [],
-            tempData: [],
+            tempDataX: [],
+
 
             editedIndex: null,
             editedItem: {
@@ -1280,6 +1467,51 @@
           };
         },
         methods: {
+          detectChange(index) {
+            
+            let d = JSON.parse(oldObject)
+            // let d = oldObject
+            let f = JSON.stringify(this.data[index])
+                f = JSON.parse(f)
+
+            console.log('OLD OBJECT', d)
+            console.log('NEW OBJECT', f)
+
+            let status = _.isEqual(d, f)
+
+
+            // console.log('status', status)
+            if(status) {
+              this.data[index].changed = false
+            }else {
+              this.data[index].changed = true
+            }
+
+          },
+          copyRowData(index) {
+            
+            oldObject = JSON.stringify(this.tempDataX[index])
+            console.log('Copy Row Data', oldObject)
+
+          },
+          copyRow(row, index) {
+
+            console.log('tempDataX', JSON.stringify(this.data[index]))
+            let old = JSON.stringify(this.data[index])
+
+            let newData = this.data[index]
+            newData.id =  Math.floor(Math.random() * 50)
+            newData.changed = true
+            let ddd = JSON.stringify(newData)
+            console.log('new data', JSON.stringify(newData))
+
+            let i = index+1
+            
+            this.data.splice(i, 0, JSON.parse(ddd));
+            
+            Object.assign(this.data[index], JSON.parse(old));
+
+          },
           addEmptyRow() {
             let obj = {
                   // toggle: '',
@@ -1391,11 +1623,12 @@
             this.confirmAttendeeModal = false
           },
           filterType() {
+            console.log(this.typeModel)
             if(this.typeModel) {
               if(this.typeModel == 'Professional Development') {
-                this.data = this.tempData.filter(a => a.typeTest == true);
+                this.data = this.tempDataX.filter(a => a.typeTest == true);
               }else {
-                this.data = this.tempData.filter(a => a.typeTest == false);
+                this.data = this.tempDataX.filter(a => a.typeTest == false);
               }
             }else {
               this.data = this.tempData
@@ -1439,9 +1672,8 @@
             }
             this.editedItem.noAttendingArr.attendeesData.push(obj)
           },
-        },
-        created() {
-
+          createData() {
+            console.log('Create data function works ...')
             let dataTest = []
 
             for(let i=0; i<5; i++) {
@@ -1469,23 +1701,30 @@
               }
 
               let no = Math.floor(Math.random() * 12)
-              // let attendeesObj = {   
-              //   no: no,
-              //   allocation: {
-              //     label: 'Title I',
-              //     value: 'Title I',
-              //     disable: true
-              //   },
-              //   type: '',
-              //   amount: 0,
-              //   attendeeList: 'View'
-              // }
+              let approvalStatus = Math.floor(Math.random() * 3),
+                  appStatus;
+
+              switch(approvalStatus) {
+                case 0:
+                  appStatus = 'Needs Assessment'
+                  break;
+                case 1:
+                  appStatus = 'Catalog'
+                  break;
+                case 2:
+                  appStatus = 'Blanket Approval'
+                  break;
+                case 3:
+                  appStatus = 'Pre-Approved'
+                  break;
+              }
 
               let obj = {
                   // toggle: '',
+                  id: i,
                   provider: 'WEI ' + i+1,
-                  status: r ? 'Approved' : 'Declined',
-                  approvals: r ? 'Active' : 'Canceled',
+                  status: r ? 'Active' : 'Canceled',
+                  approvals: r ? 'Approved' : 'Declined',
                   PDActivity: 'Balanced Literacy for Readers, #2-133 with Chris VB',
                   dateOfActivity: 'August, 2019 - May 2020 on Mondays',
                   noAttending: '12 TI teachers and 30 TII Teachers',
@@ -1509,13 +1748,27 @@
                     attendeesData: [],
                     teacherCount: no,
                   },
+                  changed: false,
+                  approvalStatus: appStatus,
+                  showEditButton: false,
               }
 
               dataTest.push(obj)
             }
 
             this.data = dataTest
-            this.tempData = dataTest
+            this.tempDataX = dataTest
+          }
+        },
+        created() {
+
+            // 
+            let q = {a: 1}
+            let w = {a: 1, b: 4}
+            console.log(_.isEqual(q, w))
+            //
+            this.createData()
+
         },
         computed: {
           popupAmount() {
@@ -1529,10 +1782,6 @@
               }
               
               return parseFloat(amount)
-          },
-          titleTeacherNumber() {
-            console.log('44', this.data)
-            return 4
           },
           filteredList() {
               let searchString = this.attendingSearch.toLowerCase();
@@ -1563,7 +1812,6 @@
             }  
 
             let result =  m1res - m2res
-            console.log('m1',m1res, 'm2', m2res, 'result=',result)
 
             return result
           },
@@ -1593,10 +1841,6 @@
 
         }
     }
-
-   // No attending
-   // on click show teacher lastname firstname 
-   // approved - not approved
 
 
 </script>

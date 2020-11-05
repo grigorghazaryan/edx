@@ -182,7 +182,7 @@
           label="Budget"
         >
           <q-list class="bg-sidebar-opened">
-            <q-item to="/Budget" class="q-pl-lg" active-class="q-item-no-link-highlighting">
+            <q-item to="/Activity" class="q-pl-lg" active-class="q-item-no-link-highlighting">
               <q-item-section avatar>
                 <q-icon name="account_balance"/>
               </q-item-section>
