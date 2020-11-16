@@ -134,12 +134,12 @@
           label="Inventory"
         >
           <q-list class="bg-sidebar-opened">
-            <q-item to="/Inventory1" class="q-pl-lg" active-class="q-item-no-link-highlighting">
+            <q-item to="/Inventory" class="q-pl-lg" active-class="q-item-no-link-highlighting">
               <q-item-section avatar>
                 <q-icon name="person"/>
               </q-item-section>
               <q-item-section>
-                <q-item-label>Inventory 1</q-item-label>
+                <q-item-label>Inventory</q-item-label>
               </q-item-section>
             </q-item>
           </q-list>
