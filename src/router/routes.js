@@ -14,6 +14,7 @@ const routes = [
       {path: '/Allocations/Title3', component: () => import('pages/Allocations/Title3.vue')},
       {path: '/Allocations/Title4', component: () => import('pages/Allocations/Title4.vue')},
       {path: '/Allocations/esser', component: () => import('pages/Allocations/ESSER.vue')},
+      {path: '/Allocations/geer', component: () => import('pages/Allocations/GEER.vue')},
       // ------------------------------------------------------------------------------------
       {path: '/Inventory', component: () => import('pages/Inventory/Inventory.vue')},
       {path: '/TeacherCosts/BudgetEstimates', component: () => import('pages/TeacherCosts/BudgetEstimates.vue')},

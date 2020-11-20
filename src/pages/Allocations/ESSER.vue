@@ -47,7 +47,7 @@
         :data="data" 
         :columns="columns" 
         :filter="filter"
-        row-key="name" 
+        row-key="id" 
         :loading="loading"
         binary-state-sort
       >
@@ -177,50 +177,158 @@
 
         <!-- Table Body -->
         <template v-slot:body="props">
-            <q-tr :props="props">
+            <q-tr :props="props" @click="copyRowData(props.rowIndex)" :class="{ 'bg-red-2' : props.row.changed }">
+
+              <q-td auto-width>
+                <q-btn size="sm" flat
+                  color="black"
+                  @click="props.expand = !props.expand" 
+                  :icon="props.expand ? 'keyboard_arrow_down' : 'keyboard_arrow_right'">
+                </q-btn>
+              </q-td>
 
               <q-td key="date" :props="props">
                 {{ props.row.date }}
+                <q-popup-proxy transition-show="scale" transition-hide="scale">
+                  <q-date v-model="props.row.date" @input="detectChange(props.rowIndex)">
+                    <div class="row items-center justify-end q-gutter-sm">
+                      <q-btn label="Cancel" color="primary" flat v-close-popup />
+                      <q-btn label="OK" color="primary" flat v-close-popup />
+                    </div>
+                  </q-date>
+                </q-popup-proxy>
               </q-td>
               
               <q-td key="school" :props="props">
-                <div class="text-pre-wrap">{{ props.row.school }}</div>
+                <div class="text-pre-wrap cursor-pointer">{{ props.row.school }}</div>
+                <q-popup-edit v-model="props.row.school" title="School" buttons>
+                  <q-input  @input="detectChange(props.rowIndex)" type="text" v-model="props.row.school" dense autofocus/>
+                </q-popup-edit>
               </q-td>
 
               <q-td key="allocation" :props="props">
-                <div v-if="props.row.status">$ {{ props.row.finalAllocation }} </div>
-                <div v-else> $ {{ props.row.allocation }} </div>
+                <div class="cursor-pointer" v-if="props.row.status == 'Final'">$ {{ props.row.finalAllocation }} </div>
+                <div class="cursor-pointer" v-else> $ {{ props.row.allocation }} </div>
+
+                <q-popup-edit v-if="props.row.status == 'Final'" v-model="props.row.finalAllocation" title="Allocation" buttons>
+                  <q-input  @input="detectChange(props.rowIndex)" type="number" v-model="props.row.materialsFinal" dense autofocus/>
+                </q-popup-edit>
+                <q-popup-edit v-else v-model="props.row.allocation" title="Allocation" buttons>
+                  <q-input  @input="detectChange(props.rowIndex)" type="number" v-model="props.row.allocation" dense autofocus/>
+                </q-popup-edit>
+
               </q-td>
               
               <q-td key="status" :props="props">
-                <q-chip  square class="edx-q-chip-button" text-color="orange" v-if="props.row.status != true">
-                  Preliminary
+                
+                <q-chip class="cursor-pointer" square color="green" text-color="white" v-if="props.row.status == 'Preliminary'">
+                  PR
+                  <q-tooltip 
+                      anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                      transition-show="flip-right"
+                      transition-hide="flip-left"
+                  >
+                    <strong>PR</strong>
+                  </q-tooltip>
                 </q-chip>
-                <q-chip square class="edx-q-chip-button" text-color="green" v-else>
-                  Final
+                <q-chip class="cursor-pointer" square color="purple" text-color="white" v-else>
+                  FN
+                  <q-tooltip 
+                      anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                      transition-show="flip-right"
+                      transition-hide="flip-left"
+                  >
+                    <strong>FN</strong>
+                  </q-tooltip>
                 </q-chip>
+
+                <!-- <q-chip square class="edx-q-chip-button cursor-pointer" text-color="orange" v-if="props.row.status == 'Preliminary'">Preliminary</q-chip>
+                <q-chip square class="edx-q-chip-button cursor-pointer" text-color="green" v-else>Final</q-chip> -->
+
+                <q-popup-edit v-model="props.row.status" title="Allocation" buttons>
+                  <q-select  @input="detectChange(props.rowIndex)" v-model="props.row.status" :options="options"/>
+                </q-popup-edit> 
               </q-td>
               
               <q-td key="actions" :props="props">
-                <q-btn 
-                  icon="edit"
-                  color="blue"
-                  @click="editItem(props.row)" 
-                  size=sm 
-                  no-caps
-                  class="q-mr-sm"
-                >
-                </q-btn>
-                <q-btn 
-                  icon="delete_forever"
-                  color="red" 
-                  @click="openDeleteModal(props.row)" 
-                  size=sm 
-                  no-caps
-                >
-                </q-btn>
+                <div v-if="props.row.changed">
+                
+                  <q-btn
+                    @click="cancellChange(props.rowIndex)"
+                    class="q-mr-sm"
+                    icon="cancel"
+                    color="orange" 
+                    size=sm 
+                    no-caps
+                    round 
+                  >
+                    <q-tooltip 
+                        anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                        transition-show="flip-right"
+                        transition-hide="flip-left"
+                    >
+                      <strong>Cancel</strong>
+                    </q-tooltip>
+                  </q-btn>
+                  
+                  <q-btn
+                    @click="props.row.changed = false"
+                    class="q-mr-sm"
+                    icon="save"
+                    color="green" 
+                    size=sm 
+                    no-caps
+                    round 
+                  >
+                    <q-tooltip 
+                        anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                        transition-show="flip-right"
+                        transition-hide="flip-left"
+                    >
+                      <strong>Save</strong>
+                    </q-tooltip>
+                  </q-btn>
+
+                </div>
+                <div v-if=" props.row.showEditButton && !props.row.changed">
+                  <!-- <q-btn 
+                    icon="edit"
+                    color="blue"
+                    @click="editItem(props.row)" 
+                    size=sm 
+                    no-caps
+                    class="q-mr-sm"
+                  >
+                  </q-btn> -->
+                  <q-btn 
+                    icon="delete_forever"
+                    color="red" 
+                    @click="openDeleteModal(props.row)" 
+                    size=sm 
+                    no-caps
+                    round 
+                  >
+                    <q-tooltip 
+                        anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                        transition-show="flip-right"
+                        transition-hide="flip-left"
+                    >
+                      <strong>Delete</strong>
+                    </q-tooltip>
+                  </q-btn>
+                </div>
               </q-td>
 
+            </q-tr>
+                        <q-tr v-show="props.expand" :props="props">
+              <q-td colspan="100%" class="q-td--no-hover">
+                <div class="row">
+                  <div class="col-md-4 q-mt-lg q-mb-lg">
+                    <div class="text-subtitle2 q-mb-md">Notes</div>
+                    <q-input type="textarea" outlined v-model="props.row.notes" />
+                  </div>
+                </div>
+              </q-td>
             </q-tr>
         </template>
 
@@ -247,6 +355,7 @@
 
 <script>
     import {exportFile} from 'quasar'
+        import lodash from 'lodash'
 
     function wrapCsvValue(val, formatFn) {
         let formatted = formatFn !== void 0
@@ -267,6 +376,8 @@
 
         return `"${formatted}"`
     }
+
+        let oldObject = {}
 
     export default {
         data() {
@@ -313,6 +424,10 @@
               notes: ""
             },
             columns: [
+                          {
+              name: "toggle",
+              style: 'width: 30px'
+            },
               {
                 name: "date",
                 align: "left",
@@ -474,13 +589,36 @@
           filterAllocation() {
             if(this.model) {
               if(this.model == 'Preliminary') {
-                this.data = this.tempData.filter(a => a.status == false);
+                this.data = this.tempData.filter(a => a.status == 'Preliminary');
               }else {
-                this.data = this.tempData.filter(a => a.status == true);
+                this.data = this.tempData.filter(a => a.status == 'Final');
               }
             }else {
               this.data = this.tempData
             }
+          },
+          copyRowData(index) {
+            oldObject = JSON.stringify(this.tempData[index])
+            console.log('Copy Row Data : ', oldObject)
+          },
+          detectChange(index) {
+            let d = JSON.parse(oldObject)
+            let f = JSON.stringify(this.data[index])
+                f = JSON.parse(f)
+
+            let status = _.isEqual(d, f)
+
+            if(status) {
+              this.data[index].changed = false
+            }else {
+              this.data[index].changed = true
+            }
+
+          },
+          cancellChange(index) {
+            let d = JSON.parse(oldObject)
+            Object.assign(this.data[index], d);
+            this.data[index].changed = false
           },
         },
         created() {
@@ -500,14 +638,17 @@
             }
             
             let obj = {
+                id: i,
                 date: "2020-09-1" + i+1,
                 school: "American School N" + i+1,
 
                 allocation: allocation,
                 finalAllocation: finalAllocation,
 
-                status: r,
-                notes: "",
+                status: r ? 'Final' : 'Preliminary',
+                notes: "There is no one who loves pain itself...",
+                showEditButton: true,
+              changed: false,
             }
 
             dataTest.push(obj)

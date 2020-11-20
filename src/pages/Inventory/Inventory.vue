@@ -13,14 +13,14 @@
       <q-card-section class="q-pa-none">
         <div class="row q-col-gutter-sm ">
 
-          <div class="col-md-2 col-sm-12 col-xs-12" v-for="i in 5" :key="i">
+          <div class="col-md-2 col-sm-12 col-xs-12">
             <q-item style="background-color: #fff" class="q-pa-none q-ml-xs">
               <q-item-section side style="background-color: #fff" class=" q-pa-lg q-mr-none text-white">
                 <q-icon name="attach_money" color="red" size="24px"></q-icon>
               </q-item-section>
               <q-item-section class="q-ml-none">
-                <q-item-label class="text-grey-7">Total PD</q-item-label>
-                <q-item-label class="text-dark text-h6 text-weight-bolder">$ 900</q-item-label>
+                <q-item-label class="text-grey-7">Total Cost</q-item-label>
+                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{totalCost}}</q-item-label>
               </q-item-section>
             </q-item>
           </div>
@@ -212,7 +212,26 @@
 
                     <q-td key="condition" :props="props" @click="copyRowData(props.rowIndex)">
                       
-                      <div>{{ props.row.condition }}</div>
+                      <div v-if="props.row.condition == 'Excellent'"> 
+                        <q-icon name="done" color="green-10" style="font-size: 1.5em"/>
+                        {{props.row.condition}}
+                      </div>
+                      <div v-else-if="props.row.condition == 'Very Good'"> 
+                        <q-icon name="done" color="light-blue-14" style="font-size: 1.5em"/>
+                        {{props.row.condition}}
+                      </div>
+                      <div v-else-if="props.row.condition == 'Good'"> 
+                        <q-icon name="done" color="pink-13" style="font-size: 1.5em"/>
+                        {{props.row.condition}}
+                      </div>
+                      <div v-else-if="props.row.condition == 'Fair'"> 
+                        <q-icon name="done" color="amber-9" style="font-size: 1.5em"/>
+                        {{props.row.condition}}
+                      </div>
+                      <div v-else> 
+                        <q-icon name="remove" color="deep-orange-13" style="font-size: 1.5em"/>
+                        {{props.row.condition}}
+                      </div>
 
                       <q-popup-edit  v-model="props.row.condition" title="Condition" buttons>
                         <q-select @input="detectChange(props.rowIndex)" dense outlined v-model="props.row.condition" :options="optionsCondition"/>
@@ -222,7 +241,26 @@
 
                     <q-td key="status" :props="props" @click="copyRowData(props.rowIndex)">
                       
-                      <div>{{ props.row.status }}</div>
+                      <div v-if="props.row.status == 'Disposed'"> 
+                        <q-icon name="forward" color="green-10" style="font-size: 1.5em"/>
+                        {{ props.row.status }}
+                      </div>
+                      <div v-else-if="props.row.status == 'Lost'"> 
+                        <q-icon name="gesture" color="green-10" style="font-size: 1.5em"/>
+                        {{ props.row.status }}
+                      </div>
+                      <div v-else-if="props.row.status == 'Stolen'"> 
+                        <q-icon name="mail" color="green-10" style="font-size: 1.5em"/>
+                        {{ props.row.status }}
+                      </div>
+                      <div v-else-if="props.row.status == 'Transferred'"> 
+                        <q-icon name="push_pin" color="green-10" style="font-size: 1.5em"/>
+                        {{ props.row.status }}
+                      </div>
+                      <div v-else> 
+                        <q-icon name="redo" color="green-10" style="font-size: 1.5em"/>
+                        {{ props.row.status }}
+                      </div>
 
                       <q-popup-edit  v-model="props.row.status" title="Status" buttons>
                         <q-select @input="detectChange(props.rowIndex)" dense outlined v-model="props.row.status" :options="optionsStatus"/>
@@ -316,11 +354,7 @@
                     <q-td colspan="100%">
                       <div class="q-mb-lg">
 
-                        <div class="row q-mt-lg q-mb-lg">
-                          
-
-
-                        </div>
+                        <div class="row q-mt-lg q-mb-lg"></div>
 
                         <div class="row ">
 
@@ -358,7 +392,7 @@
 
                           <div class="col-md-2 q-mr-sm q-ml-sm">
                             <div class="text-subtitle2 q-mb-md">Location</div>
-                            <p class="white-space-initial ">{{props.row.location}}</p>
+                            <p class="white-space-initial fixed-height-for-large-text">{{props.row.location}}</p>
                             <!-- <q-input
                               v-model="props.row.location"
                               outlines 
@@ -374,7 +408,7 @@
 
                           <div class="col-md-2 q-mr-sm q-ml-sm">
                             <div class="text-subtitle2 q-mb-md">Classroom or Location within School</div>
-                            <p class="white-space-initial">{{props.row.classroomOrLocationWithinSchool}}</p>
+                            <p class="white-space-initial fixed-height-for-large-text">{{props.row.classroomOrLocationWithinSchool}}</p>
                             <!-- <q-input
                               v-model="props.row.classroomOrLocationWithinSchool"
                               outlines dense
@@ -389,7 +423,7 @@
 
                           <div class="col-md-2 q-mr-sm q-ml-sm">
                             <div class="text-subtitle2 q-mb-md">Date and explanation of removal</div>
-                            <p class="white-space-initial">{{props.row.dateAndExplanationOfRemoval}}</p>
+                            <p class="white-space-initial fixed-height-for-large-text">{{props.row.dateAndExplanationOfRemoval}}</p>
                             <!-- <q-input
                               v-model="props.row.dateAndExplanationOfRemoval"
                               outlines dense
@@ -404,7 +438,7 @@
 
                           <div class="col-md-2 q-mr-sm q-ml-sm">
                             <div class="text-subtitle2 q-mb-md">Notes</div>
-                            <p class="white-space-initial">{{props.row.notes}}</p>
+                            <p class="white-space-initial fixed-height-for-large-text">{{props.row.notes}}</p>
                             <!-- <q-input
                               v-model="props.row.notes"
                               outlines dense
@@ -705,11 +739,11 @@ export default {
         type: 'PD',
         dateOfPurchase: '24-11-2020',
         condition: 'Good',
-        location: 'Atlas Kansas',
+        location: 'Adi-Dassler-Strasse 191074 Herzogenaurach Germany',
         classroomOrLocationWithinSchool: 'In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content',
         dateAndExplanationOfRemoval: 'In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content',
         status: 'Stolen',
-        notes: 'Note ...',
+        notes: 'Athletes will not settle for average. And neither do we. We have a clear mission: To be the best sports company in the world. Every day, we come to work to create and sell the best sports and fitness products in the world.',
         changed: false,
         showEditButton: true,
       }
@@ -717,6 +751,17 @@ export default {
     }
     this.data = dataSet
     this.tempDataX = dataSet
+  },
+  computed: {
+    totalCost() {
+      let totalCost = 0;
+      
+      for(let i=0; i<this.data.length; i++) {
+        let tc = parseFloat( this.data[i].costPerItem ) * parseFloat( this.data[i].qty )
+        totalCost += tc
+      }
+      return totalCost.toFixed(2)
+    },
   }
 }
 </script>
@@ -734,5 +779,11 @@ export default {
 .white-space-initial {
   white-space: initial;
 }
+
+.fixed-height-for-large-text {
+    height: 80px;
+    overflow-y: auto;
+}
+
 
 </style>

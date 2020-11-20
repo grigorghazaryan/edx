@@ -1,11 +1,11 @@
 <template>
-  <q-page class="q-pa-sm">    
+  <q-page class="q-pa-sm">  
 
     <div class="q-pa-md q-gutter-sm">
       <q-breadcrumbs>
         <q-breadcrumbs-el icon="dashboard" label="Dashboard" to="/" />
         <q-breadcrumbs-el label="Allocations"/>
-        <q-breadcrumbs-el label="Title IV"/>
+        <q-breadcrumbs-el label="ESSER"/>
       </q-breadcrumbs>
     </div>
 
@@ -19,8 +19,20 @@
                 <q-icon name="local_atm" color="green" size="24px"></q-icon>
               </q-item-section>
               <q-item-section class="q-ml-none">
-                <q-item-label class="text-grey-7">Total Allocation</q-item-label>
+                <q-item-label class="text-grey-7">Total</q-item-label>
                 <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{ total }}</q-item-label>
+              </q-item-section>
+            </q-item>
+          </div>
+          
+          <div class="col-md-2 col-sm-12 col-xs-12">
+            <q-item style="background-color: #fff" class="q-pa-none q-ml-xs">
+              <q-item-section side style="background-color: #fff" class=" q-pa-lg q-mr-none text-white">
+                <q-icon name="search" color="pink" size="24px"></q-icon>
+              </q-item-section>
+              <q-item-section class="q-ml-none">
+                <q-item-label class="text-grey-7">Ratio (+/-)</q-item-label>
+                <q-item-label class="text-dark text-h6 text-weight-bolder">% 0.00</q-item-label>
               </q-item-section>
             </q-item>
           </div>
@@ -31,7 +43,7 @@
     
     <div class="q-pa-sm q-mt-sm q-gutter-sm">
       <q-table
-        title="Title IV" 
+        title="GEER" 
         :data="data" 
         :columns="columns" 
         :filter="filter"
@@ -195,63 +207,15 @@
               </q-td>
 
               <q-td key="allocation" :props="props">
-
                 <div class="cursor-pointer" v-if="props.row.status == 'Final'">$ {{ props.row.finalAllocation }} </div>
                 <div class="cursor-pointer" v-else> $ {{ props.row.allocation }} </div>
 
                 <q-popup-edit v-if="props.row.status == 'Final'" v-model="props.row.finalAllocation" title="Allocation" buttons>
-                  <q-input  @input="detectChange(props.rowIndex)" type="text" v-model="props.row.finalAllocation" dense autofocus/>
+                  <q-input  @input="detectChange(props.rowIndex)" type="number" v-model="props.row.materialsFinal" dense autofocus/>
                 </q-popup-edit>
                 <q-popup-edit v-else v-model="props.row.allocation" title="Allocation" buttons>
-                  <q-input  @input="detectChange(props.rowIndex)" type="text" v-model="props.row.allocation" dense autofocus/>
+                  <q-input  @input="detectChange(props.rowIndex)" type="number" v-model="props.row.allocation" dense autofocus/>
                 </q-popup-edit>
-
-              </q-td>
-
-              <q-td key="roundedEducation" :props="props">
-
-                <div class="cursor-pointer" v-if="props.row.status == 'Final'">$ {{  (props.row.finalAllocation * props.row.roundedEducationPercentage / 100).toFixed(2)  }}</div>
-                <div class="cursor-pointer" v-else>$ {{  (props.row.allocation * props.row.roundedEducationPercentage / 100).toFixed(2)  }}</div>
-                
-                <q-popup-edit title="Rounded Education" buttons v-model="props.row.roundedEducationPercentage">
-
-                   <p v-if="props.row.status == 'Final'">$ {{  (props.row.finalAllocation * props.row.roundedEducationPercentage / 100).toFixed(2)  }}</p>
-                   <p v-else>$ {{  (props.row.allocation * props.row.roundedEducationPercentage / 100).toFixed(2)  }}</p>
-                   <q-input type="number" label="Well Rounded %" v-model="props.row.roundedEducationPercentage" :hint="props.row.roundedEducationPercentage < 20 ? 'Percentage must be greater than 20' : ''"/>
-
-                </q-popup-edit> 
-
-              </q-td>
-
-              <q-td key="healthyStudents" :props="props">
-                
-                <div class="cursor-pointer" v-if="props.row.status == 'Final'">$ {{  (props.row.finalAllocation * props.row.healthyStudentsPercentage / 100).toFixed(2)  }}</div>
-                <div class="cursor-pointer" v-else>$ {{  (props.row.allocation * props.row.healthyStudentsPercentage / 100).toFixed(2)  }}</div>
-              
-                <q-popup-edit title="Healthy Students" buttons v-model="props.row.healthyStudentsPercentage">
-
-                   <p v-if="props.row.status == 'Final'">$ {{  (props.row.finalAllocation * props.row.healthyStudentsPercentage / 100).toFixed(2)  }}</p>
-                   <p v-else>$ {{  (props.row.allocation * props.row.healthyStudentsPercentage / 100).toFixed(2)  }}</p>
-                   <q-input type="number" label="Healthy Students %" v-model="props.row.healthyStudentsPercentage" :hint="props.row.healthyStudentsPercentage < 20 ? 'Percentage must be greater than 20' : ''"/>
-                
-                </q-popup-edit> 
-
-              </q-td>
-
-              <q-td key="techPD" :props="props">
-                <div class="cursor-pointer">$ {{ props.row.techPD }}</div>
-              </q-td>
-
-              <q-td key="teachInfrastructure" :props="props">
-
-                <div class="cursor-pointer">$ {{  (props.row.techPD * props.row.teachInfrastructurePercentage / 100).toFixed(2)  }}</div>
-            
-                <q-popup-edit title="Teach Infrastructure" buttons v-model="props.row.teachInfrastructurePercentage">
-
-                   <p>$ {{  (props.row.techPD * props.row.teachInfrastructurePercentage / 100).toFixed(2)  }}</p>
-                   <q-input type="number" label="Teach Infrastructure %" v-model="props.row.teachInfrastructurePercentage" :hint="props.row.teachInfrastructurePercentage < 15 ? 'Percentage must be greater than 15' : ''"/>
-
-                </q-popup-edit> 
 
               </q-td>
               
@@ -284,13 +248,10 @@
                 <q-popup-edit v-model="props.row.status" title="Allocation" buttons>
                   <q-select  @input="detectChange(props.rowIndex)" v-model="props.row.status" :options="options"/>
                 </q-popup-edit> 
-
               </q-td>
-
-              
               
               <q-td key="actions" :props="props">
-                  <div v-if="props.row.changed">
+                <div v-if="props.row.changed">
                 
                   <q-btn
                     @click="cancellChange(props.rowIndex)"
@@ -359,7 +320,7 @@
               </q-td>
 
             </q-tr>
-            <q-tr v-show="props.expand" :props="props">
+                        <q-tr v-show="props.expand" :props="props">
               <q-td colspan="100%" class="q-td--no-hover">
                 <div class="row">
                   <div class="col-md-4 q-mt-lg q-mb-lg">
@@ -415,6 +376,7 @@
 
         return `"${formatted}"`
     }
+
         let oldObject = {}
 
     export default {
@@ -450,10 +412,6 @@
               school: "",
               previousYear: "",
               difference: "",
-              roundedEducation: "",
-              healthyStudents: "",
-              techPD: "",
-              teachInfrastructure: "",
               status: false,
               notes: ""
             },
@@ -466,10 +424,10 @@
               notes: ""
             },
             columns: [
-              {
-                name: "toggle",
-                style: 'width: 30px'
-              },
+                          {
+              name: "toggle",
+              style: 'width: 30px'
+            },
               {
                 name: "date",
                 align: "left",
@@ -487,36 +445,8 @@
               { 
                 name: "allocation", 
                 align: "left",
-                label: "Grand Total", 
+                label: "Allocation", 
                 field: "allocation",
-                sortable: true
-              },
-              {
-                name: "roundedEducation",
-                align: "left",
-                label: "Rounded Education",
-                field: "roundedEducation",
-                sortable: true
-              },
-              {
-                name: "healthyStudents",
-                align: "left",
-                label: "Healthy Students",
-                field: "healthyStudents",
-                sortable: true
-              },
-              {
-                name: "techPD",
-                align: "left",
-                label: "Tech PD",
-                field: "techPD",
-                sortable: true
-              },
-              {
-                name: "teachInfrastructure",
-                align: "left",
-                label: "Teach Infrastructure",
-                field: "teachInfrastructure",
                 sortable: true
               },
               {
@@ -541,48 +471,20 @@
         methods: {
           addRow() {
 
-            let previousYear = this.editedIndex > -1 ? this.editedItem.previousYear :  Math.floor(Math.random() * 100),
-                 allocation,
-                finalAllocation,
-                roundedEducation,
-                healthyStudents,
-                techPD,
-                teachInfrastructure,
-                difference = allocation - previousYear
+            let allocation, finalAllocation
 
             if(this.editedItem.status) {
               finalAllocation = this.editedItem.finalAllocation
-              difference = finalAllocation - previousYear
-
-              roundedEducation = finalAllocation * 20 / 100
-              healthyStudents = finalAllocation * 20 / 100
-              techPD = finalAllocation * 51 / 100
-              teachInfrastructure = finalAllocation * 9 / 100
             } else {
               allocation = this.editedItem.allocation
-              difference = allocation - previousYear
-
-              roundedEducation = allocation * 20 / 100
-              healthyStudents = allocation * 20 / 100
-              techPD = allocation * 51 / 100
-              teachInfrastructure = allocation * 9 / 100
             }
 
-          
             let obj = {
               date: this.editedItem.date,
               school: this.editedItem.school,
 
               allocation: allocation,
               finalAllocation: finalAllocation,
-
-              previousYear: previousYear,
-              difference: difference,
-              
-              roundedEducation: roundedEducation,
-              healthyStudents: healthyStudents,
-              techPD: techPD,
-              teachInfrastructure: teachInfrastructure,
 
               status: this.editedItem.status,
               notes: this.editedItem.notes
@@ -656,31 +558,12 @@
                 if(r % 2) r = true 
                 else r = false
 
-                let previousYear = Math.floor(Math.random() * 100),
-                    allocation,
-                    finalAllocation,
-                    roundedEducation,
-                    healthyStudents,
-                    techPD,
-                    teachInfrastructure,
-                    difference = allocation - previousYear
+                let allocation, finalAllocation
 
                 if(r) {
                   finalAllocation = Math.floor(Math.random() * 100)
-                  difference = finalAllocation - previousYear
-
-                  roundedEducation = finalAllocation * 20 / 100
-                  healthyStudents = finalAllocation * 20 / 100
-                  techPD = finalAllocation * 51 / 100
-                  teachInfrastructure = finalAllocation * 9 / 100
                 } else {
                   allocation = Math.floor(Math.random() * 100)
-                  difference = allocation - previousYear
-
-                  roundedEducation = allocation * 20 / 100
-                  healthyStudents = allocation * 20 / 100
-                  techPD = allocation * 51 / 100
-                  teachInfrastructure = allocation * 9 / 100
                 }
 
           
@@ -690,14 +573,6 @@
 
                   allocation: allocation,
                   finalAllocation: finalAllocation,
-
-                  previousYear: previousYear,
-                  difference: difference,
-
-                  roundedEducation: roundedEducation,
-                  healthyStudents: healthyStudents,
-                  techPD: techPD,
-                  teachInfrastructure: teachInfrastructure,
 
                   status: r,
                   notes: "",
@@ -714,9 +589,9 @@
           filterAllocation() {
             if(this.model) {
               if(this.model == 'Preliminary') {
-                this.data = this.tempData.filter(a => a.allocation == 'Preliminary');
+                this.data = this.tempData.filter(a => a.status == 'Preliminary');
               }else {
-                this.data = this.tempData.filter(a => a.allocation == 'Final');
+                this.data = this.tempData.filter(a => a.status == 'Final');
               }
             }else {
               this.data = this.tempData
@@ -745,91 +620,67 @@
             Object.assign(this.data[index], d);
             this.data[index].changed = false
           },
-      },
+        },
         created() {
-          let dataTest = []
-          for(let i=0; i<5; i++) {
+            let dataTest = []
+            for(let i=0; i<5; i++) {
 
             let r = Math.floor(Math.random() * 10)
             if(r % 2) r = true 
             else r = false
 
-            let allocation,
-                finalAllocation,
-                roundedEducation,
-                healthyStudents,
-                techPD,
-                teachInfrastructure;
+            let allocation, finalAllocation
 
             if(r) {
-              finalAllocation = Math.floor(Math.random() * 1000)
-              roundedEducation = finalAllocation * 20 / 100
-              healthyStudents = finalAllocation * 20 / 100
-              techPD = finalAllocation * 51 / 100
-              teachInfrastructure = (techPD * 15) / 100
-              // finalAllocation * 9 / 100
+                finalAllocation = Math.floor(Math.random() * 100)
             } else {
-              allocation = Math.floor(Math.random() * 1000)
-              roundedEducation = allocation * 20 / 100
-              healthyStudents = allocation * 20 / 100
-              techPD = allocation * 51 / 100
-              teachInfrastructure = (techPD * 15) / 100
-              // allocation * 9 / 100
+                allocation = Math.floor(Math.random() * 100)
             }
-
             
             let obj = {
-              id: i,
-              date: "2020-09-1" + i+1,
-              school: "American School N" + i+1,
+                id: i,
+                date: "2020-09-1" + i+1,
+                school: "American School N" + i+1,
 
-              allocation: allocation,
-              finalAllocation: finalAllocation,
+                allocation: allocation,
+                finalAllocation: finalAllocation,
 
-              roundedEducation: roundedEducation,
-              healthyStudents: healthyStudents,
-              techPD: techPD,
-              teachInfrastructure: teachInfrastructure.toFixed(2),
-
-              roundedEducationPercentage: 20,
-              healthyStudentsPercentage: 20, 
-              teachInfrastructurePercentage: 15,
-
-              status: r ? "Final" : "Preliminary",
-              notes: "",
-              showEditButton: true,
+                status: r ? 'Final' : 'Preliminary',
+                notes: "There is no one who loves pain itself...",
+                showEditButton: true,
               changed: false,
             }
 
             dataTest.push(obj)
 
-          }
-          this.data = dataTest
-          this.tempData = dataTest
+            }
+            this.data = dataTest
+            this.tempData = dataTest
 
-          let schoolArr = []
-          for(let j=0; j<this.data.length; j++) {
+            let schoolArr = []
+            for(let j=0; j<this.data.length; j++) {
             schoolArr.push(this.data[j].school)
-          }
-          this.schools = schoolArr
+            }
+            this.schools = schoolArr
         },
         computed: {
-          total() {
-            let total = 0;
-            for(let i=0; i<this.data.length; i++) {
+        total() {
+          let total = 0;
+          for(let i=0; i<this.data.length; i++) {
 
-              let allocation
-              if(this.data[i].status) {
-                allocation = parseFloat( this.data[i].finalAllocation )
-              }else {
-                allocation = parseFloat( this.data[i].allocation )
-              }
-              total += allocation
-
+            let allocation
+            if(this.data[i].status) {
+              allocation = parseFloat( this.data[i].finalAllocation )
+            }else {
+              allocation = parseFloat( this.data[i].allocation )
             }
-            return total.toFixed(2)
+            total += allocation
+
           }
+          return total.toFixed(2)
         }
+      }
     }
 
 </script>
+
