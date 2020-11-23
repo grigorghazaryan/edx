@@ -429,10 +429,8 @@
 
                       <q-card-section class="row" style="width: 500px; display: flex; align-items: center;">
                         <q-icon name="calendar_today" class="text-orange q-mr-sm" style="font-size: 2em"/>
-                        <span class="text-h6" style="line-height: 2.5rem">Schedule Activity</span>
-                      
+                        <span class="text-h6" style="line-height: 2.5rem">Schedule Activity (table)</span>
                         <q-checkbox class="q-ml-lg" :disable="editedItem.repeat" v-model="editedItem.multi" label="Multi" />
-
                       </q-card-section>
 
                 
@@ -631,9 +629,10 @@
                               <div v-if="editedItem.attendies" class="q-mt-md q-pr-lg q-pl-lg">
                                 <div>
 
+                                  <!-- top modal -->
                                   <div class="q-mb-md">
-                                    <span class="text-subtitle2">Amount: </span> 
-                                    $ {{ popupAmount }}
+                                    <span class="text-subtitle2">Amount:</span> 
+                                    $ {{ popupAmount }} 
                                   </div>
 
                                   <q-table
@@ -655,31 +654,12 @@
                                           />
                                         </q-td>
 
-                                        <q-td key="allocation" :props="props">
-                                          <q-select  @input="changeAllocation" dense outlined v-model="props.row.allocation" :options="titlesArr"  />
-                                        </q-td>
-
-                                        <q-td key="type" :props="props" v-if="props.row.allocation.value == 'Title I'">
-                                          <q-select dense outlined v-model="props.row.type" :options="typeArr"  />
-                                        </q-td>
-                                        <q-td key="type" :props="props" v-else-if="props.row.allocation.value == 'Title II'">
-                                          <q-select dense outlined v-model="props.row.type" :options="typeArr2"  />
-                                        </q-td>
-                                        <q-td key="type" :props="props" v-else-if="props.row.allocation.value == 'Title III'">
-                                          <q-select dense outlined v-model="props.row.type" :options="typeArr3"  />
-                                        </q-td>
-                                        <q-td key="type" :props="props" v-else-if="props.row.allocation.value == 'Title IV'">
-                                          <q-select dense outlined v-model="props.row.type" :options="typeArr4"  />
-                                        </q-td>
-                                        <q-td key="type" :props="props" v-else-if="props.row.allocation.value == 'ESSER'">
-                                          <q-select dense outlined v-model="props.row.type" :options="typeEssr"  />
-                                        </q-td>
-                                        <q-td key="type" :props="props" v-else>
-                                          <q-select dense outlined v-model="props.row.type" :options="typeArr"  />
+                                        <q-td key="type" :props="props" style="width: 200px">
+                                          <q-select dense outlined v-model="props.row.type" :options="teachersTypeArr"  />
                                         </q-td>
                                         
-                                        <q-td key="amount" :props="props">
-                                          <q-input dense outlined v-model="props.row.amount"/>
+                                        <q-td key="all" :props="props">
+                                          <q-checkbox v-model="props.row.all" />
                                         </q-td>
 
                                         <q-td key="attendeeList" :props="props" class="row">
@@ -745,7 +725,7 @@
 
                                   </q-table>
 
-                                  <q-btn round dense color="secondary" icon="add" class="q-mt-md"  @click="addAttRow"/>
+                                  <q-btn v-if="editedItem.noAttendingArr.attendeesData.length < 4" round dense color="secondary" icon="add" class="q-mt-md"  @click="addAttRow"/>
 
                                 </div>
                               </div>
@@ -774,7 +754,7 @@
 
                       <q-card-section class="row" style="width: 500px; display: flex; align-items: center;">
                         <q-icon name="calendar_today" class="text-orange q-mr-sm" style="font-size: 2em"/>
-                        <span class="text-h6" style="line-height: 2.5rem">Schedule Activity</span>
+                        <span class="text-h6" style="line-height: 2.5rem">Schedule Activity (2)</span>
                       </q-card-section>
 
                 
@@ -783,30 +763,6 @@
 
                           <div class="col-12">
                             <div class="q-mt-sm q-mb-md">
-
-                              <!-- <div class="row">
-                                <div class="col-3 q-pr-md row items-center justify-end"><b>Duration: </b></div>
-                                <div class="col-9">
-                                    {{timeTotal}} Hour(s) {{totalMinute}} Minute(s)
-                                    <span class="q-ml-sm"><q-checkbox v-model="allDayEvent" label="All day event" /></span>
-                                </div> 
-                              </div>
-
-                              <div class="row">
-                                <div class="col-3 text-right q-pr-md"><b>Starts:</b></div>
-                                <div class="col-9">
-                                  <span>{{ tempDateOfActivity.startdate }}</span>, 
-                                  <span>{{ tempDateOfActivity.time1 }}</span>
-                                </div>
-                              </div>
-
-                              <div class="row">
-                                <div class="col-3 text-right q-pr-md"><b>Ends:</b></div>
-                                <div class="col-9">
-                                  <span>{{ tempDateOfActivity.endDate }}</span>, 
-                                  <span>{{ tempDateOfActivity.time2 }}</span>
-                                </div>
-                              </div> -->
 
                               <q-separator class="q-mt-md q-mb-md"/>
 
@@ -912,9 +868,6 @@
                                 <div class="col-3 text-right q-pr-md">
                                   <q-checkbox v-model="tempDateOfActivity.repeat" label="Repeat" />
                                 </div>
-                                <!-- <div class="col-3 text-right q-pr-md">
-                                  <q-checkbox v-model="tempDateOfActivity.multi" label="Multi" />
-                                </div> -->
                               </div>
 
                               <div v-if="tempDateOfActivity.repeat">
@@ -976,9 +929,10 @@
                               <div v-if="editedItem.attendies" class="q-mt-md q-pr-lg q-pl-lg">
                                 <div>
 
+                                  <!-- top modal -->
                                   <div class="q-mb-md">
-                                    <span class="text-subtitle2">Amount: </span> 
-                                    $ {{ popupAmount }}
+                                    <span class="text-subtitle2">Amount:</span> 
+                                    $ {{ popupAmount }} 
                                   </div>
 
                                   <q-table
@@ -1000,31 +954,12 @@
                                           />
                                         </q-td>
 
-                                        <q-td key="allocation" :props="props">
-                                          <q-select  @input="changeAllocation" dense outlined v-model="props.row.allocation" :options="titlesArr"  />
-                                        </q-td>
-
-                                        <q-td key="type" :props="props" v-if="props.row.allocation.value == 'Title I'">
-                                          <q-select dense outlined v-model="props.row.type" :options="typeArr"  />
-                                        </q-td>
-                                        <q-td key="type" :props="props" v-else-if="props.row.allocation.value == 'Title II'">
-                                          <q-select dense outlined v-model="props.row.type" :options="typeArr2"  />
-                                        </q-td>
-                                        <q-td key="type" :props="props" v-else-if="props.row.allocation.value == 'Title III'">
-                                          <q-select dense outlined v-model="props.row.type" :options="typeArr3"  />
-                                        </q-td>
-                                        <q-td key="type" :props="props" v-else-if="props.row.allocation.value == 'Title IV'">
-                                          <q-select dense outlined v-model="props.row.type" :options="typeArr4"  />
-                                        </q-td>
-                                        <q-td key="type" :props="props" v-else-if="props.row.allocation.value == 'ESSER'">
-                                          <q-select dense outlined v-model="props.row.type" :options="typeEssr"  />
-                                        </q-td>
-                                        <q-td key="type" :props="props" v-else>
-                                          <q-select dense outlined v-model="props.row.type" :options="typeArr"  />
+                                        <q-td key="type" :props="props" style="width: 200px">
+                                          <q-select dense outlined v-model="props.row.type" :options="teachersTypeArr"  />
                                         </q-td>
                                         
-                                        <q-td key="amount" :props="props">
-                                          <q-input dense outlined v-model="props.row.amount"/>
+                                        <q-td key="all" :props="props">
+                                          <q-checkbox v-model="props.row.all" />
                                         </q-td>
 
                                         <q-td key="attendeeList" :props="props" class="row">
@@ -1090,7 +1025,7 @@
 
                                   </q-table>
 
-                                  <q-btn round dense color="secondary" icon="add" class="q-mt-md"  @click="addAttRow"/>
+                                  <q-btn v-if="editedItem.noAttendingArr.attendeesData.length < 4" round dense color="secondary" icon="add" class="q-mt-md"  @click="addAttRow"/>
 
                                 </div>
                               </div>
@@ -1110,164 +1045,6 @@
                         </div>
                       </q-card-actions>
                 
-
-                    </q-card>
-                  </q-dialog>
-
-                  <q-dialog v-model="show_attending_dialog">
-                    <q-card>
-                      <q-card-section style="width: 500px">
-                        <div class="text-h6">No attending</div>
-                      </q-card-section>
-                      <q-card-section>
-
-                        <div class="row q-mt-md">
-                          <div class="col-4 q-pr-md row items-center justify-end">
-                            Number of attendees:
-                          </div>
-                          <div class="col-2">
-                            <q-input dense outlined v-model="editedItem.noAttendingArr.attendees"/>
-                          </div>
-                        </div>
-
-                        <div class="row q-mt-md">
-                          <div class="col-12 text-left">
-                            <span class="q-ml-sm">
-                              <q-checkbox v-model="editedItem.noAttendingArr.split" label="Split activity and attendees:"/>
-                            </span>
-                          </div>
-                        </div>
-
-                        <q-separator class="q-mt-md" v-if="editedItem.noAttendingArr.split"></q-separator>
-
-                        <div class="q-mt-md" v-if="editedItem.noAttendingArr.split">
-                            <div>
-
-                              <div class="q-mb-md">
-                                <span class="text-subtitle2">Amount: </span> 
-                                $ {{ popupAmount }}
-                              </div>
-
-                              <q-table
-                                :data="editedItem.noAttendingArr.attendeesData"
-                                :columns="attendeesColumn"
-                                row-key="no"
-                                hide-bottom
-                                class="no-scroll"
-                              >
-                              
-                                <template v-slot:body="props">
-
-                                  <q-tr :props="props">
-
-                                    <q-td key="no" :props="props">
-                                      <q-input type="number" dense outlined 
-                                        v-model="props.row.no"
-                                        @input="selfTitleTeacherCount(props.row.no)"
-                                      />
-                                    </q-td>
-
-                                    <q-td key="allocation" :props="props">
-                                      <q-select  @input="changeAllocation" dense outlined v-model="props.row.allocation" :options="titlesArr"  />
-                                    </q-td>
-
-                                    <q-td key="type" :props="props" v-if="props.row.allocation.value == 'Title I'">
-                                      <q-select dense outlined v-model="props.row.type" :options="typeArr"  />
-                                    </q-td>
-                                    <q-td key="type" :props="props" v-else-if="props.row.allocation.value == 'Title II'">
-                                      <q-select dense outlined v-model="props.row.type" :options="typeArr2"  />
-                                    </q-td>
-                                    <q-td key="type" :props="props" v-else-if="props.row.allocation.value == 'Title III'">
-                                      <q-select dense outlined v-model="props.row.type" :options="typeArr3"  />
-                                    </q-td>
-                                    <q-td key="type" :props="props" v-else-if="props.row.allocation.value == 'Title IV'">
-                                      <q-select dense outlined v-model="props.row.type" :options="typeArr4"  />
-                                    </q-td>
-                                    <q-td key="type" :props="props" v-else-if="props.row.allocation.value == 'ESSER'">
-                                      <q-select dense outlined v-model="props.row.type" :options="typeEssr"  />
-                                    </q-td>
-                                    <q-td key="type" :props="props" v-else>
-                                      <q-select dense outlined v-model="props.row.type" :options="typeArr"  />
-                                    </q-td>
-                                    
-                                    <q-td key="amount" :props="props">
-                                      <q-input dense outlined v-model="props.row.amount"/>
-                                    </q-td>
-
-                                    <q-td key="attendeeList" :props="props" class="row">
-                                      <div @click="props.expand = !props.expand" class="cursor-pointer" >
-                                         <q-btn color="blue"   round dense icon="perm_identity"/>
-                                      </div>
-                                      <q-btn
-                                          icon="delete_forever"
-                                          color="red" 
-                                          @click="openAttendeDeleteModal(props.row)" 
-                                          round dense
-                                        >
-                                      </q-btn>
-                                    </q-td>
-
-                                  </q-tr>
-
-                                  <q-tr v-show="props.expand" :props="props">
-                                    <q-td colspan="100%" class="q-td--no-hover">
-
-                                        <q-input outlined dense 
-                                          v-on:keyup.enter="searchEnter"
-                                          v-model="attendingSearch"
-                                          label="Search" class="q-mt-lg q-mb-sm">
-
-                                          <template v-slot:prepend>
-                                            <q-icon name="search" />
-                                          </template>
-
-                                        </q-input>
-
-                                        <q-list bordered separator class="q-mb-lg" style="height: 195px; overflow-y: scroll;">
-
-                                          <q-item v-for="teacher in filteredList" :key="teacher.id">
-                                            <q-item-section>
-                                              <div class="w-100 row justify-between items-center">
-                                                <div class="text-subtitle2">{{ teacher.name }}</div>
-                                                <q-btn 
-                                                  icon="delete_forever"
-                                                  color="red" 
-                                                  size=sm 
-                                                  no-caps
-                                                  @click="openDeleteTeacherModal(teacher)"
-                                                ></q-btn>
-                                              </div>
-                                            </q-item-section>
-                                          </q-item>
-
-                                                                          
-                                          <div v-if="teachersSearchLength == 0">
-                                              <p class="q-mt-md q-ml-md">
-                                                <q-icon name="warning" style="font-size: 1.5em"/>
-                                                No matching records found 
-                                              </p>
-                                          </div>
-                                        
-                                        </q-list>
-
-                                    </q-td>
-                                  </q-tr>
-
-                                </template>
-
-                              </q-table>
-
-                              <q-btn round dense color="secondary" icon="add" class="q-mt-md"  @click="addAttRow"/>
-
-                            </div>
-                        </div>
-
-                      </q-card-section>
-                      
-                      <q-card-actions class="row justify-end">
-                          <q-btn flat label="Cancel" color="primary" v-close-popup></q-btn>
-                          <q-btn flat label="Confirm" color="primary" @click="confirmNoAttending" ></q-btn>
-                      </q-card-actions>
 
                     </q-card>
                   </q-dialog>
@@ -1834,9 +1611,9 @@
                             
                             <div class="text-subtitle2 q-mt-md">Attendees:</div>
 
-                            <p v-for="u in editedItem.noAttendingArr.attendeesData" :key="u">
+                            <!-- <p v-for="u in editedItem.noAttendingArr.attendeesData" :key="u">
                               {{u.no }} teachers in {{u.allocation.label}}, type {{u.type}}, amount {{u.amount}}
-                            </p>
+                            </p> -->
 
                           </div>
 
@@ -1992,23 +1769,16 @@
                 sortable: true
               },
               {
-                name: "allocation",
-                align: "left",
-                label: "Allocation",
-                field: "allocation",
-                sortable: true
-              },
-              {
                 name: "type",
-                align: "left",
+                align: "center",
                 label: "Type",
                 field: "type",
                 sortable: true
               },
               {
-                name: "amount",
+                name: "all",
                 align: "left",
-                label: "Amount",
+                label: "All",
                 field: "type",
                 sortable: true
               },
@@ -2299,32 +2069,27 @@
             confirm: false,
             confirmDate: false,
             confirmTeacherModal: false,
-            titlesArr: [
+            teachersTypeArr: [
               {
-                label: 'Title I',
-                value: 'Title I',
+                label: 'Teachers',
+                value: 'teachers',
                 disable: false
               },
               {
-                label: 'Title II',
-                value: 'Title II',
+                label: 'Students',
+                value: 'students',
                 disable: false
               },
               {
-                label: 'Title III',
-                value: 'Title III',
+                label: 'Parents',
+                value: 'parents',
                 disable: false
               },
               {
-                label: 'Title IV',
-                value: 'Title IV',
+                label: 'Staff',
+                value: 'staff',
                 disable: false
-              },
-              {
-                label: 'ESSER',
-                value: 'ESSER',
-                disable: false
-              },
+              }
             ],
             typeArr: ['PD', 'FE'],
             typeArr2: ['PD', 'M'],
@@ -2464,10 +2229,6 @@
             console.log(this.editedItem.noAttendingArr.attendeesData.no)
 
           },
-          changeAllocation(val) {
-            const index = this.titlesArr.indexOf(val)
-            this.titlesArr[index].disable = true
-          },
           searchEnter() {
             if(this.teachersSearchLength == 0) {
               let obj = {
@@ -2588,12 +2349,14 @@
           addAttRow() {
             let obj = {   
               no: '',
-              allocation: '',
               type: '',
-              amount: 0,
+              all: false,
               attendeeList: 'View'
             }
+            console.log('++++++')
+            console.log(this.editedItem.noAttendingArr.attendeesData)
             this.editedItem.noAttendingArr.attendeesData.push(obj)
+            console.log(this.editedItem.noAttendingArr.attendeesData)
           },
           addDate(key) {
             console.log('99999999999', key)
