@@ -1611,9 +1611,9 @@
                             
                             <div class="text-subtitle2 q-mt-md">Attendees:</div>
 
-                            <!-- <p v-for="u in editedItem.noAttendingArr.attendeesData" :key="u">
-                              {{u.no }} teachers in {{u.allocation.label}}, type {{u.type}}, amount {{u.amount}}
-                            </p> -->
+                            <p v-for="u in editedItem.noAttendingArr.attendeesData" :key="u">
+                              {{u.no }} - {{u.type.label}}
+                            </p>
 
                           </div>
 

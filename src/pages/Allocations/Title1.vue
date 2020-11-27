@@ -82,10 +82,10 @@
         title="Title I" 
         :data="data"
         :columns="columns"
-        :filter="filter"
         row-key="id" 
         :loading="loading"
         binary-state-sort
+        :pagination.sync="pagination"
       >
         <!-- Loading -->
         <template v-slot:loading>
@@ -95,17 +95,34 @@
         <!-- Table Header -->
         <template v-slot:top-right="props">
 
-          <q-select class="q-mr-md" style="min-width: 200px; max-width: 200px" dense outlines clearable v-model="schoolYear" :options="schoolYears" label="School year" @input="filterAllocation"/>
+          <q-select class="q-mr-md" style="min-width: 200px; max-width: 200px" 
+            dense outlines v-model="schoolYear" 
+            :options="schoolYears" label="School year" 
+            @input="filterBySchoolYear"
+          >
+            <template v-if="schoolYear" v-slot:append>
+              <q-icon name="cancel" @click.stop="schoolYear = null, getAllocationByType(1)" class="cursor-pointer" />
+            </template>
 
-          <q-input class="q-mr-md" outlines dense v-model="filter" placeholder="Search">
+          </q-select>
+
+          <!-- <q-input class="q-mr-md" outlines dense v-model="filter" placeholder="Search">
             <template v-slot:append>
               <q-icon name="search"/>
             </template>
+          </q-input> -->
+
+          <q-input label="Search" class="q-mr-md" outlines dense 
+          v-model="filter" @keyup="keyUpFilter" @keydown="keyDownFilter">
+            <template v-slot:prepend>
+              <q-icon name="search" />
+            </template>
           </q-input>
 
-          <q-select class="q-mr-md" style="min-width: 200px; max-width: 200px" dense outlines clearable v-model="model" :options="options" label="Allocation" @input="filterAllocation"/>
+          <q-select class="q-mr-md" style="min-width: 200px; max-width: 200px" dense outlines clearable v-model="model" :options="options" label="Status" @input="filterAllocation"/>
 
-          <q-btn square class="q-mr-md" style="background-color: #546bfa" text-color="white" icon="add" @click="show_dialog = true" no-caps>Add</q-btn>
+          <q-btn :disabled="addNew" square class="q-mr-md" style="background-color: #546bfa" text-color="white" icon="add" 
+          @click="addNew = true, addNewRow()" no-caps>Add</q-btn>
           
           <q-btn
             icon-right="archive"
@@ -132,89 +149,7 @@
           </q-btn>
 
           <div class="q-pa-sm q-gutter-sm">
-            <q-dialog v-model="show_dialog" >
-              <!-- <vue-drag-resize :isResizable="false" :w="650" :h="710"> -->
-              
-                <q-card>
-                  <q-card-section>
-                    <div class="text-h6">Create</div>
-                  </q-card-section>
 
-                  <!-- MODAL -->
-                  <q-card-section>
-                    <div class="row">
-
-                      <div class="col-sm-6 col-xs-12 q-mb-sm q-pr-sm">
-                        <q-input outlined v-model="editedItem.school" label="School" />
-                      </div>
-
-                      <div class="col-sm-6 col-xs-12">
-                        <q-input outlined v-model="editedItem.date">
-                          <template v-slot:prepend>
-                            <q-icon name="event" class="cursor-pointer">
-                              <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                <q-date v-model="editedItem.date" mask="YYYY-MM-DD">
-                                  <div class="row items-center justify-end">
-                                    <q-btn v-close-popup label="Close" color="primary" flat />
-                                  </div>
-                                </q-date>
-                              </q-popup-proxy>
-                            </q-icon>
-                          </template>
-                        </q-input>
-                      </div>
-
-                      <div class="col-md-12 q-mt-md">
-                        <p>Preliminary Allocations</p>
-                      </div>
-
-                      <div class="col-sm-6 col-xs-12 q-pr-sm">
-                        <q-input :disable="editedItem.allocation" outlined v-model="editedItem.totalInstruction" label="Total Instruction" />
-                      </div>
-
-                      <div class="col-sm-6 col-xs-12">
-                        <q-input :disable="editedItem.allocation" outlined v-model="editedItem.familyEngagemenet" label="Family Engagemenet" />
-                      </div>
-
-                      <div class="col-md-12 q-mt-md">
-                        <p>Final Allocations</p>
-                      </div>
-
-                      <div class="col-sm-6 col-xs-12 q-pr-sm">
-                        <q-input :disable="!editedItem.allocation" outlined v-model="editedItem.totalInstructionFinal" label="Total Instruction" />
-                      </div>
-
-                      <div class="col-sm-6 col-xs-12">
-                        <q-input :disable="!editedItem.allocation" outlined v-model="editedItem.familyEngagemenetFinal" label="Family Engagemenet" />
-                      </div>
-
-                      <div class="col-md-12 q-mt-md q-mb-md">
-                        <div class="q-gutter-sm text-right">
-                          <q-checkbox v-model="editedItem.allocation" label="Allocation is Final" />
-                        </div>
-                      </div>
-
-                      <div class="col-sm-6 col-xs-12 q-mb-sm"></div>
-
-                      <div class="col-sm-6 col-xs-12 q-mb-sm">
-                        <q-input outlined label="PD Percentage %" v-model="editedItem.pdPercentage" />
-                      </div>
-
-                      <div class="col-md-12">
-                        <q-input type="textarea" outlined v-model="editedItem.notes" label="Notes" />
-                      </div>
-                    
-                    </div>
-                  </q-card-section>
-                
-                  <q-card-actions align="right">
-                    <q-btn flat label="Confirm" color="primary" v-close-popup @click="addRow"></q-btn>
-                  </q-card-actions>
-
-                </q-card>
-
-              <!-- </vue-drag-resize> -->
-            </q-dialog>
             <q-dialog v-model="confirm" persistent>
               <q-card>
                 <q-card-section class="row items-center">
@@ -227,6 +162,7 @@
                 </q-card-actions>
               </q-card>
             </q-dialog>
+
           </div>
       
         </template>
@@ -243,12 +179,12 @@
                 </q-btn>
               </q-td>
 
-              <q-td key="date" :props="props">
+              <q-td key="creation_date" :props="props">
                 
                 <div class="cursor-pointer">
-                  {{ props.row.date }}
+                  {{ props.row.creation_date }}
                   <q-popup-proxy transition-show="scale" transition-hide="scale">
-                    <q-date v-model="props.row.date" @input="detectChange(props.rowIndex)">
+                    <q-date v-model="props.row.creation_date" mask="YYYY-MM-DD" @input="detectChange(props.rowIndex)">
                       <div class="row items-center justify-end q-gutter-sm">
                         <q-btn label="Cancel" color="primary" flat v-close-popup />
                         <q-btn label="OK" color="primary" flat v-close-popup />
@@ -260,68 +196,60 @@
               </q-td>
               
               <q-td key="school" :props="props">
-                <div class="text-pre-wrap cursor-pointer">{{ props.row.school }}</div>
-                <q-popup-edit v-model="props.row.school" title="School" buttons>
-                  <q-input  @input="detectChange(props.rowIndex)" type="text" v-model="props.row.school" dense autofocus/>
-                </q-popup-edit>
+
+                <div v-if="!props.row.add || props.row.add == false" class="text-pre-wrap cursor-pointer">{{ props.row.school.school_name }}</div>
+                <q-select
+                  v-else
+                  outlined
+                  dense
+                  v-model="selectedSchool"
+                  :options="schools"
+                  behavior="dialog"
+                  style="width: 200px"
+                  @input="addSchoolNameToObject"
+                />
+
               </q-td>
 
               <q-td key="instruction" :props="props">
-                $ {{ props.row.instruction }}
+                $ {{ props.row.total_instruction - ( props.row.total_instruction * props.row.professional_development_percentage / 100 )}}
               </q-td>
 
               <q-td key="profDev" :props="props">
-                <div class="cursor-pointer">$ {{ props.row.profDev }}</div>
-                <q-popup-edit v-model="props.row.profDev" title="Professional Development" buttons>
-                  <q-input  @input="detectChange(props.rowIndex)" type="number" v-model="props.row.profDev" dense autofocus/>
-                </q-popup-edit>
+                <div class="cursor-pointer">$ {{ props.row.total_instruction * props.row.professional_development_percentage / 100 }}</div>
+
+                <!-- <q-popup-edit v-model="props.row.professional_development" title="Professional Development" buttons>
+                  <q-input  @input="detectChange(props.rowIndex)" type="number" v-model="props.row.professional_development" dense autofocus/>
+                </q-popup-edit> -->
+
               </q-td>
               
               <q-td key="totalInstruction" :props="props">
 
-                <div class="cursor-pointer" v-if="props.row.allocation">$ {{ props.row.totalInstructionFinal }} </div>
-                <div class="cursor-pointer" v-else> $ {{ props.row.totalInstruction }} </div>
-
-                <q-popup-edit v-if="props.row.allocation" v-model="props.row.totalInstructionFinal" title="Total Instruction" buttons>
-                  <q-input  @input="detectChange(props.rowIndex)" type="number" v-model="props.row.totalInstructionFinal" dense autofocus/>
-                  <q-input  @input="detectChange(props.rowIndex)" class="q-mt-md"  label="PD Percentage %" v-model="props.row.pdPercentage" />
-                </q-popup-edit>
-                <q-popup-edit v-else v-model="props.row.totalInstruction" title="Total Instruction" buttons>
-                  <q-input  @input="detectChange(props.rowIndex)" type="number" v-model="props.row.totalInstruction" dense autofocus/>
-                  <q-input  @input="detectChange(props.rowIndex)" class="q-mt-md"  label="PD Percentage %" v-model="props.row.pdPercentage" />
+                <div class="cursor-pointer">$ {{ props.row.total_instruction }} </div>
+                
+                <q-popup-edit v-model="props.row.total_instruction" title="Total Instruction" buttons>
+                  <q-input  @input="detectChange(props.rowIndex)" type="number" v-model="props.row.total_instruction" dense autofocus/>
+                  <q-input  @input="detectChange(props.rowIndex)" type="number" v-model="props.row.professional_development_percentage" label="PD Percentage" dense autofocus/>
                 </q-popup-edit>
 
               </q-td>
               
               <q-td key="familyEngagemenet" :props="props">
-                <div class="cursor-pointer" v-if="props.row.allocation">$  {{ props.row.familyEngagemenetFinal }} </div>
-                <div class="cursor-pointer" v-else> $ {{ props.row.familyEngagemenet }} </div>
-
-                <q-popup-edit v-if="props.row.allocation" v-model="props.row.familyEngagemenetFinal" title="Family Engagemenet" buttons>
-                  <q-input  @input="detectChange(props.rowIndex)" type="number" v-model="props.row.familyEngagemenetFinal" dense autofocus/>
-                </q-popup-edit>
-                <q-popup-edit v-else v-model="props.row.familyEngagemenet" title="Family Engagemenet" buttons>
-                  <q-input  @input="detectChange(props.rowIndex)" type="number" v-model="props.row.familyEngagemenet" dense autofocus/>
+                <div class="cursor-pointer">$  {{ props.row.family_engagement }} </div>
+               
+                <q-popup-edit  v-model="props.row.family_engagement" title="Family Engagemenet" buttons>
+                  <q-input  @input="detectChange(props.rowIndex)" type="number" v-model="props.row.family_engagement" dense autofocus/>
                 </q-popup-edit>
               </q-td>
 
               <q-td key="total" :props="props">
-                  $ {{ props.row.total }}
+                  $ {{ (parseFloat(props.row.total_instruction) + parseFloat(props.row.family_engagement)).toFixed(2) }}
               </q-td>
               
-              <q-td key="allocation" :props="props">
+              <q-td key="status" :props="props">
 
-                <q-chip class="cursor-pointer" square color="green" text-color="white" v-if="props.row.allocation == 'Preliminary'">
-                  PR
-                  <q-tooltip 
-                      anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                      transition-show="flip-right"
-                      transition-hide="flip-left"
-                  >
-                    <strong>PR</strong>
-                  </q-tooltip>
-                </q-chip>
-                <q-chip class="cursor-pointer" square color="purple" text-color="white" v-else>
+                <q-chip class="cursor-pointer" square color="purple" text-color="white" v-if="props.row.status_string == 'Final'">
                   FN
                   <q-tooltip 
                       anchor="top middle" self="bottom middle" :offset="[10, 10]"
@@ -332,95 +260,97 @@
                   </q-tooltip>
                 </q-chip>
 
-                <!-- <q-chip square class="edx-q-chip-button cursor-pointer" text-color="orange" v-if="props.row.allocation == 'Preliminary'">Preliminary</q-chip> -->
-                <!-- <q-chip square class="edx-q-chip-button cursor-pointer" text-color="green" v-else>Final</q-chip> -->
+                <q-chip class="cursor-pointer" square color="green" text-color="white" v-else>
+                  PR
+                  <q-tooltip 
+                      anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                      transition-show="flip-right"
+                      transition-hide="flip-left"
+                  >
+                    <strong>PR</strong>
+                  </q-tooltip>
+                </q-chip>
 
-                <q-popup-edit v-model="props.row.allocation" title="Allocation" buttons>
-                  <q-select  @input="detectChange(props.rowIndex)" v-model="props.row.allocation" :options="options"/>
+                <q-popup-edit v-model="props.row.status_string" title="Allocation" buttons>
+                  <q-select  @input="detectChange(props.rowIndex)" v-model="props.row.status_string" :options="options"/>
                 </q-popup-edit>  
 
               </q-td>
               
-              <q-td key="actions" :props="props">
+              <q-td key="actions" :props="props" style="min-width: 132px">
 
-                <div v-if="props.row.changed">
+                  <div v-if="props.row.changed">
                 
-                  <q-btn
-                    @click="cancellChange(props.rowIndex)"
-                    class="q-mr-sm"
-                    icon="cancel"
-                    color="orange" 
-                    size=sm 
-                    no-caps
-                    round 
-                  >
-                    <q-tooltip 
-                        anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                        transition-show="flip-right"
-                        transition-hide="flip-left"
+                    <q-btn
+                      @click="cancellChange(props.rowIndex)"
+                      class="q-mr-sm"
+                      icon="cancel"
+                      color="orange" 
+                      size=sm 
+                      no-caps
+                      round 
                     >
-                      <strong>Cancel</strong>
-                    </q-tooltip>
-                  </q-btn>
-                  
-                  <q-btn
-                    @click="props.row.changed = false"
-                    class="q-mr-sm"
-                    icon="save"
-                    color="green" 
-                    size=sm 
-                    no-caps
-                    round 
-                  >
-                    <q-tooltip 
-                        anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                        transition-show="flip-right"
-                        transition-hide="flip-left"
+                      <q-tooltip 
+                          anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                          transition-show="flip-right"
+                          transition-hide="flip-left"
+                      >
+                        <strong>Cancel</strong>
+                      </q-tooltip>
+                    </q-btn>
+                    
+                    <q-btn
+                      @click="editAllocation(props.rowIndex)"
+                      class="q-mr-sm"
+                      icon="save"
+                      color="green" 
+                      size=sm 
+                      no-caps
+                      round 
                     >
-                      <strong>Save</strong>
-                    </q-tooltip>
-                  </q-btn>
+                      <q-tooltip 
+                          anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                          transition-show="flip-right"
+                          transition-hide="flip-left"
+                      >
+                        <strong>Save</strong>
+                      </q-tooltip>
+                    </q-btn>
 
-                </div>
+                  </div>
 
-                <div v-if=" props.row.showEditButton && !props.row.changed">
-                  <!-- <q-btn 
-                    icon="edit"
-                    color="blue"
-                    @click="editItem(props.row)" 
-                    size=sm 
-                    no-caps
-                    class="q-mr-sm"
-                  >
-                  </q-btn> -->
-                  <q-btn 
-                    icon="delete_forever"
-                    color="red" 
-                    @click="openDeleteModal(props.row)" 
-                    size=sm 
-                    no-caps
-                    round 
-                  >
-                    <q-tooltip 
-                        anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                        transition-show="flip-right"
-                        transition-hide="flip-left"
+                  <div v-if="props.row.showEditButton && !props.row.changed">
+                    <q-btn 
+                      icon="delete_forever"
+                      color="red" 
+                      @click="openDeleteModal(props.row)" 
+                      size=sm 
+                      no-caps
+                      round 
                     >
-                      <strong>Delete</strong>
-                    </q-tooltip>
-                  </q-btn>
-                </div>
-                
+                      <q-tooltip 
+                          anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                          transition-show="flip-right"
+                          transition-hide="flip-left"
+                      >
+                        <strong>Delete</strong>
+                      </q-tooltip>
+                    </q-btn>
+                  </div>
+
               </q-td>
 
             </q-tr>
 
-            <q-tr v-show="props.expand" :props="props">
+            <q-tr v-show="props.expand" :props="props"  @click="copyRowData(props.rowIndex)" :class="{ 'bg-red-2' : props.row.changed }">
               <q-td colspan="100%" class="q-td--no-hover">
                 <div class="row">
                   <div class="col-md-4 q-mt-lg q-mb-lg">
                     <div class="text-subtitle2 q-mb-md">Notes</div>
-                    <q-input type="textarea" outlined v-model="props.row.notes" />
+                    <q-input type="textarea" outlined v-model="props.row.note" class="q-mb-md"/>  
+                    <q-popup-edit v-model="props.row.note" title="Note" buttons>
+                      <q-input @input="detectChange(props.rowIndex)" type="textarea" outlined v-model="props.row.note" />
+                    </q-popup-edit> 
                   </div>
                 </div>
               </q-td>
@@ -429,7 +359,7 @@
         </template>
 
         <!-- Pagination -->
-        <template v-slot:bottom class="justify-end">
+        <!-- <template v-slot:bottom class="justify-end">
           <div class="q-pa-md flex flex-center">
             <q-pagination
               v-model="pagination.page"
@@ -441,7 +371,7 @@
             >
             </q-pagination>
           </div>
-        </template>
+        </template> -->
 
       </q-table>
     </div>
@@ -450,8 +380,12 @@
 </template>
 
 <script>
+
     import {exportFile} from 'quasar'
     import lodash from 'lodash'
+    import axios from 'axios'
+    import config from '../../../config'
+
     // Popup draggable functionality I will fix later
 
     // import Vue from 'vue'
@@ -479,35 +413,35 @@
     }
 
     let oldObject = {}
+    let typingTimer
+    let doneTypingInterval = 1000
 
     export default {
       data() {
         return {
           confirm: false,
-          loading: false,
+          loading: true,
           item: '',
-          pages: 3,
-          currentPage: 1,
+          // pages: 3,
+          // currentPage: 1,
           pagination: {
-            sortBy: 'name',
+            sortBy: 'id',
             page: 1,
-            rowsPerPage: 5,
-            // rowsNumber: 5
+            rowsPerPage: 10
           },
           model: null,
           options: [
             'Preliminary', 'Final'
           ],
+          schools: [],
+          selectedSchool: null,
           schoolYear: null,
           schoolYears: [
-            'School Year 20-21',
-            'School Year 19-20',
-            'School Year 18-19'
           ],
           isFinal: false,
           filter: '',
           mode: 'list',
-          show_dialog: false,
+          // show_dialog: false,
           editedIndex: -1,
           editedItem: {
 
@@ -541,10 +475,10 @@
               style: 'width: 30px'
             },
             {
-              name: "date",
+              name: "creation_date",
               align: "left",
               label: "Date",
-              field: "date",
+              field: "creation_date",
               sortable: true
             },
             {
@@ -590,10 +524,10 @@
               sortable: true
             },
             {
-              name: "allocation",
+              name: "status",
               align: "left",
               label: "Status",
-              field: "allocation",
+              field: "status",
               sortable: true
             },
             {
@@ -605,6 +539,7 @@
           ],
           data: [],
           tempData: [],
+          addNew: false,
         };
       },
       methods: {
@@ -674,18 +609,11 @@
             this.confirm = true
             this.item = item
           },
-          deleteItem() {
-            let item = this.item
-            const index = this.data.indexOf(item)
-            this.data.splice(index, 1)
-          },
           editItem(item) {
               this.editedIndex = this.data.indexOf(item);
               this.editedItem = Object.assign({}, item);
-              this.show_dialog = true;
           },
           close () {
-            this.show_dialog = false
             setTimeout(() => {
               this.editedItem = Object.assign({}, this.defaultItem)
               this.editedIndex = -1
@@ -792,27 +720,20 @@
               this.tempData = dataTest
             }, 550)
           },
-          filterAllocation() {
-            if(this.model) {
-              if(this.model == 'Preliminary') {
-                this.data = this.tempData.filter(a => a.allocation == 'Preliminary');
-              }else {
-                this.data = this.tempData.filter(a => a.allocation == 'Final');
-              }
-            }else {
-              this.data = this.tempData
-            }
-          },
           copyRowData(index) {
             oldObject = JSON.stringify(this.tempData[index])
-            console.log('Copy Row Data : ', oldObject)
           },
           detectChange(index) {
+
+            this.editedItem = this.tempData[index]
+            console.log(this.editedItem)
+
             let d = JSON.parse(oldObject)
             let f = JSON.stringify(this.data[index])
                 f = JSON.parse(f)
 
             let status = _.isEqual(d, f)
+            console.log(status)
 
             if(status) {
               this.data[index].changed = false
@@ -822,78 +743,382 @@
 
           },
           cancellChange(index) {
-            let d = JSON.parse(oldObject)
-            Object.assign(this.data[index], d);
-            this.data[index].changed = false
+            
+            if(this.addNew) {
+              this.data.splice(0, 1)
+              this.addNew = false
+            } else {
+              let d = JSON.parse(oldObject)
+              Object.assign(this.data[index], d);
+              this.data[index].changed = false
+            }
+
+
           },
+          doneTyping() {
+            console.log('Typing done!')
+            if(this.filter.length > 3) {
+              console.log('Send Request...')
+            }
+          },
+          getToday() {
+            let dateObj = new Date();
+            let month = dateObj.getUTCMonth() + 1; //months from 1-12
+            let day = dateObj.getUTCDate();
+            let year = dateObj.getUTCFullYear();
+
+            return year + "-" + month + "-" + day;
+          },
+
+          // Add new Row 
+          addNewRow() {
+            
+            let date = this.getToday()
+
+            const obj  = {
+              creation_date: date,
+              school: '',
+              total_instruction: 0,
+              total_instruction: 0,
+              professional_development_percentage: 0,
+              family_engagement: 0,
+              total: 0,
+              status_string: 'Final',
+              changed: true,
+              showEditButton: false,
+              allocation_type: 1,
+              note: '',
+              add: true,
+            }
+
+            this.data.unshift(obj)
+            this.editedItem = obj
+          
+          },
+
+          // Filter key events
+          keyUpFilter() {
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(this.doneTyping, doneTypingInterval);
+          },
+          keyDownFilter() {
+            clearTimeout(typingTimer);
+          },
+
+          // Filter Allocation
+          filterAllocation() {
+            console.log('Allocation', this.model)
+            // if(this.model) {
+            //   if(this.model == 'Preliminary') {
+            //     this.data = this.tempData.filter(a => a.status_string == 'Preliminary');
+            //   }else {
+            //     this.data = this.tempData.filter(a => a.status_string == 'Final');
+            //   }
+            // }else {
+            //   this.data = this.tempData
+            // }
+          },
+
+        // Requests
+        getAllocationByType(type) {
+          const conf = {
+            method: 'GET',
+            url: config.getAllocationByTitle + type,
+            headers: {
+              Accept: 'application/json',
+            }
+          }
+          axios(conf).then(res => {
+
+              let data = res.data.allocations
+            
+
+              for(let i=0; i<data.length; i++) {
+                
+                data[i].changed = false
+                data[i].showEditButton = true
+
+                if(data[i].is_final) {
+                  data[i].status_string = 'Final'
+                }
+                else {
+                data[i].status_string = 'Preliminary'
+                }
+
+              }
+
+              this.data = data
+              this.tempData = data
+
+              console.log('DATA = ', this.data)
+
+              this.loading = false
+          })
+        },
+        getSchools() {
+          const conf = {
+            method: 'GET',
+            url: config.getSchools,
+            headers: {
+              Accept: 'application/json',
+            }
+          }
+          axios(conf).then(res => {
+            console.log('schools', res)
+            let schoolsArr = []
+            for(let i=0; i<res.data.length; i++) {
+              let obj = {
+                id: res.data[i].id,
+                label: res.data[i].school_name,
+                value: res.data[i].id
+              }
+              schoolsArr.push(obj)
+            }
+            this.schools = schoolsArr
+            console.log(this.schools)
+          })
+        },
+        getSchoolYears() {
+          const conf = {
+            method: 'GET',
+            url: config.getSchoolYears,
+            headers: {
+              Accept: 'application/json',
+            }
+          }
+          axios(conf).then(res => {
+            console.log('getSchoolYears',  res)
+
+            let data = res.data, schoolsArr = []
+            for(let i=0; i<data.length; i++) {
+              let obj = {
+                id: data[i].id,
+                label: data[i].year_name,
+                value: data[i].year_name
+              }
+              schoolsArr.push(obj)
+            }
+            this.schoolYears = schoolsArr
+            console.log(this.schoolYears)
+          })
+        },
+        filterBySchoolYear() {
+          
+          if(this.schoolYear.id) {
+
+            this.loading = true
+            const conf = {
+              method: 'GET',
+              url: config.getAllocationByYears + 1 + '/' + this.schoolYear.id ,
+              headers: {
+                Accept: 'application/json',
+              }
+            }
+
+            axios(conf).then(res => {
+              console.log('getAllocationByYears',  res)
+              let data = res.data.allocations
+            
+              
+                for(let i=0; i<data.length; i++) {
+                  
+                  data[i].changed = false
+                  data[i].showEditButton = true
+
+                  if(data[i].is_final) {
+                    data[i].status_string = 'Final'
+                  }
+                  else {
+                  data[i].status_string = 'Preliminary'
+                  }
+
+                }
+
+                this.data = data
+                this.tempData = data
+              
+
+                this.loading = false
+            })
+          }
+        },
+        filterAllocationsBySchoolName() {
+
+        },
+
+        editAllocation(index) {
+
+          const data  = {
+            is_final:  this.editedItem.status_string == 'Final' ? true : false,
+            creation_date: this.editedItem.creation_date,
+            total_instruction: parseFloat(this.editedItem.total_instruction),
+            professional_development_percentage: parseFloat(this.editedItem.professional_development_percentage),
+            family_engagement: parseFloat(this.editedItem.family_engagement),
+            note: this.editedItem.note,
+            allocation_type: this.editedItem.allocation_type
+          }
+
+          if(this.addNew) {
+
+            data.school_id = this.selectedSchool.id
+
+            const conf = {
+              method: 'POST',
+              url: config.addAllocation,
+              headers: {
+                Accept: 'application/json',
+              },
+              data: data
+            }
+
+            axios(conf)
+              .then(res => {
+
+                this.$q.notify({
+                  message: 'Allocation Added successfully!',
+                  type: 'positive',
+                })
+
+                this.data[index].changed = false
+                this.data[index].showEditButton = true
+                this.data[index].id = res.data.id
+                this.data[index].add = false
+
+                let school = {
+                  school_name: this.selectedSchool.label
+                }
+
+                this.data[index].school = school
+                this.addNew = false
+              })
+
+          } else {
+            
+            this.data[index].changed = false
+
+            const conf = {
+              method: 'PUT',
+              url: config.getAllocationByTitle + this.editedItem.id,
+              headers: {
+                Accept: 'application/json',
+              },
+              data: data
+            }
+
+            axios(conf)
+              .then(res => {
+                this.$q.notify({
+                  message: 'Allocation updated successfully!',
+                  type: 'positive',
+                })
+              })
+          }
+
+        },
+        deleteItem() {
+          let item = this.item
+
+          const conf = {
+            method: 'DELETE',
+            url: config.getAllocationByTitle + item.id,
+            headers: {
+              Accept: 'application/json',
+            }
+          }
+
+          axios(conf)
+          .then(res => {
+            console.log('DELETE RES :', res)
+            const index = this.data.indexOf(item)
+            this.data.splice(index, 1)
+              this.$q.notify({
+                message: res.data,
+                type: 'positive',
+              })
+          })
+
+        },
+        addSchoolNameToObject() {
+          this.editedItem.school_name = this.selectedSchool.label
+          console.log(this.editedItem)
+        }
+        
       },
       created() {
-        let dataTest = []
 
-        for(let i=0; i<5; i++) {
+        // Get schools for showing
+        this.getSchools()
 
-          let r = Math.floor(Math.random() * 10)
-          if(r % 2) r = true 
-          else r = false
+        // let dataTest = []
+
+        // for(let i=0; i<5; i++) {
+
+        //   let r = Math.floor(Math.random() * 10)
+        //   if(r % 2) r = true 
+        //   else r = false
       
-          let pdPercentage = 4,
-              totalInstruction = Math.floor(Math.random() * 100),
-              totalInstructionFinal = Math.floor(Math.random() * 100),
-              instruction, 
-              profDev, 
-              total,
-              familyEngagemenetEstimated = Math.floor(Math.random() * 100),
-              familyEngagemenetFinal = Math.floor(Math.random() * 100)
+        //   let pdPercentage = 4,
+        //       totalInstruction = Math.floor(Math.random() * 100),
+        //       totalInstructionFinal = Math.floor(Math.random() * 100),
+        //       instruction, 
+        //       profDev, 
+        //       total,
+        //       familyEngagemenetEstimated = Math.floor(Math.random() * 100),
+        //       familyEngagemenetFinal = Math.floor(Math.random() * 100)
 
-          // Professional development
-          let p_percentage = parseFloat(pdPercentage) / 100;
-          if (r) {
-            profDev = (parseFloat(totalInstructionFinal) * p_percentage).toFixed(2);
-          } else {
-            profDev = (parseFloat(totalInstruction) * p_percentage).toFixed(2);
-          }
+        //   // Professional development
+        //   let p_percentage = parseFloat(pdPercentage) / 100;
+        //   if (r) {
+        //     profDev = (parseFloat(totalInstructionFinal) * p_percentage).toFixed(2);
+        //   } else {
+        //     profDev = (parseFloat(totalInstruction) * p_percentage).toFixed(2);
+        //   }
 
-          // instruction
-          let i_percentage = ( 100 - parseFloat(pdPercentage) ) / 100
-          if (r) {
-            instruction = ( parseFloat(totalInstructionFinal) * i_percentage ).toFixed(2);
-          } else {
-            instruction = ( parseFloat(totalInstruction) * i_percentage ).toFixed(2);
-          }
+        //   // instruction
+        //   let i_percentage = ( 100 - parseFloat(pdPercentage) ) / 100
+        //   if (r) {
+        //     instruction = ( parseFloat(totalInstructionFinal) * i_percentage ).toFixed(2);
+        //   } else {
+        //     instruction = ( parseFloat(totalInstruction) * i_percentage ).toFixed(2);
+        //   }
 
-          // Total
-          if (r) {
-            total = ( parseFloat(totalInstructionFinal) + parseFloat(familyEngagemenetFinal)  ).toFixed(2);
-          } else {
-            total = ( parseFloat(totalInstruction) + parseFloat(familyEngagemenetEstimated)   ).toFixed(2);
-          }
+        //   // Total
+        //   if (r) {
+        //     total = ( parseFloat(totalInstructionFinal) + parseFloat(familyEngagemenetFinal)  ).toFixed(2);
+        //   } else {
+        //     total = ( parseFloat(totalInstruction) + parseFloat(familyEngagemenetEstimated)   ).toFixed(2);
+        //   }
  
-          let obj = {
-            id: i,
-            date: "2020-09-11",
-            school: "American School N" + i+1,
-            instruction: instruction,
-            profDev: profDev,
+        //   let obj = {
+        //     id: i,
+        //     date: "2020-09-11",
+        //     school: "American School N" + i+1,
+        //     instruction: instruction,
+        //     profDev: profDev,
 
-            totalInstruction: totalInstruction,
-            familyEngagemenet: familyEngagemenetEstimated,
+        //     totalInstruction: totalInstruction,
+        //     familyEngagemenet: familyEngagemenetEstimated,
 
-            totalInstructionFinal: totalInstructionFinal,
-            familyEngagemenetFinal: familyEngagemenetFinal,
+        //     totalInstructionFinal: totalInstructionFinal,
+        //     familyEngagemenetFinal: familyEngagemenetFinal,
 
-            allocation: r ? 'Preliminary' : 'Final',
-            pdPercentage: pdPercentage,
-            total: total,
-            totalPercent: 9,
-            notes: "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.",
-            showEditButton: true,
-            changed: false,
-          }
+        //     allocation: r ? 'Preliminary' : 'Final',
+        //     pdPercentage: pdPercentage,
+        //     total: total,
+        //     totalPercent: 9,
+        //     notes: "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.",
+        //     showEditButton: true,
+        //     changed: false,
+        //   }
 
-          dataTest.push(obj)
-        }
-        this.data = dataTest
-        this.tempData = dataTest
+        //   dataTest.push(obj)
+        // }
+
+        // this.data = dataTest
+        // this.tempData = dataTest
+
+        this.getAllocationByType(1)
+        this.getSchoolYears()
       },
       computed: {
         instruction() {

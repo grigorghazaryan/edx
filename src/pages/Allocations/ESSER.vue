@@ -50,6 +50,7 @@
         row-key="id" 
         :loading="loading"
         binary-state-sort
+        :pagination.sync="pagination"
       >
 
         <!-- Loading -->
@@ -187,10 +188,14 @@
                 </q-btn>
               </q-td>
 
-              <q-td key="date" :props="props">
-                {{ props.row.date }}
+              <q-td key="creation_date" :props="props">
+                {{ props.row.creation_date }}
                 <q-popup-proxy transition-show="scale" transition-hide="scale">
-                  <q-date v-model="props.row.date" @input="detectChange(props.rowIndex)">
+                  <q-date
+                    v-model="props.row.creation_date"
+                    @input="detectChange(props.rowIndex)"
+                    mask="YYYY-MM-DD"
+                  >
                     <div class="row items-center justify-end q-gutter-sm">
                       <q-btn label="Cancel" color="primary" flat v-close-popup />
                       <q-btn label="OK" color="primary" flat v-close-popup />
@@ -200,57 +205,48 @@
               </q-td>
               
               <q-td key="school" :props="props">
-                <div class="text-pre-wrap cursor-pointer">{{ props.row.school }}</div>
-                <q-popup-edit v-model="props.row.school" title="School" buttons>
-                  <q-input  @input="detectChange(props.rowIndex)" type="text" v-model="props.row.school" dense autofocus/>
-                </q-popup-edit>
+                <div class="text-pre-wrap cursor-pointer">{{ props.row.school.school_name }}</div>
               </q-td>
 
               <q-td key="allocation" :props="props">
-                <div class="cursor-pointer" v-if="props.row.status == 'Final'">$ {{ props.row.finalAllocation }} </div>
-                <div class="cursor-pointer" v-else> $ {{ props.row.allocation }} </div>
+                <div class="cursor-pointer">$ {{ props.row.total_allocation }} </div>
+                
 
-                <q-popup-edit v-if="props.row.status == 'Final'" v-model="props.row.finalAllocation" title="Allocation" buttons>
-                  <q-input  @input="detectChange(props.rowIndex)" type="number" v-model="props.row.materialsFinal" dense autofocus/>
-                </q-popup-edit>
-                <q-popup-edit v-else v-model="props.row.allocation" title="Allocation" buttons>
-                  <q-input  @input="detectChange(props.rowIndex)" type="number" v-model="props.row.allocation" dense autofocus/>
+                <q-popup-edit v-model="props.row.total_allocation" title="Allocation" buttons>
+                  <q-input  @input="detectChange(props.rowIndex)" type="number" v-model="props.row.total_allocation" dense autofocus/>
                 </q-popup-edit>
 
               </q-td>
               
               <q-td key="status" :props="props">
-                
-                <q-chip class="cursor-pointer" square color="green" text-color="white" v-if="props.row.status == 'Preliminary'">
-                  PR
-                  <q-tooltip 
-                      anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                      transition-show="flip-right"
-                      transition-hide="flip-left"
-                  >
-                    <strong>PR</strong>
-                  </q-tooltip>
-                </q-chip>
-                <q-chip class="cursor-pointer" square color="purple" text-color="white" v-else>
-                  FN
-                  <q-tooltip 
-                      anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                      transition-show="flip-right"
-                      transition-hide="flip-left"
-                  >
-                    <strong>FN</strong>
-                  </q-tooltip>
-                </q-chip>
+                  <q-chip class="cursor-pointer" square color="purple" text-color="white" v-if="props.row.status_string == 'Final'">
+                    FN
+                    <q-tooltip 
+                        anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                        transition-show="flip-right"
+                        transition-hide="flip-left"
+                    >
+                      <strong>FN</strong>
+                    </q-tooltip>
+                  </q-chip>
 
-                <!-- <q-chip square class="edx-q-chip-button cursor-pointer" text-color="orange" v-if="props.row.status == 'Preliminary'">Preliminary</q-chip>
-                <q-chip square class="edx-q-chip-button cursor-pointer" text-color="green" v-else>Final</q-chip> -->
+                  <q-chip class="cursor-pointer" square color="green" text-color="white" v-else>
+                    PR
+                    <q-tooltip 
+                        anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                        transition-show="flip-right"
+                        transition-hide="flip-left"
+                    >
+                      <strong>PR</strong>
+                    </q-tooltip>
+                  </q-chip>
 
-                <q-popup-edit v-model="props.row.status" title="Allocation" buttons>
-                  <q-select  @input="detectChange(props.rowIndex)" v-model="props.row.status" :options="options"/>
-                </q-popup-edit> 
+                  <q-popup-edit v-model="props.row.status_string" title="Allocation" buttons>
+                    <q-select  @input="detectChange(props.rowIndex)" v-model="props.row.status_string" :options="options"/>
+                  </q-popup-edit>  
               </q-td>
               
-              <q-td key="actions" :props="props">
+              <q-td key="actions" :props="props" style="min-width: 132px">
                 <div v-if="props.row.changed">
                 
                   <q-btn
@@ -333,7 +329,7 @@
         </template>
 
         <!-- Pagination -->
-        <template v-slot:bottom class="justify-end">
+        <!-- <template v-slot:bottom class="justify-end">
           <div class="q-pa-md flex flex-center">
             <q-pagination
               v-model="pagination.page"
@@ -345,7 +341,7 @@
             >
             </q-pagination>
           </div>
-        </template>
+        </template> -->
 
       </q-table>
     </div>
@@ -355,7 +351,9 @@
 
 <script>
     import {exportFile} from 'quasar'
-        import lodash from 'lodash'
+    import lodash from 'lodash'
+    import axios from 'axios'
+    import config from '../../../config'
 
     function wrapCsvValue(val, formatFn) {
         let formatted = formatFn !== void 0
@@ -383,14 +381,13 @@
         data() {
           return {
             confirm: false,
-            loading: false,
-            pages: 3,
-            currentPage: 1,
+            loading: true,
+            // pages: 3,
+            // currentPage: 1,
             pagination: {
-              sortBy: 'name',
+              sortBy: 'id',
               page: 1,
-              rowsPerPage: 5,
-              // rowsNumber: 5
+              rowsPerPage: 10
             },
             model: null,
             options: [
@@ -429,10 +426,10 @@
               style: 'width: 30px'
             },
               {
-                name: "date",
+                name: "creation_date",
                 align: "left",
                 label: "Date",
-                field: "date",
+                field: "creation_date",
                 sortable: true
               },
               {
@@ -445,7 +442,7 @@
               { 
                 name: "allocation", 
                 align: "left",
-                label: "Allocation", 
+                label: "Grand Total", 
                 field: "allocation",
                 sortable: true
               },
@@ -620,48 +617,86 @@
             Object.assign(this.data[index], d);
             this.data[index].changed = false
           },
+
+
+          // Requests
+          getAllocationByType(type) {
+            const conf = {
+              method: 'GET',
+              url: config.getAllocationByTitle + type,
+              headers: {
+                Accept: 'application/json',
+              }
+            }
+            axios(conf).then(res => {
+
+                let data = res.data.allocations
+
+                for(let i=0; i<data.length; i++) {
+                  
+                  data[i].changed = false
+                  data[i].showEditButton = true
+
+                  if(data[i].is_final) {
+                    data[i].status_string = 'Final'
+                  }
+                  else {
+                  data[i].status_string = 'Preliminary'
+                  }
+
+                }
+
+                this.data = data
+                this.tempData = data
+
+                console.log('DATA = ', this.data)
+
+                this.loading = false
+            })
+          }
         },
         created() {
-            let dataTest = []
-            for(let i=0; i<5; i++) {
+            this.getAllocationByType(5)
+            // let dataTest = []
+            // for(let i=0; i<5; i++) {
 
-            let r = Math.floor(Math.random() * 10)
-            if(r % 2) r = true 
-            else r = false
+            // let r = Math.floor(Math.random() * 10)
+            // if(r % 2) r = true 
+            // else r = false
 
-            let allocation, finalAllocation
+            // let allocation, finalAllocation
 
-            if(r) {
-                finalAllocation = Math.floor(Math.random() * 100)
-            } else {
-                allocation = Math.floor(Math.random() * 100)
-            }
+            // if(r) {
+            //     finalAllocation = Math.floor(Math.random() * 100)
+            // } else {
+            //     allocation = Math.floor(Math.random() * 100)
+            // }
             
-            let obj = {
-                id: i,
-                date: "2020-09-1" + i+1,
-                school: "American School N" + i+1,
+            // let obj = {
+            //     id: i,
+            //     date: "2020-09-1" + i+1,
+            //     school: "American School N" + i+1,
 
-                allocation: allocation,
-                finalAllocation: finalAllocation,
+            //     allocation: allocation,
+            //     finalAllocation: finalAllocation,
 
-                status: r ? 'Final' : 'Preliminary',
-                notes: "There is no one who loves pain itself...",
-                showEditButton: true,
-              changed: false,
-            }
+            //     status: r ? 'Final' : 'Preliminary',
+            //     notes: "There is no one who loves pain itself...",
+            //     showEditButton: true,
+            //   changed: false,
+            // }
 
-            dataTest.push(obj)
+            // dataTest.push(obj)
 
-            }
-            this.data = dataTest
-            this.tempData = dataTest
+            // }
+            // this.data = dataTest
+            // this.tempData = dataTest
 
-            let schoolArr = []
-            for(let j=0; j<this.data.length; j++) {
-            schoolArr.push(this.data[j].school)
-            }
-            this.schools = schoolArr
+            // let schoolArr = []
+            // for(let j=0; j<this.data.length; j++) {
+            // schoolArr.push(this.data[j].school)
+            // }
+            // this.schools = schoolArr
         },
         computed: {
         total() {
