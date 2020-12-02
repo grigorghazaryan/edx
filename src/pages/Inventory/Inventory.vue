@@ -213,24 +213,78 @@
                     <q-td key="condition" :props="props" @click="copyRowData(props.rowIndex)">
                       
                       <div v-if="props.row.condition == 'Excellent'"> 
-                        <q-icon name="done" color="green-10" style="font-size: 1.5em"/>
-                        {{props.row.condition}}
+                        <!-- <q-icon name="done" color="green-10" style="font-size: 1.5em"/> -->
+                        <!-- {{props.row.condition}} -->
+                        <span class="mdi mdi-circle-slice-7 mdi-24px" style="color: blue">
+                          <q-tooltip 
+                              anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                              transition-show="flip-right"
+                              transition-hide="flip-left"
+                          >
+                            <strong>Excellent</strong>
+                          </q-tooltip>                         
+                        </span>
                       </div>
+
+
                       <div v-else-if="props.row.condition == 'Very Good'"> 
-                        <q-icon name="done" color="light-blue-14" style="font-size: 1.5em"/>
-                        {{props.row.condition}}
+                        <!-- <q-icon name="done" color="light-blue-14" style="font-size: 1.5em"/>
+                        {{props.row.condition}} -->
+                        <span class="mdi mdi-circle-slice-6 mdi-24px" style="color: green">
+                          <q-tooltip 
+                              anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                              transition-show="flip-right"
+                              transition-hide="flip-left"
+                          >
+                            <strong>Very Good</strong>
+                          </q-tooltip>
+                        </span>
                       </div>
+
+
+
                       <div v-else-if="props.row.condition == 'Good'"> 
-                        <q-icon name="done" color="pink-13" style="font-size: 1.5em"/>
-                        {{props.row.condition}}
+                        <!-- <q-icon name="done" color="pink-13" style="font-size: 1.5em"/>
+                        {{props.row.condition}} -->
+                        <span class="mdi mdi-circle-slice-5 mdi-24px" style="color: #ccad14">
+                          <q-tooltip 
+                              anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                              transition-show="flip-right"
+                              transition-hide="flip-left"
+                          >
+                            <strong>Good</strong>
+                          </q-tooltip>                          
+                        </span>
                       </div>
+
+
                       <div v-else-if="props.row.condition == 'Fair'"> 
-                        <q-icon name="done" color="amber-9" style="font-size: 1.5em"/>
-                        {{props.row.condition}}
+                        <!-- <q-icon name="done" color="amber-9" style="font-size: 1.5em"/>
+                        {{props.row.condition}} -->
+                        <span class="mdi mdi-circle-slice-4 mdi-24px" style="color: orange">
+                          <q-tooltip 
+                              anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                              transition-show="flip-right"
+                              transition-hide="flip-left"
+                          >
+                            <strong>Fair</strong>
+                          </q-tooltip>                          
+                        </span>
                       </div>
+
+
                       <div v-else> 
-                        <q-icon name="remove" color="deep-orange-13" style="font-size: 1.5em"/>
-                        {{props.row.condition}}
+                        <!-- <q-icon name="remove" color="deep-orange-13" style="font-size: 1.5em"/>
+                        {{props.row.condition}} -->
+                        <span class="mdi mdi-circle-slice-2 mdi-24px" style="color: red">
+                          <q-tooltip 
+                              anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                              transition-show="flip-right"
+                              transition-hide="flip-left"
+                          >
+                            <strong>Poor</strong>
+                          </q-tooltip>                          
+                        </span>
                       </div>
 
                       <q-popup-edit  v-model="props.row.condition" title="Condition" buttons>
@@ -242,24 +296,71 @@
                     <q-td key="status" :props="props" @click="copyRowData(props.rowIndex)">
                       
                       <div v-if="props.row.status == 'Disposed'"> 
-                        <q-icon name="forward" color="green-10" style="font-size: 1.5em"/>
-                        {{ props.row.status }}
+                        <!-- <q-icon name="forward" color="green-10" style="font-size: 1.5em"/>
+                        {{ props.row.status }} -->
+                        <span class="mdi mdi-recycle mdi-24px" style="color: green">
+                          <q-tooltip 
+                              anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                              transition-show="flip-right"
+                              transition-hide="flip-left"
+                          >
+                            <strong>Disposed</strong>
+                          </q-tooltip>  
+                        </span>
                       </div>
+
                       <div v-else-if="props.row.status == 'Lost'"> 
-                        <q-icon name="gesture" color="green-10" style="font-size: 1.5em"/>
-                        {{ props.row.status }}
+                        <!-- <q-icon name="gesture" color="green-10" style="font-size: 1.5em"/>
+                        {{ props.row.status }} -->
+                        <span class="mdi mdi-map-marker-question mdi-red mdi-24px" style="color: red">
+                          <q-tooltip 
+                              anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                              transition-show="flip-right"
+                              transition-hide="flip-left"
+                          >
+                            <strong>Lost</strong>
+                          </q-tooltip>                          
+                        </span>
                       </div>
+
                       <div v-else-if="props.row.status == 'Stolen'"> 
-                        <q-icon name="mail" color="green-10" style="font-size: 1.5em"/>
-                        {{ props.row.status }}
+                        <!-- <q-icon name="mail" color="green-10" style="font-size: 1.5em"/>
+                        {{ props.row.status }} -->
+                        <span class="mdi mdi-robber mdi-red mdi-24px" style="color: black">
+                          <q-tooltip 
+                              anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                              transition-show="flip-right"
+                              transition-hide="flip-left"
+                          >
+                            <strong>Stolen</strong>
+                          </q-tooltip>                             
+                        </span>
                       </div>
+
                       <div v-else-if="props.row.status == 'Transferred'"> 
-                        <q-icon name="push_pin" color="green-10" style="font-size: 1.5em"/>
-                        {{ props.row.status }}
+                        <!-- <q-icon name="push_pin" color="green-10" style="font-size: 1.5em"/>
+                        {{ props.row.status }} -->
+                        <span class="mdi mdi-truck-delivery mdi-24px" style="color: orange">
+                          <q-tooltip 
+                              anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                              transition-show="flip-right"
+                              transition-hide="flip-left"
+                          >
+                            <strong>Transferred</strong>
+                          </q-tooltip>   
+                        </span>
                       </div>
+
                       <div v-else> 
-                        <q-icon name="redo" color="green-10" style="font-size: 1.5em"/>
-                        {{ props.row.status }}
+                        <!-- <q-icon name="redo" color="green-10" style="font-size: 1.5em"/>
+                        {{ props.row.status }} -->
+                        <q-tooltip 
+                            anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                            transition-show="flip-right"
+                            transition-hide="flip-left"
+                        >
+                          <strong>Stored</strong>
+                        </q-tooltip> 
                       </div>
 
                       <q-popup-edit  v-model="props.row.status" title="Status" buttons>
@@ -653,22 +754,25 @@ export default {
       }
       this.data.unshift(obj)
     },
+    copyRowData(index) {
+      console.log(index)
+    },
     copyRow(row, index) {
-      oldObject = JSON.stringify(row)
-      console.log('tempDataX', JSON.stringify(this.data[index]))
-      let old = JSON.stringify(this.data[index])
+      // oldObject = JSON.stringify(row)
+      // console.log('tempDataX', JSON.stringify(this.data[index]))
+      // let old = JSON.stringify(this.data[index])
 
-      let newData = this.data[index]
-      newData.id =  Math.floor(Math.random() * 50)
-      newData.changed = true
-      let ddd = JSON.stringify(newData)
-      console.log('new data', JSON.stringify(newData))
+      // let newData = this.data[index]
+      // newData.id =  Math.floor(Math.random() * 50)
+      // newData.changed = true
+      // let ddd = JSON.stringify(newData)
+      // console.log('new data', JSON.stringify(newData))
 
-      let i = index+1
+      // let i = index+1
       
-      this.data.splice(i, 0, JSON.parse(ddd));
+      // this.data.splice(i, 0, JSON.parse(ddd));
       
-      Object.assign(this.data[index], JSON.parse(old));
+      // Object.assign(this.data[index], JSON.parse(old));
     },
     detectChange(index) {
       let d = JSON.parse(oldObject)

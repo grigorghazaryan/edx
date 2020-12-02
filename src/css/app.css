@@ -1,3 +1,5 @@
+@import url('https://cdn.materialdesignicons.com/5.4.55/css/materialdesignicons.min.css');
+
 /* app global css */
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
@@ -9,4 +11,28 @@ input::-webkit-inner-spin-button {
 /* Firefox */
 input[type=number] {
   -moz-appearance: textfield;
+}
+
+
+/* Global styles for refactor  */
+.q-table__title {
+  margin-left: -28px;
+  padding: 2px 10px 2px 25px;
+  background: #e0e0e0;
+  color: #616161;
+  font-size: 1.4rem;
+  position: relative;
+  border-radius: 3px 5px 5px 0;
+}
+
+.q-table__title:after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 0;
+  height: 0;
+  border: 0 solid transparent;
+  border-top-color: #bebebe;
+  border-width: 9px 0 0 11px;
 }

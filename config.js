@@ -20,6 +20,11 @@ const config = {
 
     // Search by School Name
     getAllocationsBySchoolName: '',
+
+    getAllocationBar: 'https://edxchange-allocation.aimtech.am/api/v1/allocations-totals/',
+
+    // Filter Allocation
+    filterAllocation: 'https://edxchange-allocation.aimtech.am/api/v1/filter-allocation/', // 1?search=St&status=fn&year=21
 }
 
 export default config

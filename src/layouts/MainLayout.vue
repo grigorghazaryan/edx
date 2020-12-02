@@ -1,60 +1,26 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
-      <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          @click="leftDrawerOpen = !leftDrawerOpen"
-          icon="menu"
-          aria-label="Menu"
-        />
+  <div class="q-pa-md">
+    <q-layout view="hHh Lpr lff" class="shadow-2 rounded-borders">
+      <q-header elevated class="bg-black">
+        <q-toolbar>
+          <q-btn flat @click="miniState = !miniState" round dense icon="menu" />
+          <q-toolbar-title>Header</q-toolbar-title>
+        </q-toolbar>
+      </q-header>
 
-        <q-toolbar-title>
-          EDXChange 
-        </q-toolbar-title>
+      <q-drawer
+        v-model="drawer"
+        show-if-above
+
+        :mini="!drawer || miniState"
+        @click.capture="drawerClick"
 
 
-        <q-space/>
-
-        <div class="q-gutter-sm row items-center no-wrap">
-          <q-btn round dense flat color="white" :icon="$q.fullscreen.isActive ? 'fullscreen_exit' : 'fullscreen'"
-                 @click="$q.fullscreen.toggle()"
-                 v-if="$q.screen.gt.sm">
-          </q-btn>
-          <q-btn round dense flat color="white" icon="notifications">
-            <q-badge color="red" text-color="white" floating>
-              5
-            </q-badge>
-            <q-menu
-            >
-              <q-list style="min-width: 100px">
-                <messages></messages>
-                <q-card class="text-center no-shadow no-border">
-                  <q-btn label="View All" style="max-width: 120px !important;" flat dense
-                         class="text-indigo-8"></q-btn>
-                </q-card>
-              </q-list>
-            </q-menu>
-            <!--            <q-tooltip>Notifications</q-tooltip>-->
-          </q-btn>
-          <q-btn round flat>
-            <q-avatar size="26px">
-              <img src="https://cdn.quasar.dev/img/boy-avatar.png">
-            </q-avatar>
-          </q-btn>
-        </div>
-      </q-toolbar>
-    </q-header>
-
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      bordered
-      content-class="bg-grey-sidebar text-white"
-    >
-      <q-list>
+        bordered
+        content-class="bg-grey-sidebar text-white"
+      >
+        <q-scroll-area class="fit">
+          <q-list>
 
         <q-item to="/" active-class="q-item-no-link-highlighting">
           <q-item-section avatar>
@@ -253,63 +219,60 @@
           </q-item-section>
         </q-item>
         
-      </q-list>
-    </q-drawer>
+          </q-list>
+        </q-scroll-area>
+
+        <!--
+          in this case, we use a button (can be anything)
+          so that user can switch back
+          to mini-mode
+        -->
+      </q-drawer>
 
     <q-page-container class="bg-grey-2">
       <router-view/>
     </q-page-container>
-  </q-layout>
+
+    </q-layout>
+  </div>
 </template>
 
 <script>
-    
+
     import EssentialLink from 'components/EssentialLink'
     import Messages from "./Messages";
 
     import config from '../../config';
     import axios from 'axios';
 
-    export default {
-        name: 'MainLayout',
-
-        components: {
-            Messages,
-            EssentialLink
-        },
-
-        data() {
-            return {
-                leftDrawerOpen: false,
-            }
-        },
-
-        methods: {
-          getMenus() {
-
-            console.log('Get menus request -----')
-
-              let roleId = JSON.parse(localStorage.getItem('user-info')).role_id,
-                  token = localStorage.getItem('access-token');
-
-            let url = config.getMenus + roleId
-              
-            const header = `Authorization: Bearer ${token}`;
-
-            axios.get(url, { headers: { header, 'Content-Type': 'application/json' } })
-              .then(res => {
-                console.log('RESPONSE : ', res)
-              })
-              .catch(e => {
-                console.log('ERROR : ------- ', e)
-              })
-          }
-        },
-
-        created() {
-          // this.getMenus()
-        }
+export default {
+  name: 'MainLayout',
+  components: {
+    Messages,
+    EssentialLink
+  },
+  data () {
+    return {
+      drawer: true,
+      miniState: false
     }
+  },
+
+  methods: {
+    drawerClick (e) {
+      // if in "mini" state and user
+      // click on drawer, we switch it to "normal" mode
+      if (this.miniState) {
+        this.miniState = false
+
+        // notice we have registered an event with capture flag;
+        // we need to stop further propagation as this click is
+        // intended for switching drawer to "normal" mode only
+        e.stopPropagation()
+      }
+    }
+  }
+}
 </script>
 
 <style lang="scss">

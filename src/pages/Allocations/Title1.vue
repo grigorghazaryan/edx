@@ -20,7 +20,7 @@
               </q-item-section>
               <q-item-section class="q-ml-none">
                 <q-item-label class="text-grey-7">Instruction</q-item-label>
-                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{ instruction }}</q-item-label>
+                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{ barInfo.totalInstruction }}</q-item-label>
               </q-item-section>
             </q-item>
           </div>
@@ -32,7 +32,7 @@
               </q-item-section>
               <q-item-section class="q-ml-none">
                 <q-item-label class="text-grey-7">PD</q-item-label>
-                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{ pd }}</q-item-label>
+                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{ barInfo.pdTotal }}</q-item-label>
               </q-item-section>
             </q-item>
           </div>
@@ -44,7 +44,7 @@
               </q-item-section>
               <q-item-section class="q-ml-none">
                 <q-item-label class="text-grey-7">Total Instructions</q-item-label>
-                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{ totalInstruction }}</q-item-label>
+                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{ barInfo.totalInstruction }}</q-item-label>
               </q-item-section>
             </q-item>
           </div>
@@ -56,19 +56,7 @@
               </q-item-section>
               <q-item-section class="q-ml-none">
                 <q-item-label class="text-grey-7">Total Engagement</q-item-label>
-                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{ totalEngagement }}</q-item-label>
-              </q-item-section>
-            </q-item>
-          </div>
-
-          <div class="col-md-2 col-sm-12 col-xs-12">
-            <q-item style="background-color: #fff" class="q-pa-none q-ml-xs">
-              <q-item-section side style="background-color: #fff" class=" q-pa-lg q-mr-none text-white">
-                <q-icon name="search" color="pink" size="24px"></q-icon>
-              </q-item-section>
-              <q-item-section class="q-ml-none">
-                <q-item-label class="text-grey-7">Final/Est Ratio (+/-)</q-item-label>
-                <q-item-label class="text-dark text-h6 text-weight-bolder">% 1.04</q-item-label>
+                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{ barInfo.familyEngTotal }}</q-item-label>
               </q-item-section>
             </q-item>
           </div>
@@ -87,6 +75,7 @@
         binary-state-sort
         :pagination.sync="pagination"
       >
+
         <!-- Loading -->
         <template v-slot:loading>
           <q-inner-loading showing color="primary" />
@@ -98,19 +87,13 @@
           <q-select class="q-mr-md" style="min-width: 200px; max-width: 200px" 
             dense outlines v-model="schoolYear" 
             :options="schoolYears" label="School year" 
-            @input="filterBySchoolYear"
+            @input="filterAllocation"
           >
             <template v-if="schoolYear" v-slot:append>
-              <q-icon name="cancel" @click.stop="schoolYear = null, getAllocationByType(1)" class="cursor-pointer" />
+              <q-icon name="cancel" @click.stop="schoolYear = null, getAllocationByType(1, 10, 1)" class="cursor-pointer" />
             </template>
 
           </q-select>
-
-          <!-- <q-input class="q-mr-md" outlines dense v-model="filter" placeholder="Search">
-            <template v-slot:append>
-              <q-icon name="search"/>
-            </template>
-          </q-input> -->
 
           <q-input label="Search" class="q-mr-md" outlines dense 
           v-model="filter" @keyup="keyUpFilter" @keydown="keyDownFilter">
@@ -169,6 +152,7 @@
 
         <!-- Table Body -->
         <template v-slot:body="props">
+
             <q-tr :props="props" @click="copyRowData(props.rowIndex)" :class="{ 'bg-red-2' : props.row.changed }">
 
               <q-td auto-width>
@@ -204,29 +188,24 @@
                   dense
                   v-model="selectedSchool"
                   :options="schools"
-                  behavior="dialog"
-                  style="width: 200px"
+                  style="max-width: 300px"
                   @input="addSchoolNameToObject"
                 />
 
               </q-td>
 
               <q-td key="instruction" :props="props">
-                $ {{ props.row.total_instruction - ( props.row.total_instruction * props.row.professional_development_percentage / 100 )}}
+                $ {{ (props.row.total_instruction - ( props.row.total_instruction * props.row.professional_development_percentage / 100 )).toFixed(2) }}
               </q-td>
 
               <q-td key="profDev" :props="props">
-                <div class="cursor-pointer">$ {{ props.row.total_instruction * props.row.professional_development_percentage / 100 }}</div>
-
-                <!-- <q-popup-edit v-model="props.row.professional_development" title="Professional Development" buttons>
-                  <q-input  @input="detectChange(props.rowIndex)" type="number" v-model="props.row.professional_development" dense autofocus/>
-                </q-popup-edit> -->
+                <div class="cursor-pointer">$ {{ ( props.row.total_instruction * props.row.professional_development_percentage / 100 ).toFixed(2) }}</div>
 
               </q-td>
               
               <q-td key="totalInstruction" :props="props">
 
-                <div class="cursor-pointer">$ {{ props.row.total_instruction }} </div>
+                <div class="cursor-pointer">$ {{ parseFloat(props.row.total_instruction).toFixed(2) }} </div>
                 
                 <q-popup-edit v-model="props.row.total_instruction" title="Total Instruction" buttons>
                   <q-input  @input="detectChange(props.rowIndex)" type="number" v-model="props.row.total_instruction" dense autofocus/>
@@ -241,10 +220,11 @@
                 <q-popup-edit  v-model="props.row.family_engagement" title="Family Engagemenet" buttons>
                   <q-input  @input="detectChange(props.rowIndex)" type="number" v-model="props.row.family_engagement" dense autofocus/>
                 </q-popup-edit>
+                
               </q-td>
 
               <q-td key="total" :props="props">
-                  $ {{ (parseFloat(props.row.total_instruction) + parseFloat(props.row.family_engagement)).toFixed(2) }}
+                  $ {{ ( parseFloat(props.row.total_instruction) + parseFloat(props.row.family_engagement) ).toFixed(2) }}
               </q-td>
               
               <q-td key="status" :props="props">
@@ -280,7 +260,6 @@
               <q-td key="actions" :props="props" style="min-width: 132px">
 
                   <div v-if="props.row.changed">
-                
                     <q-btn
                       @click="cancellChange(props.rowIndex)"
                       class="q-mr-sm"
@@ -316,7 +295,6 @@
                         <strong>Save</strong>
                       </q-tooltip>
                     </q-btn>
-
                   </div>
 
                   <div v-if="props.row.showEditButton && !props.row.changed">
@@ -359,19 +337,27 @@
         </template>
 
         <!-- Pagination -->
-        <!-- <template v-slot:bottom class="justify-end">
+        <template v-slot:bottom class="justify-end">
           <div class="q-pa-md flex flex-center">
             <q-pagination
-              v-model="pagination.page"
+              v-model="current"
               :max="pages"
-              :max-pages="5"
-              ellipsess
               :direction-links="true"
-              @input="changePagination"
+              @click="changePagination(current)"
             >
             </q-pagination>
+
+            <div class="row justify-center items-center">
+              <span class="q-mr-md">Rows Per page</span>
+              <q-select dense outlined 
+                @input="changeRowsPerPage"
+                v-model="pagination.rowsPerPage" 
+                :options="rowsPerPageArr" 
+              />
+            </div>
+            
           </div>
-        </template> -->
+        </template>
 
       </q-table>
     </div>
@@ -414,7 +400,7 @@
 
     let oldObject = {}
     let typingTimer
-    let doneTypingInterval = 1000
+    let doneTypingInterval = 500
 
     export default {
       data() {
@@ -422,20 +408,19 @@
           confirm: false,
           loading: true,
           item: '',
-          // pages: 3,
-          // currentPage: 1,
+          pages: 1,
           pagination: {
-            sortBy: 'id',
-            page: 1,
             rowsPerPage: 10
           },
-          model: null,
+          current: 1,
+          count: 10,
+          model: '',
           options: [
             'Preliminary', 'Final'
           ],
           schools: [],
           selectedSchool: null,
-          schoolYear: null,
+          schoolYear: '',
           schoolYears: [
           ],
           isFinal: false,
@@ -540,6 +525,8 @@
           data: [],
           tempData: [],
           addNew: false,
+          barInfo: {},
+          rowsPerPageArr: ['5', '10', '25', '50', '75', '100'], 
         };
       },
       methods: {
@@ -645,80 +632,21 @@
                 }
           },
           changePagination (val) {
-            this.currentPage = val
-            this.loading = true
-            this.pagination.page = val
 
-            setTimeout(()=> {
-              this.loading = false
-              let dataTest = []
+            console.log('change pagination')
+            this.current = val
+            this.getAllocationByType(1, this.count, val)
+            
+          },
+          changeRowsPerPage() {
 
-              for(let i=0; i<5; i++) {
+            console.log('changeRowsPerPage')
+            
+            this.count = this.pagination.rowsPerPage
+            this.current = 1
 
-                let r = Math.floor(Math.random() * 10)
-                if(r % 2) r = true 
-                else r = false
-      
-                let pdPercentage = 4,
+            this.getAllocationByType(1, this.count, this.current)
 
-                    totalInstruction = Math.floor(Math.random() * 100),
-                    totalInstructionFinal = Math.floor(Math.random() * 100),
-
-                    instruction, 
-                    profDev, 
-                    total, 
-
-                    familyEngagemenetEstimated = Math.floor(Math.random() * 100),
-                    familyEngagemenetFinal = Math.floor(Math.random() * 100)
-
-                    // Professional development
-                    let p_percentage = parseFloat(pdPercentage) / 100;
-                    if (r) {
-                      profDev = (parseFloat(totalInstructionFinal) * p_percentage).toFixed(2);
-                    } else {
-                      profDev = (parseFloat(totalInstruction) * p_percentage).toFixed(2);
-                    }
-
-                    // instruction
-                    let i_percentage = ( 100 - parseFloat(pdPercentage) ) / 100
-                    if (r) {
-                      instruction = ( parseFloat(totalInstructionFinal) * i_percentage ).toFixed(2);
-                    } else {
-                      instruction = ( parseFloat(totalInstruction) * i_percentage ).toFixed(2);
-                    }
-
-                    // Total
-                    if (r) {
-                      total = ( parseFloat(totalInstructionFinal) + parseFloat(familyEngagemenetFinal)  ).toFixed(2);
-                    } else {
-                      total = ( parseFloat(totalInstruction) + parseFloat(familyEngagemenetEstimated)   ).toFixed(2);
-                    }
-    
-                    let obj = {
-                      date: "2020-09-11",
-                      school: "American School N" + i+1,
-                      instruction: instruction,
-                      profDev: profDev,
-
-                      totalInstruction: totalInstruction,
-                      familyEngagemenet: familyEngagemenetEstimated,
-
-                      totalInstructionFinal: totalInstructionFinal,
-                      familyEngagemenetFinal: familyEngagemenetFinal,
-
-                      allocation: r,
-                      pdPercentage: pdPercentage,
-                      total: total,
-                      totalPercent: 9,
-                      notes: "",
-                    }
-
-                    dataTest.push(obj)
-
-              }
-              this.data = dataTest
-              this.tempData = dataTest
-            }, 550)
           },
           copyRowData(index) {
             oldObject = JSON.stringify(this.tempData[index])
@@ -759,6 +687,7 @@
             console.log('Typing done!')
             if(this.filter.length > 3) {
               console.log('Send Request...')
+              this.filterAllocation()
             }
           },
           getToday() {
@@ -807,31 +736,83 @@
 
           // Filter Allocation
           filterAllocation() {
-            console.log('Allocation', this.model)
-            // if(this.model) {
-            //   if(this.model == 'Preliminary') {
-            //     this.data = this.tempData.filter(a => a.status_string == 'Preliminary');
-            //   }else {
-            //     this.data = this.tempData.filter(a => a.status_string == 'Final');
-            //   }
-            // }else {
-            //   this.data = this.tempData
-            // }
-          },
 
-        // Requests
-        getAllocationByType(type) {
+            this.loading = true
+
+            let model = '', url = '';            
+            
+            if(this.filter != '') {
+              url += '&search=' + this.filter
+            }
+
+            if(this.schoolYear) {
+              url += '&year=' + this.schoolYear.id
+            }
+
+            if(this.model != '') {
+              this.model == 'Preliminary' ? model = 'pr' : model = 'fn'
+              url += '&status=' + model
+            } 
+            
+
+            // 1?search=St&status=fn&year=21
+
           const conf = {
             method: 'GET',
-            url: config.getAllocationByTitle + type,
+            url: config.filterAllocation + '1?' + url,
             headers: {
               Accept: 'application/json',
             }
           }
+
+          console.log(conf.url)
+            
+          axios(conf).then(res => {
+
+            this.loading = false
+
+            let data = res.data.allocations
+            this.pages = res.data.pagesCount
+
+            for(let i=0; i<data.length; i++) {
+              
+              data[i].changed = false
+              data[i].showEditButton = true
+
+              if(data[i].is_final) {
+                data[i].status_string = 'Final'
+              }
+              else {
+              data[i].status_string = 'Preliminary'
+              }
+
+            }
+
+            this.data = data
+            this.tempData = data
+            
+            console.log('Filter result: ', res.data)
+          })
+
+          },
+
+        // Requests
+        getAllocationByType(type, limit, page) {
+
+          this.loading = true
+
+          const conf = {
+            method: 'GET',
+            url: config.getAllocationByTitle + type + '?limit=' + limit + '&page=' + page,
+            headers: {
+              Accept: 'application/json',
+            }
+          }
+
           axios(conf).then(res => {
 
               let data = res.data.allocations
-            
+              this.pages = res.data.pagesCount
 
               for(let i=0; i<data.length; i++) {
                 
@@ -850,7 +831,7 @@
               this.data = data
               this.tempData = data
 
-              console.log('DATA = ', this.data)
+              console.log(' getAllocationByType DATA = ', this.data)
 
               this.loading = false
           })
@@ -902,46 +883,47 @@
             console.log(this.schoolYears)
           })
         },
-        filterBySchoolYear() {
+        // filterAllocation() {
           
-          if(this.schoolYear.id) {
+        //   // if(this.schoolYear.id) {
 
-            this.loading = true
-            const conf = {
-              method: 'GET',
-              url: config.getAllocationByYears + 1 + '/' + this.schoolYear.id ,
-              headers: {
-                Accept: 'application/json',
-              }
-            }
+        //   //   this.loading = true
+        //   //   const conf = {
+        //   //     method: 'GET',
+        //   //     url: config.getAllocationByYears + 1 + '/' + this.schoolYear.id ,
+        //   //     headers: {
+        //   //       Accept: 'application/json',
+        //   //     }
+        //   //   }
 
-            axios(conf).then(res => {
-              console.log('getAllocationByYears',  res)
-              let data = res.data.allocations
+        //   //   axios(conf).then(res => {
+        //   //     console.log('getAllocationByYears',  res)
+        //   //     let data = res.data.allocations
             
               
-                for(let i=0; i<data.length; i++) {
+        //   //       for(let i=0; i<data.length; i++) {
                   
-                  data[i].changed = false
-                  data[i].showEditButton = true
+        //   //         data[i].changed = false
+        //   //         data[i].showEditButton = true
 
-                  if(data[i].is_final) {
-                    data[i].status_string = 'Final'
-                  }
-                  else {
-                  data[i].status_string = 'Preliminary'
-                  }
+        //   //         if(data[i].is_final) {
+        //   //           data[i].status_string = 'Final'
+        //   //         }
+        //   //         else {
+        //   //         data[i].status_string = 'Preliminary'
+        //   //         }
 
-                }
+        //   //       }
 
-                this.data = data
-                this.tempData = data
+        //   //       this.data = data
+        //   //       this.tempData = data
               
 
-                this.loading = false
-            })
-          }
-        },
+        //   //       this.loading = false
+        //   //   })
+        //   // }
+          
+        // },
         filterAllocationsBySchoolName() {
 
         },
@@ -955,7 +937,7 @@
             professional_development_percentage: parseFloat(this.editedItem.professional_development_percentage),
             family_engagement: parseFloat(this.editedItem.family_engagement),
             note: this.editedItem.note,
-            allocation_type: this.editedItem.allocation_type
+            allocation_type: parseInt(this.editedItem.allocation_type)
           }
 
           if(this.addNew) {
@@ -1041,6 +1023,19 @@
         addSchoolNameToObject() {
           this.editedItem.school_name = this.selectedSchool.label
           console.log(this.editedItem)
+        },
+
+        getAllocationBar(type) {
+          const conf = {
+            method: 'GET',
+            url: config.getAllocationBar + type,
+            headers: {
+              Accept: 'application/json',
+            }
+          }
+          axios(conf).then(res => {
+            this.barInfo = res.data
+          })
         }
         
       },
@@ -1048,112 +1043,10 @@
 
         // Get schools for showing
         this.getSchools()
-
-        // let dataTest = []
-
-        // for(let i=0; i<5; i++) {
-
-        //   let r = Math.floor(Math.random() * 10)
-        //   if(r % 2) r = true 
-        //   else r = false
-      
-        //   let pdPercentage = 4,
-        //       totalInstruction = Math.floor(Math.random() * 100),
-        //       totalInstructionFinal = Math.floor(Math.random() * 100),
-        //       instruction, 
-        //       profDev, 
-        //       total,
-        //       familyEngagemenetEstimated = Math.floor(Math.random() * 100),
-        //       familyEngagemenetFinal = Math.floor(Math.random() * 100)
-
-        //   // Professional development
-        //   let p_percentage = parseFloat(pdPercentage) / 100;
-        //   if (r) {
-        //     profDev = (parseFloat(totalInstructionFinal) * p_percentage).toFixed(2);
-        //   } else {
-        //     profDev = (parseFloat(totalInstruction) * p_percentage).toFixed(2);
-        //   }
-
-        //   // instruction
-        //   let i_percentage = ( 100 - parseFloat(pdPercentage) ) / 100
-        //   if (r) {
-        //     instruction = ( parseFloat(totalInstructionFinal) * i_percentage ).toFixed(2);
-        //   } else {
-        //     instruction = ( parseFloat(totalInstruction) * i_percentage ).toFixed(2);
-        //   }
-
-        //   // Total
-        //   if (r) {
-        //     total = ( parseFloat(totalInstructionFinal) + parseFloat(familyEngagemenetFinal)  ).toFixed(2);
-        //   } else {
-        //     total = ( parseFloat(totalInstruction) + parseFloat(familyEngagemenetEstimated)   ).toFixed(2);
-        //   }
- 
-        //   let obj = {
-        //     id: i,
-        //     date: "2020-09-11",
-        //     school: "American School N" + i+1,
-        //     instruction: instruction,
-        //     profDev: profDev,
-
-        //     totalInstruction: totalInstruction,
-        //     familyEngagemenet: familyEngagemenetEstimated,
-
-        //     totalInstructionFinal: totalInstructionFinal,
-        //     familyEngagemenetFinal: familyEngagemenetFinal,
-
-        //     allocation: r ? 'Preliminary' : 'Final',
-        //     pdPercentage: pdPercentage,
-        //     total: total,
-        //     totalPercent: 9,
-        //     notes: "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.",
-        //     showEditButton: true,
-        //     changed: false,
-        //   }
-
-        //   dataTest.push(obj)
-        // }
-
-        // this.data = dataTest
-        // this.tempData = dataTest
-
-        this.getAllocationByType(1)
+        this.getAllocationBar(1)
+        this.getAllocationByType(1, this.count, this.current)
         this.getSchoolYears()
-      },
-      computed: {
-        instruction() {
-          let inst = 0;
-          
-          for(let i=0; i<this.data.length; i++) {
-            let instruction = parseFloat( this.data[i].instruction )
-            inst += instruction
-          }
-          return inst.toFixed(2)
-        },
-        pd() {
-          let pd = 0;
-          for(let i=0; i<this.data.length; i++) {
-            let profDev = parseFloat( this.data[i].profDev )
-            pd += profDev
-          }
-          return pd.toFixed(2)
-        },
-        totalInstruction() {
-          let totalInstruction = 0;
-          for(let i=0; i<this.data.length; i++) {
-            let totalInst = parseFloat( this.data[i].totalInstruction )
-            totalInstruction += totalInst
-          }
-          return totalInstruction.toFixed(2)
-        },
-        totalEngagement() {
-          let totalEngagement = 0;
-          for(let i=0; i<this.data.length; i++) {
-            let totalEng = parseFloat(this.data[i].familyEngagemenet)
-            totalEngagement += totalEng
-          }
-          return totalEngagement.toFixed(2)
-        }
+
       }
     }
 </script>

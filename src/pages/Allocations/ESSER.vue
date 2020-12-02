@@ -20,19 +20,7 @@
               </q-item-section>
               <q-item-section class="q-ml-none">
                 <q-item-label class="text-grey-7">Total</q-item-label>
-                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{ total }}</q-item-label>
-              </q-item-section>
-            </q-item>
-          </div>
-          
-          <div class="col-md-2 col-sm-12 col-xs-12">
-            <q-item style="background-color: #fff" class="q-pa-none q-ml-xs">
-              <q-item-section side style="background-color: #fff" class=" q-pa-lg q-mr-none text-white">
-                <q-icon name="search" color="pink" size="24px"></q-icon>
-              </q-item-section>
-              <q-item-section class="q-ml-none">
-                <q-item-label class="text-grey-7">Ratio (+/-)</q-item-label>
-                <q-item-label class="text-dark text-h6 text-weight-bolder">% 0.00</q-item-label>
+                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{ barInfo.totalAllocation }}</q-item-label>
               </q-item-section>
             </q-item>
           </div>
@@ -46,7 +34,6 @@
         title="ESSER" 
         :data="data" 
         :columns="columns" 
-        :filter="filter"
         row-key="id" 
         :loading="loading"
         binary-state-sort
@@ -61,17 +48,29 @@
         <!-- Table Header -->
         <template v-slot:top-right="props">
 
-          <q-select class="q-mr-md" style="min-width: 200px; max-width: 200px" dense outlines clearable v-model="schoolYear" :options="schoolYears" label="School year" @input="filterAllocation"/>
+          <q-select class="q-mr-md" style="min-width: 200px; max-width: 200px" 
+            dense outlines v-model="schoolYear" 
+            :options="schoolYears" label="School year" 
+            @input="filterAllocation"
+          >
+            <template v-if="schoolYear" v-slot:append>
+              <q-icon name="cancel" @click.stop="schoolYear = null, getAllocationByType(5, 10, 1)" class="cursor-pointer" />
+            </template>
 
-          <q-input class="q-mr-md" outlines dense v-model="filter" placeholder="Search">
-            <template v-slot:append>
-              <q-icon name="search"/>
+          </q-select>
+
+          <q-input label="Search" class="q-mr-md" outlines dense 
+          v-model="filter" @keyup="keyUpFilter" @keydown="keyDownFilter">
+            <template v-slot:prepend>
+              <q-icon name="search" />
             </template>
           </q-input>
 
-          <q-select class="q-mr-md" style="min-width: 200px; max-width: 200px" dense outlines clearable v-model="model" :options="options" label="Allocation" @input="filterAllocation"/>
+          <q-select class="q-mr-md" style="min-width: 200px; max-width: 200px" dense outlines clearable v-model="model" :options="options" label="Status" @input="filterAllocation"/>
 
-          <q-btn square class="q-mr-md" style="background-color: #546bfa" text-color="white" icon="add" @click="show_dialog = true" no-caps>Add</q-btn>
+          <q-btn :disabled="addNew" square class="q-mr-md" style="background-color: #546bfa" text-color="white" icon="add" 
+          @click="addNew = true, addNewRow()" no-caps>Add</q-btn>
+
           <q-btn
             icon-right="archive"
             label="Export to Excel"
@@ -205,7 +204,16 @@
               </q-td>
               
               <q-td key="school" :props="props">
-                <div class="text-pre-wrap cursor-pointer">{{ props.row.school.school_name }}</div>
+                <div v-if="!props.row.add || props.row.add == false" class="text-pre-wrap cursor-pointer">{{ props.row.school.school_name }}</div>
+                <q-select
+                  v-else
+                  outlined
+                  dense
+                  v-model="selectedSchool"
+                  :options="schools"
+                  style="min-width: 200px; max-width: 300px"
+                  @input="addSchoolNameToObject"
+                />
               </q-td>
 
               <q-td key="allocation" :props="props">
@@ -268,7 +276,7 @@
                   </q-btn>
                   
                   <q-btn
-                    @click="props.row.changed = false"
+                    @click="editAllocation(props.rowIndex)"
                     class="q-mr-sm"
                     icon="save"
                     color="green" 
@@ -316,7 +324,8 @@
               </q-td>
 
             </q-tr>
-                        <q-tr v-show="props.expand" :props="props">
+
+            <q-tr v-show="props.expand" :props="props">
               <q-td colspan="100%" class="q-td--no-hover">
                 <div class="row">
                   <div class="col-md-4 q-mt-lg q-mb-lg">
@@ -326,22 +335,31 @@
                 </div>
               </q-td>
             </q-tr>
+
         </template>
 
         <!-- Pagination -->
-        <!-- <template v-slot:bottom class="justify-end">
+        <template v-slot:bottom class="justify-end">
           <div class="q-pa-md flex flex-center">
             <q-pagination
-              v-model="pagination.page"
+              v-model="current"
               :max="pages"
-              :max-pages="5"
-              ellipsess
               :direction-links="true"
-              @input="changePagination"
+              @click="changePagination(current)"
             >
             </q-pagination>
+
+            <div class="row justify-center items-center">
+              <span class="q-mr-md">Rows Per page</span>
+              <q-select dense outlined 
+                @input="changeRowsPerPage"
+                v-model="pagination.rowsPerPage" 
+                :options="rowsPerPageArr" 
+              />
+            </div>
+            
           </div>
-        </template> -->
+        </template>
 
       </q-table>
     </div>
@@ -375,25 +393,26 @@
         return `"${formatted}"`
     }
 
-        let oldObject = {}
+    let oldObject = {}
+    let typingTimer
+    let doneTypingInterval = 500
 
     export default {
         data() {
           return {
             confirm: false,
             loading: true,
-            // pages: 3,
-            // currentPage: 1,
+            pages: 1,
             pagination: {
-              sortBy: 'id',
-              page: 1,
               rowsPerPage: 10
             },
-            model: null,
+            count: 10,
+            current: 1,
+            model: '',
             options: [
               'Preliminary', 'Final'
             ],
-            schoolYear: null,
+            schoolYear: '',
             schoolYears: [
               'School Year 20-21',
               'School Year 19-20',
@@ -463,6 +482,11 @@
             data: [],
             tempData: [],
             schools: [],
+            selectedSchool: '',
+
+            addNew: false,
+            barInfo: {},
+            rowsPerPageArr: ['5', '10', '25', '50', '75', '100'], 
           };
         },
         methods: {
@@ -501,8 +525,25 @@
           },
           deleteItem() {
             let item = this.item
-            const index = this.data.indexOf(item)
-            this.data.splice(index, 1)
+              
+            const conf = {
+              method: 'DELETE',
+              url: config.getAllocationByTitle + item.id,
+              headers: {
+                Accept: 'application/json',
+              }
+            }
+
+            axios(conf)
+              .then(res => {
+                console.log('DELETE RES :', res)
+                const index = this.data.indexOf(item)
+                this.data.splice(index, 1)
+                  this.$q.notify({
+                    message: res.data,
+                    type: 'positive',
+                  })
+              })
           },
           editItem(item) {
               this.editedIndex = this.data.indexOf(item);
@@ -541,64 +582,31 @@
                     })
                 }
           },
-          changePagination(val) {
-            this.currentPage = val
-            this.loading = true
-            this.pagination.page = val
+          changePagination (val) {
 
-            setTimeout(()=> {
-
-              this.loading = false
-              let dataTest = []
-              for(let i=0; i<5; i++) {
-                let r = Math.floor(Math.random() * 10)
-                if(r % 2) r = true 
-                else r = false
-
-                let allocation, finalAllocation
-
-                if(r) {
-                  finalAllocation = Math.floor(Math.random() * 100)
-                } else {
-                  allocation = Math.floor(Math.random() * 100)
-                }
-
-          
-                let obj = {
-                  date: "2020-09-1" + i+1,
-                  school: "American School N" + i+1,
-
-                  allocation: allocation,
-                  finalAllocation: finalAllocation,
-
-                  status: r,
-                  notes: "",
-                }
-
-                  dataTest.push(obj)
-              }
-              
-              this.data = dataTest
-              this.tempData = dataTest
-
-            }, 650)
+            console.log('change pagination')
+            this.current = val
+            this.getAllocationByType(5, this.count, val)
+            
           },
-          filterAllocation() {
-            if(this.model) {
-              if(this.model == 'Preliminary') {
-                this.data = this.tempData.filter(a => a.status == 'Preliminary');
-              }else {
-                this.data = this.tempData.filter(a => a.status == 'Final');
-              }
-            }else {
-              this.data = this.tempData
-            }
+          changeRowsPerPage() {
+
+            console.log('changeRowsPerPage')
+            
+            this.count = this.pagination.rowsPerPage
+            this.current = 1
+
+            this.getAllocationByType(5, this.count, this.current)
+
           },
           copyRowData(index) {
             oldObject = JSON.stringify(this.tempData[index])
             console.log('Copy Row Data : ', oldObject)
           },
           detectChange(index) {
+
+            this.editedItem = this.tempData[index]
+            
             let d = JSON.parse(oldObject)
             let f = JSON.stringify(this.data[index])
                 f = JSON.parse(f)
@@ -613,24 +621,174 @@
 
           },
           cancellChange(index) {
-            let d = JSON.parse(oldObject)
-            Object.assign(this.data[index], d);
-            this.data[index].changed = false
+
+            if(this.addNew) {
+              this.data.splice(0, 1)
+              this.addNew = false
+            } else {
+              let d = JSON.parse(oldObject)
+              Object.assign(this.data[index], d);
+              this.data[index].changed = false
+            }
+
           },
 
+          getToday() {
+            let dateObj = new Date();
+            let month = dateObj.getUTCMonth() + 1; //months from 1-12
+            let day = dateObj.getUTCDate();
+            let year = dateObj.getUTCFullYear();
 
-          // Requests
-          getAllocationByType(type) {
+            return year + "-" + month + "-" + day;
+          },
+          getSchoolYears() {
             const conf = {
               method: 'GET',
-              url: config.getAllocationByTitle + type,
+              url: config.getSchoolYears,
               headers: {
                 Accept: 'application/json',
               }
             }
             axios(conf).then(res => {
+              console.log('getSchoolYears',  res)
+
+              let data = res.data, schoolsArr = []
+              for(let i=0; i<data.length; i++) {
+                let obj = {
+                  id: data[i].id,
+                  label: data[i].year_name,
+                  value: data[i].year_name
+                }
+                schoolsArr.push(obj)
+              }
+              this.schoolYears = schoolsArr
+              console.log(this.schoolYears)
+            })
+          },
+
+          // Add new Row 
+          addNewRow() {
+            
+            let date = this.getToday()
+
+            const obj  = {
+              creation_date: date,
+              school: '',
+
+              total_allocation: 0,
+
+              status_string: 'Final',
+              changed: true,
+              showEditButton: false,
+              allocation_type: 5,
+              note: '',
+              add: true,
+            }
+
+            this.data.unshift(obj)
+            this.editedItem = obj
+          
+          },
+          addSchoolNameToObject() {
+            this.editedItem.school_name = this.selectedSchool.label
+            console.log(this.editedItem)
+          },
+
+          // Filter key events
+          keyUpFilter() {
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(this.doneTyping, doneTypingInterval);
+          },
+          keyDownFilter() {
+            clearTimeout(typingTimer);
+          },
+          doneTyping() {
+            console.log('Typing done!')
+            if(this.filter.length > 3) {
+              console.log('Send Request...')
+              this.filterAllocation()
+            }
+          },
+
+          // Filter Allocation
+          filterAllocation() {
+
+            this.loading = true
+
+            let model = '', url = '';            
+            
+            if(this.filter != '') {
+              url += '&search=' + this.filter
+            }
+
+            if(this.schoolYear) {
+              url += '&year=' + this.schoolYear.id
+            }
+
+            if(this.model != '') {
+              this.model == 'Preliminary' ? model = 'pr' : model = 'fn'
+              url += '&status=' + model
+            } 
+            
+
+            // 1?search=St&status=fn&year=21
+
+          const conf = {
+            method: 'GET',
+            url: config.filterAllocation + '5?' + url,
+            headers: {
+              Accept: 'application/json',
+            }
+          }
+
+          console.log(conf.url)
+            
+          axios(conf).then(res => {
+
+            this.loading = false
+
+            let data = res.data.allocations
+            this.pages = res.data.pagesCount
+
+            for(let i=0; i<data.length; i++) {
+              
+              data[i].changed = false
+              data[i].showEditButton = true
+
+              if(data[i].is_final) {
+                data[i].status_string = 'Final'
+              }
+              else {
+              data[i].status_string = 'Preliminary'
+              }
+
+            }
+
+            this.data = data
+            this.tempData = data
+            
+            console.log('Filter result: ', res.data)
+          })
+
+          },
+
+          // Requests
+          getAllocationByType(type, limit, page) {
+
+            this.loading = true
+
+            const conf = {
+              method: 'GET',
+              url: config.getAllocationByTitle + type + '?limit=' + limit + '&page=' + page,
+              headers: {
+                Accept: 'application/json',
+              }
+            }
+
+            axios(conf).then(res => {
 
                 let data = res.data.allocations
+                this.pages = res.data.pagesCount
 
                 for(let i=0; i<data.length; i++) {
                   
@@ -653,68 +811,118 @@
 
                 this.loading = false
             })
-          }
+          },
+          getAllocationBar(type) {
+            const conf = {
+              method: 'GET',
+              url: config.getAllocationBar + type,
+              headers: {
+                Accept: 'application/json',
+              }
+            }
+            axios(conf).then(res => {
+              this.barInfo = res.data
+            })
+          },
+          editAllocation(index) {
+
+              const data  = {
+                is_final:  this.editedItem.status_string == 'Final' ? true : false,
+                creation_date: this.editedItem.creation_date,
+                total_allocation: this.editedItem.total_allocation,
+                note: this.editedItem.note,
+                allocation_type: parseInt(this.editedItem.allocation_type)
+              }
+
+              console.log(data)
+
+              if(this.addNew) {
+
+                data.school_id = this.selectedSchool.id
+
+                const conf = {
+                  method: 'POST',
+                  url: config.addAllocation,
+                  headers: {
+                    Accept: 'application/json',
+                  },
+                  data: data
+                }
+
+                axios(conf)
+                  .then(res => {
+
+                    this.$q.notify({
+                      message: 'Allocation Added successfully!',
+                      type: 'positive',
+                    })
+
+                    this.data[index].changed = false
+                    this.data[index].showEditButton = true
+                    this.data[index].id = res.data.id
+                    this.data[index].add = false
+
+                    let school = {
+                      school_name: this.selectedSchool.label
+                    }
+
+                    this.data[index].school = school
+                    this.addNew = false
+                  })
+
+              } else {
+                
+                this.data[index].changed = false
+
+                const conf = {
+                  method: 'PUT',
+                  url: config.getAllocationByTitle + this.editedItem.id,
+                  headers: {
+                    Accept: 'application/json',
+                  },
+                  data: data
+                }
+
+                axios(conf)
+                  .then(res => {
+                    this.$q.notify({
+                      message: 'Allocation updated successfully!',
+                      type: 'positive',
+                    })
+                  })
+              }
+
+          },
+          getSchools() {
+            const conf = {
+              method: 'GET',
+              url: config.getSchools,
+              headers: {
+                Accept: 'application/json',
+              }
+            }
+            axios(conf).then(res => {
+              console.log('schools', res)
+              let schoolsArr = []
+              for(let i=0; i<res.data.length; i++) {
+                let obj = {
+                  id: res.data[i].id,
+                  label: res.data[i].school_name,
+                  value: res.data[i].id
+                }
+                schoolsArr.push(obj)
+              }
+              this.schools = schoolsArr
+              console.log(this.schools)
+            })
+          },
         },
         created() {
-            this.getAllocationByType(5)
-            // let dataTest = []
-            // for(let i=0; i<5; i++) {
-
-            // let r = Math.floor(Math.random() * 10)
-            // if(r % 2) r = true 
-            // else r = false
-
-            // let allocation, finalAllocation
-
-            // if(r) {
-            //     finalAllocation = Math.floor(Math.random() * 100)
-            // } else {
-            //     allocation = Math.floor(Math.random() * 100)
-            // }
-            
-            // let obj = {
-            //     id: i,
-            //     date: "2020-09-1" + i+1,
-            //     school: "American School N" + i+1,
-
-            //     allocation: allocation,
-            //     finalAllocation: finalAllocation,
-
-            //     status: r ? 'Final' : 'Preliminary',
-            //     notes: "There is no one who loves pain itself...",
-            //     showEditButton: true,
-            //   changed: false,
-            // }
-
-            // dataTest.push(obj)
-
-            // }
-            // this.data = dataTest
-            // this.tempData = dataTest
-
-            // let schoolArr = []
-            // for(let j=0; j<this.data.length; j++) {
-            // schoolArr.push(this.data[j].school)
-            // }
-            // this.schools = schoolArr
-        },
-        computed: {
-        total() {
-          let total = 0;
-          for(let i=0; i<this.data.length; i++) {
-
-            let allocation
-            if(this.data[i].status) {
-              allocation = parseFloat( this.data[i].finalAllocation )
-            }else {
-              allocation = parseFloat( this.data[i].allocation )
-            }
-            total += allocation
-
-          }
-          return total.toFixed(2)
+          this.getSchools()
+          this.getAllocationByType(5, this.count, this.current)
+          this.getAllocationBar(5)
+          this.getSchoolYears()
         }
-      }
     }
 
 </script>
