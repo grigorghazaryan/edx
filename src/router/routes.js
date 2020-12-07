@@ -16,14 +16,13 @@ const routes = [
       {path: '/Allocations/esser', component: () => import('pages/Allocations/ESSER.vue')},
       {path: '/Allocations/geer', component: () => import('pages/Allocations/GEER.vue')},
       // ------------------------------------------------------------------------------------
-      {path: '/Inventory', component: () => import('pages/Inventory/Inventory.vue')},
+      {path: '/Inventory', component: () => import('pages/Inventory/InventorySchools.vue')},
+      {path: '/Inventory/:id', component: () => import('pages/Inventory/Inventory.vue')},
       {path: '/TeacherCosts/BudgetEstimates', component: () => import('pages/TeacherCosts/BudgetEstimates.vue')},
       {path: '/Expenses', component: () => import('pages/Expenses/Expenses.vue')},
       {path: '/Activity', component: () => import('pages/Budget/Budget.vue'),
         children: [
           {
-            // UserProfile will be rendered inside User's <router-view>
-            // when /user/:id/profile is matched
             path: '/Activity/:id',
             component: () => import('pages/Budget/Budget.vue')
           }

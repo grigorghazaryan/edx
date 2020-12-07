@@ -36,7 +36,7 @@
 
     <div class="q-pa-sm q-mt-sm q-gutter-sm">
       <q-table
-        title="Title IV"
+        :title="titleHeader" 
         :data="data"
         :columns="columns"
         :filter="filter"
@@ -605,6 +605,8 @@ export default {
             align: "left",
             label: "School",
             field: "school",
+            field: row => row.name,
+            format: val => `${val}`,
             sortable: true
           },
           {
@@ -1133,11 +1135,20 @@ export default {
         })
       },
   },
-    created() {
-      this.getSchools()
-      this.getAllocationByType(4, this.count, this.current)
-      this.getAllocationBar(4)
-      this.getSchoolYears()
+  created() {
+    this.getSchools()
+    this.getAllocationByType(4, this.count, this.current)
+    this.getAllocationBar(4)
+    this.getSchoolYears()
+  },
+  computed: {
+    titleHeader() {
+      let title;
+      this.schoolYear == '' 
+        ? title = this.schoolYears[0] && this.schoolYears[0].value
+        : title = this.schoolYear.value
+      return 'Title IV - ' + title
     }
+  }
 }
 </script>

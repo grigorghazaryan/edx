@@ -25,6 +25,17 @@ const config = {
 
     // Filter Allocation
     filterAllocation: 'https://edxchange-allocation.aimtech.am/api/v1/filter-allocation/', // 1?search=St&status=fn&year=21
+
+    // INVENTORY
+
+    // Get total cost
+    getInventoryTotalCost: 'https://inventory.aimtech.am/api/v1/get-inventory-total-cost/', // + 1/1001 ?schoolYearId=21
+    getInventory: 'https://inventory.aimtech.am/api/v1/inventory/',  // + 1/1001
+    addInventory: 'https://inventory.aimtech.am/api/v1/inventory',
+    getAdditionalInfoForInventory: 'https://inventory.aimtech.am/api/v1/get-supplier-category-status-data',
+
+    
+
 }
 
 export default config

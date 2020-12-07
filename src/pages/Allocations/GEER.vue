@@ -31,7 +31,7 @@
     
     <div class="q-pa-sm q-mt-sm q-gutter-sm">
       <q-table
-        title="GEER" 
+        :title="titleHeader" 
         :data="data" 
         :columns="columns" 
         row-key="id" 
@@ -456,6 +456,8 @@
                 align: "left",
                 label: "School",
                 field: "school",
+                field: row => row.name,
+                format: val => `${val}`,
                 sortable: true
               },
               { 
@@ -922,6 +924,15 @@
           this.getAllocationByType(6, this.count, this.current)
           this.getAllocationBar(6)
           this.getSchoolYears()
+        },
+        computed: {
+          titleHeader() {
+            let title;
+            this.schoolYear == '' 
+              ? title = this.schoolYears[0] && this.schoolYears[0].value
+              : title = this.schoolYear.value
+            return 'GEER - ' + title
+          }
         }
     }
 

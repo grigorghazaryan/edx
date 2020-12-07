@@ -67,7 +67,7 @@
 
     <div class="q-pa-sm q-mt-sm q-gutter-sm">
       <q-table
-        title="Title I" 
+        :title="titleHeader" 
         :data="data"
         :columns="columns"
         row-key="id" 
@@ -414,6 +414,7 @@
           },
           current: 1,
           count: 10,
+          
           model: '',
           options: [
             'Preliminary', 'Final'
@@ -426,7 +427,6 @@
           isFinal: false,
           filter: '',
           mode: 'list',
-          // show_dialog: false,
           editedIndex: -1,
           editedItem: {
 
@@ -471,6 +471,8 @@
               align: "left",
               label: "School",
               field: "school",
+              field: row => row.name,
+              format: val => `${val}`,
               sortable: true
             },
             { 
@@ -1047,6 +1049,15 @@
         this.getAllocationByType(1, this.count, this.current)
         this.getSchoolYears()
 
+      },
+      computed: {
+        titleHeader() {
+          let title = '';
+          this.schoolYear == '' 
+            ? title = this.schoolYears[0] && this.schoolYears[0].value
+            : title = this.schoolYear.value
+          return 'Title I - ' + title
+        }
       }
     }
 </script>

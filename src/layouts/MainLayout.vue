@@ -5,183 +5,215 @@
         <q-toolbar>
           <q-btn flat @click="miniState = !miniState" round dense icon="menu" />
           <q-toolbar-title>Header</q-toolbar-title>
+
+          <q-space/>
+
+          <div class="q-gutter-sm row items-center no-wrap">
+          
+            <q-btn round dense flat color="white" :icon="$q.fullscreen.isActive ? 'fullscreen_exit' : 'fullscreen'"
+                  @click="$q.fullscreen.toggle()"
+                  v-if="$q.screen.gt.sm">
+            </q-btn>
+
+            <q-btn round dense flat color="white" icon="notifications">
+              <q-badge color="red" text-color="white" floating>
+                5
+              </q-badge>
+              <q-menu
+              >
+                <q-list style="min-width: 100px">
+                  <messages></messages>
+                  <q-card class="text-center no-shadow no-border">
+                    <q-btn label="View All" style="max-width: 120px !important;" flat dense
+                          class="text-indigo-8"></q-btn>
+                  </q-card>
+                </q-list>
+              </q-menu>
+              <!--            <q-tooltip>Notifications</q-tooltip>-->
+            </q-btn>
+
+            <q-btn round flat>
+              <q-avatar size="26px">
+                <img src="https://cdn.quasar.dev/img/boy-avatar.png">
+              </q-avatar>
+            </q-btn>
+            
+          </div>
+
         </q-toolbar>
       </q-header>
 
       <q-drawer
         v-model="drawer"
         show-if-above
-
-        :mini="!drawer || miniState"
-        @click.capture="drawerClick"
-
-
+        :mini="miniState"
         bordered
         content-class="bg-grey-sidebar text-white"
+        @click="drawerClick"
       >
         <q-scroll-area class="fit">
           <q-list>
 
-        <q-item to="/" active-class="q-item-no-link-highlighting">
-          <q-item-section avatar>
-            <q-icon name="dashboard"/>
-          </q-item-section>
-          <q-item-section>
-            <q-item-label>Dashboard</q-item-label>
-          </q-item-section>
-        </q-item>
+          <q-item to="/" active-class="q-item-no-link-highlighting">
+            <q-item-section avatar>
+              <q-icon name="dashboard"/>
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>Dashboard</q-item-label>
+            </q-item-section>
+          </q-item>
 
-        <q-expansion-item
-          icon="person"
-          label="Administration"
-        >
-          <q-list class="bg-sidebar-opened">
-            <q-item to="/Administration1" class="q-pl-lg" active-class="q-item-no-link-highlighting">
-              <q-item-section avatar>
-                <q-icon name="person"/>
-              </q-item-section>
-              <q-item-section>
-                <q-item-label>Administration 1</q-item-label>
-              </q-item-section>
-            </q-item>
-          </q-list>
-        </q-expansion-item>
+          <q-expansion-item
+            icon="person"
+            label="Administration"
+          >
+            <q-list class="bg-sidebar-opened">
+              <q-item to="/Administration1" class="q-pl-lg" active-class="q-item-no-link-highlighting">
+                <q-item-section avatar>
+                  <q-icon name="person"/>
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label>Administration 1</q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </q-expansion-item>
 
-        <q-expansion-item
-          icon="text_format"
-          label="Allocations"
-        >
-          <q-list class="bg-sidebar-opened">
-            <q-item to="/Allocations/Title1" class="q-pl-lg" active-class="q-item-no-link-highlighting">
-              <q-item-section avatar>
-                <q-icon name="text_format"/>
-              </q-item-section>
-              <q-item-section>
-                <q-item-label>Title I</q-item-label>
-              </q-item-section>
-            </q-item>
-            <q-item to="/Allocations/Title2" class="q-pl-lg" active-class="q-item-no-link-highlighting">
-              <q-item-section avatar>
-                <q-icon name="text_format"/>
-              </q-item-section>
-              <q-item-section>
-                <q-item-label>Title II</q-item-label>
-              </q-item-section>
-            </q-item>
-            <q-item to="/Allocations/Title3" class="q-pl-lg" active-class="q-item-no-link-highlighting">
-              <q-item-section avatar>
-                <q-icon name="text_format"/>
-              </q-item-section>
-              <q-item-section>
-                <q-item-label>Title III</q-item-label>
-              </q-item-section>
-            </q-item>
-            <q-item to="/Allocations/Title4" class="q-pl-lg" active-class="q-item-no-link-highlighting">
-              <q-item-section avatar>
-                <q-icon name="text_format"/>
-              </q-item-section>
-              <q-item-section>
-                <q-item-label>Title IV</q-item-label>
-              </q-item-section>
-            </q-item>
-            <q-item to="/Allocations/esser" class="q-pl-lg" active-class="q-item-no-link-highlighting">
-              <q-item-section avatar>
-                <q-icon name="text_format"/>
-              </q-item-section>
-              <q-item-section>
-                <q-item-label>ESSER</q-item-label>
-              </q-item-section>
-            </q-item>
-            <q-item to="/Allocations/geer" class="q-pl-lg" active-class="q-item-no-link-highlighting">
-              <q-item-section avatar>
-                <q-icon name="text_format"/>
-              </q-item-section>
-              <q-item-section>
-                <q-item-label>GEER</q-item-label>
-              </q-item-section>
-            </q-item>
-          </q-list>
-        </q-expansion-item>
+          <q-expansion-item
+            icon="text_format"
+            label="Allocations"
+          >
+            <q-list class="bg-sidebar-opened">
+              <q-item to="/Allocations/Title1" class="q-pl-lg" active-class="q-item-no-link-highlighting">
+                <q-item-section avatar>
+                  <q-icon name="text_format"/>
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label>Title I</q-item-label>
+                </q-item-section>
+              </q-item>
+              <q-item to="/Allocations/Title2" class="q-pl-lg" active-class="q-item-no-link-highlighting">
+                <q-item-section avatar>
+                  <q-icon name="text_format"/>
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label>Title II</q-item-label>
+                </q-item-section>
+              </q-item>
+              <q-item to="/Allocations/Title3" class="q-pl-lg" active-class="q-item-no-link-highlighting">
+                <q-item-section avatar>
+                  <q-icon name="text_format"/>
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label>Title III</q-item-label>
+                </q-item-section>
+              </q-item>
+              <q-item to="/Allocations/Title4" class="q-pl-lg" active-class="q-item-no-link-highlighting">
+                <q-item-section avatar>
+                  <q-icon name="text_format"/>
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label>Title IV</q-item-label>
+                </q-item-section>
+              </q-item>
+              <q-item to="/Allocations/esser" class="q-pl-lg" active-class="q-item-no-link-highlighting">
+                <q-item-section avatar>
+                  <q-icon name="text_format"/>
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label>ESSER</q-item-label>
+                </q-item-section>
+              </q-item>
+              <q-item to="/Allocations/geer" class="q-pl-lg" active-class="q-item-no-link-highlighting">
+                <q-item-section avatar>
+                  <q-icon name="text_format"/>
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label>GEER</q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </q-expansion-item>
 
-        <q-expansion-item
-          icon="person"
-          label="Inventory"
-        >
-          <q-list class="bg-sidebar-opened">
-            <q-item to="/Inventory" class="q-pl-lg" active-class="q-item-no-link-highlighting">
-              <q-item-section avatar>
-                <q-icon name="person"/>
-              </q-item-section>
-              <q-item-section>
-                <q-item-label>Inventory</q-item-label>
-              </q-item-section>
-            </q-item>
-          </q-list>
-        </q-expansion-item>
+          <q-expansion-item
+            icon="person"
+            label="Inventory"
+          >
+            <q-list class="bg-sidebar-opened">
+              <q-item to="/Inventory" class="q-pl-lg" active-class="q-item-no-link-highlighting">
+                <q-item-section avatar>
+                  <q-icon name="person"/>
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label>Inventory</q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </q-expansion-item>
 
-        <q-expansion-item
-          icon="school"
-          label="Teacher Costs"
-        >
-          <q-list class="bg-sidebar-opened">
-            <q-item to="/TeacherCosts/BudgetEstimates" class="q-pl-lg" active-class="q-item-no-link-highlighting">
-              <q-item-section avatar>
-                <q-icon name="school"/>
-              </q-item-section>
-              <q-item-section>
-                <q-item-label>Budget Estimates</q-item-label>
-              </q-item-section>
-            </q-item>
-          </q-list>
-        </q-expansion-item>
+          <q-expansion-item
+            icon="school"
+            label="Teacher Costs"
+          >
+            <q-list class="bg-sidebar-opened">
+              <q-item to="/TeacherCosts/BudgetEstimates" class="q-pl-lg" active-class="q-item-no-link-highlighting">
+                <q-item-section avatar>
+                  <q-icon name="school"/>
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label>Budget Estimates</q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </q-expansion-item>
 
-        <q-expansion-item
-          icon="attach_money"
-          label="Expenses"
-        >
-          <q-list class="bg-sidebar-opened">
-            <q-item to="/Expenses" class="q-pl-lg" active-class="q-item-no-link-highlighting">
-              <q-item-section avatar>
-                <q-icon name="attach_money"/>
-              </q-item-section>
-              <q-item-section>
-                <q-item-label>Expenses</q-item-label>
-              </q-item-section>
-            </q-item>
-          </q-list>
-        </q-expansion-item>
+          <q-expansion-item
+            icon="attach_money"
+            label="Expenses"
+          >
+            <q-list class="bg-sidebar-opened">
+              <q-item to="/Expenses" class="q-pl-lg" active-class="q-item-no-link-highlighting">
+                <q-item-section avatar>
+                  <q-icon name="attach_money"/>
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label>Expenses</q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </q-expansion-item>
 
-        <q-expansion-item
-          icon="account_balance"
-          label="Budget"
-        >
-          <q-list class="bg-sidebar-opened">
-            <q-item to="/Activity" class="q-pl-lg" active-class="q-item-no-link-highlighting">
-              <q-item-section avatar>
-                <q-icon name="account_balance"/>
-              </q-item-section>
-              <q-item-section>
-                <q-item-label>Activity</q-item-label>
-              </q-item-section>
-            </q-item>
-          </q-list>
-        </q-expansion-item>
+          <q-expansion-item
+            icon="account_balance"
+            label="Budget"
+          >
+            <q-list class="bg-sidebar-opened">
+              <q-item to="/Activity" class="q-pl-lg" active-class="q-item-no-link-highlighting">
+                <q-item-section avatar>
+                  <q-icon name="account_balance"/>
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label>Activity</q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </q-expansion-item>
 
-        <q-expansion-item
-          icon="money"
-          label="Reimbursement"
-        >
-          <q-list class="bg-sidebar-opened">
-            <q-item to="/Reimbursement" class="q-pl-lg" active-class="q-item-no-link-highlighting">
-              <q-item-section avatar>
-                <q-icon name="money"/>
-              </q-item-section>
-              <q-item-section>
-                <q-item-label>Reimbursement</q-item-label>
-              </q-item-section>
-            </q-item>
-          </q-list>
-        </q-expansion-item>
+          <q-expansion-item
+            icon="money"
+            label="Reimbursement"
+          >
+            <q-list class="bg-sidebar-opened">
+              <q-item to="/Reimbursement" class="q-pl-lg" active-class="q-item-no-link-highlighting">
+                <q-item-section avatar>
+                  <q-icon name="money"/>
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label>Reimbursement</q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </q-expansion-item>
 
         <hr>
 
@@ -254,22 +286,30 @@ export default {
   data () {
     return {
       drawer: true,
-      miniState: false
+      miniState: true
     }
   },
 
   methods: {
     drawerClick (e) {
+      console.log(this.miniState)
+      if(this.miniState) {
+        e.preventDefault()
+      }
+      // e.stopPropagation()
+      // console.log(e)
+      
       // if in "mini" state and user
       // click on drawer, we switch it to "normal" mode
-      if (this.miniState) {
-        this.miniState = false
 
-        // notice we have registered an event with capture flag;
-        // we need to stop further propagation as this click is
-        // intended for switching drawer to "normal" mode only
-        e.stopPropagation()
-      }
+      // if (this.miniState) {
+      //   this.miniState = false
+
+      //   // notice we have registered an event with capture flag;
+      //   // we need to stop further propagation as this click is
+      //   // intended for switching drawer to "normal" mode only
+      //   // e.stopPropagation()
+      // }
     }
   }
 }
@@ -284,5 +324,9 @@ export default {
 .bg-sidebar-opened {
   background: #1f2d3d !important;
 }
-
+.hover-sidebar-menu {
+  &:hover {
+    background: red
+  }
+}
 </style>

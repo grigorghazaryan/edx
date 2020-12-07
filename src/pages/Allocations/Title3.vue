@@ -35,7 +35,7 @@
 
     <div class="q-pa-sm q-mt-sm q-gutter-sm">
       <q-table
-        title="Title III"
+        :title="titleHeader" 
         :data="data"
         :columns="columns"
         row-key="id"
@@ -520,6 +520,8 @@ export default {
             align: "left",
             label: "School",
             field: "school",
+            field: row => row.name,
+            format: val => `${val}`,
             sortable: true
           },
           {
@@ -969,6 +971,15 @@ export default {
     this.getAllocationByType(3, this.count, this.current)
     this.getAllocationBar(3)
     this.getSchoolYears()
+  },
+  computed: {
+    titleHeader() {
+      let title;
+      this.schoolYear == '' 
+        ? title = this.schoolYears[0] && this.schoolYears[0].value
+        : title = this.schoolYear.value
+      return 'Title III - ' + title
+    }
   }
 }
 </script>

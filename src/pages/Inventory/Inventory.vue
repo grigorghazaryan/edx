@@ -1,37 +1,40 @@
 <template>
-  <q-page class="q-pa-sm">  
+  <q-page class="q-pa-sm">
 
     <div class="q-pa-md q-gutter-sm">
       <q-breadcrumbs>
         <q-breadcrumbs-el icon="dashboard" label="Dashboard" to="/" />
-        <q-breadcrumbs-el label="Inventory"/>
-        <q-breadcrumbs-el label="Inventory"/>
+        <q-breadcrumbs-el label="Inventory" to="/Inventory" />
+        <q-breadcrumbs-el :label="schoolName" />
       </q-breadcrumbs>
     </div>
 
     <q-card class="bg-transparent no-shadow no-border">
       <q-card-section class="q-pa-none">
-        <div class="row q-col-gutter-sm ">
-
+        <div class="row q-col-gutter-sm">
           <div class="col-md-2 col-sm-12 col-xs-12">
             <q-item style="background-color: #fff" class="q-pa-none q-ml-xs">
-              <q-item-section side style="background-color: #fff" class=" q-pa-lg q-mr-none text-white">
+              <q-item-section
+                side
+                style="background-color: #fff"
+                class="q-pa-lg q-mr-none text-white"
+              >
                 <q-icon name="attach_money" color="red" size="24px"></q-icon>
               </q-item-section>
               <q-item-section class="q-ml-none">
                 <q-item-label class="text-grey-7">Total Cost</q-item-label>
-                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{totalCost}}</q-item-label>
+                <q-item-label class="text-dark text-h6 text-weight-bolder"
+                  >$ {{ barInfo.totalCost }}</q-item-label
+                >
               </q-item-section>
             </q-item>
           </div>
-
         </div>
       </q-card-section>
     </q-card>
 
     <div class="q-pa-sm q-mt-sm q-gutter-sm">
       <q-card>
-
         <q-tabs
           v-model="tab"
           dense
@@ -41,21 +44,19 @@
           align="left"
           narrow-indicator
         >
-          <q-tab name="Title1" label="Title I"/>
-          <q-tab name="Title2" label="Title II"/>
-          <q-tab name="Title3" label="Title III"/>
-          <q-tab name="Title4" label="Title IV"/>
-          <q-tab name="ESSER" label="ESSER"/>
-
+          <q-tab name="1" label="Title I" />
+          <q-tab name="2" label="Title II" />
+          <q-tab name="3" label="Title III" />
+          <q-tab name="4" label="Title IV" />
+          <q-tab name="5" label="ESSER" />
         </q-tabs>
 
         <q-separator />
 
         <q-tab-panels v-model="tab" animated>
-
-          <q-tab-panel name="Title1" class="q-p-sm">
+          <q-tab-panel name="1" class="q-p-sm">
             <q-table
-              :data="data" 
+              :data="data"
               :columns="columns"
               :loading="loading"
               :filter="filter"
@@ -63,7 +64,6 @@
               row-key="id"
               :pagination.sync="pagination"
             >
-
               <!-- Loading -->
               <template v-slot:loading>
                 <q-inner-loading showing color="primary" />
@@ -71,22 +71,36 @@
 
               <!-- Table Header -->
               <template v-slot:top-right="props">
-                
-                <q-select class="q-mr-md" style="min-width: 200px; max-width: 200px" dense outlines clearable v-model="schoolYear" :options="schoolYears" label="School year"/>
+                <!-- <q-select
+                  class="q-mr-md"
+                  style="min-width: 200px; max-width: 200px"
+                  dense
+                  outlines
+                  clearable
+                  v-model="schoolYear"
+                  :options="schoolYears"
+                  label="School year"
+                />
 
-                <q-input class="q-mr-md" outlines dense v-model="filter" placeholder="Search">
+                <q-input
+                  class="q-mr-md"
+                  outlines
+                  dense
+                  v-model="filter"
+                  placeholder="Search"
+                >
                   <template v-slot:append>
-                    <q-icon name="search"/>
+                    <q-icon name="search" />
                   </template>
-                </q-input>
+                </q-input> -->
 
-                <q-btn square class="q-mr-md" style="background-color: #546bfa" text-color="white" icon="add" @click="addEmptyRow" no-caps>Add</q-btn>
-
+                <q-btn :disabled="addNew" square class="q-mr-md" style="background-color: #546bfa" text-color="white" icon="add" 
+                @click="addNew = true, addNewRow()" no-caps>Add</q-btn>
 
                 <q-btn
                   icon-right="archive"
                   label="Export to Excel"
-                  color="teal" 
+                  color="teal"
                   text-color="white"
                   no-caps
                   @click="exportTable"
@@ -97,281 +111,434 @@
                   dense
                   :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
                   @click="props.toggleFullscreen"
-                  v-if="mode === 'list'" class="q-px-sm"
+                  v-if="mode === 'list'"
+                  class="q-px-sm"
                 >
-                  <q-tooltip
-                    :disable="$q.platform.is.mobile"
-                    v-close-popup
-                  >{{props.inFullscreen ? 'Exit Fullscreen' : 'Toggle Fullscreen'}}
+                  <q-tooltip :disable="$q.platform.is.mobile" v-close-popup
+                    >{{props.inFullscreen ? 'Exit Fullscreen' : 'Toggle Fullscreen'}}
                   </q-tooltip>
                 </q-btn>
 
                 <div class="q-pa-sm q-gutter-sm">
-
                   <q-dialog v-model="confirm" persistent>
                     <q-card>
                       <q-card-section class="row items-center">
-                        <span class="q-ml-sm">Are you sure to delete this item?</span>
+                        <span class="q-ml-sm"
+                          >Are you sure to delete this item?</span
+                        >
                       </q-card-section>
 
                       <q-card-actions align="right">
-                        <q-btn flat label="No, thanks" color="primary" v-close-popup />
-                        <q-btn label="Yes" color="red" v-close-popup @click="deleteItem" />
+                        <q-btn
+                          flat
+                          label="No, thanks"
+                          color="primary"
+                          v-close-popup
+                        />
+                        <q-btn
+                          label="Yes"
+                          color="red"
+                          v-close-popup
+                          @click="deleteItem"
+                        />
                       </q-card-actions>
                     </q-card>
                   </q-dialog>
-
                 </div>
-
               </template>
 
               <!-- Table Body -->
               <template v-slot:body="props">
                 
-                  <q-tr :props="props" :class="{ 'bg-red-2' : props.row.changed }">
+                <q-tr
+                  :props="props"
+                  :class="{ 'bg-red-2' : props.row.changed }"
+                  @click="copyRowData(props.rowIndex)"
+                >
 
-                    <q-td auto-width>
-                      <q-btn size="sm" flat
-                        color="black"
-                        @click="props.expand = !props.expand" 
-                        :icon="props.expand ? 'keyboard_arrow_down' : 'keyboard_arrow_right'">
-                      </q-btn>
-                    </q-td>
+                  <q-td auto-width>
+                    <q-btn
+                      size="sm"
+                      flat
+                      color="black"
+                      @click="props.expand = !props.expand"
+                      :icon="props.expand ? 'keyboard_arrow_down' : 'keyboard_arrow_right'"
+                    >
+                    </q-btn>
+                  </q-td>
 
-                    <q-td key="qty" :props="props" @click="copyRowData(props.rowIndex)">
+                  <q-td
+                    key="qty"
+                    :props="props"
+                    
+                  >
+                    <div>{{ props.row.quantity }}</div>
 
-                      <div>{{ props.row.qty }}</div>
+                    <q-popup-edit v-model="props.row.quantity" title="Qty" buttons>
+                      <q-input
+                        type="text"
+                        v-model="props.row.quantity"
+                        dense
+                        autofocus
+                        @input="detectChange(props.rowIndex)"
+                      />
+                    </q-popup-edit>
+                  </q-td>
 
-                      <q-popup-edit v-model="props.row.qty" title="Qty" buttons>
-                        <q-input type="text" v-model="props.row.qty" dense autofocus 
-                          @input="detectChange(props.rowIndex)"
+                  <q-td
+                    key="category"
+                    :props="props"
+                    
+                  >
+                    <div> {{ props.row.inventory_category_uni.label }} </div>
+
+                    <q-popup-edit 
+                        v-model="props.row.inventory_category_uni"
+                        title="category" buttons>
+                        <q-select  
+                            @input="detectChange(props.rowIndex)"
+                            v-model="props.row.inventory_category_uni" 
+                            :options="optionsCategory"
                         />
-                      </q-popup-edit>
+                    </q-popup-edit>  
 
-                    </q-td>
+                  </q-td>
 
-                    <q-td key="categoryDescription" :props="props" @click="copyRowData(props.rowIndex)">
+                  <q-td
+                    key="itemName"
+                    :props="props"
+                    style="white-space: initial;width: 350px; max-width: 350px;"
+                  >
+                    <span class="inline-span">{{ props.row.item_name }}</span>
 
-                      <div>{{ props.row.categoryDescription }}</div>
+                    <q-popup-edit
+                      v-model="props.row.item_name"
+                      title="Item name"
+                      buttons
+                    >
+                      <q-input
+                        type="text"
+                        v-model="props.row.item_name"
+                        dense
+                        autofocus
+                        @input="detectChange(props.rowIndex)"
+                      />
+                    </q-popup-edit>
+                  </q-td>
 
-                      <q-popup-edit v-model="props.row.categoryDescription" title="Category Description" buttons>
-                        <q-input type="text" v-model="props.row.categoryDescription" dense autofocus 
-                          @input="detectChange(props.rowIndex)"
+                  <q-td
+                    key="vendor"
+                    :props="props"
+                    
+                  >
+                    <div v-if="props.row.inventory_supplier_uni">{{ props.row.inventory_supplier_uni.label }}</div>
+                    <div v-else>  </div>
+
+                    <q-popup-edit 
+                        v-model="props.row.inventory_supplier_uni"
+                        title="Vendor" buttons>
+                        <q-select  
+                            @input="detectChange(props.rowIndex)"
+                            v-model="props.row.inventory_supplier_uni" 
+                            :options="optionsSupplier"
                         />
-                      </q-popup-edit>
+                    </q-popup-edit>  
+                  </q-td>
 
-                    </q-td>
+                  <q-td
+                    key="costPerItem"
+                    :props="props"
+                    
+                  >
+                    <div>$ {{ props.row.item_cost }}</div>
 
-                    <q-td key="itemName" :props="props" @click="copyRowData(props.rowIndex)">
+                    <q-popup-edit
+                      v-model="props.row.item_cost"
+                      title="Cost Per Item"
+                      buttons
+                    >
+                      <q-input
+                        type="text"
+                        v-model="props.row.item_cost"
+                        dense
+                        autofocus
+                        @input="detectChange(props.rowIndex)"
+                      />
+                    </q-popup-edit>
+                  </q-td>
+
+                  <q-td
+                    key="totalCost"
+                    :props="props"
+                    
+                  >
+                    <div>$ {{ (props.row.item_cost * props.row.quantity).toFixed(2) }}</div>
+                  </q-td>
+
+                  <q-td
+                    key="dateOfPurchase"
+                    :props="props"
+                    
+                  >
+                    <div>{{ props.row.purchase_date }}</div>
+                  </q-td>
+
+                  <q-td
+                    key="condition"
+                    :props="props"
+                  >
+
+                    <div v-if="props.row.condition.label == 'Excellent'">
+                      <span
+                        class="mdi mdi-circle-slice-7 mdi-24px"
+                        style="color: blue"
+                      >
+                        <q-tooltip
+                          anchor="top middle"
+                          self="bottom middle"
+                          :offset="[10, 10]"
+                          transition-show="flip-right"
+                          transition-hide="flip-left"
+                        >
+                          <strong>Excellent</strong>
+                        </q-tooltip>
+                      </span>
+                    </div>
+
+                    <div v-else-if="props.row.condition.label == 'Very Good'">
+                      <span
+                        class="mdi mdi-circle-slice-6 mdi-24px"
+                        style="color: green"
+                      >
+                        <q-tooltip
+                          anchor="top middle"
+                          self="bottom middle"
+                          :offset="[10, 10]"
+                          transition-show="flip-right"
+                          transition-hide="flip-left"
+                        >
+                          <strong>Very Good</strong>
+                        </q-tooltip>
+                      </span>
+                    </div>
+
+                    <div v-else-if="props.row.condition.label == 'Good'">
+                      <span
+                        class="mdi mdi-circle-slice-5 mdi-24px"
+                        style="color: #ccad14"
+                      >
+                        <q-tooltip
+                          anchor="top middle"
+                          self="bottom middle"
+                          :offset="[10, 10]"
+                          transition-show="flip-right"
+                          transition-hide="flip-left"
+                        >
+                          <strong>Good</strong>
+                        </q-tooltip>
+                      </span>
+                    </div>
+
+                    <div v-else-if="props.row.condition.label == 'Fair'">
+                      <span
+                        class="mdi mdi-circle-slice-4 mdi-24px"
+                        style="color: orange"
+                      >
+                        <q-tooltip
+                          anchor="top middle"
+                          self="bottom middle"
+                          :offset="[10, 10]"
+                          transition-show="flip-right"
+                          transition-hide="flip-left"
+                        >
+                          <strong>Fair</strong>
+                        </q-tooltip>
+                      </span>
+                    </div>
+
+                    <div v-else>
+                      <span
+                        class="mdi mdi-circle-slice-2 mdi-24px"
+                        style="color: red"
+                      >
+                        <q-tooltip
+                          anchor="top middle"
+                          self="bottom middle"
+                          :offset="[10, 10]"
+                          transition-show="flip-right"
+                          transition-hide="flip-left"
+                        >
+                          <strong>Poor</strong>
+                        </q-tooltip>
+                      </span>
+                    </div>
+
+                    <q-popup-edit
+                      v-model="props.row.condition"
+                      title="Condition"
+                      buttons
+                    >
+                      <q-select
+                        @input="detectChange(props.rowIndex)"
+                        dense
+                        outlined
+                        v-model="props.row.condition"
+                        :options="optionsCondition"
+                      />
+                    </q-popup-edit>
+
+                  </q-td>
+
+                  <q-td
+                    key="status"
+                    :props="props"
+                    
+                  >
+                    <div v-if="props.row.status_uni.label == 'On Premise'">
+                      <span
+                        class="mdi mdi-recycle mdi-24px"
+                        style="color: green"
+                      >
+                        <q-tooltip
+                          anchor="top middle"
+                          self="bottom middle"
+                          :offset="[10, 10]"
+                          transition-show="flip-right"
+                          transition-hide="flip-left"
+                        >
+                          <strong>On Premise</strong>
+                        </q-tooltip>
+                      </span>
                       
-                      <div>{{ props.row.itemName }}</div>
+                    </div>
 
-                      <q-popup-edit v-model="props.row.itemName" title="Item name" buttons>
-                        <q-input type="text" v-model="props.row.itemName" dense autofocus 
-                          @input="detectChange(props.rowIndex)"
-                        />
-                      </q-popup-edit>
-
-                    </q-td>
-
-                    <q-td key="vendor" :props="props" @click="copyRowData(props.rowIndex)">
+                    <div v-else-if="props.row.status_uni.label == 'Off Premise'">
+                      <span
+                        class="mdi mdi-recycle mdi-24px"
+                        style="color: green"
+                      >
+                        <q-tooltip
+                          anchor="top middle"
+                          self="bottom middle"
+                          :offset="[10, 10]"
+                          transition-show="flip-right"
+                          transition-hide="flip-left"
+                        >
+                          <strong>On Premise</strong>
+                        </q-tooltip>
+                      </span>
                       
-                      <div>{{ props.row.vendor }}</div>
+                    </div>
 
-                      <q-popup-edit v-model="props.row.vendor" title="Vendor" buttons>
-                        <q-input type="text" v-model="props.row.vendor" dense autofocus 
-                          @input="detectChange(props.rowIndex)"
-                        />
-                      </q-popup-edit>
-
-                    </q-td>
-
-                    <q-td key="costPerItem" :props="props" @click="copyRowData(props.rowIndex)">
+                    <div v-else-if="props.row.status_uni.label == 'Disposed'">
+                      <span
+                        class="mdi mdi-recycle mdi-24px"
+                        style="color: green"
+                      >
+                        <q-tooltip
+                          anchor="top middle"
+                          self="bottom middle"
+                          :offset="[10, 10]"
+                          transition-show="flip-right"
+                          transition-hide="flip-left"
+                        >
+                          <strong>Disposed</strong>
+                        </q-tooltip>
+                      </span>
                       
-                      <div>$ {{ props.row.costPerItem }}</div>
+                    </div>
 
-                      <q-popup-edit v-model="props.row.costPerItem" title="Cost Per Item" buttons>
-                        <q-input type="text" v-model="props.row.costPerItem" dense autofocus 
-                          @input="detectChange(props.rowIndex)"
-                        />
-                      </q-popup-edit>
-
-                    </q-td>
-
-                    <q-td key="totalCost" :props="props" @click="copyRowData(props.rowIndex)">
+                    <div v-else-if="props.row.status_uni.label == 'Lost'">
+                      <span
+                        class="mdi mdi-map-marker-question mdi-red mdi-24px"
+                        style="color: red"
+                      >
+                        <q-tooltip
+                          anchor="top middle"
+                          self="bottom middle"
+                          :offset="[10, 10]"
+                          transition-show="flip-right"
+                          transition-hide="flip-left"
+                        >
+                          <strong>Lost</strong>
+                        </q-tooltip>
+                      </span>
                       
-                      <div>$ {{ props.row.costPerItem * props.row.qty }}</div>
+                    </div>
 
-                    </q-td>
-
-                    <q-td key="dateOfPurchase" :props="props" @click="copyRowData(props.rowIndex)">
+                    <div v-else-if="props.row.status_uni.label == 'Stolen'">
+                      <span
+                        class="mdi mdi-robber mdi-red mdi-24px"
+                        style="color: black"
+                      >
+                        <q-tooltip
+                          anchor="top middle"
+                          self="bottom middle"
+                          :offset="[10, 10]"
+                          transition-show="flip-right"
+                          transition-hide="flip-left"
+                        >
+                          <strong>Stolen</strong>
+                        </q-tooltip>
+                      </span>
                       
-                      <div>{{ props.row.dateOfPurchase }}</div>
+                    </div>
 
-                    </q-td>
-
-                    <q-td key="condition" :props="props" @click="copyRowData(props.rowIndex)">
+                    <div v-else-if="props.row.status_uni.label == 'Transfered'">
+                      <span
+                        class="mdi mdi-truck-delivery mdi-24px"
+                        style="color: orange"
+                      >
+                        <q-tooltip
+                          anchor="top middle"
+                          self="bottom middle"
+                          :offset="[10, 10]"
+                          transition-show="flip-right"
+                          transition-hide="flip-left"
+                        >
+                          <strong>Transferred</strong>
+                        </q-tooltip>
+                      </span>
                       
-                      <div v-if="props.row.condition == 'Excellent'"> 
-                        <!-- <q-icon name="done" color="green-10" style="font-size: 1.5em"/> -->
-                        <!-- {{props.row.condition}} -->
-                        <span class="mdi mdi-circle-slice-7 mdi-24px" style="color: blue">
-                          <q-tooltip 
-                              anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                              transition-show="flip-right"
-                              transition-hide="flip-left"
-                          >
-                            <strong>Excellent</strong>
-                          </q-tooltip>                         
-                        </span>
-                      </div>
+                    </div>
 
-
-                      <div v-else-if="props.row.condition == 'Very Good'"> 
-                        <!-- <q-icon name="done" color="light-blue-14" style="font-size: 1.5em"/>
-                        {{props.row.condition}} -->
-                        <span class="mdi mdi-circle-slice-6 mdi-24px" style="color: green">
-                          <q-tooltip 
-                              anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                              transition-show="flip-right"
-                              transition-hide="flip-left"
-                          >
-                            <strong>Very Good</strong>
-                          </q-tooltip>
-                        </span>
-                      </div>
-
-
-
-                      <div v-else-if="props.row.condition == 'Good'"> 
-                        <!-- <q-icon name="done" color="pink-13" style="font-size: 1.5em"/>
-                        {{props.row.condition}} -->
-                        <span class="mdi mdi-circle-slice-5 mdi-24px" style="color: #ccad14">
-                          <q-tooltip 
-                              anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                              transition-show="flip-right"
-                              transition-hide="flip-left"
-                          >
-                            <strong>Good</strong>
-                          </q-tooltip>                          
-                        </span>
-                      </div>
-
-
-                      <div v-else-if="props.row.condition == 'Fair'"> 
-                        <!-- <q-icon name="done" color="amber-9" style="font-size: 1.5em"/>
-                        {{props.row.condition}} -->
-                        <span class="mdi mdi-circle-slice-4 mdi-24px" style="color: orange">
-                          <q-tooltip 
-                              anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                              transition-show="flip-right"
-                              transition-hide="flip-left"
-                          >
-                            <strong>Fair</strong>
-                          </q-tooltip>                          
-                        </span>
-                      </div>
-
-
-                      <div v-else> 
-                        <!-- <q-icon name="remove" color="deep-orange-13" style="font-size: 1.5em"/>
-                        {{props.row.condition}} -->
-                        <span class="mdi mdi-circle-slice-2 mdi-24px" style="color: red">
-                          <q-tooltip 
-                              anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                              transition-show="flip-right"
-                              transition-hide="flip-left"
-                          >
-                            <strong>Poor</strong>
-                          </q-tooltip>                          
-                        </span>
-                      </div>
-
-                      <q-popup-edit  v-model="props.row.condition" title="Condition" buttons>
-                        <q-select @input="detectChange(props.rowIndex)" dense outlined v-model="props.row.condition" :options="optionsCondition"/>
-                      </q-popup-edit>
-
-                    </q-td>
-
-                    <q-td key="status" :props="props" @click="copyRowData(props.rowIndex)">
-                      
-                      <div v-if="props.row.status == 'Disposed'"> 
-                        <!-- <q-icon name="forward" color="green-10" style="font-size: 1.5em"/>
-                        {{ props.row.status }} -->
-                        <span class="mdi mdi-recycle mdi-24px" style="color: green">
-                          <q-tooltip 
-                              anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                              transition-show="flip-right"
-                              transition-hide="flip-left"
-                          >
-                            <strong>Disposed</strong>
-                          </q-tooltip>  
-                        </span>
-                      </div>
-
-                      <div v-else-if="props.row.status == 'Lost'"> 
-                        <!-- <q-icon name="gesture" color="green-10" style="font-size: 1.5em"/>
-                        {{ props.row.status }} -->
-                        <span class="mdi mdi-map-marker-question mdi-red mdi-24px" style="color: red">
-                          <q-tooltip 
-                              anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                              transition-show="flip-right"
-                              transition-hide="flip-left"
-                          >
-                            <strong>Lost</strong>
-                          </q-tooltip>                          
-                        </span>
-                      </div>
-
-                      <div v-else-if="props.row.status == 'Stolen'"> 
-                        <!-- <q-icon name="mail" color="green-10" style="font-size: 1.5em"/>
-                        {{ props.row.status }} -->
-                        <span class="mdi mdi-robber mdi-red mdi-24px" style="color: black">
-                          <q-tooltip 
-                              anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                              transition-show="flip-right"
-                              transition-hide="flip-left"
-                          >
-                            <strong>Stolen</strong>
-                          </q-tooltip>                             
-                        </span>
-                      </div>
-
-                      <div v-else-if="props.row.status == 'Transferred'"> 
-                        <!-- <q-icon name="push_pin" color="green-10" style="font-size: 1.5em"/>
-                        {{ props.row.status }} -->
-                        <span class="mdi mdi-truck-delivery mdi-24px" style="color: orange">
-                          <q-tooltip 
-                              anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                              transition-show="flip-right"
-                              transition-hide="flip-left"
-                          >
-                            <strong>Transferred</strong>
-                          </q-tooltip>   
-                        </span>
-                      </div>
-
-                      <div v-else> 
-                        <!-- <q-icon name="redo" color="green-10" style="font-size: 1.5em"/>
-                        {{ props.row.status }} -->
-                        <q-tooltip 
-                            anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                            transition-show="flip-right"
-                            transition-hide="flip-left"
+                    <div v-else>
+                      <span
+                        class="mdi mdi-dolly mdi-red mdi-24px"
+                        style="color: blue"
+                      >
+                        <q-tooltip
+                          anchor="top middle"
+                          self="bottom middle"
+                          :offset="[10, 10]"
+                          transition-show="flip-right"
+                          transition-hide="flip-left"
                         >
                           <strong>Stored</strong>
-                        </q-tooltip> 
-                      </div>
+                        </q-tooltip>
+                      </span>
+                      
+                    </div>
 
-                      <q-popup-edit  v-model="props.row.status" title="Status" buttons>
-                        <q-select @input="detectChange(props.rowIndex)" dense outlined v-model="props.row.status" :options="optionsStatus"/>
-                      </q-popup-edit>
+                    <q-popup-edit
+                      v-model="props.row.status"
+                      title="Status"
+                      buttons
+                    >
+                      <q-select
+                        @input="detectChange(props.rowIndex)"
+                        dense
+                        outlined
+                        v-model="props.row.status_uni"
+                        :options="optionsStatus"
+                      />
+                    </q-popup-edit>
+                  </q-td>
 
-                    </q-td>
-
-                    <q-td key="actions" :props="props">
+                  <q-td key="actions" :props="props" style="min-width: 132px">
 
                       <div v-if="props.row.changed">
+
                         <q-btn
                           @click="cancellChange(props.rowIndex)"
                           class="q-mr-sm"
@@ -389,10 +556,9 @@
                             <strong>Cancel</strong>
                           </q-tooltip>
                         </q-btn>
-
-                        <q-btn 
-                          :style="{visibility: props.row.changed ? 'visible' : 'hidden'}"
-                          @click="props.row.changed = false"
+                        
+                        <q-btn
+                          @click="editInventory(props.rowIndex)"
                           class="q-mr-sm"
                           icon="save"
                           color="green" 
@@ -408,27 +574,10 @@
                             <strong>Save</strong>
                           </q-tooltip>
                         </q-btn>
+
                       </div>
 
                       <div v-if="props.row.showEditButton && !props.row.changed">
-                        <q-btn 
-                          class="q-mr-sm"
-                          icon="content_copy"
-                          color="orange" 
-                          @click="copyRow(props.row, props.rowIndex)"
-                          size=sm 
-                          no-caps
-                          round 
-                        >
-                          <q-tooltip 
-                              anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                              transition-show="flip-right"
-                              transition-hide="flip-left"
-                          >
-                            <strong>Duplicate</strong>
-                          </q-tooltip>
-                        </q-btn>
-
                         <q-btn 
                           icon="delete_forever"
                           color="red" 
@@ -447,159 +596,256 @@
                         </q-btn>
                       </div>
 
-                    </q-td>
+                  </q-td>
 
-                  </q-tr>
+                </q-tr>
 
-                  <q-tr v-show="props.expand" :props="props">
-                    <q-td colspan="100%">
-                      <div class="q-mb-lg">
+                <q-tr v-show="props.expand" :props="props" @click="copyRowData(props.rowIndex)" :class="{ 'bg-red-2' : props.row.changed }">
+                  <q-td colspan="100%">
+                    <div class="q-mb-lg">
+                      <div class="row q-mt-lg q-mb-lg"></div>
 
-                        <div class="row q-mt-lg q-mb-lg"></div>
+                      <div class="row">
 
-                        <div class="row ">
+                        <div class="col-1" >
+                          <div class="text-subtitle2 q-mb-md">Identifier</div>
+                          <div>{{ props.row.identification_uni.label }}</div>
 
-                          <div class="col-1"  @click="copyRowData(props.rowIndex)">
-                            <div class="text-subtitle2 q-mb-md">Identifier</div>
-                            <div>{{ props.row.identifier }}</div>
-
-                            <q-popup-edit  v-model="props.row.identifier" title="Identifier" buttons>
-                              <q-select @input="detectChange(props.rowIndex)" dense outlined v-model="props.row.identifier" :options="optionsIdentifier"/>
-                            </q-popup-edit>
-
-                          </div>
-
-                          <div class="col-1" @click="copyRowData(props.rowIndex)">
-                            <div class="text-subtitle2 q-mb-md">District ID</div>
-                            <div>{{ props.row.mpsId }}</div>
-
-                            <q-popup-edit v-model="props.row.mpsId" title="District ID" buttons>
-                              <q-input type="text" v-model="props.row.mpsId" dense autofocus 
-                                @input="detectChange(props.rowIndex)"
-                              />
-                            </q-popup-edit>
-
-                          </div>
-
-                          <div class="col-1" @click="copyRowData(props.rowIndex)">
-                            <div class="text-subtitle2 q-mb-md">Serial #</div>
-                            <div>{{ props.row.serial }}</div>
-                            <q-popup-edit v-model="props.row.serial" title="Serial #" buttons>
-                              <q-input type="text" v-model="props.row.serial" dense autofocus 
-                                @input="detectChange(props.rowIndex)"
-                              />
-                            </q-popup-edit>
-                          </div>
-
-                          <div class="col-md-2 q-mr-sm q-ml-sm">
-                            <div class="text-subtitle2 q-mb-md">Location</div>
-                            <p class="white-space-initial fixed-height-for-large-text">{{props.row.location}}</p>
-                            <!-- <q-input
-                              v-model="props.row.location"
-                              outlines 
+                          <q-popup-edit
+                            v-model="props.row.identification_uni"
+                            title="Identifier"
+                            buttons
+                          >
+                            <q-select
+                              @input="detectChange(props.rowIndex)"
                               dense
-                              type="textarea"
-                              readonly
-                              class="full-height"
-                            /> -->
-                            <q-popup-edit v-model="props.row.location" title="Location" buttons>
-                              <q-input type="input" v-model="props.row.location" dense autofocus />
-                            </q-popup-edit> 
-                          </div>
+                              outlined
+                              v-model="props.row.identification_uni"
+                              :options="optionsIdentifier"
+                            />
+                          </q-popup-edit>
+                        </div>
 
-                          <div class="col-md-2 q-mr-sm q-ml-sm">
-                            <div class="text-subtitle2 q-mb-md">Classroom or Location within School</div>
-                            <p class="white-space-initial fixed-height-for-large-text">{{props.row.classroomOrLocationWithinSchool}}</p>
-                            <!-- <q-input
-                              v-model="props.row.classroomOrLocationWithinSchool"
-                              outlines dense
-                              type="textarea"
-                              readonly
-                              class="full-height"
-                            /> -->
-                            <q-popup-edit v-model="props.row.classroomOrLocationWithinSchool" title="Classroom or Location within School" buttons>
-                              <q-input type="textarea" v-model="props.row.classroomOrLocationWithinSchool" dense autofocus />
-                            </q-popup-edit> 
-                          </div>
+                        <div class="col-1" >
+                          <div class="text-subtitle2 q-mb-md">District ID</div>
+                          <div>{{ props.row.district_assigned_id }}</div>
 
-                          <div class="col-md-2 q-mr-sm q-ml-sm">
-                            <div class="text-subtitle2 q-mb-md">Date and explanation of removal</div>
-                            <p class="white-space-initial fixed-height-for-large-text">{{props.row.dateAndExplanationOfRemoval}}</p>
-                            <!-- <q-input
-                              v-model="props.row.dateAndExplanationOfRemoval"
-                              outlines dense
-                              type="textarea"
-                              readonly
-                              class="full-height"
-                            /> -->
-                            <q-popup-edit v-model="props.row.dateAndExplanationOfRemoval" title="Date and explanation of removal" buttons>
-                              <q-input type="textarea" v-model="props.row.dateAndExplanationOfRemoval" dense autofocus />
-                            </q-popup-edit> 
-                          </div>
+                          <q-popup-edit
+                            v-model="props.row.district_assigned_id"
+                            title="District ID"
+                            buttons
+                          >
+                            <q-input
+                              type="text"
+                              v-model="props.row.district_assigned_id"
+                              dense
+                              autofocus
+                              @input="detectChange(props.rowIndex)"
+                            />
+                          </q-popup-edit>
+                        </div>
 
-                          <div class="col-md-2 q-mr-sm q-ml-sm">
-                            <div class="text-subtitle2 q-mb-md">Notes</div>
-                            <p class="white-space-initial fixed-height-for-large-text">{{props.row.notes}}</p>
-                            <!-- <q-input
-                              v-model="props.row.notes"
-                              outlines dense
-                              type="textarea"
-                              readonly
-                              class="full-height"
-                            /> -->
-                            <q-popup-edit v-model="props.row.notes" title="Notes" buttons>
-                              <q-input type="textarea" v-model="props.row.notes" dense autofocus />
-                            </q-popup-edit> 
-                          </div>
-
+                        <div class="col-1" >
+                          <div class="text-subtitle2 q-mb-md">Serial #</div>
+                          <div>{{ props.row.serial_number }}</div>
+                          <q-popup-edit
+                            v-model="props.row.serial_number"
+                            title="Serial #"
+                            buttons
+                          >
+                            <q-input
+                              type="text"
+                              v-model="props.row.serial_number"
+                              dense
+                              autofocus
+                              @input="detectChange(props.rowIndex)"
+                            />
+                          </q-popup-edit>
                         </div>
 
                       </div>
-                    </q-td>
-                  </q-tr>
+
+                      <q-separator class="q-mt-lg q-mb-lg" />
+
+                      <div class="row">
+
+                        <div class="col-md-3 q-mr-sm q-ml-sm">
+                          <div class="text-subtitle2 q-mb-md">Location</div>
+                          <p
+                            class="white-space-initial fixed-height-for-large-text"
+                          >
+                            {{props.row.location}}
+                          </p>
+                          <q-popup-edit
+                            v-model="props.row.location"
+                            title="Location"
+                            buttons
+                          >
+                            <q-input
+                              type="input"
+                              v-model="props.row.location"
+                              dense
+                              autofocus
+                              @input="detectChange(props.rowIndex)"
+                            />
+                          </q-popup-edit>
+                        </div>
+
+                        <div class="col-md-3 q-mr-sm q-ml-sm">
+                          <div class="text-subtitle2 q-mb-md">
+                            Location Note
+                          </div>
+                          <p
+                            class="white-space-initial fixed-height-for-large-text"
+                          >
+                            {{props.row.location_information_note}}
+                          </p>
+                          <q-popup-edit
+                            v-model="props.row.location_information_note"
+                            title="Classroom or Location within School"
+                            buttons
+                          >
+                            <q-input
+                              type="textarea"
+                              v-model="props.row.location_information_note"
+                              dense
+                              autofocus
+                              @input="detectChange(props.rowIndex)"
+                            />
+                          </q-popup-edit>
+                        </div>
+                      </div>
+
+                      <q-separator class="q-mt-lg q-mb-lg" />
+
+                      <div class="row">
+                        <div class="col-md-212q-mr-sm q-ml-sm">
+                          <div class="text-subtitle2 q-mb-md">Removal Note</div>
+                          <p
+                            class="white-space-initial fixed-height-for-large-text"
+                          >
+                            {{props.row.transition_information_note}}
+                          </p>
+
+                          <q-popup-edit
+                            v-model="props.row.transition_information_note"
+                            title="Date and explanation of removal"
+                            buttons
+                          >
+                            <q-input
+                              type="textarea"
+                              v-model="props.row.transition_information_note"
+                              dense
+                              autofocus
+                            />
+                          </q-popup-edit>
+                        </div>
+                      </div>
+
+                      <q-separator class="q-mt-lg q-mb-lg" />
+
+                      <div class="row">
+                        <div class="col-md-12 q-mr-sm q-ml-sm">
+                          <div class="text-subtitle2 q-mb-md">General Note</div>
+                          <p
+                            class="white-space-initial fixed-height-for-large-text"
+                          >
+                            {{props.row.notes}}
+                          </p>
+                          <q-popup-edit
+                            v-model="props.row.notes"
+                            title="Notes"
+                            buttons
+                          >
+                            <q-input
+                              type="textarea"
+                              v-model="props.row.notes"
+                              dense
+                              autofocus
+                              @input="detectChange(props.rowIndex)"
+                            />
+                          </q-popup-edit>
+                        </div>
+                      </div>
+
+                    </div>
+                  </q-td>
+                </q-tr>
 
               </template>
 
+              <!-- Pagination -->
+              <template v-slot:bottom class="justify-end">
+                <div class="q-pa-md flex flex-center">
+                  <q-pagination
+                    v-model="current"
+                    :max-pages="6"
+                    :max="pages"
+                    :direction-links="true"
+                    @click="changePagination(current)"
+                  >
+                  </q-pagination>
+
+                  <div class="row justify-center items-center">
+                    <span class="q-mr-md">Rows Per page</span>
+                    <q-select dense outlined 
+                      @input="changeRowsPerPage"
+                      v-model="pagination.rowsPerPage" 
+                      :options="rowsPerPageArr" 
+                    />
+                  </div>
+                  
+                </div>
+              </template>
 
             </q-table>
           </q-tab-panel>
 
-          <q-tab-panel name="Title2" class="q-p-sm">
+          <q-tab-panel name="2" class="q-p-sm">
             <h5>Title 2</h5>
           </q-tab-panel>
 
-          <q-tab-panel name="Title3" class="q-p-sm">
+          <q-tab-panel name="3" class="q-p-sm">
             <h5>Title 3</h5>
           </q-tab-panel>
 
-          <q-tab-panel name="Title4" class="q-p-sm">
-           <h5>Title 4</h5>
+          <q-tab-panel name="4" class="q-p-sm">
+            <h5>Title 4</h5>
           </q-tab-panel>
 
-          <q-tab-panel name="ESSER" class="q-p-sm">
+          <q-tab-panel name="5" class="q-p-sm">
             <h5>ESSER</h5>
           </q-tab-panel>
-
-
         </q-tab-panels>
 
       </q-card>
     </div>
-
   </q-page>
 </template>
 
 <script>
+
 import {exportFile} from 'quasar'
 import lodash from 'lodash'
+import axios from 'axios'
+import config from '../../../config'
+
 let oldObject = {}
 
 export default {
   name: 'Inventory',
   data() {
     return {
+      schoolName: '',
       mode: 'list',
-      tab: 'Title1',
+      tab: '1',
+      pages: 1,
+      pagination: {
+        rowsPerPage: 10,
+      },
+      current: 1,
+      count: 10,
+
       data: [],
       tempDataX: [],
       columns: [
@@ -615,10 +861,10 @@ export default {
           sortable: true
         },
         {
-          name: "categoryDescription",
+          name: "category",
           align: "left",
-          label: "Description",
-          field: "categoryDescription",
+          label: "Category",
+          field: "category",
           sortable: true
         },
         {
@@ -679,11 +925,9 @@ export default {
         },
       ],
       filter: '',
-      loading: false,
+      loading: true,
       confirm: false,
-      pagination: {
-        rowsPerPage: -1,
-      },
+
       schoolYear: null,
       schoolYears: [
         'School Year 20-21',
@@ -691,19 +935,30 @@ export default {
         'School Year 18-19'
       ],
       typeModel: '',
+
+      optionsCategory: [
+
+      ],
+      optionsSupplier: [
+
+      ],
       optionsIdentifier: [
-        'Sticker', 'Stamp'
       ],
       optionsCondition: [
         'Excellent', 'Very Good', 'Good', 'Fair', 'Poor'
       ],
       optionsStatus: [
-        'Disposed', 'Lost', 'Stolen', 'Transferred', 'Stored'
+        'On Premise', 'Off Premise', 'Disposed', 'Lost', 'Stolen', 'Transferred', 'Stored'
       ],
+
+
       optionsType: [
         'PD', 'FE'
       ],
       typeModel: null,
+      addNew: false,
+      barInfo: {},
+      rowsPerPageArr: ['5', '10', '25', '50', '75', '100'], 
     }
   },
   methods: {
@@ -713,8 +968,27 @@ export default {
     },
     deleteItem() {
       let item = this.item
-      const index = this.data.indexOf(item)
-      this.data.splice(index, 1)
+      // const index = this.data.indexOf(item)
+      // this.data.splice(index, 1)
+      const conf = {
+        method: 'DELETE',
+        url: config.getInventory + item.id,
+        headers: {
+          Accept: 'application/json',
+        }
+      }
+
+      axios(conf)
+      .then(res => {
+        console.log('DELETE RES :', res)
+        const index = this.data.indexOf(item)
+        this.data.splice(index, 1)
+          this.$q.notify({
+            message: res.data,
+            type: 'positive',
+          })
+      })
+
     },
     filterType() {
       if(this.typeModel) {
@@ -755,9 +1029,10 @@ export default {
       this.data.unshift(obj)
     },
     copyRowData(index) {
-      console.log(index)
+      oldObject = JSON.stringify(this.tempDataX[index])
     },
     copyRow(row, index) {
+      oldObject = JSON.stringify(this.tempDataX[index])
       // oldObject = JSON.stringify(row)
       // console.log('tempDataX', JSON.stringify(this.data[index]))
       // let old = JSON.stringify(this.data[index])
@@ -769,33 +1044,41 @@ export default {
       // console.log('new data', JSON.stringify(newData))
 
       // let i = index+1
-      
+
       // this.data.splice(i, 0, JSON.parse(ddd));
-      
+
       // Object.assign(this.data[index], JSON.parse(old));
     },
     detectChange(index) {
+
+      this.editedItem = this.tempDataX[index]
+      console.log(this.editedItem)
+
       let d = JSON.parse(oldObject)
-      // let d = oldObject
       let f = JSON.stringify(this.data[index])
           f = JSON.parse(f)
 
-      console.log('OLD OBJECT', d)
-      console.log('NEW OBJECT', f)
-
       let status = _.isEqual(d, f)
-      // console.log('status', status)
+      console.log(status)
+
       if(status) {
         this.data[index].changed = false
       }else {
         this.data[index].changed = true
       }
+
     },
     cancellChange(index) {
-      let d = JSON.parse(oldObject)
-      console.log('ddd =', d)
-      Object.assign(this.data[index], d);
-      this.data[index].changed = false
+
+      if(this.addNew) {
+        this.data.splice(0, 1)
+        this.addNew = false
+      } else {
+        let d = JSON.parse(oldObject)
+        Object.assign(this.data[index], d);
+        this.data[index].changed = false
+      }
+
     },
     exportTable() {
       // naive encoding to csv format
@@ -822,62 +1105,380 @@ export default {
           })
       }
     },
+    changePagination (val) {
+
+      console.log('change pagination')
+      this.current = val
+      this.getInventoryByType( parseInt(this.tab), this.$route.params.id, this.count, val )
+    },
+    changeRowsPerPage() {
+
+      console.log('changeRowsPerPage')
+      
+      this.count = this.pagination.rowsPerPage
+      this.current = 1
+
+      this.getInventoryByType( parseInt(this.tab), this.$route.params.id, this.count, this.current )
+
+    },
+
+    parseDataToSelect() {
+
+    },
+
+
+    getToday() {
+      let dateObj = new Date();
+      let month = dateObj.getUTCMonth() + 1; //months from 1-12
+      let day = dateObj.getUTCDate();
+      let year = dateObj.getUTCFullYear();
+
+      return year + "-" + month + "-" + day;
+    },
+    // Add new Row 
+    addNewRow() {
+      
+      let date = this.getToday()
+
+      const obj  = {
+        quantity: 1,
+        add: true,
+        inventory_category_uni: {
+          id: 1,
+          label: 'Comprehension'        
+        },
+        item_name: '',
+        inventory_supplier_uni: {
+          id: 10001,
+          label: 'A CHANCE TO GROW'       
+        },
+        item_cost: 0,
+        purchase_date: date,
+        condition:  {
+          id: 1,
+          label: 'Excelent'
+        },
+        status_uni: {
+          id: 1,
+          label: 'On Premise'
+        },
+        identification_uni: {
+          id: 1,
+          label: 'Stamp'
+        },
+        district_assigned_id: 0,
+        serial_number: 0,
+        location: '',
+        location_information_note: '',
+        transition_information_note: '',
+        notes: '',
+        changed: true,
+        showEditButton: false,
+      }
+
+      this.data.unshift(obj)
+      this.editedItem = obj
+    
+    },
+
+    // Requests
+    getAllocationBar(type, id) {
+        const conf = {
+        method: 'GET',
+        url: config.getInventoryTotalCost + type + '/' + id,
+        headers: {
+            Accept: 'application/json',
+        }
+        }
+        axios(conf).then(res => {
+            this.barInfo = res.data
+            console.log('Bar info', this.barInfo)
+        })
+    },
+    getInventoryByType(type, id, limit, page) {
+        this.loading = true
+
+        const conf = {
+            method: 'GET',
+            url: config.getInventory + type + '/' + id + '?limit=' + limit + '&page=' + page,
+            headers: {
+                Accept: 'application/json',
+            }
+        }
+
+        axios(conf).then(res => {
+
+            console.log('grigor ghazaryan', res.data)
+            let data = res.data.inventory
+            this.pages = res.data.pagesCount
+
+            for(let i=0; i<data.length; i++) {
+
+              // Inventory
+              let obj = {
+                id: data[i].inventory_category.id,
+                label: data[i].inventory_category.category_name,
+                value: data[i].inventory_category.id
+              }
+              data[i].inventory_category_uni = obj
+
+              // Suplier
+              if(data[i].inventory_supplier != null) {
+
+                let objSuplier = {
+                  id: data[i].inventory_supplier.id,
+                  label: data[i].inventory_supplier.short_name,
+                  value: data[i].inventory_supplier.id
+                }
+
+                data[i].inventory_supplier_uni = objSuplier
+              }else {
+                data[i].inventory_supplier_uni = {
+                  id: 10001,
+                  label: 'A CHANCE TO GROW'       
+                }
+              }
+
+              // Condition
+              let conditionObj = {
+                id: data[i].condition_id,
+                label: data[i].condition
+              }
+              data[i].condition = conditionObj
+              
+              // Status
+              let statusId = data[i].condition_id
+              let statusName = ''
+
+              switch(statusId) {
+                case 1:
+                  statusName = "On Premise"
+                  break;
+                case 2:
+                  statusName = "Off Premise"
+                  break;
+                case 3:
+                  statusName = "Disposed"
+                  break;
+                case 4:
+                  statusName = "Lost"
+                  break;
+                case 5:
+                  statusName = "Stolen"
+                  break;
+                case 6:
+                  statusName = "Transfered"
+                  break;
+                case 7:
+                  statusName = "Stored"
+                  break;
+                default:
+                  break;
+              }
+
+              let statusObj = {
+                id: data[i].condition_id,
+                label: statusName
+              }
+              data[i].status_uni = statusObj
+
+              // Identification
+              let identificationObj = {
+                id: data[i].identification_id,
+                label: data[i].identification
+              }
+              data[i].identification_uni = conditionObj
+
+
+              // 
+              data[i].changed = false
+              data[i].showEditButton = true
+            }
+
+            this.data = data
+            this.tempDataX = data
+            this.loading = false
+            console.log('this.datathis.data', this.data)
+        });
+    },
+    getAdditionalInfo() {
+        const conf = {
+            method: 'GET',
+            url: config.getAdditionalInfoForInventory,
+            headers: {
+                Accept: 'application/json',
+            }
+        }
+        axios(conf).then(res => {
+
+            console.log('getAdditionalInfoForInventory', res.data)
+
+            let conditionsArr = []
+            for(let i=0; i<res.data.conditions.length; i++) {
+                let obj = {
+                    id: res.data.conditions[i].id,
+                    label: res.data.conditions[i].condition_name,
+                    value: res.data.conditions[i].id,
+                }
+                conditionsArr.push(obj)
+            }
+            this.optionsCondition = conditionsArr
+
+
+            // Status
+            let statusArr = []
+            for(let i=0; i<res.data.status.length; i++) {
+                let obj = {
+                    id: res.data.status[i].id,
+                    label: res.data.status[i].status_name
+                }
+                statusArr.push(obj)
+            }
+            this.optionsStatus = statusArr
+
+
+            // Category
+            let categoryArr = []
+            for(let i=0; i<res.data.categories.length; i++) {
+                let obj = {
+                    id: res.data.categories[i].id,
+                    label: res.data.categories[i].category_name,
+                    value: res.data.categories[i].id
+                }
+                categoryArr.push(obj)
+            }
+            this.optionsCategory = categoryArr
+
+
+            // Supplier
+            let supplierArr = []
+            for(let i=0; i<res.data.suppliers.length; i++) {
+                let obj = {
+                    id: res.data.suppliers[i].id,
+                    label: res.data.suppliers[i].short_name,
+                    value: res.data.suppliers[i].id
+                }
+                supplierArr.push(obj)
+            }
+            this.optionsSupplier = supplierArr
+
+            // Identifications
+            let identArr = []
+            for(let i=0; i<res.data.identifications.length; i++) {
+                let obj = {
+                    id: res.data.identifications[i].id,
+                    label: res.data.identifications[i].identifcation_name
+                }
+                identArr.push(obj)
+            }
+            this.optionsIdentifier = identArr
+
+
+            console.log('4444444444444444444',this.optionsSupplier)
+
+
+        })
+    },
+    editInventory(index) {
+
+      console.log(this.editedItem)
+
+          const data = {
+            school_id: this.editedItem.school_id,
+            allocation_type_id: parseInt(this.editedItem.allocation_type_id),
+            quantity:  this.editedItem.quantity,
+            inventory_category_type_id:  this.editedItem.inventory_category_uni.id,
+            item_name: this.editedItem.item_name,
+            supplier_id: this.editedItem.inventory_supplier_uni.id,
+            item_cost: this.editedItem.item_cost,
+            inventory_condition_type_id: this.editedItem.condition.id,
+            status: this.editedItem.status_uni.label,
+            inventory_identification_type_id: this.editedItem.identification_uni.id,
+            district_assigned_id: this.editedItem.district_assigned_id,
+            serial_number: this.editedItem.serial_number,
+            location: this.editedItem.location,
+            location_information_note: this.editedItem.location_information_note,
+            note:  this.editedItem.note
+          }
+
+          console.log('data datd data', data)
+
+          if(this.addNew) {
+
+            data.schoolYearId = 21
+
+            const conf = {
+              method: 'POST',
+              url: config.addInventory,
+              headers: {
+                Accept: 'application/json',
+              },
+              data: data
+            }
+
+            axios(conf)
+              .then(res => {
+
+                this.$q.notify({
+                  message: 'Inventory Added successfully!',
+                  type: 'positive',
+                })
+
+                this.data[index].changed = false
+                this.data[index].showEditButton = true
+
+                this.data[index].id = res.data.inventory[0].id
+                this.data[index].add = false
+
+                this.addNew = false
+
+              })
+
+          } else {
+            
+            this.data[index].changed = false
+            data.school_year_id = this.editedItem.school_year_id
+
+            const conf = {
+              method: 'PUT',
+              url: config.getInventory + this.editedItem.id,
+              headers: {
+                Accept: 'application/json',
+              },
+              data: data
+            }
+
+            axios(conf)
+              .then(res => {
+                this.$q.notify({
+                  message: 'Inventory updated successfully!',
+                  type: 'positive',
+                })
+              })
+          }
+
+    },
+
   },
   created() {
-    console.log('Create data function works ...')
-    let dataSet = []
-    for(let i=0; i<20; i++) {
-      let qty = Math.floor(Math.random() * 20)
 
-      let obj = {
-        id: i+1,
-        qty,
-        categoryDescription: 'Comprehension',
-        itemName: 'Focus on Understanding Sequence ' + i,
-        vendor: 'Curriculum Associates ' + i,
-        identifier: 'Stamp',
-        mpsId: (i+1) * qty,
-        serial: parseInt((qty * 8) / 4),
-        costPerItem: qty * 2,
-        totalCost: 0,
-        type: 'PD',
-        dateOfPurchase: '24-11-2020',
-        condition: 'Good',
-        location: 'Adi-Dassler-Strasse 191074 Herzogenaurach Germany',
-        classroomOrLocationWithinSchool: 'In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content',
-        dateAndExplanationOfRemoval: 'In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content',
-        status: 'Stolen',
-        notes: 'Athletes will not settle for average. And neither do we. We have a clear mission: To be the best sports company in the world. Every day, we come to work to create and sell the best sports and fitness products in the world.',
-        changed: false,
-        showEditButton: true,
-      }
-      dataSet.push(obj)
-    }
-    this.data = dataSet
-    this.tempDataX = dataSet
-  },
-  computed: {
-    totalCost() {
-      let totalCost = 0;
-      
-      for(let i=0; i<this.data.length; i++) {
-        let tc = parseFloat( this.data[i].costPerItem ) * parseFloat( this.data[i].qty )
-        totalCost += tc
-      }
-      return totalCost.toFixed(2)
-    },
+    this.schoolName = this.$route.query.name
+
+    this.getAllocationBar( parseInt(this.tab), this.$route.params.id )
+    this.getInventoryByType( parseInt(this.tab), this.$route.params.id, this.count, this.current )
+    this.getAdditionalInfo()
+
   }
 }
 </script>
 
 <style>
-
 ._actions.q-btn-dropdown--simple .q-btn-dropdown__arrow {
-    margin-left: 0 !important;
+  margin-left: 0 !important;
 }
 
 ._actions .q-btn__wrapper {
-    padding: 0 5px !important;
+  padding: 0 5px !important;
 }
 
 .white-space-initial {
@@ -885,8 +1486,16 @@ export default {
 }
 
 .fixed-height-for-large-text {
-    height: 80px;
-    overflow-y: auto;
+  height: 80px;
+  overflow-y: auto;
+}
+
+.inline-span {
+    height: 34px;
+    overflow: hidden;
+    display: flex;
+    justify-content: start;
+    align-items: center;
 }
 
 
