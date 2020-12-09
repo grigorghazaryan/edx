@@ -1,6 +1,7 @@
 <template>
   <div class="q-pa-md">
     <q-layout view="hHh Lpr lff" class="shadow-2 rounded-borders">
+
       <q-header elevated class="bg-black">
         <q-toolbar>
           <q-btn flat @click="miniState = !miniState" round dense icon="menu" />
@@ -32,11 +33,21 @@
               <!--            <q-tooltip>Notifications</q-tooltip>-->
             </q-btn>
 
-            <q-btn round flat>
-              <q-avatar size="26px">
-                <img src="https://cdn.quasar.dev/img/boy-avatar.png">
-              </q-avatar>
-            </q-btn>
+
+            <q-btn-dropdown label="luke skywalker">
+              <q-list>
+                <q-item clickable v-close-popup to="/Profile">
+                  <q-item-section>
+                    <q-item-label>My Profile</q-item-label>
+                  </q-item-section>
+                </q-item>
+                <q-item clickable v-close-popup>
+                  <q-item-section>
+                    <q-item-label>Logout</q-item-label>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </q-btn-dropdown>
             
           </div>
 
@@ -63,7 +74,7 @@
             </q-item-section>
           </q-item>
 
-          <q-expansion-item
+          <q-expansion-item v-if="!miniState"
             icon="person"
             label="Administration"
           >
@@ -79,9 +90,37 @@
             </q-list>
           </q-expansion-item>
 
+          <q-item v-else active-class="q-item-no-link-highlighting">
+            <q-item-section avatar>
+              <q-icon name="person"/>
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>Administration</q-item-label>
+            </q-item-section>
+           
+            <q-menu
+              anchor="top right"
+              self="top left"
+            >
+              <q-list style="min-width: 100px">
+                <q-item clickable  v-close-popup to="/Administration1" class="q-pl-lg" active-class="q-item-no-link-highlighting">
+                  <q-item-section avatar>
+                    <q-icon name="person"/>
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>Administration 1</q-item-label>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </q-menu>
+          </q-item>
+
+
           <q-expansion-item
             icon="text_format"
             label="Allocations"
+            class="menu-parent"
+            v-if="!miniState"
           >
             <q-list class="bg-sidebar-opened">
               <q-item to="/Allocations/Title1" class="q-pl-lg" active-class="q-item-no-link-highlighting">
@@ -135,7 +174,78 @@
             </q-list>
           </q-expansion-item>
 
-          <q-expansion-item
+          <q-item v-else active-class="q-item-no-link-highlighting">
+            <q-item-section avatar>
+              <q-icon name="text_format"/>
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>Allocations</q-item-label>
+            </q-item-section>
+            <q-menu
+              anchor="top right"
+              self="top left"
+            >
+              <q-list style="min-width: 100px">
+                <!-- <q-item clickable v-close-popup>
+                  <q-item-section>anchor="top right"</q-item-section>
+                </q-item>
+                <q-item clickable v-close-popup>
+                  <q-item-section>self="top left"</q-item-section>
+                </q-item> -->
+
+                <q-item clickable  v-close-popup to="/Allocations/Title1" class="q-pl-lg" active-class="q-item-no-link-highlighting">
+                  <q-item-section avatar>
+                    <q-icon name="text_format"/>
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>Title I</q-item-label>
+                  </q-item-section>
+                </q-item>
+                <q-item clickable  v-close-popup to="/Allocations/Title2" class="q-pl-lg" active-class="q-item-no-link-highlighting">
+                  <q-item-section avatar>
+                    <q-icon name="text_format"/>
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>Title II</q-item-label>
+                  </q-item-section>
+                </q-item>
+                <q-item clickable v-close-popup to="/Allocations/Title3" class="q-pl-lg" active-class="q-item-no-link-highlighting">
+                  <q-item-section avatar>
+                    <q-icon name="text_format"/>
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>Title III</q-item-label>
+                  </q-item-section>
+                </q-item>
+                <q-item clickable v-close-popup to="/Allocations/Title4" class="q-pl-lg" active-class="q-item-no-link-highlighting">
+                  <q-item-section avatar>
+                    <q-icon name="text_format"/>
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>Title IV</q-item-label>
+                  </q-item-section>
+                </q-item>
+                <q-item clickable v-close-popup to="/Allocations/esser" class="q-pl-lg" active-class="q-item-no-link-highlighting">
+                  <q-item-section avatar>
+                    <q-icon name="text_format"/>
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>ESSER</q-item-label>
+                  </q-item-section>
+                </q-item>
+                <q-item clickable v-close-popup to="/Allocations/geer" class="q-pl-lg" active-class="q-item-no-link-highlighting">
+                  <q-item-section avatar>
+                    <q-icon name="text_format"/>
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>GEER</q-item-label>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </q-menu>
+          </q-item>
+
+          <q-expansion-item v-if="!miniState"
             icon="person"
             label="Inventory"
           >
@@ -151,7 +261,32 @@
             </q-list>
           </q-expansion-item>
 
-          <q-expansion-item
+          <q-item v-else active-class="q-item-no-link-highlighting">
+            <q-item-section avatar>
+              <q-icon name="person"/>
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>Inventory</q-item-label>
+            </q-item-section>
+            <q-menu
+              anchor="top right"
+              self="top left"
+            >
+              <q-list style="min-width: 100px">
+                <q-item clickable  v-close-popup to="/Inventory" class="q-pl-lg" active-class="q-item-no-link-highlighting">
+                  <q-item-section avatar>
+                    <q-icon name="person"/>
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>Inventory</q-item-label>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </q-menu>
+          </q-item>
+
+
+          <q-expansion-item v-if="!miniState"
             icon="school"
             label="Teacher Costs"
           >
@@ -167,7 +302,32 @@
             </q-list>
           </q-expansion-item>
 
-          <q-expansion-item
+          <q-item v-else active-class="q-item-no-link-highlighting">
+            <q-item-section avatar>
+              <q-icon name="school"/>
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>Teacher Costs</q-item-label>
+            </q-item-section>
+            <q-menu
+              anchor="top right"
+              self="top left"
+            >
+              <q-list style="min-width: 100px">
+                <q-item clickable  v-close-popup to="/TeacherCosts/BudgetEstimates" class="q-pl-lg" active-class="q-item-no-link-highlighting">
+                  <q-item-section avatar>
+                    <q-icon name="school"/>
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>Budget Estimates</q-item-label>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </q-menu>
+          </q-item>
+
+
+          <q-expansion-item v-if="!miniState"
             icon="attach_money"
             label="Expenses"
           >
@@ -183,7 +343,34 @@
             </q-list>
           </q-expansion-item>
 
-          <q-expansion-item
+          <q-item v-else active-class="q-item-no-link-highlighting">
+            <q-item-section avatar>
+              <q-icon name="attach_money"/>
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>Expenses</q-item-label>
+            </q-item-section>
+            <q-menu
+              anchor="top right"
+              self="top left"
+            >
+              <q-list style="min-width: 100px">
+                <q-item clickable  v-close-popup to="/Expenses" class="q-pl-lg" active-class="q-item-no-link-highlighting">
+                  <q-item-section avatar>
+                    <q-icon name="attach_money"/>
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>Expenses</q-item-label>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </q-menu>
+          </q-item>
+
+
+
+
+          <q-expansion-item v-if="!miniState"
             icon="account_balance"
             label="Budget"
           >
@@ -199,7 +386,34 @@
             </q-list>
           </q-expansion-item>
 
-          <q-expansion-item
+          <q-item v-else active-class="q-item-no-link-highlighting">
+            <q-item-section avatar>
+              <q-icon name="account_balance"/>
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>Budget</q-item-label>
+            </q-item-section>
+            <q-menu
+              anchor="top right"
+              self="top left"
+            >
+              <q-list style="min-width: 100px">
+                <q-item clickable  v-close-popup to="/Activity" class="q-pl-lg" active-class="q-item-no-link-highlighting">
+                  <q-item-section avatar>
+                    <q-icon name="account_balance"/>
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>Activity</q-item-label>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </q-menu>
+          </q-item>
+
+
+
+
+          <q-expansion-item v-if="!miniState"
             icon="money"
             label="Reimbursement"
           >
@@ -214,6 +428,33 @@
               </q-item>
             </q-list>
           </q-expansion-item>
+
+          <q-item v-else active-class="q-item-no-link-highlighting">
+            <q-item-section avatar>
+              <q-icon name="money"/>
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>Reimbursement</q-item-label>
+            </q-item-section>
+            <q-menu
+              anchor="top right"
+              self="top left"
+            >
+              <q-list style="min-width: 100px">
+                <q-item clickable  v-close-popup to="/Reimbursement" class="q-pl-lg" active-class="q-item-no-link-highlighting">
+                  <q-item-section avatar>
+                    <q-icon name="money"/>
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>Reimbursement</q-item-label>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </q-menu>
+          </q-item>
+
+
+
 
         <hr>
 
@@ -324,9 +565,9 @@ export default {
 .bg-sidebar-opened {
   background: #1f2d3d !important;
 }
-.hover-sidebar-menu {
-  &:hover {
-    background: red
-  }
+
+.q-item.q-item-type.row.no-wrap {
+    cursor: pointer;
 }
+
 </style>

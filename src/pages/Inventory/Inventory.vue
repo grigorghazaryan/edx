@@ -188,18 +188,35 @@
                   <q-td
                     key="category"
                     :props="props"
-                    
                   >
                     <div> {{ props.row.inventory_category_uni.label }} </div>
 
                     <q-popup-edit 
                         v-model="props.row.inventory_category_uni"
-                        title="category" buttons>
+                        title="Category" buttons>
+
                         <q-select  
+                            use-input
+                            hide-selected
+                            fill-input
+                            input-debounce="0"
                             @input="detectChange(props.rowIndex)"
                             v-model="props.row.inventory_category_uni" 
                             :options="optionsCategory"
-                        />
+                            @filter="filterCategory"
+                            style="width: 350px; max-width: 350px; padding-bottom: 32px"
+                        >
+                          <template v-slot:no-option>
+                            <q-item>
+                              <q-item-section class="text-grey">
+                                No results
+                              </q-item-section>
+                            </q-item>
+                          </template>
+
+                        </q-select>
+                        
+
                     </q-popup-edit>  
 
                   </q-td>
@@ -234,15 +251,32 @@
                     <div v-if="props.row.inventory_supplier_uni">{{ props.row.inventory_supplier_uni.label }}</div>
                     <div v-else>  </div>
 
-                    <q-popup-edit 
+                      <q-popup-edit 
                         v-model="props.row.inventory_supplier_uni"
                         title="Vendor" buttons>
+
                         <q-select  
+                            use-input
+                            hide-selected
+                            fill-input
+                            input-debounce="0"
                             @input="detectChange(props.rowIndex)"
                             v-model="props.row.inventory_supplier_uni" 
                             :options="optionsSupplier"
-                        />
-                    </q-popup-edit>  
+                            @filter="filterSupplier"
+                            style="width: 350px; max-width: 350px; padding-bottom: 32px"
+                        >
+                          <template v-slot:no-option>
+                            <q-item>
+                              <q-item-section class="text-grey">
+                                No results
+                              </q-item-section>
+                            </q-item>
+                          </template>
+
+                        </q-select>
+                      </q-popup-edit>  
+
                   </q-td>
 
                   <q-td
@@ -275,12 +309,16 @@
                     <div>$ {{ (props.row.item_cost * props.row.quantity).toFixed(2) }}</div>
                   </q-td>
 
-                  <q-td
-                    key="dateOfPurchase"
-                    :props="props"
-                    
-                  >
+                  <q-td key="dateOfPurchase" :props="props">
                     <div>{{ props.row.purchase_date }}</div>
+                    <q-popup-proxy transition-show="scale" transition-hide="scale">
+                      <q-date v-model="props.row.purchase_date" mask="YYYY-MM-DD" @input="detectChange(props.rowIndex)">
+                        <div class="row items-center justify-end q-gutter-sm">
+                          <q-btn label="Cancel" color="primary" flat v-close-popup />
+                          <q-btn label="OK" color="primary" flat v-close-popup />
+                        </div>
+                      </q-date>
+                    </q-popup-proxy>
                   </q-td>
 
                   <q-td
@@ -288,7 +326,7 @@
                     :props="props"
                   >
 
-                    <div v-if="props.row.condition.label == 'Excellent'">
+                    <div v-if="props.row.condition.label == 'Excelent'">
                       <span
                         class="mdi mdi-circle-slice-7 mdi-24px"
                         style="color: blue"
@@ -526,13 +564,14 @@
                       buttons
                     >
                       <q-select
-                        @input="detectChange(props.rowIndex)"
+                        @input="detectChange(props.rowIndex), changeStatus(props.rowIndex)"
                         dense
                         outlined
                         v-model="props.row.status_uni"
                         :options="optionsStatus"
                       />
                     </q-popup-edit>
+
                   </q-td>
 
                   <q-td key="actions" :props="props" style="min-width: 132px">
@@ -628,7 +667,8 @@
 
                         <div class="col-1" >
                           <div class="text-subtitle2 q-mb-md">District ID</div>
-                          <div>{{ props.row.district_assigned_id }}</div>
+
+                          <span>{{ props.row.district_assigned_id }}</span>
 
                           <q-popup-edit
                             v-model="props.row.district_assigned_id"
@@ -643,6 +683,8 @@
                               @input="detectChange(props.rowIndex)"
                             />
                           </q-popup-edit>
+
+                          <span class="q-ml-lg" v-if="props.row.identification_uni.id == 99">{{ props.row.district_assigned_id }}</span>
                         </div>
 
                         <div class="col-1" >
@@ -663,19 +705,13 @@
                           </q-popup-edit>
                         </div>
 
-                      </div>
-
-                      <q-separator class="q-mt-lg q-mb-lg" />
-
-                      <div class="row">
-
-                        <div class="col-md-3 q-mr-sm q-ml-sm">
+                        <div class="col-1 q-mr-sm q-ml-sm">
                           <div class="text-subtitle2 q-mb-md">Location</div>
-                          <p
-                            class="white-space-initial fixed-height-for-large-text"
-                          >
+
+                          <p class="white-space-initial fixed-height-for-large-text">
                             {{props.row.location}}
                           </p>
+                          
                           <q-popup-edit
                             v-model="props.row.location"
                             title="Location"
@@ -691,7 +727,7 @@
                           </q-popup-edit>
                         </div>
 
-                        <div class="col-md-3 q-mr-sm q-ml-sm">
+                        <div class="col-5 q-mr-sm q-ml-sm">
                           <div class="text-subtitle2 q-mb-md">
                             Location Note
                           </div>
@@ -702,7 +738,7 @@
                           </p>
                           <q-popup-edit
                             v-model="props.row.location_information_note"
-                            title="Classroom or Location within School"
+                            title="Location Note"
                             buttons
                           >
                             <q-input
@@ -714,12 +750,34 @@
                             />
                           </q-popup-edit>
                         </div>
+
                       </div>
 
                       <q-separator class="q-mt-lg q-mb-lg" />
 
                       <div class="row">
-                        <div class="col-md-212q-mr-sm q-ml-sm">
+
+                        <div class="col-md-1 q-mr-sm q-ml-sm">
+
+                          <div class="text-subtitle2 q-mb-md">Removal Date</div>
+                          <p :disabled="props.row.status_uni.label == 'On Premise'" class="white-space-initial fixed-height-for-large-text">
+                            {{props.row.purchase_date}}
+                          </p>
+
+                          <q-popup-proxy>
+                           transition-show="scale" transition-hide="scale">
+                            <q-date :disabled="props.row.status_uni.label == 'On Premise'" v-model="props.row.purchase_date" mask="YYYY-MM-DD" @input="detectChange(props.rowIndex)">
+                              <div class="row items-center justify-end q-gutter-sm">
+                                <q-btn label="Cancel" color="primary" flat v-close-popup />
+                                <q-btn label="OK" color="primary" flat v-close-popup />
+                              </div>
+                            </q-date>
+                          </q-popup-proxy>
+
+                        </div>
+
+                        <div class="col-md-3 q-mr-sm q-ml-sm">
+
                           <div class="text-subtitle2 q-mb-md">Removal Note</div>
                           <p
                             class="white-space-initial fixed-height-for-large-text"
@@ -729,7 +787,7 @@
 
                           <q-popup-edit
                             v-model="props.row.transition_information_note"
-                            title="Date and explanation of removal"
+                            title="Removal Note"
                             buttons
                           >
                             <q-input
@@ -740,6 +798,27 @@
                             />
                           </q-popup-edit>
                         </div>
+
+                        <div class="col-md-1 q-mr-sm q-ml-sm">
+
+                          <div class="text-subtitle2 q-mb-md">Visibility date</div>
+                          <p
+                            class="white-space-initial fixed-height-for-large-text"
+                          >
+                            {{props.row.purchase_date}}
+                          </p>
+
+                          <q-popup-proxy transition-show="scale" transition-hide="scale">
+                            <q-date v-model="props.row.purchase_date" mask="YYYY-MM-DD" @input="detectChange(props.rowIndex)">
+                              <div class="row items-center justify-end q-gutter-sm">
+                                <q-btn label="Cancel" color="primary" flat v-close-popup />
+                                <q-btn label="OK" color="primary" flat v-close-popup />
+                              </div>
+                            </q-date>
+                          </q-popup-proxy>
+
+                        </div>
+
                       </div>
 
                       <q-separator class="q-mt-lg q-mb-lg" />
@@ -939,9 +1018,11 @@ export default {
       optionsCategory: [
 
       ],
+      optionsCategoryForFilter: [],
       optionsSupplier: [
 
       ],
+      optionsSupplierForFilter: [],
       optionsIdentifier: [
       ],
       optionsCondition: [
@@ -1068,6 +1149,15 @@ export default {
       }
 
     },
+    changeStatus(index) {
+      console.log('changeStatus', index)
+      console.log('result: ', this.data[index].status_uni.label)
+      
+      if(this.data[index].status_uni.label == 'On Premise') {
+        this.data[index].location = this.$route.query.name
+      }
+
+    },
     cancellChange(index) {
 
       if(this.addNew) {
@@ -1105,6 +1195,7 @@ export default {
           })
       }
     },
+
     changePagination (val) {
 
       console.log('change pagination')
@@ -1122,8 +1213,17 @@ export default {
 
     },
 
-    parseDataToSelect() {
-
+    filterCategory (val, update, abort) {
+      update(() => {
+        const needle = val.toLowerCase()
+        this.optionsCategory = this.optionsCategoryForFilter.filter(v =>   v.label.toLowerCase().indexOf(needle) > -1)
+      })
+    },
+    filterSupplier (val, update, abort) {
+      update(() => {
+        const needle = val.toLowerCase()
+        this.optionsSupplier = this.optionsSupplierForFilter.filter(v =>   v.label.toLowerCase().indexOf(needle) > -1)
+      })
     },
 
 
@@ -1287,7 +1387,7 @@ export default {
                 id: data[i].identification_id,
                 label: data[i].identification
               }
-              data[i].identification_uni = conditionObj
+              data[i].identification_uni = identificationObj
 
 
               // 
@@ -1317,12 +1417,12 @@ export default {
             for(let i=0; i<res.data.conditions.length; i++) {
                 let obj = {
                     id: res.data.conditions[i].id,
-                    label: res.data.conditions[i].condition_name,
-                    value: res.data.conditions[i].id,
+                    label: res.data.conditions[i].condition_name
                 }
                 conditionsArr.push(obj)
             }
             this.optionsCondition = conditionsArr
+            console.log('CONDITION ARR =',this.optionsCondition  )
 
 
             // Status
@@ -1348,6 +1448,7 @@ export default {
                 categoryArr.push(obj)
             }
             this.optionsCategory = categoryArr
+            this.optionsCategoryForFilter = categoryArr
 
 
             // Supplier
@@ -1361,6 +1462,7 @@ export default {
                 supplierArr.push(obj)
             }
             this.optionsSupplier = supplierArr
+            this.optionsSupplierForFilter = supplierArr
 
             // Identifications
             let identArr = []
@@ -1371,6 +1473,7 @@ export default {
                 }
                 identArr.push(obj)
             }
+            identArr.push({ id: 99, label: 'Sticker Range' })
             this.optionsIdentifier = identArr
 
 
@@ -1438,6 +1541,7 @@ export default {
             
             this.data[index].changed = false
             data.school_year_id = this.editedItem.school_year_id
+            data.purchase_date = this.editedItem.purchase_date
 
             const conf = {
               method: 'PUT',

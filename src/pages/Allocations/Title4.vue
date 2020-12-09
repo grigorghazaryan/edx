@@ -1,5 +1,6 @@
 <template>
   <q-page class="q-pa-sm">
+
     <div class="q-pa-md q-gutter-sm">
       <q-breadcrumbs>
         <q-breadcrumbs-el icon="dashboard" label="Dashboard" to="/" />
@@ -59,7 +60,7 @@
             @input="filterAllocation"
           >
             <template v-if="schoolYear" v-slot:append>
-              <q-icon name="cancel" @click.stop="schoolYear = null, getAllocationByType(1, 10, 1)" class="cursor-pointer" />
+              <q-icon name="cancel" @click.stop="schoolYear = '', filterAllocation()" class="cursor-pointer" />
             </template>
 
           </q-select>
@@ -71,7 +72,15 @@
             </template>
           </q-input>
 
-          <q-select class="q-mr-md" style="min-width: 200px; max-width: 200px" dense outlines clearable v-model="model" :options="options" label="Status" @input="filterAllocation"/>
+          <q-select class="q-mr-md" style="min-width: 200px; max-width: 200px" 
+            dense outlines v-model="model" :options="options" label="Status" 
+            @input="filterAllocation"
+          >
+            <template v-if="model" v-slot:append>
+              <q-icon name="cancel" @click.stop="model = '', filterAllocation()" class="cursor-pointer" />
+            </template>
+
+          </q-select>
 
           <q-btn :disabled="addNew" square class="q-mr-md" style="background-color: #546bfa" text-color="white" icon="add" 
           @click="addNew = true, addNewRow()" no-caps>Add</q-btn>
@@ -351,29 +360,29 @@
             <q-td key="techPD" :props="props">
               <div class="cursor-pointer">
                 $
-                {{ props.row.total_allocation - ( (props.row.total_allocation * props.row.well_rounded_percentage / 100) + (props.row.total_allocation * props.row.safe_healthy_percentage / 100)  ) - (((  props.row.total_allocation - ((props.row.total_allocation * props.row.well_rounded_percentage / 100) +  (props.row.total_allocation * props.row.safe_healthy_percentage / 100) ))) * props.row.tech_infrastructure_percentage / 100) }}
+                {{ (props.row.total_allocation - ( (props.row.total_allocation * props.row.well_rounded_percentage / 100) + (props.row.total_allocation * props.row.safe_healthy_percentage / 100)  ) - (((  props.row.total_allocation - ((props.row.total_allocation * props.row.well_rounded_percentage / 100) +  (props.row.total_allocation * props.row.safe_healthy_percentage / 100) ))) * props.row.teach_instruction_percentage / 100)).toFixed(2) }}
               </div>
             </q-td>
 
             <q-td key="teachInfrastructure" :props="props">
               <div class="cursor-pointer">
                 $
-                {{  (((  props.row.total_allocation - ((props.row.total_allocation * props.row.well_rounded_percentage / 100) +  (props.row.total_allocation * props.row.safe_healthy_percentage / 100) ))) * props.row.tech_infrastructure_percentage / 100).toFixed(2) }}
+                {{  (((  props.row.total_allocation - ((props.row.total_allocation * props.row.well_rounded_percentage / 100) +  (props.row.total_allocation * props.row.safe_healthy_percentage / 100) ))) * props.row.teach_instruction_percentage / 100).toFixed(2) }}
               </div>
 
               <q-popup-edit
                 title="Teach Infrastructure"
                 buttons
-                v-model="props.row.tech_infrastructure_percentage"
+                v-model="props.row.teach_instruction_percentage"
               >
                 <p>
                   $
-                  {{ (((  props.row.total_allocation - ((props.row.total_allocation * props.row.well_rounded_percentage / 100) +  (props.row.total_allocation * props.row.safe_healthy_percentage / 100) ))) * props.row.tech_infrastructure_percentage / 100).toFixed(2)  }}
+                  {{ (((  props.row.total_allocation - ((props.row.total_allocation * props.row.well_rounded_percentage / 100) +  (props.row.total_allocation * props.row.safe_healthy_percentage / 100) ))) * props.row.teach_instruction_percentage / 100).toFixed(2)  }}
                 </p>
                 <q-input
                   type="number"
                   label="Teach Infrastructure %"
-                  v-model="props.row.tech_infrastructure_percentage"
+                  v-model="props.row.teach_instruction_percentage"
                 />
               </q-popup-edit>
             </q-td>
@@ -892,7 +901,7 @@ export default {
           total_allocation: 0,
           well_rounded_percentage: 20,
           safe_healthy_percentage: 20,
-          tech_infrastructure_percentage: 15,
+          teach_instruction_percentage: 15,
 
           status_string: 'Final',
           changed: true,
@@ -913,14 +922,18 @@ export default {
 
       // Filter key events
       keyUpFilter() {
+        console.log('Key up')
         clearTimeout(typingTimer);
         typingTimer = setTimeout(this.doneTyping, doneTypingInterval);
       },
       keyDownFilter() {
+        console.log('Key down')
         clearTimeout(typingTimer);
       },
       doneTyping() {
-        if(this.filter.length > 3) {
+        console.log('Typing done!')
+        if(this.filter.length > 1 || this.filter.length == 0) {
+          console.log('Send Request...')
           this.filterAllocation()
         }
       },
@@ -1047,7 +1060,7 @@ export default {
             total_allocation: this.editedItem.total_allocation,
             well_rounded_percentage: this.editedItem.well_rounded_percentage,
             safe_healthy_percentage: this.editedItem.safe_healthy_percentage,
-            tech_infrastructure_percentage: this.editedItem.tech_infrastructure_percentage,
+            teach_instruction_percentage: this.editedItem.teach_instruction_percentage,
             note: this.editedItem.note,
             allocation_type: parseInt(this.editedItem.allocation_type)
           }

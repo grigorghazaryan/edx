@@ -28,7 +28,7 @@
         <template v-slot:body="props">
             <q-tr :props="props">
 
-              <q-td key="name" :props="props" @click="changeRoute(props.row.id, props.row.name)">
+              <q-td key="name" class="cursor-pointer" :props="props" @click="changeRoute(props.row.id, props.row.name)">
                 <!-- <router-link :to="{ path: '/Inventory/'+ props.row.id }"> {{ props.row.name }} </router-link> -->
                 {{ props.row.name }} 
               </q-td>

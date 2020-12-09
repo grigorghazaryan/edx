@@ -2,7 +2,7 @@
   <q-page class="q-pa-sm">
     <div class="row q-col-gutter-sm">
       <div class="col-lg-8 col-md-8 col-xs-12 col-sm-12">
-        <q-card class="card-bg text-white">
+        <q-card class="bg-grey-10 text-white">
           <q-card-section class="text-h6 ">
             <div class="text-h6">Edit Profile</div>
             <div class="text-subtitle2">Complete your profile</div>
@@ -69,26 +69,26 @@
       </div>
       <div class="col-lg-4 col-md-4 col-xs-12 col-sm-12">
 
-        <q-card class="card-bg text-white">
+        <q-card class="bg-grey-10 text-white">
           <q-card-section class="text-center bg-transparent">
             <q-avatar size="100px" class="shadow-10">
               <img src="../statics/profile.svg">
             </q-avatar>
-            <div class="text-subtitle2 q-mt-lg">by Pratik Patel</div>
-            <div class="text-h6 q-mt-md">Pratik Patel</div>
+            <div class="text-subtitle2 q-mt-lg">by R2 D2</div>
+            <div class="text-h6 q-mt-md">Luke Skywalker</div>
           </q-card-section>
           <q-card-section>
             <div class="text-body2 text-justify">
-              My name is Pratik Patel (also known as @pratik227). I noticed myself pulling into programming since 2013,
-              and then determined myself to become a skilled and knowledgeable programmer. My passion for my programming
-              increases as I started working for Incentius (where I am currently working in).
+              <p>
+                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Et consectetur, eaque nam sequi fuga officia quia architecto dicta, voluptates quam a aspernatur eveniet enim eum minus porro expedita officiis, fugit delectus. Aliquam voluptates explicabo ab non perspiciatis asperiores, sunt distinctio.
+              </p>
             </div>
           </q-card-section>
         </q-card>
       </div>
 
       <div class="col-lg-8 col-md-8 col-xs-12 col-sm-12">
-        <q-card class="card-bg text-white">
+        <q-card class="bg-grey-10 text-white">
           <q-card-section class="text-h6 q-pa-sm">
             <div class="text-h6">Change Password</div>
           </q-card-section>

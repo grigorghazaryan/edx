@@ -90,7 +90,7 @@
             @input="filterAllocation"
           >
             <template v-if="schoolYear" v-slot:append>
-              <q-icon name="cancel" @click.stop="schoolYear = null, getAllocationByType(1, 10, 1)" class="cursor-pointer" />
+              <q-icon name="cancel" @click.stop="schoolYear = '', filterAllocation()" class="cursor-pointer" />
             </template>
 
           </q-select>
@@ -102,7 +102,15 @@
             </template>
           </q-input>
 
-          <q-select class="q-mr-md" style="min-width: 200px; max-width: 200px" dense outlines clearable v-model="model" :options="options" label="Status" @input="filterAllocation"/>
+          <q-select class="q-mr-md" style="min-width: 200px; max-width: 200px" 
+            dense outlines v-model="model" :options="options" label="Status" 
+            @input="filterAllocation"
+          >
+            <template v-if="model" v-slot:append>
+              <q-icon name="cancel" @click.stop="model = '', filterAllocation()" class="cursor-pointer" />
+            </template>
+
+          </q-select>
 
           <q-btn :disabled="addNew" square class="q-mr-md" style="background-color: #546bfa" text-color="white" icon="add" 
           @click="addNew = true, addNewRow()" no-caps>Add</q-btn>
@@ -337,6 +345,8 @@
         </template>
 
         <!-- Pagination -->
+
+
         <template v-slot:bottom class="justify-end">
           <div class="q-pa-md flex flex-center">
             <q-pagination
@@ -685,13 +695,6 @@
 
 
           },
-          doneTyping() {
-            console.log('Typing done!')
-            if(this.filter.length > 3) {
-              console.log('Send Request...')
-              this.filterAllocation()
-            }
-          },
           getToday() {
             let dateObj = new Date();
             let month = dateObj.getUTCMonth() + 1; //months from 1-12
@@ -729,11 +732,20 @@
 
           // Filter key events
           keyUpFilter() {
+            console.log('Key up')
             clearTimeout(typingTimer);
             typingTimer = setTimeout(this.doneTyping, doneTypingInterval);
           },
           keyDownFilter() {
+            console.log('Key down')
             clearTimeout(typingTimer);
+          },
+          doneTyping() {
+            console.log('Typing done!')
+            if(this.filter.length > 1 || this.filter.length == 0) {
+              console.log('Send Request...')
+              this.filterAllocation()
+            }
           },
 
           // Filter Allocation
@@ -1053,6 +1065,9 @@
       computed: {
         titleHeader() {
           let title = '';
+
+          console.log(this.schoolYear)
+
           this.schoolYear == '' 
             ? title = this.schoolYears[0] && this.schoolYears[0].value
             : title = this.schoolYear.value

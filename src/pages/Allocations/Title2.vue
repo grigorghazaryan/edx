@@ -94,7 +94,7 @@
             @input="filterAllocation"
           >
             <template v-if="schoolYear" v-slot:append>
-              <q-icon name="cancel" @click.stop="schoolYear = null, getAllocationByType(1, 10, 1)" class="cursor-pointer" />
+              <q-icon name="cancel" @click.stop="schoolYear = '', filterAllocation()" class="cursor-pointer" />
             </template>
 
           </q-select>
@@ -106,7 +106,15 @@
             </template>
           </q-input>
 
-          <q-select class="q-mr-md" style="min-width: 200px; max-width: 200px" dense outlines clearable v-model="model" :options="options" label="Status" @input="filterAllocation"/>
+          <q-select class="q-mr-md" style="min-width: 200px; max-width: 200px" 
+            dense outlines v-model="model" :options="options" label="Status" 
+            @input="filterAllocation"
+          >
+            <template v-if="model" v-slot:append>
+              <q-icon name="cancel" @click.stop="model = '', filterAllocation()" class="cursor-pointer" />
+            </template>
+
+          </q-select>
 
           <q-btn :disabled="addNew" square class="q-mr-md" style="background-color: #546bfa" text-color="white" icon="add" 
           @click="addNew = true, addNewRow()" no-caps>Add</q-btn>
@@ -892,15 +900,17 @@ export default {
 
       // Filter key events
       keyUpFilter() {
+        console.log('Key up')
         clearTimeout(typingTimer);
         typingTimer = setTimeout(this.doneTyping, doneTypingInterval);
       },
       keyDownFilter() {
+        console.log('Key down')
         clearTimeout(typingTimer);
       },
       doneTyping() {
         console.log('Typing done!')
-        if(this.filter.length > 3) {
+        if(this.filter.length > 1 || this.filter.length == 0) {
           console.log('Send Request...')
           this.filterAllocation()
         }
