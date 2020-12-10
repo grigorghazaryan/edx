@@ -79,7 +79,7 @@
             label="Administration"
           >
             <q-list class="bg-sidebar-opened">
-              <q-item to="/Administration1" class="q-pl-lg" active-class="q-item-no-link-highlighting">
+              <q-item to="/Administration1"  active-class="q-item-no-link-highlighting">
                 <q-item-section avatar>
                   <q-icon name="person"/>
                 </q-item-section>
@@ -103,7 +103,7 @@
               self="top left"
             >
               <q-list style="min-width: 100px">
-                <q-item clickable  v-close-popup to="/Administration1" class="q-pl-lg" active-class="q-item-no-link-highlighting">
+                <q-item clickable  v-close-popup to="/Administration1"  active-class="q-item-no-link-highlighting">
                   <q-item-section avatar>
                     <q-icon name="person"/>
                   </q-item-section>
@@ -123,7 +123,7 @@
             v-if="!miniState"
           >
             <q-list class="bg-sidebar-opened">
-              <q-item to="/Allocations/Title1" class="q-pl-lg" active-class="q-item-no-link-highlighting">
+              <q-item to="/Allocations/Title1"  active-class="q-item-no-link-highlighting">
                 <q-item-section avatar>
                   <q-icon name="text_format"/>
                 </q-item-section>
@@ -131,7 +131,7 @@
                   <q-item-label>Title I</q-item-label>
                 </q-item-section>
               </q-item>
-              <q-item to="/Allocations/Title2" class="q-pl-lg" active-class="q-item-no-link-highlighting">
+              <q-item to="/Allocations/Title2"  active-class="q-item-no-link-highlighting">
                 <q-item-section avatar>
                   <q-icon name="text_format"/>
                 </q-item-section>
@@ -139,7 +139,7 @@
                   <q-item-label>Title II</q-item-label>
                 </q-item-section>
               </q-item>
-              <q-item to="/Allocations/Title3" class="q-pl-lg" active-class="q-item-no-link-highlighting">
+              <q-item to="/Allocations/Title3"  active-class="q-item-no-link-highlighting">
                 <q-item-section avatar>
                   <q-icon name="text_format"/>
                 </q-item-section>
@@ -147,7 +147,7 @@
                   <q-item-label>Title III</q-item-label>
                 </q-item-section>
               </q-item>
-              <q-item to="/Allocations/Title4" class="q-pl-lg" active-class="q-item-no-link-highlighting">
+              <q-item to="/Allocations/Title4"  active-class="q-item-no-link-highlighting">
                 <q-item-section avatar>
                   <q-icon name="text_format"/>
                 </q-item-section>
@@ -155,7 +155,7 @@
                   <q-item-label>Title IV</q-item-label>
                 </q-item-section>
               </q-item>
-              <q-item to="/Allocations/esser" class="q-pl-lg" active-class="q-item-no-link-highlighting">
+              <q-item to="/Allocations/esser"  active-class="q-item-no-link-highlighting">
                 <q-item-section avatar>
                   <q-icon name="text_format"/>
                 </q-item-section>
@@ -163,7 +163,7 @@
                   <q-item-label>ESSER</q-item-label>
                 </q-item-section>
               </q-item>
-              <q-item to="/Allocations/geer" class="q-pl-lg" active-class="q-item-no-link-highlighting">
+              <q-item to="/Allocations/geer"  active-class="q-item-no-link-highlighting">
                 <q-item-section avatar>
                   <q-icon name="text_format"/>
                 </q-item-section>
@@ -193,7 +193,7 @@
                   <q-item-section>self="top left"</q-item-section>
                 </q-item> -->
 
-                <q-item clickable  v-close-popup to="/Allocations/Title1" class="q-pl-lg" active-class="q-item-no-link-highlighting">
+                <q-item clickable  v-close-popup to="/Allocations/Title1"  active-class="q-item-no-link-highlighting">
                   <q-item-section avatar>
                     <q-icon name="text_format"/>
                   </q-item-section>
@@ -201,7 +201,7 @@
                     <q-item-label>Title I</q-item-label>
                   </q-item-section>
                 </q-item>
-                <q-item clickable  v-close-popup to="/Allocations/Title2" class="q-pl-lg" active-class="q-item-no-link-highlighting">
+                <q-item clickable  v-close-popup to="/Allocations/Title2"  active-class="q-item-no-link-highlighting">
                   <q-item-section avatar>
                     <q-icon name="text_format"/>
                   </q-item-section>
@@ -209,7 +209,7 @@
                     <q-item-label>Title II</q-item-label>
                   </q-item-section>
                 </q-item>
-                <q-item clickable v-close-popup to="/Allocations/Title3" class="q-pl-lg" active-class="q-item-no-link-highlighting">
+                <q-item clickable v-close-popup to="/Allocations/Title3"  active-class="q-item-no-link-highlighting">
                   <q-item-section avatar>
                     <q-icon name="text_format"/>
                   </q-item-section>
@@ -217,7 +217,7 @@
                     <q-item-label>Title III</q-item-label>
                   </q-item-section>
                 </q-item>
-                <q-item clickable v-close-popup to="/Allocations/Title4" class="q-pl-lg" active-class="q-item-no-link-highlighting">
+                <q-item clickable v-close-popup to="/Allocations/Title4"  active-class="q-item-no-link-highlighting">
                   <q-item-section avatar>
                     <q-icon name="text_format"/>
                   </q-item-section>
@@ -225,7 +225,7 @@
                     <q-item-label>Title IV</q-item-label>
                   </q-item-section>
                 </q-item>
-                <q-item clickable v-close-popup to="/Allocations/esser" class="q-pl-lg" active-class="q-item-no-link-highlighting">
+                <q-item clickable v-close-popup to="/Allocations/esser"  active-class="q-item-no-link-highlighting">
                   <q-item-section avatar>
                     <q-icon name="text_format"/>
                   </q-item-section>
@@ -233,7 +233,7 @@
                     <q-item-label>ESSER</q-item-label>
                   </q-item-section>
                 </q-item>
-                <q-item clickable v-close-popup to="/Allocations/geer" class="q-pl-lg" active-class="q-item-no-link-highlighting">
+                <q-item clickable v-close-popup to="/Allocations/geer"  active-class="q-item-no-link-highlighting">
                   <q-item-section avatar>
                     <q-icon name="text_format"/>
                   </q-item-section>
@@ -250,7 +250,7 @@
             label="Inventory"
           >
             <q-list class="bg-sidebar-opened">
-              <q-item to="/Inventory" class="q-pl-lg" active-class="q-item-no-link-highlighting">
+              <q-item to="/Inventory"  active-class="q-item-no-link-highlighting">
                 <q-item-section avatar>
                   <q-icon name="person"/>
                 </q-item-section>
@@ -273,7 +273,7 @@
               self="top left"
             >
               <q-list style="min-width: 100px">
-                <q-item clickable  v-close-popup to="/Inventory" class="q-pl-lg" active-class="q-item-no-link-highlighting">
+                <q-item clickable  v-close-popup to="/Inventory"  active-class="q-item-no-link-highlighting">
                   <q-item-section avatar>
                     <q-icon name="person"/>
                   </q-item-section>
@@ -291,7 +291,7 @@
             label="Teacher Costs"
           >
             <q-list class="bg-sidebar-opened">
-              <q-item to="/TeacherCosts/BudgetEstimates" class="q-pl-lg" active-class="q-item-no-link-highlighting">
+              <q-item to="/TeacherCosts/BudgetEstimates"  active-class="q-item-no-link-highlighting">
                 <q-item-section avatar>
                   <q-icon name="school"/>
                 </q-item-section>
@@ -314,7 +314,7 @@
               self="top left"
             >
               <q-list style="min-width: 100px">
-                <q-item clickable  v-close-popup to="/TeacherCosts/BudgetEstimates" class="q-pl-lg" active-class="q-item-no-link-highlighting">
+                <q-item clickable  v-close-popup to="/TeacherCosts/BudgetEstimates"  active-class="q-item-no-link-highlighting">
                   <q-item-section avatar>
                     <q-icon name="school"/>
                   </q-item-section>
@@ -332,7 +332,7 @@
             label="Expenses"
           >
             <q-list class="bg-sidebar-opened">
-              <q-item to="/Expenses" class="q-pl-lg" active-class="q-item-no-link-highlighting">
+              <q-item to="/Expenses"  active-class="q-item-no-link-highlighting">
                 <q-item-section avatar>
                   <q-icon name="attach_money"/>
                 </q-item-section>
@@ -355,7 +355,7 @@
               self="top left"
             >
               <q-list style="min-width: 100px">
-                <q-item clickable  v-close-popup to="/Expenses" class="q-pl-lg" active-class="q-item-no-link-highlighting">
+                <q-item clickable  v-close-popup to="/Expenses"  active-class="q-item-no-link-highlighting">
                   <q-item-section avatar>
                     <q-icon name="attach_money"/>
                   </q-item-section>
@@ -375,7 +375,7 @@
             label="Budget"
           >
             <q-list class="bg-sidebar-opened">
-              <q-item to="/Activity" class="q-pl-lg" active-class="q-item-no-link-highlighting">
+              <q-item to="/Activity"  active-class="q-item-no-link-highlighting">
                 <q-item-section avatar>
                   <q-icon name="account_balance"/>
                 </q-item-section>
@@ -398,7 +398,7 @@
               self="top left"
             >
               <q-list style="min-width: 100px">
-                <q-item clickable  v-close-popup to="/Activity" class="q-pl-lg" active-class="q-item-no-link-highlighting">
+                <q-item clickable  v-close-popup to="/Activity"  active-class="q-item-no-link-highlighting">
                   <q-item-section avatar>
                     <q-icon name="account_balance"/>
                   </q-item-section>
@@ -418,7 +418,7 @@
             label="Reimbursement"
           >
             <q-list class="bg-sidebar-opened">
-              <q-item to="/Reimbursement" class="q-pl-lg" active-class="q-item-no-link-highlighting">
+              <q-item to="/Reimbursement"  active-class="q-item-no-link-highlighting">
                 <q-item-section avatar>
                   <q-icon name="money"/>
                 </q-item-section>
@@ -441,7 +441,7 @@
               self="top left"
             >
               <q-list style="min-width: 100px">
-                <q-item clickable  v-close-popup to="/Reimbursement" class="q-pl-lg" active-class="q-item-no-link-highlighting">
+                <q-item clickable  v-close-popup to="/Reimbursement"  active-class="q-item-no-link-highlighting">
                   <q-item-section avatar>
                     <q-icon name="money"/>
                   </q-item-section>
@@ -463,7 +463,7 @@
           label="Pages ( for use later) "
         >
           <q-list class="bg-sidebar-opened">
-            <q-item to="/Login-1" class="q-pl-lg" active-class="q-item-no-link-highlighting">
+            <q-item to="/Login-1"  active-class="q-item-no-link-highlighting">
               <q-item-section avatar>
                 <q-icon name="email"/>
               </q-item-section>
@@ -558,6 +558,10 @@ export default {
 
 <style lang="scss">
 
+.scroll.relative-position.fit.hide-scrollbar {
+  background: #304156 !important;
+}
+
 .bg-grey-sidebar {
   background: #304156 !important;
 }
@@ -568,6 +572,19 @@ export default {
 
 .q-item.q-item-type.row.no-wrap {
     cursor: pointer;
+}
+
+a.q-item.q-item-type.row.no-wrap.q-item--clickable.q-link.cursor-pointer.q-focusable.q-hoverable {
+    background: #304156;
+    color: #fff;
+}
+.q-item__section--avatar {
+    color: inherit;
+    min-width: 34px;
+}
+
+.q-menu {
+  border-radius: 0;
 }
 
 </style>

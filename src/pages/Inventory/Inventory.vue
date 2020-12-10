@@ -144,7 +144,504 @@
                       </q-card-actions>
                     </q-card>
                   </q-dialog>
+
+                  <q-dialog v-model="onpremise" persistent>
+                    <q-card style="width: 600px; max-width: 80vw;">
+                      <q-toolbar>
+
+                        <q-avatar>
+                          <span class="mdi mdi-recycle mdi-24px" style="color: green"></span>
+                        </q-avatar>
+
+                        <q-toolbar-title>On Premise</q-toolbar-title>
+
+                      </q-toolbar>
+
+                      <q-card-section>
+                        <div class="row">
+
+                          <div class="col-6 q-pr-sm q-pl-sm">
+                            <div class="text-subtitle2 q-mb-sm">Location</div>
+                            <q-input outlined dense v-model="mode" />
+                          </div>
+
+                          <div class="col-6 q-pr-sm q-pl-sm">
+                            <div class="text-subtitle2 q-mb-sm">Location within school</div>
+                            <q-input outlined dense v-model="mode" />
+                          </div>
+
+                          <div class="col-12 q-pr-sm q-pl-sm q-mt-md">
+                            <div class="text-subtitle2 q-mb-sm">Note</div>
+                            <q-input outlined type="textarea" dense v-model="mode" />
+                          </div>
+
+                        </div>
+                      </q-card-section>
+                      
+                      <q-card-actions align="right">
+                        <q-btn
+                          flat
+                          label="Cancel"
+                          color="primary"
+                          v-close-popup
+                        ></q-btn>
+                        <q-btn
+                          flat
+                          label="Confirm"
+                          color="primary"
+                          v-close-popup
+                        ></q-btn>
+                      </q-card-actions>
+
+                    </q-card>
+                  </q-dialog>
+
+                  <q-dialog v-model="offpremise" persistent>
+                    <q-card style="width: 600px; max-width: 80vw;">
+                      <q-toolbar>
+
+                        <q-avatar>
+                          <span class="mdi mdi-recycle mdi-24px" style="color: green"></span>
+                        </q-avatar>
+
+                        <q-toolbar-title>Off Premise</q-toolbar-title>
+
+                      </q-toolbar>
+
+                      <q-card-section>
+                        <div class="row">
+
+                          <div class="col-6 q-pr-sm q-pl-sm">
+                            <div class="text-subtitle2 q-mb-sm">Location</div>
+                            <q-input outlined dense v-model="mode" />
+                          </div>
+
+                          <div class="col-6 q-pr-sm q-pl-sm">
+                            <div class="text-subtitle2 q-mb-sm">Location within school</div>
+                            <q-input outlined dense v-model="mode" />
+                          </div>
+
+                          <div class="col-12 q-pr-sm q-pl-sm q-mt-md">
+                            <div class="text-subtitle2 q-mb-sm">Note</div>
+                            <q-input outlined type="textarea" dense v-model="mode" />
+                          </div>
+
+                        </div>
+                      </q-card-section>
+                      
+                      <q-card-actions align="right">
+                        <q-btn
+                          flat
+                          label="Cancel"
+                          color="primary"
+                          v-close-popup
+                        ></q-btn>
+                        <q-btn
+                          flat
+                          label="Confirm"
+                          color="primary"
+                          v-close-popup
+                        ></q-btn>
+                      </q-card-actions>
+
+                    </q-card>
+                  </q-dialog>
+
+                  <q-dialog v-model="disposed" persistent>
+                    <q-card style="width: 600px; max-width: 80vw;">
+                      <q-toolbar>
+
+                        <q-avatar>
+                          <span class="mdi mdi-recycle mdi-24px" style="color: green"></span>
+                        </q-avatar>
+
+                        <q-toolbar-title>Disposed</q-toolbar-title>
+
+                      </q-toolbar>
+
+                      <q-card-section>
+                        <div class="row">
+
+                          <div class="col-6 q-pr-sm q-pl-sm">
+                            <div class="text-subtitle2 q-mb-sm">Location</div>
+                            <q-input outlined dense v-model="mode" />
+                          </div>
+
+                          <div class="col-6 q-pr-sm q-pl-sm">
+                            <div class="text-subtitle2 q-mb-sm">Location within school</div>
+                            <q-input outlined dense v-model="mode" />
+                          </div>
+
+                          <div class="col-8 q-pr-sm q-pl-sm q-mt-md">
+                            <div class="text-subtitle2 q-mb-sm">Note</div>
+                            <q-input outlined type="textarea" dense v-model="mode" />
+                          </div>
+
+                          <div class="col-4 q-pr-sm q-pl-sm q-mt-md">
+                            <div class="text-subtitle2 q-mb-sm">Show until</div>
+                            <q-input dense outlined v-model="date" mask="YYYY-MM-DD">
+                              <template v-slot:append>
+                                <q-icon name="event" class="cursor-pointer">
+                                  <q-popup-proxy>
+                                    <q-date v-model="date">
+                                      <div class="row items-center justify-end">
+                                        <q-btn v-close-popup label="Close" color="primary" flat />
+                                      </div>
+                                    </q-date>
+                                  </q-popup-proxy>
+                                </q-icon>
+                              </template>
+                            </q-input>
+                          </div>
+
+                        </div>
+                      </q-card-section>
+                      
+                      <q-card-actions align="right">
+                        <q-btn
+                          flat
+                          label="Cancel"
+                          color="primary"
+                          v-close-popup
+                        ></q-btn>
+                        <q-btn
+                          flat
+                          label="Confirm"
+                          color="primary"
+                          v-close-popup
+                        ></q-btn>
+                      </q-card-actions>
+
+                    </q-card>
+                  </q-dialog>
+
+                  <q-dialog v-model="lost" persistent>
+                    <q-card style="width: 600px; max-width: 80vw;">
+                      <q-toolbar>
+
+                        <q-avatar>
+                          <span class="mdi mdi-map-marker-question mdi-red mdi-24px" style="color: red"></span>
+                        </q-avatar>
+
+                        <q-toolbar-title>Lost</q-toolbar-title>
+
+                      </q-toolbar>
+
+                      <q-card-section>
+                        <div class="row">
+
+                          <div class="col-6 q-pr-sm q-pl-sm">
+                            <div class="text-subtitle2 q-mb-sm">Location</div>
+                            <q-input outlined dense v-model="mode" />
+                          </div>
+
+                          <div class="col-6 q-pr-sm q-pl-sm">
+                            <div class="text-subtitle2 q-mb-sm">Location within school</div>
+                            <q-input outlined dense v-model="mode" />
+                          </div>
+
+                          <div class="col-8 q-pr-sm q-pl-sm q-mt-md">
+                            <div class="text-subtitle2 q-mb-sm">Note</div>
+                            <q-input outlined type="textarea" dense v-model="mode" />
+                          </div>
+
+                          <div class="col-4 q-pr-sm q-pl-sm q-mt-md">
+                            <div class="text-subtitle2 q-mb-sm">Show until</div>
+                            <q-input dense outlined v-model="date" mask="YYYY-MM-DD">
+                              <template v-slot:append>
+                                <q-icon name="event" class="cursor-pointer">
+                                  <q-popup-proxy>
+                                    <q-date v-model="date">
+                                      <div class="row items-center justify-end">
+                                        <q-btn v-close-popup label="Close" color="primary" flat />
+                                      </div>
+                                    </q-date>
+                                  </q-popup-proxy>
+                                </q-icon>
+                              </template>
+                            </q-input>
+                          </div>
+
+                        </div>
+                      </q-card-section>
+                      
+                      <q-card-actions align="right">
+                        <q-btn
+                          flat
+                          label="Cancel"
+                          color="primary"
+                          v-close-popup
+                        ></q-btn>
+                        <q-btn
+                          flat
+                          label="Confirm"
+                          color="primary"
+                          v-close-popup
+                        ></q-btn>
+                      </q-card-actions>
+
+                    </q-card>
+                  </q-dialog>
+
+                  <q-dialog v-model="stolen" persistent>
+                    <q-card style="width: 600px; max-width: 80vw;">
+                      <q-toolbar>
+
+                        <q-avatar>
+                          <span class="mdi mdi-robber mdi-red mdi-24px" style="color: black"></span>
+                        </q-avatar>
+
+                        <q-toolbar-title>Stolen</q-toolbar-title>
+
+                      </q-toolbar>
+
+                      <q-card-section>
+                        <div class="row">
+
+                          <div class="col-6 q-pr-sm q-pl-sm">
+                            <div class="text-subtitle2 q-mb-sm">Location</div>
+                            <q-input outlined dense v-model="mode" />
+                          </div>
+
+                          <div class="col-6 q-pr-sm q-pl-sm">
+                            <div class="text-subtitle2 q-mb-sm">Location within school</div>
+                            <q-input outlined dense v-model="mode" />
+                          </div>
+
+                          <div class="col-8 q-pr-sm q-pl-sm q-mt-md">
+                            <div class="text-subtitle2 q-mb-sm">Note</div>
+                            <q-input outlined type="textarea" dense v-model="mode" />
+                          </div>
+
+                          <div class="col-4 q-pr-sm q-pl-sm q-mt-md">
+                            <div class="text-subtitle2 q-mb-sm">Show until</div>
+                            <q-input dense outlined v-model="date" mask="YYYY-MM-DD">
+                              <template v-slot:append>
+                                <q-icon name="event" class="cursor-pointer">
+                                  <q-popup-proxy>
+                                    <q-date v-model="date">
+                                      <div class="row items-center justify-end">
+                                        <q-btn v-close-popup label="Close" color="primary" flat />
+                                      </div>
+                                    </q-date>
+                                  </q-popup-proxy>
+                                </q-icon>
+                              </template>
+                            </q-input>
+                          </div>
+
+                        </div>
+                      </q-card-section>
+                      
+                      <q-card-actions align="right">
+                        <q-btn
+                          flat
+                          label="Cancel"
+                          color="primary"
+                          v-close-popup
+                        ></q-btn>
+                        <q-btn
+                          flat
+                          label="Confirm"
+                          color="primary"
+                          v-close-popup
+                        ></q-btn>
+                      </q-card-actions>
+
+                    </q-card>
+                  </q-dialog>
+
+                  <q-dialog v-model="transfered" persistent>
+                    <q-card style="width: 800px; max-width: 80vw;">
+                      <q-toolbar>
+
+                        <q-avatar>
+                          <span class="mdi mdi-truck-delivery mdi-24px" style="color: orange"></span>
+                        </q-avatar>
+
+                        <q-toolbar-title>Transfer</q-toolbar-title>
+
+                      </q-toolbar>
+
+                      <q-card-section>
+                        <div class="row">
+
+                          <div class="col-2 q-pr-sm q-pl-sm">
+                            <div class="text-subtitle2 q-mb-sm">Qty</div>
+                            <q-input outlined dense v-model="mode" />
+                          </div>
+
+                          <div class="col-4 q-pr-sm q-pl-sm">
+                            <div class="text-subtitle2 q-mb-sm">School to transfer to</div>
+                            <!-- @input="detectChange(props.rowIndex)"
+                              v-model="props.row.inventory_supplier_uni"  -->
+                            <q-select  
+                              dense
+                              outlined
+                              use-input
+                              hide-selected
+                              fill-input
+                              input-debounce="0"
+                              
+                              :options="optionsSupplier"
+                              @filter="filterSupplier"
+                             
+                            >
+                              <template v-slot:no-option>
+                                <q-item>
+                                  <q-item-section class="text-grey">
+                                    No results
+                                  </q-item-section>
+                                </q-item>
+                              </template>
+
+                            </q-select>
+                          </div>
+
+                          <div class="col-2 q-pr-sm q-pl-sm">
+                            <div class="text-subtitle2 q-mb-sm">Allocation</div>
+                            <q-select outlined dense v-model="allocationSelected" :options="optionsAllocation"/>
+                          </div>
+
+                          <div class="col-4 q-pr-sm q-pl-sm">
+                            <div class="text-subtitle2 q-mb-sm">Location within school</div>
+                            <q-input outlined dense v-model="mode" />
+                          </div>
+
+                          <div class="col-12 q-pr-sm q-pl-sm q-mt-md">
+                            <div class="text-subtitle2 q-mb-sm">Transfer Note</div>
+                            <q-input outlined type="textarea" dense v-model="mode" />
+                          </div>
+
+                          <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
+                            <div class="text-subtitle2 q-mb-sm">Curent Sticker</div>
+                            <q-input outlined dense v-model="mode" />
+                          </div>
+
+                          <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
+                            <div class="text-subtitle2 q-mb-sm">Serial #</div>
+                            <q-input outlined dense v-model="mode" />
+                          </div>
+
+                          <div class="col-4 q-pr-sm q-pl-sm q-mt-md">
+                            <div class="text-subtitle2 q-mb-sm">Show until</div>
+                            <q-input dense outlined v-model="date" mask="YYYY-MM-DD">
+                              <template v-slot:append>
+                                <q-icon name="event" class="cursor-pointer">
+                                  <q-popup-proxy>
+                                    <q-date v-model="date">
+                                      <div class="row items-center justify-end">
+                                        <q-btn v-close-popup label="Close" color="primary" flat />
+                                      </div>
+                                    </q-date>
+                                  </q-popup-proxy>
+                                </q-icon>
+                              </template>
+                            </q-input>
+                          </div>
+
+                          <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
+                            <div class="text-subtitle2 q-mb-sm">New Sticker </div>
+                            <q-input outlined dense v-model="mode" />
+                          </div>
+
+                          <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
+                            <div class="text-subtitle2 q-mb-sm">Serial #</div>
+                            <q-input outlined dense v-model="mode" />
+                          </div>
+
+
+                        </div>
+                      </q-card-section>
+                      
+                      <q-card-actions align="right">
+                        <q-btn
+                          flat
+                          label="Cancel"
+                          color="primary"
+                          v-close-popup
+                        ></q-btn>
+                        <q-btn
+                          flat
+                          label="Confirm"
+                          color="primary"
+                          v-close-popup
+                        ></q-btn>
+                      </q-card-actions>
+
+                    </q-card>
+                  </q-dialog>
+
+                  <q-dialog v-model="stored" persistent>
+                    <q-card style="width: 600px; max-width: 80vw;">
+                      <q-toolbar>
+
+                        <q-avatar>
+                          <span class="mdi mdi-dolly mdi-red mdi-24px" style="color: blue"></span>
+                        </q-avatar>
+
+                        <q-toolbar-title>Stored</q-toolbar-title>
+
+                      </q-toolbar>
+
+                      <q-card-section>
+                        <div class="row">
+
+                          <div class="col-6 q-pr-sm q-pl-sm">
+                            <div class="text-subtitle2 q-mb-sm">Location</div>
+                            <q-input outlined dense v-model="mode" />
+                          </div>
+
+                          <div class="col-6 q-pr-sm q-pl-sm">
+                            <div class="text-subtitle2 q-mb-sm">Location within school</div>
+                            <q-input outlined dense v-model="mode" />
+                          </div>
+
+                          <div class="col-8 q-pr-sm q-pl-sm q-mt-md">
+                            <div class="text-subtitle2 q-mb-sm">Note</div>
+                            <q-input outlined type="textarea" dense v-model="mode" />
+                          </div>
+
+                          <div class="col-4 q-pr-sm q-pl-sm q-mt-md">
+                            <div class="text-subtitle2 q-mb-sm">Show until</div>
+                            <q-input dense outlined v-model="date" mask="YYYY-MM-DD">
+                              <template v-slot:append>
+                                <q-icon name="event" class="cursor-pointer">
+                                  <q-popup-proxy>
+                                    <q-date v-model="date">
+                                      <div class="row items-center justify-end">
+                                        <q-btn v-close-popup label="Close" color="primary" flat />
+                                      </div>
+                                    </q-date>
+                                  </q-popup-proxy>
+                                </q-icon>
+                              </template>
+                            </q-input>
+                          </div>
+
+                        </div>
+                      </q-card-section>
+                      
+                      <q-card-actions align="right">
+                        <q-btn
+                          flat
+                          label="Cancel"
+                          color="primary"
+                          v-close-popup
+                        ></q-btn>
+                        <q-btn
+                          flat
+                          label="Confirm"
+                          color="primary"
+                          v-close-popup
+                        ></q-btn>
+                      </q-card-actions>
+
+                    </q-card>
+                  </q-dialog>
+
                 </div>
+
               </template>
 
               <!-- Table Body -->
@@ -188,6 +685,7 @@
                   <q-td
                     key="category"
                     :props="props"
+                    style="white-space: initial;width: 350px; max-width: 350px;"
                   >
                     <div> {{ props.row.inventory_category_uni.label }} </div>
 
@@ -561,7 +1059,6 @@
                     <q-popup-edit
                       v-model="props.row.status"
                       title="Status"
-                      buttons
                     >
                       <q-select
                         @input="detectChange(props.rowIndex), changeStatus(props.rowIndex)"
@@ -761,12 +1258,11 @@
 
                           <div class="text-subtitle2 q-mb-md">Removal Date</div>
                           <p :disabled="props.row.status_uni.label == 'On Premise'" class="white-space-initial fixed-height-for-large-text">
-                            {{props.row.purchase_date}}
+                            {{props.row.relocation_date}}
                           </p>
 
                           <q-popup-proxy>
-                           transition-show="scale" transition-hide="scale">
-                            <q-date :disabled="props.row.status_uni.label == 'On Premise'" v-model="props.row.purchase_date" mask="YYYY-MM-DD" @input="detectChange(props.rowIndex)">
+                            <q-date :disabled="props.row.status_uni.label == 'On Premise'" v-model="props.row.relocation_date" mask="YYYY-MM-DD" @input="detectChange(props.rowIndex)">
                               <div class="row items-center justify-end q-gutter-sm">
                                 <q-btn label="Cancel" color="primary" flat v-close-popup />
                                 <q-btn label="OK" color="primary" flat v-close-popup />
@@ -805,11 +1301,11 @@
                           <p
                             class="white-space-initial fixed-height-for-large-text"
                           >
-                            {{props.row.purchase_date}}
+                            {{props.row.visibility_date}}
                           </p>
 
                           <q-popup-proxy transition-show="scale" transition-hide="scale">
-                            <q-date v-model="props.row.purchase_date" mask="YYYY-MM-DD" @input="detectChange(props.rowIndex)">
+                            <q-date v-model="props.row.visibility_date" mask="YYYY-MM-DD" @input="detectChange(props.rowIndex)">
                               <div class="row items-center justify-end q-gutter-sm">
                                 <q-btn label="Cancel" color="primary" flat v-close-popup />
                                 <q-btn label="OK" color="primary" flat v-close-popup />
@@ -1015,6 +1511,8 @@ export default {
       ],
       typeModel: '',
 
+      optionsAllocation: ['Title I', 'Title II', 'Title III', 'Title IV', 'ESSER', 'GEEP' ],
+      allocationSelected: '',
       optionsCategory: [
 
       ],
@@ -1040,6 +1538,14 @@ export default {
       addNew: false,
       barInfo: {},
       rowsPerPageArr: ['5', '10', '25', '50', '75', '100'], 
+      onpremise: false,
+      offpremise: false,
+      disposed: false,
+      lost: false,
+      stolen: false,
+      transfered: false,
+      stored: false,
+      date: '2020-06-06',
     }
   },
   methods: {
@@ -1150,11 +1656,28 @@ export default {
 
     },
     changeStatus(index) {
-      console.log('changeStatus', index)
-      console.log('result: ', this.data[index].status_uni.label)
       
       if(this.data[index].status_uni.label == 'On Premise') {
+        this.onpremise = true
         this.data[index].location = this.$route.query.name
+      }
+      else if(this.data[index].status_uni.label == 'Off Premise') {
+        this.offpremise = true       
+      }
+      else if(this.data[index].status_uni.label == 'Disposed') {
+        this.disposed = true       
+      }
+      else if(this.data[index].status_uni.label == 'Lost') {
+        this.lost = true       
+      }
+      else if(this.data[index].status_uni.label == 'Stolen') {
+        this.stolen = true       
+      }
+      else if(this.data[index].status_uni.label == 'Transfered') {
+        this.transfered = true       
+      }
+      else {
+        this.stored = true
       }
 
     },
@@ -1600,6 +2123,10 @@ export default {
     display: flex;
     justify-content: start;
     align-items: center;
+}
+
+.q-table tbody td {
+    font-size: 12px;
 }
 
 
