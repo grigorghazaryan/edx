@@ -160,12 +160,17 @@
                       <q-card-section>
                         <div class="row">
 
-                          <div class="col-6 q-pr-sm q-pl-sm">
+                          <div class="col-2 q-pr-sm q-pl-sm">
+                            <div class="text-subtitle2 q-mb-sm">Qty</div>
+                            <q-input outlined :disable="editedItem.quantity <= 1" dense v-model="editedItem.quantity" />
+                          </div>
+
+                          <div class="col-5 q-pr-sm q-pl-sm">
                             <div class="text-subtitle2 q-mb-sm">Location</div>
                             <q-input outlined dense v-model="mode" />
                           </div>
 
-                          <div class="col-6 q-pr-sm q-pl-sm">
+                          <div class="col-5 q-pr-sm q-pl-sm">
                             <div class="text-subtitle2 q-mb-sm">Location within school</div>
                             <q-input outlined dense v-model="mode" />
                           </div>
@@ -211,12 +216,17 @@
                       <q-card-section>
                         <div class="row">
 
-                          <div class="col-6 q-pr-sm q-pl-sm">
+                          <div class="col-2 q-pr-sm q-pl-sm">
+                            <div class="text-subtitle2 q-mb-sm">Qty</div>
+                            <q-input outlined :disable="editedItem.quantity <= 1" dense v-model="editedItem.quantity" />
+                          </div>
+
+                          <div class="col-5 q-pr-sm q-pl-sm">
                             <div class="text-subtitle2 q-mb-sm">Location</div>
                             <q-input outlined dense v-model="mode" />
                           </div>
 
-                          <div class="col-6 q-pr-sm q-pl-sm">
+                          <div class="col-5 q-pr-sm q-pl-sm">
                             <div class="text-subtitle2 q-mb-sm">Location within school</div>
                             <q-input outlined dense v-model="mode" />
                           </div>
@@ -262,12 +272,17 @@
                       <q-card-section>
                         <div class="row">
 
-                          <div class="col-6 q-pr-sm q-pl-sm">
+                          <div class="col-2 q-pr-sm q-pl-sm">
+                            <div class="text-subtitle2 q-mb-sm">Qty</div>
+                            <q-input outlined :disable="editedItem.quantity <= 1" dense v-model="editedItem.quantity" />
+                          </div>
+
+                          <div class="col-5 q-pr-sm q-pl-sm">
                             <div class="text-subtitle2 q-mb-sm">Location</div>
                             <q-input outlined dense v-model="mode" />
                           </div>
 
-                          <div class="col-6 q-pr-sm q-pl-sm">
+                          <div class="col-5 q-pr-sm q-pl-sm">
                             <div class="text-subtitle2 q-mb-sm">Location within school</div>
                             <q-input outlined dense v-model="mode" />
                           </div>
@@ -330,12 +345,17 @@
                       <q-card-section>
                         <div class="row">
 
-                          <div class="col-6 q-pr-sm q-pl-sm">
+                          <div class="col-2 q-pr-sm q-pl-sm">
+                            <div class="text-subtitle2 q-mb-sm">Qty</div>
+                            <q-input outlined :disable="editedItem.quantity <= 1" dense v-model="editedItem.quantity" />
+                          </div>
+
+                          <div class="col-5 q-pr-sm q-pl-sm">
                             <div class="text-subtitle2 q-mb-sm">Location</div>
                             <q-input outlined dense v-model="mode" />
                           </div>
 
-                          <div class="col-6 q-pr-sm q-pl-sm">
+                          <div class="col-5 q-pr-sm q-pl-sm">
                             <div class="text-subtitle2 q-mb-sm">Location within school</div>
                             <q-input outlined dense v-model="mode" />
                           </div>
@@ -360,6 +380,43 @@
                                 </q-icon>
                               </template>
                             </q-input>
+                          </div>
+
+                           <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
+                            <div class="text-subtitle2 q-mb-sm">Curent Sticker</div>
+                            <q-input outlined dense v-model="mode" />
+                          </div>
+
+                          <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
+                            <div class="text-subtitle2 q-mb-sm">Serial #</div>
+                            <q-input outlined dense v-model="mode" />
+                          </div>
+
+                          <div class="col-4 q-pr-sm q-pl-sm q-mt-md">
+                            <div class="text-subtitle2 q-mb-sm">Show until</div>
+                            <q-input dense outlined v-model="date" mask="YYYY-MM-DD">
+                              <template v-slot:append>
+                                <q-icon name="event" class="cursor-pointer">
+                                  <q-popup-proxy>
+                                    <q-date v-model="date">
+                                      <div class="row items-center justify-end">
+                                        <q-btn v-close-popup label="Close" color="primary" flat />
+                                      </div>
+                                    </q-date>
+                                  </q-popup-proxy>
+                                </q-icon>
+                              </template>
+                            </q-input>
+                          </div>
+
+                          <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
+                            <div class="text-subtitle2 q-mb-sm">New Sticker </div>
+                            <q-input outlined dense v-model="mode" />
+                          </div>
+
+                          <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
+                            <div class="text-subtitle2 q-mb-sm">Serial #</div>
+                            <q-input outlined dense v-model="mode" />
                           </div>
 
                         </div>
@@ -398,12 +455,17 @@
                       <q-card-section>
                         <div class="row">
 
-                          <div class="col-6 q-pr-sm q-pl-sm">
+                          <div class="col-2 q-pr-sm q-pl-sm">
+                            <div class="text-subtitle2 q-mb-sm">Qty</div>
+                            <q-input outlined :disable="editedItem.quantity <= 1" dense v-model="editedItem.quantity" />
+                          </div>
+
+                          <div class="col-5 q-pr-sm q-pl-sm">
                             <div class="text-subtitle2 q-mb-sm">Location</div>
                             <q-input outlined dense v-model="mode" />
                           </div>
 
-                          <div class="col-6 q-pr-sm q-pl-sm">
+                          <div class="col-5 q-pr-sm q-pl-sm">
                             <div class="text-subtitle2 q-mb-sm">Location within school</div>
                             <q-input outlined dense v-model="mode" />
                           </div>
@@ -466,15 +528,13 @@
                       <q-card-section>
                         <div class="row">
 
-                          <div class="col-2 q-pr-sm q-pl-sm">
+                          <div class="col-2 q-pr-sm q-pl-sm" v-if="editedItem.quantity > 1">
                             <div class="text-subtitle2 q-mb-sm">Qty</div>
-                            <q-input outlined dense v-model="mode" />
+                            <q-input outlined dense v-model="editedItem.quantity" />
                           </div>
 
                           <div class="col-4 q-pr-sm q-pl-sm">
                             <div class="text-subtitle2 q-mb-sm">School to transfer to</div>
-                            <!-- @input="detectChange(props.rowIndex)"
-                              v-model="props.row.inventory_supplier_uni"  -->
                             <q-select  
                               dense
                               outlined
@@ -482,10 +542,9 @@
                               hide-selected
                               fill-input
                               input-debounce="0"
-                              
-                              :options="optionsSupplier"
-                              @filter="filterSupplier"
-                             
+                              :options="optionsSchool"
+                              @filter="filterSchool"
+                              v-model="statusChangeObject.schoolToTransfer"
                             >
                               <template v-slot:no-option>
                                 <q-item>
@@ -505,50 +564,103 @@
 
                           <div class="col-4 q-pr-sm q-pl-sm">
                             <div class="text-subtitle2 q-mb-sm">Location within school</div>
-                            <q-input outlined dense v-model="mode" />
+                            <q-input outlined dense v-model="statusChangeObject.locationWithinSchool" />
                           </div>
 
                           <div class="col-12 q-pr-sm q-pl-sm q-mt-md">
                             <div class="text-subtitle2 q-mb-sm">Transfer Note</div>
-                            <q-input outlined type="textarea" dense v-model="mode" />
+                            <q-input outlined type="textarea" dense v-model="statusChangeObject.note" />
                           </div>
 
-                          <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
-                            <div class="text-subtitle2 q-mb-sm">Curent Sticker</div>
-                            <q-input outlined dense v-model="mode" />
+                          <div v-if="editedItem.identification_uni && editedItem.identification_uni.id"> 
+                            
+                            <div v-if="editedItem.identification_uni.id === 5" class="row">
+
+                              <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
+                                <div class="text-subtitle2 q-mb-sm">Curent Sticker range</div>
+                                <q-input outlined dense v-model="editedItem.sticker_range_start" />
+                              </div>
+
+                              <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
+                                <div class="text-subtitle2 q-mb-sm">&nbsp; </div>
+                                <q-input outlined dense v-model="editedItem.sticker_range_end" />
+                              </div>
+
+                              <div class="col-2 q-pr-sm q-pl-sm q-mt-md">
+                                <div class="text-subtitle2 q-mb-sm">Serial #</div>
+                                <q-input outlined dense v-model="statusChangeObject.serial" />
+                              </div>
+
+                              <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
+                                <div class="text-subtitle2 q-mb-sm">Show until</div>
+                                <q-input dense outlined v-model="statusChangeObject.showUntil">
+                                  <template v-slot:append>
+                                    <q-icon name="event" class="cursor-pointer">
+                                      <q-popup-proxy transition-show="scale" transition-hide="scale">
+                                      <q-date v-model="statusChangeObject.showUntil" mask="YYYY-MM-DD">
+                                        <div class="row items-center justify-end q-gutter-sm">
+                                          <q-btn label="Cancel" color="primary" flat v-close-popup />
+                                          <q-btn label="OK" color="primary" flat v-close-popup />
+                                        </div>
+                                      </q-date>
+                                    </q-popup-proxy>
+                                    </q-icon>
+                                  </template>
+                                </q-input>
+                              </div>
+
+                              <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
+                                <div class="text-subtitle2 q-mb-sm">New Sticker range</div>
+                                <q-input outlined dense v-model="statusChangeObject.stickerRangeStart" />
+                              </div>
+
+                              <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
+                                <div class="text-subtitle2 q-mb-sm">&nbsp; </div>
+                                <q-input outlined dense v-model="statusChangeObject.stickerRangeEnd" />
+                              </div>
+
+                              <div class="col-2 q-pr-sm q-pl-sm q-mt-md">
+                                <div class="text-subtitle2 q-mb-sm">Serial #</div>
+                                <q-input outlined dense v-model="statusChangeObject.newSerial" />
+                              </div>
+                            </div>
+
+                            <div v-else class="row">
+
+                              <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
+                                <div class="text-subtitle2 q-mb-sm">Identifier</div>
+                                <div v-if="editedItem.identification_uni"> {{ editedItem.identification_uni.label }} </div>
+                              </div>
+
+                              <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
+                                <div class="text-subtitle2 q-mb-sm">Serial #</div>
+                                <q-input outlined dense v-model="statusChangeObject.serial" />
+                              </div>
+
+                              <div class="col-4 q-pr-sm q-pl-sm q-mt-md">
+                                <div class="text-subtitle2 q-mb-sm">Show until</div>
+                                <q-input dense outlined v-model="statusChangeObject.showUntil">
+                                  <template v-slot:append>
+                                    <q-icon name="event" class="cursor-pointer">
+                                      <q-popup-proxy transition-show="scale" transition-hide="scale">
+                                      <q-date v-model="statusChangeObject.showUntil" mask="YYYY-MM-DD">
+                                        <div class="row items-center justify-end q-gutter-sm">
+                                          <q-btn label="Cancel" color="primary" flat v-close-popup />
+                                          <q-btn label="OK" color="primary" flat v-close-popup />
+                                        </div>
+                                      </q-date>
+                                    </q-popup-proxy>
+                                    </q-icon>
+                                  </template>
+                                </q-input>
+                              </div>
+
+                            </div>
+
                           </div>
 
-                          <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
-                            <div class="text-subtitle2 q-mb-sm">Serial #</div>
-                            <q-input outlined dense v-model="mode" />
-                          </div>
 
-                          <div class="col-4 q-pr-sm q-pl-sm q-mt-md">
-                            <div class="text-subtitle2 q-mb-sm">Show until</div>
-                            <q-input dense outlined v-model="date" mask="YYYY-MM-DD">
-                              <template v-slot:append>
-                                <q-icon name="event" class="cursor-pointer">
-                                  <q-popup-proxy>
-                                    <q-date v-model="date">
-                                      <div class="row items-center justify-end">
-                                        <q-btn v-close-popup label="Close" color="primary" flat />
-                                      </div>
-                                    </q-date>
-                                  </q-popup-proxy>
-                                </q-icon>
-                              </template>
-                            </q-input>
-                          </div>
 
-                          <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
-                            <div class="text-subtitle2 q-mb-sm">New Sticker </div>
-                            <q-input outlined dense v-model="mode" />
-                          </div>
-
-                          <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
-                            <div class="text-subtitle2 q-mb-sm">Serial #</div>
-                            <q-input outlined dense v-model="mode" />
-                          </div>
 
 
                         </div>
@@ -587,12 +699,17 @@
                       <q-card-section>
                         <div class="row">
 
-                          <div class="col-6 q-pr-sm q-pl-sm">
+                          <div class="col-2 q-pr-sm q-pl-sm">
+                            <div class="text-subtitle2 q-mb-sm">Qty</div>
+                            <q-input outlined :disable="editedItem.quantity <= 1" dense v-model="editedItem.quantity" />
+                          </div>
+
+                          <div class="col-5 q-pr-sm q-pl-sm">
                             <div class="text-subtitle2 q-mb-sm">Location</div>
                             <q-input outlined dense v-model="mode" />
                           </div>
 
-                          <div class="col-6 q-pr-sm q-pl-sm">
+                          <div class="col-5 q-pr-sm q-pl-sm">
                             <div class="text-subtitle2 q-mb-sm">Location within school</div>
                             <q-input outlined dense v-model="mode" />
                           </div>
@@ -1181,7 +1298,7 @@
                             />
                           </q-popup-edit>
 
-                          <span class="q-ml-lg" v-if="props.row.identification_uni.id == 99">{{ props.row.district_assigned_id }}</span>
+                          <span class="q-ml-lg" v-if="props.row.identification_uni.id == 5">{{ props.row.district_assigned_id }}</span>
                         </div>
 
                         <div class="col-1" >
@@ -1499,6 +1616,7 @@ export default {
           sortable: true
         },
       ],
+      editedItem: {},
       filter: '',
       loading: true,
       confirm: false,
@@ -1510,6 +1628,8 @@ export default {
         'School Year 18-19'
       ],
       typeModel: '',
+      optionsSchool: [],
+      optionsSchoolForFilter: [],
 
       optionsAllocation: ['Title I', 'Title II', 'Title III', 'Title IV', 'ESSER', 'GEEP' ],
       allocationSelected: '',
@@ -1523,17 +1643,8 @@ export default {
       optionsSupplierForFilter: [],
       optionsIdentifier: [
       ],
-      optionsCondition: [
-        'Excellent', 'Very Good', 'Good', 'Fair', 'Poor'
-      ],
-      optionsStatus: [
-        'On Premise', 'Off Premise', 'Disposed', 'Lost', 'Stolen', 'Transferred', 'Stored'
-      ],
-
-
-      optionsType: [
-        'PD', 'FE'
-      ],
+      optionsCondition: [],
+      optionsStatus: [],
       typeModel: null,
       addNew: false,
       barInfo: {},
@@ -1546,6 +1657,17 @@ export default {
       transfered: false,
       stored: false,
       date: '2020-06-06',
+      statusChangeObject: {
+        schoolToTransfer: null,
+        locationWithinSchool: '',
+        note: '',
+        serial: '',
+        showUntil: '2020-06-06',
+
+        stickerRangeStart: '',
+        stickerRangeEnd: '',
+        newSerial: '',
+      }
     }
   },
   methods: {
@@ -1657,9 +1779,19 @@ export default {
     },
     changeStatus(index) {
       
+
+      this.editedItem = this.data[index]
+      console.log('edited item', this.editedItem)
+      this.getSchools();
+
+      this.statusChangeObject.serial = this.editedItem.serial_number
+      
       if(this.data[index].status_uni.label == 'On Premise') {
         this.onpremise = true
-        this.data[index].location = this.$route.query.name
+
+        // this.data[index].location = this.$route.query.name
+        this.statusChangeObject.locationWithinSchool = this.$route.query.name
+
       }
       else if(this.data[index].status_uni.label == 'Off Premise') {
         this.offpremise = true       
@@ -1746,6 +1878,12 @@ export default {
       update(() => {
         const needle = val.toLowerCase()
         this.optionsSupplier = this.optionsSupplierForFilter.filter(v =>   v.label.toLowerCase().indexOf(needle) > -1)
+      })
+    },
+    filterSchool (val, update, abort) {
+      update(() => {
+        const needle = val.toLowerCase()
+        this.optionsSchool = this.optionsSchoolForFilter.filter(v =>   v.label.toLowerCase().indexOf(needle) > -1)
       })
     },
 
@@ -1996,9 +2134,7 @@ export default {
                 }
                 identArr.push(obj)
             }
-            identArr.push({ id: 99, label: 'Sticker Range' })
             this.optionsIdentifier = identArr
-
 
             console.log('4444444444444444444',this.optionsSupplier)
 
@@ -2084,6 +2220,32 @@ export default {
               })
           }
 
+    },
+    getSchools() {
+
+      const conf = {
+        method: 'GET',
+        url: config.getSchools,
+        headers: {
+          Accept: 'application/json',
+        }
+      }
+
+      axios(conf).then(res => {
+        let schoolsArr = []
+        for(let i=0; i<res.data.length; i++) {
+          let obj = {
+            id: res.data[i].id,
+            name: res.data[i].school_name,
+            label: res.data[i].school_name,
+            value: res.data[i].id,
+          }
+          schoolsArr.push(obj)
+        }
+        this.optionsSchool = schoolsArr
+        this.optionsSchoolForFilter = schoolsArr
+        console.log(schoolsArr)
+      })
     },
 
   },
