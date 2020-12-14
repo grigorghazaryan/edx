@@ -71,6 +71,7 @@
 
               <!-- Table Header -->
               <template v-slot:top-right="props">
+                
                 <!-- <q-select
                   class="q-mr-md"
                   style="min-width: 200px; max-width: 200px"
@@ -2062,10 +2063,10 @@ export default {
             console.log('this.datathis.data', this.data)
         });
     },
-    getAdditionalInfo() {
+    getAdditionalInfo(type) {
         const conf = {
             method: 'GET',
-            url: config.getAdditionalInfoForInventory,
+            url: config.getAdditionalInfoForInventory + '/' + type,
             headers: {
                 Accept: 'application/json',
             }
@@ -2255,7 +2256,7 @@ export default {
 
     this.getAllocationBar( parseInt(this.tab), this.$route.params.id )
     this.getInventoryByType( parseInt(this.tab), this.$route.params.id, this.count, this.current )
-    this.getAdditionalInfo()
+    this.getAdditionalInfo(1)
 
   }
 }
