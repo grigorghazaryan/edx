@@ -34,6 +34,10 @@ const config = {
     addInventory: 'https://inventory.aimtech.am/api/v1/inventory',
     getAdditionalInfoForInventory: 'https://inventory.aimtech.am/api/v1/get-supplier-category-status-data',
 
+    // Modify status
+    modifyInventoryStatus: 'https://inventory.aimtech.am/api/v1/modify-inventory/', // + id
+    
+
     
 
 }

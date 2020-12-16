@@ -165,7 +165,13 @@
 
                           <div class="col-2 q-pr-sm q-pl-sm">
                             <div class="text-subtitle2 q-mb-sm">Qty</div>
-                            <q-input outlined dense v-model="statusChangeObject.quantity" :disable="editedItem.quantity <= 1" />
+                            <q-input 
+                              outlined 
+                              dense 
+                              v-model="statusChangeObject.quantity" 
+                              :disable="editedItem.quantity <= 1" 
+                              :rules="[ val => val <= editedItem.quantity || 'Number cant be more than ' + editedItem.quantity]"
+                            />
                           </div>
 
                           <div class="col-5 q-pr-sm q-pl-sm">
@@ -254,7 +260,7 @@
                           flat
                           label="Confirm"
                           color="primary"
-                          v-close-popup
+                          @click="confirmStatusChanges"
                         ></q-btn>
                       </q-card-actions>
 
@@ -278,7 +284,13 @@
 
                           <div class="col-2 q-pr-sm q-pl-sm">
                             <div class="text-subtitle2 q-mb-sm">Qty</div>
-                            <q-input outlined dense v-model="statusChangeObject.quantity" :disable="editedItem.quantity <= 1" />
+                            <q-input 
+                              outlined 
+                              dense 
+                              v-model="statusChangeObject.quantity" 
+                              :disable="editedItem.quantity <= 1" 
+                              :rules="[ val => val <= editedItem.quantity || 'Number cant be more than ' + editedItem.quantity]"
+                            />
                           </div>
 
                           <div class="col-5 q-pr-sm q-pl-sm">
@@ -367,7 +379,7 @@
                           flat
                           label="Confirm"
                           color="primary"
-                          v-close-popup
+                          @click="confirmStatusChanges"
                         ></q-btn>
                       </q-card-actions>
 
@@ -391,7 +403,13 @@
 
                           <div class="col-2 q-pr-sm q-pl-sm">
                             <div class="text-subtitle2 q-mb-sm">Qty</div>
-                            <q-input outlined dense v-model="statusChangeObject.quantity" :disable="editedItem.quantity <= 1" />
+                            <q-input 
+                              outlined 
+                              dense 
+                              v-model="statusChangeObject.quantity" 
+                              :disable="editedItem.quantity <= 1" 
+                              :rules="[ val => val <= editedItem.quantity || 'Number cant be more than ' + editedItem.quantity]"
+                            />
                           </div>
 
                           <div class="col-5 q-pr-sm q-pl-sm">
@@ -480,7 +498,7 @@
                           flat
                           label="Confirm"
                           color="primary"
-                          v-close-popup
+                          @click="confirmStatusChanges"
                         ></q-btn>
                       </q-card-actions>
 
@@ -505,7 +523,13 @@
 
                           <div class="col-2 q-pr-sm q-pl-sm">
                             <div class="text-subtitle2 q-mb-sm">Qty</div>
-                            <q-input outlined dense v-model="statusChangeObject.quantity" :disable="editedItem.quantity <= 1" />
+                            <q-input 
+                              outlined 
+                              dense 
+                              v-model="statusChangeObject.quantity" 
+                              :disable="editedItem.quantity <= 1" 
+                              :rules="[ val => val <= editedItem.quantity || 'Number cant be more than ' + editedItem.quantity]"
+                            />
                           </div>
 
                           <div class="col-5 q-pr-sm q-pl-sm">
@@ -594,7 +618,7 @@
                           flat
                           label="Confirm"
                           color="primary"
-                          v-close-popup
+                          @click="confirmStatusChanges"
                         ></q-btn>
                       </q-card-actions>
 
@@ -622,7 +646,13 @@
 
                           <div class="col-2 q-pr-sm q-pl-sm">
                             <div class="text-subtitle2 q-mb-sm">Qty</div>
-                            <q-input outlined dense v-model="statusChangeObject.quantity" :disable="editedItem.quantity <= 1" />
+                            <q-input 
+                              outlined 
+                              dense 
+                              v-model="statusChangeObject.quantity" 
+                              :disable="editedItem.quantity <= 1" 
+                              :rules="[ val => val <= editedItem.quantity || 'Number cant be more than ' + editedItem.quantity]"
+                            />
                           </div>
 
                           <div class="col-5 q-pr-sm q-pl-sm">
@@ -711,7 +741,7 @@
                           flat
                           label="Confirm"
                           color="primary"
-                          v-close-popup
+                          @click="confirmStatusChanges"
                         ></q-btn>
                       </q-card-actions>
 
@@ -735,7 +765,13 @@
 
                           <div class="col-2 q-pr-sm q-pl-sm">
                             <div class="text-subtitle2 q-mb-sm">Qty</div>
-                            <q-input outlined dense v-model="statusChangeObject.quantity" :disable="editedItem.quantity <= 1" />
+                            <q-input 
+                              outlined 
+                              dense 
+                              v-model="statusChangeObject.quantity" 
+                              :disable="editedItem.quantity <= 1" 
+                              :rules="[ val => val <= editedItem.quantity || 'Number cant be more than ' + editedItem.quantity]"
+                            />
                           </div>
 
                           <div class="col-4 q-pr-sm q-pl-sm">
@@ -849,7 +885,7 @@
                           flat
                           label="Confirm"
                           color="primary"
-                          v-close-popup
+                          @click="confirmStatusChanges"
                         ></q-btn>
                       </q-card-actions>
 
@@ -873,7 +909,13 @@
 
                           <div class="col-2 q-pr-sm q-pl-sm">
                             <div class="text-subtitle2 q-mb-sm">Qty</div>
-                            <q-input outlined dense v-model="statusChangeObject.quantity" :disable="editedItem.quantity <= 1" />
+                            <q-input 
+                              outlined 
+                              dense 
+                              v-model="statusChangeObject.quantity" 
+                              :disable="editedItem.quantity <= 1" 
+                              :rules="[ val => val <= editedItem.quantity || 'Number cant be more than ' + editedItem.quantity]"
+                            />
                           </div>
 
                           <div class="col-5 q-pr-sm q-pl-sm">
@@ -962,7 +1004,7 @@
                           flat
                           label="Confirm"
                           color="primary"
-                          v-close-popup
+                          @click="confirmStatusChanges"
                         ></q-btn>
                       </q-card-actions>
 
@@ -1851,7 +1893,7 @@ export default {
       optionsSchoolForFilter: [],
 
       optionsAllocation: ['Title I', 'Title II', 'Title III', 'Title IV', 'ESSER', 'GEEP' ],
-      allocationSelected: '',
+      allocationSelected: this.tab == '1' && 'Title I',
       optionsCategory: [
 
       ],
@@ -1877,18 +1919,18 @@ export default {
       stored: false,
       date: '2020-06-06',
       statusChangeObject: {
-        quantity: '',
-        schoolToTransfer: null,
-        location: '',
-        locationWithinSchool: '',
-        note: '',
-        serial: '',
-        showUntil: '2020-06-06',
+        // quantity: '',
+        // schoolToTransfer: null,
+        // location: '',
+        // locationWithinSchool: '',
+        // note: '',
+        // serial: '',
+        // showUntil: '2020-06-06',
 
-        stickerRangeStart: '',
-        stickerRangeEnd: '',
-        newStickerId: '',
-        newSerial: '',
+        // stickerRangeStart: '',
+        // stickerRangeEnd: '',
+        // newStickerId: '',
+        // newSerial: '',
       }
     }
   },
@@ -2003,10 +2045,27 @@ export default {
       
 
       this.editedItem = this.data[index]
-      console.log('edited item', this.editedItem)
+      // console.log('edited item', this.editedItem)
+
+      this.statusChangeObject = {
+        quantity: '',
+        schoolToTransfer: null,
+        location: '',
+        locationWithinSchool: '',
+        note: '',
+        serial: '',
+        showUntil: '2020-06-06',
+
+        stickerRangeStart: '',
+        stickerRangeEnd: '',
+        newStickerId: '',
+        newSerial: '',
+      }
+
       this.getSchools();
 
       this.statusChangeObject.serial = this.editedItem.serial_number
+      console.log(this.data[index].status_uni)
       
       if(this.data[index].status_uni.label == 'On Premise') {
 
@@ -2019,47 +2078,70 @@ export default {
       }
       else if(this.data[index].status_uni.label == 'Off Premise') {
         this.offpremise = true      
-        
+        this.statusChangeObject.location = 'Off Premise'
         if (this.editedItem.quantity <= 1) {
-          this.statusChangeObject.location = 'Off Premise'
           this.statusChangeObject.locationWithinSchool = ''
         }
 
       }
       else if(this.data[index].status_uni.label == 'Disposed') {
-        this.disposed = true   
+        this.disposed = true
+        this.statusChangeObject.location = 'Disposed'   
         if (this.editedItem.quantity <= 1) {
-          this.statusChangeObject.location = 'Disposed'
           this.statusChangeObject.locationWithinSchool = ''
         }    
       }
       else if(this.data[index].status_uni.label == 'Lost') {
 
         this.lost = true    
+        this.statusChangeObject.location = 'Lost'
         if (this.editedItem.quantity <= 1) {
-          this.statusChangeObject.location = 'Lost'
           this.statusChangeObject.locationWithinSchool = ''
         }
 
       }
       else if(this.data[index].status_uni.label == 'Stolen') {
         this.stolen = true     
+        this.statusChangeObject.location = 'Stolen'
         if (this.editedItem.quantity <= 1) {
-          this.statusChangeObject.location = 'Stolen'
           this.statusChangeObject.locationWithinSchool = ''
         }  
       }
       else if(this.data[index].status_uni.label == 'Transfered') {
         this.transfered = true     
+        this.statusChangeObject.location = 'Transfered'
+
+        switch(this.tab) {
+          case '1':
+            this.allocationSelected = this.optionsAllocation[0]
+            break;
+          case '2':
+            this.allocationSelected = this.optionsAllocation[1]
+            break;
+          case '3':
+            this.allocationSelected = this.optionsAllocation[2]
+            break;
+          case '4':
+            this.allocationSelected = this.optionsAllocation[3]
+            break;
+          case '5':
+            this.allocationSelected = this.optionsAllocation[4]
+            break;
+          case '6':
+            this.allocationSelected = this.optionsAllocation[5]
+            break;
+        }
+
         if (this.editedItem.quantity <= 1) {
-          this.statusChangeObject.location = 'Transfered'
+          
           this.statusChangeObject.locationWithinSchool = ''
         }  
       }
       else {
         this.stored = true
+        this.statusChangeObject.location = 'Stored'
         if (this.editedItem.quantity <= 1) {
-          this.statusChangeObject.location = 'Stored'
+          
           this.statusChangeObject.locationWithinSchool = ''
         }
       }
@@ -2204,6 +2286,9 @@ export default {
       this.data.unshift(obj)
       this.editedItem = obj
     
+    },
+    confirmStatusChanges() {
+      console.log('Status confirm : ', this.statusChangeObject)
     },
 
     // Requests
@@ -2556,6 +2641,11 @@ export default {
 
 .q-table tbody td {
     font-size: 12px;
+}
+
+.q-field__bottom.row.items-start.q-field__bottom--animated {
+    padding: 3px 0;
+    font-size: .75rem;
 }
 
 
