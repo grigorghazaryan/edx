@@ -184,27 +184,9 @@
                             <q-input  outlined dense v-model="statusChangeObject.locationWithinSchool" />
                           </div>
 
-                          <div class="col-9 q-pr-sm q-pl-sm q-mt-md">
+                          <div class="col-12 q-pr-sm q-pl-sm q-mt-md">
                             <div class="text-subtitle2 q-mb-sm">Note</div>
                             <q-input outlined type="textarea" dense v-model="statusChangeObject.note" />
-                          </div>
-
-                          <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
-                            <div class="text-subtitle2 q-mb-sm">Show until</div>
-                            <q-input dense outlined v-model="statusChangeObject.showUntil">
-                              <template v-slot:append>
-                                <q-icon name="event" class="cursor-pointer">
-                                  <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                  <q-date v-model="statusChangeObject.showUntil" mask="YYYY-MM-DD">
-                                    <div class="row items-center justify-end q-gutter-sm">
-                                      <q-btn label="Cancel" color="primary" flat v-close-popup />
-                                      <q-btn label="OK" color="primary" flat v-close-popup />
-                                    </div>
-                                  </q-date>
-                                </q-popup-proxy>
-                                </q-icon>
-                              </template>
-                            </q-input>
                           </div>
 
                           <div class="full-width" v-if="editedItem.identification_uni && editedItem.identification_uni.id == 5">
@@ -226,11 +208,11 @@
                             <div class="row" v-if="statusChangeObject.quantity <= 1">
                                 <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
                                   <div class="text-subtitle2 q-mb-sm">Sticker ID</div>
-                                  <q-input outlined dense v-model="statusChangeObject.newStickerId" />
+                                  <q-input outlined dense v-model="statusChangeObject.stickerRangeStart" />
                                 </div>
                             </div>
                             
-                            <div class="row" v-if="statusChangeObject.quantity > 1">
+                            <div class="row" v-if="statusChangeObject.quantity > 1 && statusChangeObject.quantity != editedItem.quantity">
                               
                               <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
                                 <div class="text-subtitle2 q-mb-sm">New Sticker range</div>
@@ -255,6 +237,7 @@
                           label="Cancel"
                           color="primary"
                           v-close-popup
+                          @click="cancelStatus"
                         ></q-btn>
                         <q-btn
                           flat
@@ -303,27 +286,9 @@
                             <q-input disable outlined dense v-model="statusChangeObject.locationWithinSchool" />
                           </div>
 
-                          <div class="col-9 q-pr-sm q-pl-sm q-mt-md">
+                          <div class="col-12 q-pr-sm q-pl-sm q-mt-md">
                             <div class="text-subtitle2 q-mb-sm">Note</div>
                             <q-input outlined type="textarea" dense v-model="statusChangeObject.note" />
-                          </div>
-
-                          <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
-                            <div class="text-subtitle2 q-mb-sm">Show until</div>
-                            <q-input dense outlined v-model="statusChangeObject.showUntil">
-                              <template v-slot:append>
-                                <q-icon name="event" class="cursor-pointer">
-                                  <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                  <q-date v-model="statusChangeObject.showUntil" mask="YYYY-MM-DD">
-                                    <div class="row items-center justify-end q-gutter-sm">
-                                      <q-btn label="Cancel" color="primary" flat v-close-popup />
-                                      <q-btn label="OK" color="primary" flat v-close-popup />
-                                    </div>
-                                  </q-date>
-                                </q-popup-proxy>
-                                </q-icon>
-                              </template>
-                            </q-input>
                           </div>
 
                           <div class="full-width" v-if="editedItem.identification_uni && editedItem.identification_uni.id == 5">
@@ -342,10 +307,10 @@
 
                             </div>
 
-                            <div class="row" v-if="statusChangeObject.quantity <= 1">
+                            <div class="row" v-if="statusChangeObject.quantity > 1 && statusChangeObject.quantity != editedItem.quantity">
                                 <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
                                   <div class="text-subtitle2 q-mb-sm">Sticker ID</div>
-                                  <q-input outlined dense v-model="statusChangeObject.newStickerId" />
+                                  <q-input outlined dense v-model="statusChangeObject.stickerRangeStart" />
                                 </div>
                             </div>
                             
@@ -374,6 +339,7 @@
                           label="Cancel"
                           color="primary"
                           v-close-popup
+                          @click="cancelStatus"
                         ></q-btn>
                         <q-btn
                           flat
@@ -461,10 +427,10 @@
 
                             </div>
 
-                            <div class="row" v-if="statusChangeObject.quantity <= 1">
+                            <div class="row" v-if="statusChangeObject.quantity > 1 && statusChangeObject.quantity != editedItem.quantity">
                                 <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
                                   <div class="text-subtitle2 q-mb-sm">Sticker ID</div>
-                                  <q-input outlined dense v-model="statusChangeObject.newStickerId" />
+                                  <q-input outlined dense v-model="statusChangeObject.stickerRangeStart" />
                                 </div>
                             </div>
                             
@@ -493,6 +459,7 @@
                           label="Cancel"
                           color="primary"
                           v-close-popup
+                          @click="cancelStatus"
                         ></q-btn>
                         <q-btn
                           flat
@@ -584,11 +551,11 @@
                             <div class="row" v-if="statusChangeObject.quantity <= 1">
                                 <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
                                   <div class="text-subtitle2 q-mb-sm">Sticker ID</div>
-                                  <q-input outlined dense v-model="statusChangeObject.newStickerId" />
+                                  <q-input outlined dense v-model="statusChangeObject.stickerRangeStart" />
                                 </div>
                             </div>
                             
-                            <div class="row" v-if="statusChangeObject.quantity > 1">
+                            <div class="row" v-if="statusChangeObject.quantity > 1 && statusChangeObject.quantity != editedItem.quantity">
                               
                               <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
                                 <div class="text-subtitle2 q-mb-sm">New Sticker range</div>
@@ -613,6 +580,7 @@
                           label="Cancel"
                           color="primary"
                           v-close-popup
+                          @click="cancelStatus"
                         ></q-btn>
                         <q-btn
                           flat
@@ -707,11 +675,11 @@
                             <div class="row" v-if="statusChangeObject.quantity <= 1">
                                 <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
                                   <div class="text-subtitle2 q-mb-sm">Sticker ID</div>
-                                  <q-input outlined dense v-model="statusChangeObject.newStickerId" />
+                                  <q-input outlined dense v-model="statusChangeObject.stickerRangeStart" />
                                 </div>
                             </div>
                             
-                            <div class="row" v-if="statusChangeObject.quantity > 1">
+                            <div class="row" v-if="statusChangeObject.quantity > 1 && statusChangeObject.quantity != editedItem.quantity">
                               
                               <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
                                 <div class="text-subtitle2 q-mb-sm">New Sticker range</div>
@@ -736,6 +704,7 @@
                           label="Cancel"
                           color="primary"
                           v-close-popup
+                          @click="cancelStatus"
                         ></q-btn>
                         <q-btn
                           flat
@@ -850,11 +819,11 @@
                             <div class="row" v-if="statusChangeObject.quantity <= 1">
                                 <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
                                   <div class="text-subtitle2 q-mb-sm">Sticker ID</div>
-                                  <q-input outlined dense v-model="statusChangeObject.newStickerId" />
+                                  <q-input outlined dense v-model="statusChangeObject.stickerRangeStart" />
                                 </div>
                             </div>
                             
-                            <div class="row" v-if="statusChangeObject.quantity > 1">
+                            <div class="row" v-if="statusChangeObject.quantity > 1 && statusChangeObject.quantity != editedItem.quantity">
                               
                               <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
                                 <div class="text-subtitle2 q-mb-sm">New Sticker range</div>
@@ -880,6 +849,7 @@
                           label="Cancel"
                           color="primary"
                           v-close-popup
+                          @click="cancelStatus"
                         ></q-btn>
                         <q-btn
                           flat
@@ -970,11 +940,11 @@
                             <div class="row" v-if="statusChangeObject.quantity <= 1">
                                 <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
                                   <div class="text-subtitle2 q-mb-sm">Sticker ID</div>
-                                  <q-input outlined dense v-model="statusChangeObject.newStickerId" />
+                                  <q-input outlined dense v-model="statusChangeObject.stickerRangeStart" />
                                 </div>
                             </div>
                             
-                            <div class="row" v-if="statusChangeObject.quantity > 1">
+                            <div class="row" v-if="statusChangeObject.quantity > 1 && statusChangeObject.quantity != editedItem.quantity">
                               
                               <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
                                 <div class="text-subtitle2 q-mb-sm">New Sticker range</div>
@@ -999,6 +969,7 @@
                           label="Cancel"
                           color="primary"
                           v-close-popup
+                          @click="cancelStatus"
                         ></q-btn>
                         <q-btn
                           flat
@@ -1035,11 +1006,8 @@
                     </q-btn>
                   </q-td>
 
-                  <q-td
-                    key="qty"
-                    :props="props"
-                    
-                  >
+                  <q-td key="qty" :props="props">
+
                     <div>{{ props.row.quantity }}</div>
 
                     <q-popup-edit v-model="props.row.quantity" title="Qty" buttons>
@@ -1048,7 +1016,7 @@
                         v-model="props.row.quantity"
                         dense
                         autofocus
-                        @input="detectChange(props.rowIndex)"
+                        @input="detectChange(props.rowIndex), checkQuantity(props.row.quantity, props.rowIndex)"
                       />
                     </q-popup-edit>
                   </q-td>
@@ -1432,7 +1400,7 @@
                       title="Status"
                     >
                       <q-select
-                        @input="detectChange(props.rowIndex), changeStatus(props.rowIndex)"
+                        @input="changeStatus(props.rowIndex), detectChange(props.rowIndex)"
                         dense
                         outlined
                         v-model="props.row.status_uni"
@@ -1534,33 +1502,59 @@
                           </q-popup-edit>
                         </div>
 
-                        <div class="col-1 q-mr-md">
+                        <div class="col-1 q-mr-md" v-if="props.row.identification_uni.id != 5">
 
                           <div class="text-subtitle2 q-mb-md">District ID</div>
 
-                          <q-input  :readonly="props.row.identification_uni.id == 1" dense outlined v-model="props.row.district_assigned_id"/>
+                          <div>
+                            <q-input readonly dense outlined v-model="props.row.district_assigned_id"/>
 
-                          <q-popup-edit
-                            v-if="props.row.identification_uni.id != 1"
-                            v-model="props.row.district_assigned_id"
-                            title="District ID"
-                            buttons
-                          >
-                            <q-input
-                              type="text"
+                            <q-popup-edit
+                              v-if="props.row.identification_uni.id != 1"
                               v-model="props.row.district_assigned_id"
-                              dense
-                              autofocus
-                              @input="detectChange(props.rowIndex)"
-                            />
-                          </q-popup-edit>
+                              title="District ID"
+                              buttons
+                            >
+                              <q-input
+                                type="text"
+                                v-model="props.row.district_assigned_id"
+                                dense
+                                autofocus
+                                @input="detectChange(props.rowIndex)"
+                              />
+                            </q-popup-edit>
+                          </div>
 
-                          <span class="q-ml-lg" v-if="props.row.identification_uni.id == 5">{{ props.row.district_assigned_id }}</span>
+                        </div>
+
+                        <div class="col-1 q-mr-md" v-if="props.row.identification_uni.id == 5">
+                          <div class="text-subtitle2 q-mb-md">District ID</div>
+                          <div class="relative-position">
+                            <q-input 
+                              readonly
+                              dense 
+                              outlined 
+                              v-model="props.row.sticker_range_start"
+                              class="left-arrow-input"
+                            />
+                          </div>
+                        </div>
+                        <div class="col-1 q-mr-md" v-if="props.row.identification_uni.id == 5">
+                          <div class="text-subtitle2 q-mb-md">&nbsp;</div>
+                          <div class="relative-position">
+                            <q-input 
+                              readonly
+                              dense 
+                              outlined 
+                              v-model="props.row.sticker_range_end"
+                              class="left-arrow-input"
+                            />
+                          </div>
                         </div>
 
                         <div class="col-1" >
                           <div class="text-subtitle2 q-mb-md">Serial #</div>
-                          <q-input  :readonly="props.row.identification_uni.id == 1" dense outlined v-model="props.row.serial_number"/>
+                          <q-input  readonly dense outlined v-model="props.row.serial_number"/>
                           <q-popup-edit
                             v-if="props.row.identification_uni.id != 1"
                             v-model="props.row.serial_number"
@@ -1584,7 +1578,7 @@
                             {{props.row.location}}
                           </p> -->
 
-                          <q-input  readonly dense outlined v-model="props.row.location"/>
+                          <q-input readonly dense outlined v-model="props.row.location"/>
                           
                           <q-popup-edit
                             v-model="props.row.location"
@@ -1605,12 +1599,7 @@
                           <div class="text-subtitle2 q-mb-md">
                             Location Note
                           </div>
-                          <!-- <p
-                            class="white-space-initial fixed-height-for-large-text"
-                          >
-                            {{props.row.location_information_note}}
-                          </p> -->
-                          <q-input  readonly dense outlined v-model="props.row.location_information_note"/>
+                          <q-input readonly dense outlined v-model="props.row.location_information_note"/>
                           <q-popup-edit
                             v-model="props.row.location_information_note"
                             title="Location Note"
@@ -1635,9 +1624,13 @@
                         <div class="col-md-1 q-mr-sm q-ml-sm">
 
                           <div class="text-subtitle2 q-mb-md">Removal Date</div>
-                          <p :disabled="props.row.status_uni.label == 'On Premise'" class="white-space-initial fixed-height-for-large-text">
-                            {{props.row.relocation_date}}
-                          </p>
+                          <q-input 
+                            readonly 
+                            dense 
+                            outlined 
+                            :disabled="props.row.status_uni.label == 'On Premise'" 
+                            v-model="props.row.relocation_date"
+                          />
 
                           <q-popup-proxy>
                             <q-date :disabled="props.row.status_uni.label == 'On Premise'" v-model="props.row.relocation_date" mask="YYYY-MM-DD" @input="detectChange(props.rowIndex)">
@@ -1653,11 +1646,14 @@
                         <div class="col-md-3 q-mr-sm q-ml-sm">
 
                           <div class="text-subtitle2 q-mb-md">Removal Note</div>
-                          <p
-                            class="white-space-initial fixed-height-for-large-text"
-                          >
-                            {{props.row.transition_information_note}}
-                          </p>
+
+                          <q-input 
+                            type="textarea"
+                            readonly 
+                            dense 
+                            outlined 
+                            v-model="props.row.transition_information_note"
+                          />
 
                           <q-popup-edit
                             v-model="props.row.transition_information_note"
@@ -1676,11 +1672,13 @@
                         <div class="col-md-1 q-mr-sm q-ml-sm">
 
                           <div class="text-subtitle2 q-mb-md">Visibility date</div>
-                          <p
-                            class="white-space-initial fixed-height-for-large-text"
-                          >
-                            {{props.row.visibility_date}}
-                          </p>
+
+                          <q-input
+                            readonly 
+                            dense 
+                            outlined 
+                            v-model="props.row.visibility_date"
+                          />
 
                           <q-popup-proxy transition-show="scale" transition-hide="scale">
                             <q-date v-model="props.row.visibility_date" mask="YYYY-MM-DD" @input="detectChange(props.rowIndex)">
@@ -1793,12 +1791,9 @@ export default {
       mode: 'list',
       tab: '1',
       pages: 1,
-      pagination: {
-        rowsPerPage: 10,
-      },
+      pagination: { rowsPerPage: 10 },
       current: 1,
       count: 10,
-
       data: [],
       tempDataX: [],
       columns: [
@@ -1881,29 +1876,23 @@ export default {
       filter: '',
       loading: true,
       confirm: false,
-
-      schoolYear: null,
-      schoolYears: [
-        'School Year 20-21',
-        'School Year 19-20',
-        'School Year 18-19'
-      ],
       typeModel: '',
       optionsSchool: [],
       optionsSchoolForFilter: [],
-
-      optionsAllocation: ['Title I', 'Title II', 'Title III', 'Title IV', 'ESSER', 'GEEP' ],
-      allocationSelected: this.tab == '1' && 'Title I',
-      optionsCategory: [
-
+      optionsAllocation: [
+        { id: 1, label: 'Title I' },
+        { id: 2, label: 'Title II' },
+        { id: 3, label: 'Title III' },
+        { id: 4, label: 'Title IV' },
+        { id: 5, label: 'ESSER' },
+        { id: 6, label: 'GEEP' }
       ],
+      allocationSelected: this.tab == '1' && { id: 1, label: 'Title I' },
+      optionsCategory: [],
       optionsCategoryForFilter: [],
-      optionsSupplier: [
-
-      ],
+      optionsSupplier: [],
       optionsSupplierForFilter: [],
-      optionsIdentifier: [
-      ],
+      optionsIdentifier: [],
       optionsCondition: [],
       optionsStatus: [],
       typeModel: null,
@@ -1931,7 +1920,8 @@ export default {
         // stickerRangeEnd: '',
         // newStickerId: '',
         // newSerial: '',
-      }
+      },
+      statusChanged: false,
     }
   },
   methods: {
@@ -2032,7 +2022,6 @@ export default {
           f = JSON.parse(f)
 
       let status = _.isEqual(d, f)
-      console.log(status)
 
       if(status) {
         this.data[index].changed = false
@@ -2042,11 +2031,8 @@ export default {
 
     },
     changeStatus(index) {
-      
 
       this.editedItem = this.data[index]
-      // console.log('edited item', this.editedItem)
-
       this.statusChangeObject = {
         quantity: '',
         schoolToTransfer: null,
@@ -2054,11 +2040,9 @@ export default {
         locationWithinSchool: '',
         note: '',
         serial: '',
-        showUntil: '2020-06-06',
-
+        showUntil: '',
         stickerRangeStart: '',
         stickerRangeEnd: '',
-        newStickerId: '',
         newSerial: '',
       }
 
@@ -2159,6 +2143,18 @@ export default {
       }
 
     },
+    cancelStatus() {
+      console.log('cancel status')
+
+      let d = JSON.parse(oldObject)
+      console.log(d)
+      let index = this.data.findIndex( item => item.id === d.id )
+      console.log('old', index)
+
+      this.data[index].status_uni = d.status_uni
+      this.statusChanged = false
+
+    },
     exportTable() {
       // naive encoding to csv format
       const content = [this.columns.map(col => wrapCsvValue(col.label))].concat(
@@ -2183,6 +2179,15 @@ export default {
               icon: 'warning'
           })
       }
+    },
+    closePopup() {
+      this.onpremise = false
+      this.offpremise = false
+      this.disposed = false
+      this.lost = false
+      this.stolen = false
+      this.transfered = false
+      this.stored = false
     },
 
     changePagination (val) {
@@ -2288,7 +2293,119 @@ export default {
     
     },
     confirmStatusChanges() {
-      console.log('Status confirm : ', this.statusChangeObject)
+
+      this.statusChanged = true
+      this.closePopup()
+
+    },
+    checkQuantity(quantity, index) {
+
+      if(quantity < 1) {
+        let i = this.optionsIdentifier.findIndex( item => item.id == 5 )
+
+        if(this.editedItem.quantity <= 1) {
+          this.optionsIdentifier[i].disable = true
+        } else {
+          this.optionsIdentifier[i].disable = false
+        }
+
+        this.data[index].identification_uni = this.optionsIdentifier[0]
+      }
+
+      if(this.data[index].identification_uni.id == 5 && this.editedItem.quantity <= 1) {
+        this.$q.notify({
+          message: 'When Identifier status equals Sticker Range you can not change quality 1! /t asdasd',
+          type: 'negative',
+          color: 'yellow',
+          textColor: 'black'
+        })
+        this.data[index].identification_uni = this.optionsIdentifier[0]
+      }
+    },
+
+    allocationParsing(data) {
+      for(let i=0; i<data.length; i++) {
+
+        // Inventory
+        let obj = {
+          id: data[i].inventory_category.id,
+          label: data[i].inventory_category.category_name,
+          value: data[i].inventory_category.id
+        }
+        data[i].inventory_category_uni = obj
+
+        // Suplier
+        if(data[i].inventory_supplier != null) {
+
+          let objSuplier = {
+            id: data[i].inventory_supplier.id,
+            label: data[i].inventory_supplier.short_name,
+            value: data[i].inventory_supplier.id
+          }
+
+          data[i].inventory_supplier_uni = objSuplier
+        }else {
+          data[i].inventory_supplier_uni = {
+            id: 10001,
+            label: 'A CHANCE TO GROW'       
+          }
+        }
+
+        // Condition
+        let conditionObj = {
+          id: data[i].condition_id,
+          label: data[i].condition
+        }
+        data[i].condition = conditionObj
+        
+        // Status
+        let statusId = data[i].condition_id
+        let statusName = ''
+
+        switch(statusId) {
+          case 1:
+            statusName = "On Premise"
+            break;
+          case 2:
+            statusName = "Off Premise"
+            break;
+          case 3:
+            statusName = "Disposed"
+            break;
+          case 4:
+            statusName = "Lost"
+            break;
+          case 5:
+            statusName = "Stolen"
+            break;
+          case 6:
+            statusName = "Transfered"
+            break;
+          case 7:
+            statusName = "Stored"
+            break;
+          default:
+            break;
+        }
+
+        let statusObj = {
+          id: data[i].condition_id,
+          label: statusName
+        }
+        data[i].status_uni = statusObj
+
+        // Identification
+        let identificationObj = {
+          id: data[i].identification_id,
+          label: data[i].identification
+        }
+        data[i].identification_uni = identificationObj
+
+        data[i].changed = false
+        data[i].showEditButton = true
+      }
+
+      return data
     },
 
     // Requests
@@ -2322,91 +2439,12 @@ export default {
             let data = res.data.inventory
             this.pages = res.data.pagesCount
 
-            for(let i=0; i<data.length; i++) {
+            // Allocation parsing function here
+            let finalResult = this.allocationParsing(data)
+            
+            this.data = finalResult
+            this.tempDataX = finalResult
 
-              // Inventory
-              let obj = {
-                id: data[i].inventory_category.id,
-                label: data[i].inventory_category.category_name,
-                value: data[i].inventory_category.id
-              }
-              data[i].inventory_category_uni = obj
-
-              // Suplier
-              if(data[i].inventory_supplier != null) {
-
-                let objSuplier = {
-                  id: data[i].inventory_supplier.id,
-                  label: data[i].inventory_supplier.short_name,
-                  value: data[i].inventory_supplier.id
-                }
-
-                data[i].inventory_supplier_uni = objSuplier
-              }else {
-                data[i].inventory_supplier_uni = {
-                  id: 10001,
-                  label: 'A CHANCE TO GROW'       
-                }
-              }
-
-              // Condition
-              let conditionObj = {
-                id: data[i].condition_id,
-                label: data[i].condition
-              }
-              data[i].condition = conditionObj
-              
-              // Status
-              let statusId = data[i].condition_id
-              let statusName = ''
-
-              switch(statusId) {
-                case 1:
-                  statusName = "On Premise"
-                  break;
-                case 2:
-                  statusName = "Off Premise"
-                  break;
-                case 3:
-                  statusName = "Disposed"
-                  break;
-                case 4:
-                  statusName = "Lost"
-                  break;
-                case 5:
-                  statusName = "Stolen"
-                  break;
-                case 6:
-                  statusName = "Transfered"
-                  break;
-                case 7:
-                  statusName = "Stored"
-                  break;
-                default:
-                  break;
-              }
-
-              let statusObj = {
-                id: data[i].condition_id,
-                label: statusName
-              }
-              data[i].status_uni = statusObj
-
-              // Identification
-              let identificationObj = {
-                id: data[i].identification_id,
-                label: data[i].identification
-              }
-              data[i].identification_uni = identificationObj
-
-
-              // 
-              data[i].changed = false
-              data[i].showEditButton = true
-            }
-
-            this.data = data
-            this.tempDataX = data
             this.loading = false
             console.log('this.datathis.data', this.data)
         });
@@ -2492,82 +2530,122 @@ export default {
     },
     editInventory(index) {
 
-      console.log(this.editedItem)
+      const updateData = {
+        school_id: this.editedItem.school_id,
+        allocation_type_id: parseInt(this.editedItem.allocation_type_id),
+        quantity:  this.editedItem.quantity,
+        inventory_category_type_id:  this.editedItem.inventory_category_uni.id,
+        item_name: this.editedItem.item_name,
+        supplier_id: this.editedItem.inventory_supplier_uni.id,
+        item_cost: this.editedItem.item_cost,
+        inventory_condition_type_id: this.editedItem.condition.id,
+        status: this.editedItem.status_uni.label,
+        inventory_identification_type_id: this.editedItem.identification_uni.id,
+        district_assigned_id: this.editedItem.district_assigned_id,
+        serial_number: this.editedItem.serial_number,
+        location: this.editedItem.location,
+        location_information_note: this.editedItem.location_information_note,
+        note:  this.editedItem.note
+      }
+      const modifyData = {
 
-          const data = {
-            school_id: this.editedItem.school_id,
-            allocation_type_id: parseInt(this.editedItem.allocation_type_id),
-            quantity:  this.editedItem.quantity,
-            inventory_category_type_id:  this.editedItem.inventory_category_uni.id,
-            item_name: this.editedItem.item_name,
-            supplier_id: this.editedItem.inventory_supplier_uni.id,
-            item_cost: this.editedItem.item_cost,
-            inventory_condition_type_id: this.editedItem.condition.id,
-            status: this.editedItem.status_uni.label,
-            inventory_identification_type_id: this.editedItem.identification_uni.id,
-            district_assigned_id: this.editedItem.district_assigned_id,
-            serial_number: this.editedItem.serial_number,
-            location: this.editedItem.location,
-            location_information_note: this.editedItem.location_information_note,
-            note:  this.editedItem.note
-          }
+        status_id: this.editedItem.status_uni.id,
+        quantity: parseInt(this.statusChangeObject.quantity),
+        sticker_range_start: this.editedItem.sticker_range_start,
+        sticker_range_end: this.editedItem.sticker_range_end,
+        location: this.statusChangeObject.location,
+        location_information_note: this.statusChangeObject.locationWithinSchool,
+        note: this.statusChangeObject.note,
+        visibility_date: this.statusChangeObject.showUntil,
+        new_sticker_range_start: this.statusChangeObject.stickerRangeStart,
+        new_sticker_range_end: this.statusChangeObject.stickerRangeEnd,
+        allocation_type_id: this.allocationSelected.id,
+        school_id: this.statusChangeObject.schoolToTransfer && this.statusChangeObject.schoolToTransfer.id,
 
-          console.log('data datd data', data)
+      }
 
-          if(this.addNew) {
+      let finalData = {}
 
-            data.schoolYearId = 21
+      if(this.addNew) {
 
-            const conf = {
-              method: 'POST',
-              url: config.addInventory,
-              headers: {
-                Accept: 'application/json',
-              },
-              data: data
-            }
+        updateData.schoolYearId = 21
 
-            axios(conf)
-              .then(res => {
+        const conf = {
+          method: 'POST',
+          url: config.addInventory,
+          headers: {
+            Accept: 'application/json',
+          },
+          data: updateData
+        }
 
-                this.$q.notify({
-                  message: 'Inventory Added successfully!',
-                  type: 'positive',
-                })
+        axios(conf)
+          .then(res => {
 
-                this.data[index].changed = false
-                this.data[index].showEditButton = true
+            this.$q.notify({
+              message: 'Inventory Added successfully!',
+              type: 'positive',
+            })
 
-                this.data[index].id = res.data.inventory[0].id
-                this.data[index].add = false
-
-                this.addNew = false
-
-              })
-
-          } else {
-            
             this.data[index].changed = false
-            data.school_year_id = this.editedItem.school_year_id
-            data.purchase_date = this.editedItem.purchase_date
+            this.data[index].showEditButton = true
 
-            const conf = {
-              method: 'PUT',
-              url: config.getInventory + this.editedItem.id,
-              headers: {
-                Accept: 'application/json',
-              },
-              data: data
-            }
+            this.data[index].id = res.data.inventory[0].id
+            this.data[index].add = false
 
-            axios(conf)
-              .then(res => {
-                this.$q.notify({
-                  message: 'Inventory updated successfully!',
-                  type: 'positive',
-                })
-              })
+            this.addNew = false
+            this.statusChanged = false
+
+          })
+
+      } 
+      else {
+
+        console.log('status changed', this.statusChanged)
+        
+        finalData.updateData = updateData
+
+        if(this.statusChanged) {
+          finalData.modifyData = modifyData
+        }else {
+          finalData.modifyData = {}
+        }
+
+        let id = this.editedItem.id
+
+          const conf = {
+            method: 'PUT',
+            url: config.modifyInventoryStatus + id,
+            headers: {
+              Accept: 'application/json',
+            },
+            data: finalData
           }
+
+          axios(conf).then(res => {
+
+            this.$q.notify({
+              message: 'Inventory updated successfully!',
+              type: 'positive',
+            })
+
+            let currentInventory = this.allocationParsing(res.data.currentInventory),
+                newInventory;
+
+            if(res.data.newInventory.length) {
+              newInventory = this.allocationParsing(res.data.newInventory);
+              this.data.unshift(newInventory[0])
+            }
+            
+
+            let _index = this.data.findIndex( item => item.id === currentInventory[0].id )
+            this.data = Object.assign( [], this.data, { [_index]: currentInventory[0] } ) 
+            this.statusChanged = false
+            
+
+          })
+      }
+      
 
     },
     getSchools() {
@@ -2596,9 +2674,35 @@ export default {
         console.log(schoolsArr)
       })
     },
+    editInventoryRequest(index, data) {
+
+        this.data[index].changed = false
+        data.school_year_id = this.editedItem.school_year_id
+        data.purchase_date = this.editedItem.purchase_date
+
+        const conf = {
+          method: 'PUT',
+          url: config.getInventory + this.editedItem.id,
+          headers: {
+            Accept: 'application/json',
+          },
+          data: data
+        }
+
+        axios(conf)
+          .then(res => {
+            this.$q.notify({
+              message: 'Inventory updated successfully!',
+              type: 'positive',
+            })
+          })
+    },
 
   },
   watch: {
+    allocationSelected() {
+      console.log('allocationSelected', this.allocationSelected)
+    }
 
   },
   created() {
@@ -2611,6 +2715,7 @@ export default {
 
   }
 }
+
 </script>
 
 <style>
@@ -2646,6 +2751,16 @@ export default {
 .q-field__bottom.row.items-start.q-field__bottom--animated {
     padding: 3px 0;
     font-size: .75rem;
+}
+
+label.left-arrow-input:after {
+    content: '';
+    position: absolute;
+    width: 10px;
+    height: 3px;
+    background-color: #bbbbbb;
+    right: 138px;
+    top: 18px;
 }
 
 
