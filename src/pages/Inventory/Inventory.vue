@@ -153,7 +153,7 @@
                       <q-toolbar>
 
                         <q-avatar>
-                          <span class="mdi mdi-recycle mdi-24px" style="color: green"></span>
+                          <span class="mdi mdi-school mdi-24px" style="color: blue"></span>
                         </q-avatar>
 
                         <q-toolbar-title>On Premise</q-toolbar-title>
@@ -255,7 +255,7 @@
                       <q-toolbar>
 
                         <q-avatar>
-                          <span class="mdi mdi-recycle mdi-24px" style="color: green"></span>
+                          <span class="mdi mdi-home mdi-24px" style="color: orange"></span>
                         </q-avatar>
 
                         <q-toolbar-title>Off Premise</q-toolbar-title>
@@ -1271,8 +1271,8 @@
                   >
                     <div v-if="props.row.status_uni.label == 'On Premise'">
                       <span
-                        class="mdi mdi-recycle mdi-24px"
-                        style="color: green"
+                        class="mdi mdi-school mdi-24px"
+                        style="color: blue"
                       >
                         <q-tooltip
                           anchor="top middle"
@@ -1289,8 +1289,8 @@
 
                     <div v-else-if="props.row.status_uni.label == 'Off Premise'">
                       <span
-                        class="mdi mdi-recycle mdi-24px"
-                        style="color: green"
+                        class="mdi mdi-home mdi-24px"
+                        style="color: orange"
                       >
                         <q-tooltip
                           anchor="top middle"
@@ -1299,7 +1299,7 @@
                           transition-show="flip-right"
                           transition-hide="flip-left"
                         >
-                          <strong>On Premise</strong>
+                          <strong>Off Premise</strong>
                         </q-tooltip>
                       </span>
                       
