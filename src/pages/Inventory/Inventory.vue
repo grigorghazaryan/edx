@@ -35,6 +35,7 @@
 
     <div class="q-pa-sm q-mt-sm q-gutter-sm">
       <q-card>
+
         <q-tabs
           v-model="tab"
           dense
@@ -49,6 +50,8 @@
           <q-tab name="3" label="Title III" />
           <q-tab name="4" label="Title IV" />
           <q-tab name="5" label="ESSER" />
+          <q-tab name="6" label="GEER" />
+        
         </q-tabs>
 
         <q-separator />
@@ -56,6 +59,7 @@
         <q-tab-panels v-model="tab" animated>
           <q-tab-panel name="1" class="q-p-sm">
             <q-table
+              :title="schoolName" 
               :data="data"
               :columns="columns"
               :loading="loading"
@@ -71,17 +75,6 @@
 
               <!-- Table Header -->
               <template v-slot:top-right="props">
-                
-                <!-- <q-select
-                  class="q-mr-md"
-                  style="min-width: 200px; max-width: 200px"
-                  dense
-                  outlines
-                  clearable
-                  v-model="schoolYear"
-                  :options="schoolYears"
-                  label="School year"
-                />
 
                 <q-input
                   class="q-mr-md"
@@ -93,7 +86,44 @@
                   <template v-slot:append>
                     <q-icon name="search" />
                   </template>
-                </q-input> -->
+                </q-input>
+                
+                <q-select
+                  class="q-mr-md"
+                  style="min-width: 150px; max-width: 150px"
+                  dense
+                  outlines
+                  clearable
+                  label="Category"
+                />
+                <q-select
+                  class="q-mr-md"
+                  style="min-width: 150px; max-width: 150px"
+                  dense
+                  outlines
+                  clearable
+                  label="Vendor"
+                />
+                <q-select
+                  class="q-mr-md"
+                  style="min-width: 150px; max-width: 150px"
+                  dense
+                  outlines
+                  clearable
+                  label="Condition"
+                />
+                <q-select
+                  class="q-mr-md"
+                  style="min-width: 150px; max-width: 150px"
+                  dense
+                  outlines
+                  clearable
+                  label="Status"
+                />
+                                  <!-- v-model="category"
+                  :options="schoolYears" -->
+
+
 
                 <q-btn :disabled="addNew" square class="q-mr-md" style="background-color: #546bfa" text-color="white" icon="add" 
                 @click="addNew = true, addNewRow()" no-caps>Add</q-btn>
@@ -1753,20 +1783,25 @@
           </q-tab-panel>
 
           <q-tab-panel name="2" class="q-p-sm">
-            <h5>Title 2</h5>
+            <h5>Title 2 Comming Soon</h5>
           </q-tab-panel>
 
           <q-tab-panel name="3" class="q-p-sm">
-            <h5>Title 3</h5>
+            <h5>Title 3 Comming Soon</h5>
           </q-tab-panel>
 
           <q-tab-panel name="4" class="q-p-sm">
-            <h5>Title 4</h5>
+            <h5>Title 4 Comming Soon</h5>
           </q-tab-panel>
 
           <q-tab-panel name="5" class="q-p-sm">
-            <h5>ESSER</h5>
+            <h5>ESSER Comming Soon</h5>
           </q-tab-panel>
+
+          <q-tab-panel name="6" class="q-p-sm">
+            <h5>GEER Comming Soon</h5>
+          </q-tab-panel>
+
         </q-tab-panels>
 
       </q-card>
@@ -2761,6 +2796,13 @@ label.left-arrow-input:after {
     background-color: #bbbbbb;
     right: 138px;
     top: 18px;
+}
+
+.q-table__control:nth-child(2) {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 30px;
 }
 
 
