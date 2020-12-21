@@ -33,6 +33,8 @@
       </q-card-section>
     </q-card>
 
+    <div class="heading-top q-mt-lg">{{ schoolName }}</div>
+
     <div class="q-pa-sm q-mt-sm q-gutter-sm">
       <q-card>
 
@@ -59,7 +61,6 @@
         <q-tab-panels v-model="tab" animated>
           <q-tab-panel name="1" class="q-p-sm">
             <q-table
-              :title="schoolName" 
               :data="data"
               :columns="columns"
               :loading="loading"
@@ -95,14 +96,18 @@
                   outlines
                   clearable
                   label="Category"
+                  :options="optionsCategory"
+                  v-model="filterCategory"
                 />
                 <q-select
                   class="q-mr-md"
-                  style="min-width: 150px; max-width: 150px"
+                  style="min-width: 200px; max-width: 200px"
                   dense
                   outlines
                   clearable
                   label="Vendor"
+                  :options="optionsSupplier"
+                  v-model="filterVendor"
                 />
                 <q-select
                   class="q-mr-md"
@@ -111,6 +116,8 @@
                   outlines
                   clearable
                   label="Condition"
+                  :options="optionsCondition"
+                  v-model="filterCondition"
                 />
                 <q-select
                   class="q-mr-md"
@@ -119,6 +126,8 @@
                   outlines
                   clearable
                   label="Status"
+                  :options="optionsStatus"
+                  v-model="filterStatus"
                 />
                                   <!-- v-model="category"
                   :options="schoolYears" -->
@@ -1783,23 +1792,18 @@
           </q-tab-panel>
 
           <q-tab-panel name="2" class="q-p-sm">
-            <h5>Title 2 Comming Soon</h5>
           </q-tab-panel>
 
           <q-tab-panel name="3" class="q-p-sm">
-            <h5>Title 3 Comming Soon</h5>
           </q-tab-panel>
 
           <q-tab-panel name="4" class="q-p-sm">
-            <h5>Title 4 Comming Soon</h5>
           </q-tab-panel>
 
           <q-tab-panel name="5" class="q-p-sm">
-            <h5>ESSER Comming Soon</h5>
           </q-tab-panel>
 
           <q-tab-panel name="6" class="q-p-sm">
-            <h5>GEER Comming Soon</h5>
           </q-tab-panel>
 
         </q-tab-panels>
@@ -1815,6 +1819,13 @@ import {exportFile} from 'quasar'
 import lodash from 'lodash'
 import axios from 'axios'
 import config from '../../../config'
+
+import InventoryTable1 from '../../components/inventory/InventoryTable1'
+import InventoryTable2 from '../../components/inventory/InventoryTable2'
+import InventoryTable3 from '../../components/inventory/InventoryTable3'
+import InventoryTable4 from '../../components/inventory/InventoryTable4'
+import InventoryEsser from '../../components/inventory/InventoryTableEsser'
+import InventoryGeer from '../../components/inventory/InventoryTableGeer'
 
 let oldObject = {}
 
@@ -1908,7 +1919,13 @@ export default {
         },
       ],
       editedItem: {},
+
       filter: '',
+      filterCategory: '',
+      filterVendor: '',
+      filterCondition: '',
+      filterStatus: '',
+
       loading: true,
       confirm: false,
       typeModel: '',
