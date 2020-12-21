@@ -85,8 +85,10 @@
         <template v-slot:top-right="props">
 
           <q-select class="q-mr-md" style="min-width: 200px; max-width: 200px" 
-            dense outlines v-model="schoolYear" 
-            :options="schoolYears" label="School year" 
+            dense outlines 
+            v-model="schoolYear" 
+            :options="schoolYears" 
+            label="School year" 
             @input="filterAllocation"
           >
             <template v-if="schoolYear" v-slot:append>

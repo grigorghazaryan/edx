@@ -64,7 +64,6 @@
               :data="data"
               :columns="columns"
               :loading="loading"
-              :filter="filter"
               class="no-shadow"
               row-key="id"
               :pagination.sync="pagination"
@@ -83,6 +82,8 @@
                   dense
                   v-model="filter"
                   placeholder="Search"
+                  @keyup="keyUpFilter" 
+                  @keydown="keyDownFilter"
                 >
                   <template v-slot:append>
                     <q-icon name="search" />
@@ -90,47 +91,64 @@
                 </q-input>
                 
                 <q-select
+                  @input="filterInventory"
                   class="q-mr-md"
-                  style="min-width: 150px; max-width: 150px"
+                  style="min-width: 300px; max-width: 300px"
                   dense
                   outlines
-                  clearable
                   label="Category"
                   :options="optionsCategory"
-                  v-model="filterCategory"
-                />
+                  v-model="filterCategoryValue"
+                >
+                  <template v-if="filterCategoryValue" v-slot:append>
+                    <q-icon name="cancel" @click.stop="filterCategoryValue = '', filterInventory()" class="cursor-pointer" />
+                  </template>
+                </q-select>
+
                 <q-select
+                  @input="filterInventory"
                   class="q-mr-md"
                   style="min-width: 200px; max-width: 200px"
                   dense
                   outlines
-                  clearable
                   label="Vendor"
                   :options="optionsSupplier"
                   v-model="filterVendor"
-                />
+                >
+                  <template v-if="filterVendor" v-slot:append>
+                    <q-icon name="cancel" @click.stop="filterVendor = '', filterInventory()" class="cursor-pointer" />
+                  </template>
+                </q-select>
+
                 <q-select
+                  @input="filterInventory"
                   class="q-mr-md"
                   style="min-width: 150px; max-width: 150px"
                   dense
                   outlines
-                  clearable
                   label="Condition"
                   :options="optionsCondition"
                   v-model="filterCondition"
-                />
+                >
+                  <template v-if="filterCondition" v-slot:append>
+                    <q-icon name="cancel" @click.stop="filterCondition = '', filterInventory()" class="cursor-pointer" />
+                  </template>
+                </q-select>
+
                 <q-select
+                  @input="filterInventory"
                   class="q-mr-md"
                   style="min-width: 150px; max-width: 150px"
                   dense
                   outlines
-                  clearable
                   label="Status"
                   :options="optionsStatus"
                   v-model="filterStatus"
-                />
-                                  <!-- v-model="category"
-                  :options="schoolYears" -->
+                >
+                  <template v-if="filterStatus" v-slot:append>
+                    <q-icon name="cancel" @click.stop="filterfilterStatusCondition = '', filterInventory()" class="cursor-pointer" />
+                  </template>
+                </q-select>
 
 
 
@@ -1828,6 +1846,8 @@ import InventoryEsser from '../../components/inventory/InventoryTableEsser'
 import InventoryGeer from '../../components/inventory/InventoryTableGeer'
 
 let oldObject = {}
+let typingTimer
+let doneTypingInterval = 500
 
 export default {
   name: 'Inventory',
@@ -1921,7 +1941,7 @@ export default {
       editedItem: {},
 
       filter: '',
-      filterCategory: '',
+      filterCategoryValue: '',
       filterVendor: '',
       filterCondition: '',
       filterStatus: '',
@@ -2240,6 +2260,24 @@ export default {
       this.stolen = false
       this.transfered = false
       this.stored = false
+    },
+
+    // Filter key events
+    keyUpFilter() {
+      console.log('Key up')
+      clearTimeout(typingTimer);
+      typingTimer = setTimeout(this.doneTyping, doneTypingInterval);
+    },
+    keyDownFilter() {
+      console.log('Key down')
+      clearTimeout(typingTimer);
+    },
+    doneTyping() {
+      console.log('Typing done!')
+      if(this.filter.length > 1 || this.filter.length == 0) {
+        console.log('Send Request...')
+        this.filterInventory()
+      }
     },
 
     changePagination (val) {
@@ -2749,6 +2787,56 @@ export default {
             })
           })
     },
+    filterInventory() {
+      this.loading = true
+      console.log('filterInventory')
+
+      let uri = '';
+
+      if(this.filter != '') {
+        uri += '&search=' + this.filter
+      }
+
+      if(this.filterCategoryValue != '') {
+        uri += '&category=' + this.filterCategoryValue.id
+      }
+
+      if(this.filterVendor != '') {
+        uri += '&supplier=' + this.filterVendor.id
+      }
+
+      if(this.filterCondition != '') {
+        uri += '&condition=' + this.filterCondition.id
+      }
+
+      if(this.filterStatus != '') {
+        uri += '&status=' + this.filterStatus.id
+      }
+
+      console.log('URI', uri)
+
+      const conf = {
+        method: 'GET',
+        url: config.filterInventory + '1/' + this.$route.params.id + '?' + uri,
+        headers: {
+          Accept: 'application/json',
+        }
+      }
+
+      axios(conf).then(res => {
+        console.log('res', res)
+
+        this.pages = res.data.pagesCount
+        let data = res.data.inventory
+        let filteredData = this.allocationParsing(data)
+
+        this.data = filteredData
+        this.tempDataX = filteredData
+
+        this.loading = false
+      });
+
+    }
 
   },
   watch: {

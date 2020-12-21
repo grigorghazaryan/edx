@@ -37,6 +37,8 @@ const config = {
     // Modify status
     modifyInventoryStatus: 'https://inventory.aimtech.am/api/v1/modify-inventory/', // + id
     
+    // Filter Inventory
+    filterInventory: 'https://inventory.aimtech.am/api/v1/filter-inventory/', // 1/1001?category=8&supplier=1002&status=1&condition=1&search=School
 
     
 
