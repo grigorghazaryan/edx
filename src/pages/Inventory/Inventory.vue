@@ -146,7 +146,7 @@
                   v-model="filterStatus"
                 >
                   <template v-if="filterStatus" v-slot:append>
-                    <q-icon name="cancel" @click.stop="filterfilterStatusCondition = '', filterInventory()" class="cursor-pointer" />
+                    <q-icon name="cancel" @click.stop="filterStatus = '', filterInventory()" class="cursor-pointer" />
                   </template>
                 </q-select>
 
