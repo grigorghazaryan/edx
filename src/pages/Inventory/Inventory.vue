@@ -150,8 +150,6 @@
                   </template>
                 </q-select>
 
-
-
                 <q-btn :disabled="addNew" square class="q-mr-md" style="background-color: #546bfa" text-color="white" icon="add" 
                 @click="addNew = true, addNewRow()" no-caps>Add</q-btn>
 
@@ -213,7 +211,13 @@
                           <span class="mdi mdi-school mdi-24px" style="color: blue"></span>
                         </q-avatar>
 
-                        <q-toolbar-title>On Premise</q-toolbar-title>
+                        <q-toolbar-title class="row justify-between">
+                          On Premise
+                          <div v-if="editedItem.quantity > 1">
+                            {{ editedItem.quantity - statusChangeObject.quantity }}
+                            left
+                          </div>
+                        </q-toolbar-title>
 
                       </q-toolbar>
 
@@ -314,8 +318,14 @@
                         <q-avatar>
                           <span class="mdi mdi-home mdi-24px" style="color: orange"></span>
                         </q-avatar>
-
-                        <q-toolbar-title>Off Premise</q-toolbar-title>
+                        
+                        <q-toolbar-title class="row justify-between">
+                          Off Premise
+                          <div v-if="editedItem.quantity > 1">
+                            {{ editedItem.quantity - statusChangeObject.quantity }}
+                            left
+                          </div>
+                        </q-toolbar-title>
 
                       </q-toolbar>
 
@@ -417,7 +427,13 @@
                           <span class="mdi mdi-recycle mdi-24px" style="color: green"></span>
                         </q-avatar>
 
-                        <q-toolbar-title>Disposed</q-toolbar-title>
+                        <q-toolbar-title class="row justify-between">
+                          Disposed
+                          <div v-if="editedItem.quantity > 1">
+                            {{ editedItem.quantity - statusChangeObject.quantity }}
+                            left
+                          </div>
+                        </q-toolbar-title>
 
                       </q-toolbar>
 
@@ -538,7 +554,13 @@
                           <span class="mdi mdi-map-marker-question mdi-red mdi-24px" style="color: red"></span>
                         </q-avatar>
 
-                        <q-toolbar-title>Lost</q-toolbar-title>
+                        <q-toolbar-title class="row justify-between">
+                          Lost
+                          <div v-if="editedItem.quantity > 1">
+                            {{ editedItem.quantity - statusChangeObject.quantity }}
+                            left
+                          </div>
+                        </q-toolbar-title>
 
                       </q-toolbar>
 
@@ -662,7 +684,13 @@
                         ></span>
                         </q-avatar>
 
-                        <q-toolbar-title>Stolen</q-toolbar-title>
+                        <q-toolbar-title class="row justify-between">
+                          Stolen
+                          <div v-if="editedItem.quantity > 1">
+                            {{ editedItem.quantity - statusChangeObject.quantity }}
+                            left
+                          </div>
+                        </q-toolbar-title>
 
                       </q-toolbar>
 
@@ -782,7 +810,13 @@
                           <span class="mdi mdi-truck-delivery mdi-24px" style="color: orange"></span>
                         </q-avatar>
 
-                        <q-toolbar-title>Transfer</q-toolbar-title>
+                        <q-toolbar-title class="row justify-between">
+                          Transfer
+                          <div v-if="editedItem.quantity > 1">
+                            {{ editedItem.quantity - statusChangeObject.quantity }}
+                            left
+                          </div>
+                        </q-toolbar-title>
 
                       </q-toolbar>
 
@@ -927,7 +961,13 @@
                           <span class="mdi mdi-dolly mdi-red mdi-24px" style="color: blue"></span>
                         </q-avatar>
 
-                        <q-toolbar-title>Stored</q-toolbar-title>
+                        <q-toolbar-title class="row justify-between">
+                          Stored
+                          <div v-if="editedItem.quantity > 1">
+                            {{ editedItem.quantity - statusChangeObject.quantity }}
+                            left
+                          </div>
+                        </q-toolbar-title>
 
                       </q-toolbar>
 
@@ -1206,7 +1246,7 @@
                   <q-td key="dateOfPurchase" :props="props">
                     <div>{{ props.row.purchase_date }}</div>
                     <q-popup-proxy transition-show="scale" transition-hide="scale">
-                      <q-date v-model="props.row.purchase_date" mask="YYYY-MM-DD" @input="detectChange(props.rowIndex)">
+                      <q-date v-model="props.row.purchase_date" mask="MM-DD-YYYY" @input="detectChange(props.rowIndex)">
                         <div class="row items-center justify-end q-gutter-sm">
                           <q-btn label="Cancel" color="primary" flat v-close-popup />
                           <q-btn label="OK" color="primary" flat v-close-popup />
@@ -1324,7 +1364,6 @@
                   <q-td
                     key="status"
                     :props="props"
-                    
                   >
                     <div v-if="props.row.status_uni.label == 'On Premise'">
                       <span
@@ -2417,12 +2456,22 @@ export default {
       for(let i=0; i<data.length; i++) {
 
         // Inventory
-        let obj = {
-          id: data[i].inventory_category.id,
-          label: data[i].inventory_category.category_name,
-          value: data[i].inventory_category.id
+        if(data[i].inventory_category != null) {
+          let obj = {
+            id: data[i].inventory_category.id,
+            label: data[i].inventory_category.category_name,
+            value: data[i].inventory_category.id
+          }
+          data[i].inventory_category_uni = obj
         }
-        data[i].inventory_category_uni = obj
+        else {
+          data[i].inventory_category_uni = {
+            id: 0,
+            label: 'Empty',
+            value: 0
+          }
+        }
+
 
         // Suplier
         if(data[i].inventory_supplier != null) {
@@ -2495,6 +2544,7 @@ export default {
         data[i].showEditButton = true
       }
 
+      console.log('DATA ==============', data)
       return data
     },
 

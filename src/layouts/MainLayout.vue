@@ -545,17 +545,18 @@ export default {
       }
       else {
         for(let i=0; i<tabs.length; i++) {
-          
-          console.log(tabs[i])
-          console.log(currentTab)
-          let status = _.isEqual(tabs[i], currentTab)
 
-          console.log('+++++++++++++++++++++', status)
-          if( !status ) {
-            
-            tabs.push(currentTab)
-            localStorage.setItem('tabs', JSON.stringify(tabs))
-          }
+          console.log('9898989898', tabs[i])
+
+          // if(JSON.stringify(tabs[i]) != JSON.stringify(currentTab)) {
+          //   alert('!!!!!!')
+          //   tabs.push(currentTab)
+          //   console.log('tabs', tabs)
+          //   localStorage.setItem('tabs', JSON.stringify(tabs))
+          // }else {
+          //   alert('++++')
+          // }
+        
 
         } 
       }
