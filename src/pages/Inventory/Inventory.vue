@@ -2160,7 +2160,7 @@ export default {
       this.getSchools();
 
       this.statusChangeObject.serial = this.editedItem.serial_number
-      console.log(this.data[index].status_uni)
+      console.log('change status', this.data[index].status_uni)
       
       if(this.data[index].status_uni.label == 'On Premise') {
 
@@ -2498,7 +2498,7 @@ export default {
         data[i].condition = conditionObj
         
         // Status
-        let statusId = data[i].condition_id
+        let statusId = data[i].status
         let statusName = ''
 
         switch(statusId) {
@@ -2679,7 +2679,7 @@ export default {
         supplier_id: this.editedItem.inventory_supplier_uni.id,
         item_cost: this.editedItem.item_cost,
         inventory_condition_type_id: this.editedItem.condition.id,
-        status: this.editedItem.status_uni.label,
+        status_id: this.editedItem.status_uni.id,
         inventory_identification_type_id: this.editedItem.identification_uni.id,
         district_assigned_id: this.editedItem.district_assigned_id,
         serial_number: this.editedItem.serial_number,
@@ -2687,6 +2687,7 @@ export default {
         location_information_note: this.editedItem.location_information_note,
         note:  this.editedItem.note
       }
+      
       const modifyData = {
 
         status_id: this.editedItem.status_uni.id,
