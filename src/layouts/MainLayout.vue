@@ -258,6 +258,14 @@
                   <q-item-label>Inventory</q-item-label>
                 </q-item-section>
               </q-item>
+              <q-item to="/License" @click="addDataToLS('License', '/License')"   active-class="q-item-no-link-highlighting">
+                <q-item-section avatar>
+                  <q-icon name="person"/>
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label>License</q-item-label>
+                </q-item-section>
+              </q-item>
             </q-list>
           </q-expansion-item>
 
@@ -279,6 +287,14 @@
                   </q-item-section>
                   <q-item-section>
                     <q-item-label>Inventory</q-item-label>
+                  </q-item-section>
+                </q-item>
+                <q-item clickable  v-close-popup to="/License" @click="addDataToLS('License', '/License')" active-class="q-item-no-link-highlighting">
+                  <q-item-section avatar>
+                    <q-icon name="person"/>
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>License</q-item-label>
                   </q-item-section>
                 </q-item>
               </q-list>

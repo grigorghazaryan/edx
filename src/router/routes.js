@@ -18,6 +18,8 @@ const routes = [
       // ------------------------------------------------------------------------------------
       {path: '/Inventory', component: () => import('pages/Inventory/InventorySchools.vue')},
       {path: '/Inventory/:id', component: () => import('pages/Inventory/Inventory.vue')},
+      {path: '/License', component: () => import('pages/Inventory/License.vue')},
+      // ------------------------------------------------------------------------------------
       {path: '/TeacherCosts/BudgetEstimates', component: () => import('pages/TeacherCosts/BudgetEstimates.vue')},
       {path: '/Expenses', component: () => import('pages/Expenses/Expenses.vue')},
       {path: '/Activity', component: () => import('pages/Budget/Budget.vue'),
