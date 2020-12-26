@@ -1119,7 +1119,6 @@
         <q-td
           key="vendor"
           :props="props"
-          
         >
           <div v-if="props.row.inventory_supplier_uni">{{ props.row.inventory_supplier_uni.label }}</div>
           <div v-else>  </div>

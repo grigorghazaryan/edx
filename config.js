@@ -40,7 +40,9 @@ const config = {
     // Filter Inventory
     filterInventory: 'https://inventory.aimtech.am/api/v1/filter-inventory/', // 1/1001?category=8&supplier=1002&status=1&condition=1&search=School
 
-    
+    // License
+    getLicense: 'https://inventory.aimtech.am/api/v1/license', // + id
+    getTotalLicense: 'https://inventory.aimtech.am/api/v1/license-total/', // + school id
 
 }
 
