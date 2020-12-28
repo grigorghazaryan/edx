@@ -5,7 +5,7 @@
       <q-breadcrumbs>
         <q-breadcrumbs-el icon="dashboard" label="Dashboard" to="/" />
         <q-breadcrumbs-el label="Inventory" to="/Inventory" />
-        <q-breadcrumbs-el label="License" />
+        <q-breadcrumbs-el label="License" to="/License" />
         <q-breadcrumbs-el :label="schoolName" />
       </q-breadcrumbs>
     </div>
