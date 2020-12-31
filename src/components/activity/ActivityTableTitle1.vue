@@ -552,78 +552,80 @@
               </q-icon>
 
 
-              <q-icon v-if="props.row.type_uni.label == 'Needs Assessment'"
+
+
+
+              <q-icon v-if="props.row.approval_type_uni.label == 'Needs Assessment'"
                 name="psychology" color="blue" style="font-size: 1.5em">
                 <q-tooltip 
                     anchor="top middle" self="bottom middle" :offset="[10, 10]"
                     transition-show="flip-right"
                     transition-hide="flip-left"
                 >
-                  <strong>{{props.row.approvalStatus}}</strong>
+                  <strong>{{props.row.approval_type_uni.label}}</strong>
               </q-tooltip>
               </q-icon>
 
-              <q-icon v-else-if="props.row.type_uni.label == 'Catalog'" name="category" color="blue" style="font-size: 1.5em">
+              <q-icon v-else-if="props.row.approval_type_uni.label == 'Catalog'" name="category" color="blue" style="font-size: 1.5em">
                 <q-tooltip 
                     anchor="top middle" self="bottom middle" :offset="[10, 10]"
                     transition-show="flip-right"
                     transition-hide="flip-left"
                 >
-                    <strong>{{props.row.approvalStatus}}</strong>
+                    <strong>{{props.row.approval_type_uni.label}}</strong>
                 </q-tooltip>
               </q-icon>
 
-              <q-icon v-else-if="props.row.type_uni.label == 'Blanket Approval'" name="touch_app" color="blue" style="font-size: 1.5em">
+              <q-icon v-else-if="props.row.approval_type_uni.label == 'Blanket Approval'" name="touch_app" color="blue" style="font-size: 1.5em">
                 <q-tooltip 
                     anchor="top middle" self="bottom middle" :offset="[10, 10]"
                     transition-show="flip-right"
                     transition-hide="flip-left"
                 >
-                    <strong>{{props.row.approvalStatus}}</strong>
+                    <strong>{{props.row.approval_type_uni.label}}</strong>
                 </q-tooltip>
               </q-icon>
 
-              <q-icon v-else-if="props.row.type_uni.label == 'Pre Approval'" name="how_to_reg" color="blue" style="font-size: 1.5em">
+              <q-icon v-else-if="props.row.approval_type_uni.label == 'Pre Approval'" name="how_to_reg" color="blue" style="font-size: 1.5em">
                 <q-tooltip 
                     anchor="top middle" self="bottom middle" :offset="[10, 10]"
                     transition-show="flip-right"
                     transition-hide="flip-left"
                 >
-                    <strong>{{props.row.approvalStatus}}</strong>
+                    <strong>{{props.row.approval_type_uni.label}}</strong>
                 </q-tooltip>
               </q-icon>
 
-              <q-popup-edit v-model="props.row.type_uni" title="Approvals" buttons >
-              
-              <div style="width: 450px !important;max-width: 450px !important;">
+              <q-popup-edit v-model="props.row.approval_status_uni" title="Approvals" buttons >
+                <div style="width: 450px !important;max-width: 450px !important;">
 
-                  <div class="row">
-                  <div class="col-md-4">
-                      <q-select @input="detectChange(props.rowIndex)" 
-                      dense outlined v-model="props.row.type_uni" 
-                      :options="approval"/>
-                  </div>
-                  <div class="col-md-7 q-ml-md">
-                      
-                      <q-option-group
-                          @input="detectChange(props.rowIndex)"
-                          :options="optionsApp"
-                          label="Notifications"
-                          type="radio"
-                          v-model="props.row.approvalStatus"
-                      />
+                    <div class="row">
+                      <div class="col-md-4">
+                          <q-select @input="detectChange(props.rowIndex)" 
+                          dense outlined v-model="props.row.approval_status_uni" 
+                          :options="approval"/>
+                      </div>
+                      <div class="col-md-7 q-ml-md">
+                          
+                          <q-option-group
+                              @input="detectChange(props.rowIndex)"
+                              :options="optionsApp"
+                              label="Notifications"
+                              type="radio"
+                              v-model="props.row.approval_type_uni.label"
+                          />
 
-                      <q-input 
-                        :disable="props.row.approvalStatus !== 'Pre-Approved'" 
-                        class="q-mt-md q-mb-lg" dense outlined v-model="approvedName" 
-                        label="Approved Name" 
-                      />
-              
-                  </div>
-                  <q-separator />
-                  </div>
-              
-              </div>
+                          <q-input 
+                            :disable="props.row.approval_type_uni.label !== 'Pre-Approved'" 
+                            class="q-mt-md q-mb-lg" dense outlined v-model="approvedName" 
+                            label="Approved Name" 
+                          />
+                  
+                      </div>
+                    <q-separator />
+                    </div>
+                
+                </div>
               </q-popup-edit>
 
           </q-td>
@@ -1517,7 +1519,7 @@ data() {
             let arr = []
             for(let i=0; i<data.length; i++) {
 
-              console.log(data[i].id)
+          
               let activityObj = {
                 id: data[i].id,
                 provider: {
@@ -1533,8 +1535,8 @@ data() {
                   label: data[i].approval_status.name
                 },
                 approval_type_uni: {
-                  id: data[i].attendee_type.id,
-                  label: data[i].attendee_type.name
+                  id: data[i].approval_types.id,
+                  label: data[i].approval_types.name
                 },
                 activity: data[i].activity_name,
                 activity_date: 'N/A',
