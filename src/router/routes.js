@@ -23,14 +23,10 @@ const routes = [
       // ------------------------------------------------------------------------------------
       {path: '/TeacherCosts/BudgetEstimates', component: () => import('pages/TeacherCosts/BudgetEstimates.vue')},
       {path: '/Expenses', component: () => import('pages/Expenses/Expenses.vue')},
-      {path: '/Activity', component: () => import('pages/Budget/Budget.vue'),
-        children: [
-          {
-            path: '/Activity/:id',
-            component: () => import('pages/Budget/Budget.vue')
-          }
-        ]
-      },
+      // ------------------------------------------------------------------------------
+      {path: '/Activity', component: () => import('pages/Activity/ActivitySchools.vue')},
+      {path: '/Activity/:id', component: () => import('pages/Activity/Activity.vue')},
+      // -------------
       {path: '/Reimbursement', component: () => import('pages/Reimbursement/Reimbursement.vue')},
       
     ]

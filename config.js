@@ -44,6 +44,9 @@ const config = {
     getLicense: 'https://inventory.aimtech.am/api/v1/license', // + id
     getTotalLicense: 'https://inventory.aimtech.am/api/v1/license-total/', // + school id
 
+    // Activity
+    getActivity: 'https://edxchange-activity.aimtech.am/api/v1/activity/' // + 1 / 1001,
+
 }
 
 export default config
