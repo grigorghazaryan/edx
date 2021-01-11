@@ -9,7 +9,7 @@
       </q-breadcrumbs>
     </div>
 
-    <!-- <q-card v-if='tab == "Title1" ' class="bg-transparent no-shadow no-border">
+    <q-card class="bg-transparent no-shadow no-border">
       <q-card-section class="q-pa-none">
         <div class="row q-col-gutter-sm ">
 
@@ -20,7 +20,7 @@
               </q-item-section>
               <q-item-section class="q-ml-none">
                 <q-item-label class="text-grey-7">Total PD</q-item-label>
-                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{totalPD}}</q-item-label>
+                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{barInfo.totalsAmount.PD}}</q-item-label>
               </q-item-section>
             </q-item>
           </div>
@@ -32,7 +32,7 @@
               </q-item-section>
               <q-item-section class="q-ml-none">
                 <q-item-label class="text-grey-7">Total FE</q-item-label>
-                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{totalFE}}</q-item-label>
+                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{barInfo.totalsAmount.FE}} </q-item-label>
               </q-item-section>
             </q-item>
           </div>
@@ -44,7 +44,7 @@
               </q-item-section>
               <q-item-section class="q-ml-none">
                 <q-item-label class="text-grey-7">Used PD</q-item-label>
-                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{usedPD}}</q-item-label>
+                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{barInfo.usedAmount.PD}} </q-item-label>
               </q-item-section>
             </q-item>
           </div>
@@ -56,7 +56,7 @@
               </q-item-section>
               <q-item-section class="q-ml-none">
                 <q-item-label class="text-grey-7">Used FE</q-item-label>
-                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{usedPE}}</q-item-label>
+                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{barInfo.usedAmount.FE }}</q-item-label>
               </q-item-section>
             </q-item>
           </div>
@@ -68,7 +68,7 @@
               </q-item-section>
               <q-item-section class="q-ml-none">
                 <q-item-label class="text-grey-7">Remaining PD</q-item-label>
-                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{remainingPD}}</q-item-label>
+                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{barInfo.remaining.PD }} </q-item-label>
               </q-item-section>
             </q-item>
           </div>
@@ -80,7 +80,7 @@
               </q-item-section>
               <q-item-section class="q-ml-none">
                 <q-item-label class="text-grey-7">Remaining FE</q-item-label>
-                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{remainingFE}}</q-item-label>
+                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{barInfo.remaining.FE }} </q-item-label>
               </q-item-section>
             </q-item>
           </div>
@@ -90,6 +90,7 @@
       </q-card-section>
     </q-card>
 
+    <!--
     <q-card v-if='tab == "Title2" ' class="bg-transparent no-shadow no-border">
       <q-card-section class="q-pa-none">
         <div class="row q-col-gutter-sm ">
@@ -399,6 +400,9 @@
     import {exportFile} from 'quasar'
     import router from 'src/router'
     import lodash from 'lodash'
+
+    import axios from 'axios'
+    import config from '../../../config'
 
     import ActivityTableTitle1 from '../../components/activity/ActivityTableTitle1'
     import BudgetTableTitle2 from '../../components/activity/BudgetTableTitle2'
@@ -841,10 +845,22 @@
               attendies: false,
             },
             key: null,
-
+            barInfo: {},
           };
         },
         methods: {
+          getActivityBar(type, schoolId) {
+            const conf = {
+              method: 'GET',
+              url: config.getActivityBar + type + '/' + schoolId,
+              headers: {
+                Accept: 'application/json',
+              }
+            }
+            axios(conf).then(res => {
+              this.barInfo = res.data
+            })
+          },
           optionsFn (date) {
             // let start = this.editedItem.dateOfActivityArr[0].startdate
             // let end = this.editedItem.dateOfActivityArr[0].endDate
@@ -1188,15 +1204,9 @@
           }
         },
         created() {
-
+            console.log('activity created....')
             this.schoolName = this.$route.query.name
-
-            // 
-            // let q = {a: 1}
-            // let w = {a: 1, b: 4}
-            // console.log(_.isEqual(q, w))
-            // //
-            // this.createData()
+            this.getActivityBar(parseInt(this.tab), this.$route.params.id)
 
         },
         computed: {

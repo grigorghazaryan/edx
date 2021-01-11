@@ -27,7 +27,9 @@
       <q-select class="q-mr-md" style="min-width: 250px; max-width: 250px" dense outlines clearable 
       v-model="typeModel" :options="options" label="Type" @input="filterType"/>
 
-      <q-btn square class="q-mr-md" style="background-color: #546bfa" text-color="white" icon="add" @click="addEmptyRow" no-caps>Add</q-btn>
+      <q-btn square :disabled="addNew"
+       class="q-mr-md" style="background-color: #546bfa" text-color="white" icon="add" 
+      @click="addNew = true, addNewRow()" no-caps>Add</q-btn>
 
 
       <q-btn
@@ -53,6 +55,10 @@
           >{{props.inFullscreen ? 'Exit Fullscreen' : 'Toggle Fullscreen'}}
           </q-tooltip>
       </q-btn>
+
+      <q-checkbox v-model="showRemainingBalance" label="Show remaining balance" />
+
+
 
       <div class="q-pa-sm q-gutter-sm">
 
@@ -260,6 +266,7 @@
                             row-key="no"
                             hide-bottom
                             class="no-scroll"
+                            :pagination.sync="paginationAttendee"
                           >
                           
                             <template v-slot:body="props">
@@ -360,8 +367,15 @@
 
                           </q-table>
 
-                          <q-btn v-if="editedItem.noAttendingArr.attendeesData.length < 5" round dense color="secondary" icon="add" class="q-mt-md"  @click="addAttRow"/>
-
+                      <q-btn 
+                        v-if="editedItem.noAttendingArr.attendeesData.length < teachersTypeArr.length"
+                        round 
+                        dense 
+                        color="secondary" 
+                        icon="add" 
+                        class="q-mt-md"  
+                        @click="addAttRow"
+                      />
                         </div>
                       </div>
 
@@ -574,6 +588,7 @@
                             row-key="no"
                             hide-bottom
                             class="no-scroll"
+                            :pagination.sync="paginationAttendee"
                           >
                           
                             <template v-slot:body="props">
@@ -674,9 +689,20 @@
 
                           </q-table>
 
-                          <q-btn v-if="editedItem.noAttendingArr.attendeesData.length < 5" round dense color="secondary" icon="add" class="q-mt-md"  @click="addAttRow"/>
+
+
+                      <q-btn 
+                        v-if="editedItem.noAttendingArr.attendeesData.length < teachersTypeArr.length"
+                        round 
+                        dense 
+                        color="secondary" 
+                        icon="add" 
+                        class="q-mt-md"  
+                        @click="addAttRow"
+                      />
 
                         </div>
+
                       </div>
 
                       <q-separator class="q-mt-md q-mb-lg"></q-separator>
@@ -701,7 +727,10 @@
           <q-dialog v-model="show_attending_dialog">
           <q-card>
 
-              <q-card-section class="row justify-start items-center" style="width: 500px">
+              <q-card-section 
+                class="row justify-start items-center" 
+                style="width: 550px"
+              >
                 <q-icon class="q-mr-sm" name="people_alt"  color="green" style="font-size: 1.5em"/>
                 <div class="text-h6">Activity Attendees</div>
               </q-card-section>
@@ -712,9 +741,9 @@
                   <q-table
                     :data="editedItem.noAttendingArr.attendeesData"
                     :columns="attendeesColumn"
-                    row-key="no"
+                    row-key="id"
                     hide-bottom
-                    class="no-scroll"
+                    :pagination.sync="paginationAttendee"
                   >
                   
                     <template v-slot:body="props">
@@ -814,8 +843,15 @@
                     </template>
 
                   </q-table>
-
-                  <q-btn v-if="editedItem.noAttendingArr.attendeesData.length < 5" round dense color="secondary" icon="add" class="q-mt-md"  @click="addAttRow"/>
+                  <q-btn 
+                    v-if="editedItem.noAttendingArr.attendeesData.length < teachersTypeArr.length"
+                    round 
+                    dense 
+                    color="secondary" 
+                    icon="add" 
+                    class="q-mt-md"  
+                    @click="addAttRow"
+                  />
 
                 </div>
               </q-card-section>
@@ -890,6 +926,7 @@
           <q-tr 
             :props="props" 
             :class="{ 'bg-red-2' : props.row.changed }" 
+            @click="copyRowData(props.rowIndex)"
           >
 
           <q-td auto-width>
@@ -1038,7 +1075,7 @@
                 </q-tooltip>
               </q-icon>
 
-              <q-icon v-else-if="props.row.approval_type_uni.label == 'Pre-Approved'" name="how_to_reg" color="blue" style="font-size: 1.5em">
+              <q-icon v-else-if="props.row.approval_type_uni.label == 'Pre Approval'" name="how_to_reg" color="blue" style="font-size: 1.5em">
                 <q-tooltip 
                     anchor="top middle" self="bottom middle" :offset="[10, 10]"
                     transition-show="flip-right"
@@ -1068,8 +1105,8 @@
                           />
 
                           <q-input 
-                            :disable="props.row.approval_type_uni.label !== 'Pre-Approved'" 
-                            class="q-mt-md q-mb-lg" dense outlined v-model="approvedName" 
+                            :disable="props.row.approval_type_uni.label !== 'Pre Approval'" 
+                            class="q-mt-md q-mb-lg" dense outlined v-model="props.row.approver" 
                             label="Approved Name" 
                           />
                   
@@ -1115,12 +1152,11 @@
 
           <q-td key="noAttending" :props="props" @click="copyRowData(props.rowIndex)">
               <div @click="editAttendingitem(props.row)">
-              <!-- {{ props.row.noAttendingArr.attendees }}  -->
-              {{ props.row.no_attending }}
-              <span class="q-ml-sm">
-                  <q-icon name="people_alt" color="green" style="font-size: 1.5em"/>
-                  <!-- v-if="props.row.noAttendingArr.split"  -->
-              </span>
+
+                {{ props.row.no_attending }}
+                <span class="q-ml-sm">
+                    <q-icon name="people_alt" color="green" style="font-size: 1.5em"/>
+                </span>
 
               </div>
           </q-td>
@@ -1131,6 +1167,7 @@
               <q-popup-edit v-model="props.row.amount" title="Update amount" buttons>
                 <q-input @input="detectChange(props.rowIndex)" type="text" 
                 v-model="props.row.amount" dense autofocus />
+                <q-input v-model="props.row.percentage"  type="number"  :label="props.row.type_uni.label + ' Percentage' " dense autofocus/>
               </q-popup-edit>
           </q-td>
 
@@ -1178,64 +1215,147 @@
               <div>$ {{ (parseFloat(props.row.amount) + parseFloat(((props.row.amount * 12) / 100))).toFixed(2) }}</div>
           </q-td>
 
-          <q-td key="actions" :props="props">
-              <q-btn 
-              v-if="props.row.changed"
-              @click="props.row.changed = false"
-              class="q-mr-sm"
-              icon="save"
-              color="green" 
-              size=sm 
-              no-caps
-              round 
+          <q-td key="actions" :props="props" style="min-width: 132px">
+            
+            <div v-if="props.row.changed">
+
+              <q-btn
+                @click="cancellChange(props.rowIndex)"
+                class="q-mr-sm"
+                icon="cancel"
+                color="orange" 
+                size=sm 
+                no-caps
+                round 
               >
-              <q-tooltip 
-                  anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                  transition-show="flip-right"
-                  transition-hide="flip-left"
+                <q-tooltip 
+                    anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                    transition-show="flip-right"
+                    transition-hide="flip-left"
+                >
+                  <strong>Cancel</strong>
+                </q-tooltip>
+              </q-btn>
+              
+              <q-btn
+                @click="editActivity(props.rowIndex)"
+                class="q-mr-sm"
+                icon="save"
+                color="green" 
+                size=sm 
+                no-caps
+                round 
               >
+                <q-tooltip 
+                    anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                    transition-show="flip-right"
+                    transition-hide="flip-left"
+                >
                   <strong>Save</strong>
-              </q-tooltip>
+                </q-tooltip>
               </q-btn>
+
+            </div>
+
+            <div v-if="props.row.showEditButton && !props.row.changed">
               <q-btn 
-              v-show="props.row.showEditButton && !props.row.changed"
-              class="q-mr-sm"
-              icon="content_copy"
-              color="orange" 
-              @click="copyRow(props.row, props.rowIndex)"
-              size=sm 
-              no-caps
-              round 
+                v-show="props.row.showEditButton && !props.row.changed"
+                class="q-mr-sm"
+                icon="content_copy"
+                color="orange" 
+                @click="addNew = true, duplicate = true, copyRow(props.row, props.rowIndex)"
+                size=sm 
+                no-caps
+                round 
               >
-              <q-tooltip 
-                  anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                  transition-show="flip-right"
-                  transition-hide="flip-left"
-              >
-                  <strong>Duplicate</strong>
-              </q-tooltip>
-              </q-btn>
+                <q-tooltip 
+                    anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                    transition-show="flip-right"
+                    transition-hide="flip-left"
+                >
+                    <strong>Duplicate</strong>
+                </q-tooltip>
+              </q-btn>              
+
               <q-btn 
-              icon="delete_forever"
-              color="red" 
-              @click="openDeleteModal(props.row)" 
-              size=sm 
-              no-caps
-              round 
+                icon="delete_forever"
+                color="red" 
+                @click="openDeleteModal(props.row)" 
+                size=sm 
+                no-caps
+                round 
               >
-              <q-tooltip 
-                  anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                  transition-show="flip-right"
-                  transition-hide="flip-left"
-              >
+                <q-tooltip 
+                    anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                    transition-show="flip-right"
+                    transition-hide="flip-left"
+                >
                   <strong>Delete</strong>
-              </q-tooltip>
+                </q-tooltip>
               </q-btn>
+            </div>
+            
+              <!-- <q-btn 
+                v-if="props.row.changed"
+                @click="props.row.changed = false"
+                class="q-mr-sm"
+                icon="save"
+                color="green" 
+                size=sm 
+                no-caps
+                round 
+              >
+                <q-tooltip 
+                    anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                    transition-show="flip-right"
+                    transition-hide="flip-left"
+                >
+                    <strong>Save</strong>
+                </q-tooltip>
+              </q-btn>
+
+              <q-btn 
+                v-show="props.row.showEditButton && !props.row.changed"
+                class="q-mr-sm"
+                icon="content_copy"
+                color="orange" 
+                @click="copyRow(props.row, props.rowIndex)"
+                size=sm 
+                no-caps
+                round 
+              >
+                <q-tooltip 
+                    anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                    transition-show="flip-right"
+                    transition-hide="flip-left"
+                >
+                    <strong>Duplicate</strong>
+                </q-tooltip>
+              </q-btn>
+
+              <q-btn 
+                icon="delete_forever"
+                color="red" 
+                @click="openDeleteModal(props.row)" 
+                size=sm 
+                no-caps
+                round 
+              >
+                <q-tooltip 
+                    anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                    transition-show="flip-right"
+                    transition-hide="flip-left"
+                >
+                    <strong>Delete</strong>
+                </q-tooltip>
+              </q-btn> -->
+
           </q-td>
 
           </q-tr>
 
-          <q-tr v-show="props.expand" :props="props">
+          <q-tr v-show="props.expand" 
+          :props="props">
             <q-td colspan="100%">
                 <div class="q-mt-md">
                 <div class="row">
@@ -1333,10 +1453,9 @@
 
                     <div class="col-md-3">
                       <div class="text-subtitle2">Notes</div>
-                      <q-input class="q-mt-md" dense outlined type="textarea" v-model="props.row.activity_note" readonly />
-                      <!-- <q-input type="textarea" outlined v-model="props.row.notes" class="q-mb-md"/>   -->
-                      <q-popup-edit v-model="props.row.activity_note" title="Update notes" buttons>
-                          <q-input type="textarea" v-model="props.row.activity_note" 
+                      <q-input class="q-mt-md" dense outlined type="textarea" v-model="props.row.note" readonly />
+                      <q-popup-edit v-model="props.row.note" title="Update notes" buttons>
+                          <q-input type="textarea" v-model="props.row.note" @input="detectChange(props.rowIndex)"
                           dense autofocus />
                       </q-popup-edit>    
                     </div>
@@ -1411,14 +1530,18 @@ function wrapCsvValue(val, formatFn) {
 }
 const adminFee = 12;
 let oldObject = {}
+let typingTimer
+let doneTypingInterval = 500
 
 export default {
 data() {
   return {
+    showRemainingBalance: false,
     detectChangeOldData: {},
     tab: '1',
     pages: 1,
     pagination: { rowsPerPage: 10 },
+    paginationAttendee: { rowsPerPage: 10 },
     current: 1,
     count: 10,
     mode: 'list',
@@ -1447,8 +1570,10 @@ data() {
     show_attending_dialog: false,
     splitActivity: false,
     confirmAttendeeModal: false,
+    addNew: false,
+    duplicate: false,
 
-    approval : ['Approved', 'Declined', 'Pending'],
+    approval : [],
     status : [ 
     {
       id: 1,
@@ -1459,13 +1584,7 @@ data() {
       label: "Canceled"
     }],
 
-    optionsApp: [
-      { label: 'Needs Assessment', value: 'Needs Assessment' },
-      { label: 'Catalog', value: 'Catalog', color: 'green' },
-      { label: 'Blanket Approval', value: 'Blanket Approval', color: 'red' },
-      { label: 'Pre Approval', value: 'Pre-Approved', color: 'green' },
-      { label: 'None', value: 'None'}
-    ],
+    optionsApp: [],
     approvedName: '',
     
     numbersOfAttendees: [1, 2, 3],
@@ -1499,8 +1618,7 @@ data() {
         sortable: true
       },
     ],
-    attendeesData: [
-    ],
+    attendeesData: [],
 
     dateOfActivityColumns: [
       {
@@ -1733,48 +1851,13 @@ data() {
         disable: false
       },
     ],
-    teachersTypeArr: [
-    {
-      label: 'Teachers',
-      value: 'teachers',
-      disable: false
-    },
-    {
-      label: 'Students',
-      value: 'students',
-      disable: false
-    },
-    {
-      label: 'Parents',
-      value: 'parents',
-      disable: false
-    },
-    {
-      label: 'Staff',
-      value: 'staff',
-      disable: false
-    },
-    {
-      label: 'Admin',
-      value: 'admin',
-      disable: false
-    }
-  ],
+    teachersTypeArr: [],
     // typeArr: ['PD', 'FE'],
     typeArr2: ['PD', 'M'],
     typeArr3: ['PD', 'I'],
     typeArr4: ['WR', 'SH', 'PD', 'TI'],
     typeEssr: ['PD', 'M', 'S'],
-    typeArr: [
-      {
-        label: 'PD',
-        value: true
-      },
-      {
-        label: 'FE',
-        value: false
-      },
-    ],
+    typeArr: [],
     rowsPerPageArr: ['5', '10', '25', '50', '75', '100'], 
     weekDays: [
       { label: 'Sunday', checked: false }, 
@@ -1803,7 +1886,7 @@ data() {
       child: true,
       attendies: false,
     },
-    key: null,
+    key: null
   };
   },
   methods: {
@@ -1813,14 +1896,14 @@ data() {
       return date >= '2020/06/14' && date <= '2020/06/25'
     },
     detectChange(index) {
+
+      this.editedItem = this.tempDataX[index]
+      console.log('detectChange function', this.editedItem)
       
       let d = JSON.parse(oldObject)
       // let d = oldObject
       let f = JSON.stringify(this.data[index])
           f = JSON.parse(f)
-
-      console.log('OLD OBJECT', d)
-      console.log('NEW OBJECT', f)
 
       let status = _.isEqual(d, f)
 
@@ -1857,37 +1940,86 @@ data() {
       Object.assign(this.data[index], JSON.parse(old));
 
     },
-    addEmptyRow() {
-      let obj = {
-            // toggle: '',
-            provider: '',
-            status: '',
-            approvals: '',
-            PDActivity: '',
-            dateOfActivity: '',
-            noAttending: 's',
-            amount: 0,
-            type: 0,
-            typeTest: 0,
-            grossPD: 0,
-            repeat: false,
-            notes: '',
-            dateOfActivityArr: {
-              startdate: '06-14-1995',
-              endDate: '06-14-1998',
-              time1: '00:00',
-              time2: '00:00',
-              selectDayWeekMonth: '',
-              selectWeekDay: '',
-            },
-            noAttendingArr: {
-              attendees: 0,
-              split: false,
-              attendeesData: [],
-              teacherCount: 0,
-            },
-        }
+    getToday() {
+      let dateObj = new Date();
+      let month = dateObj.getUTCMonth() + 1; //months from 1-12
+      let day = dateObj.getUTCDate();
+      let year = dateObj.getUTCFullYear();
+
+      return year + "-" + month + "-" + day;
+    },
+    addNewRow() {
+
+      let date = this.getToday()
+
+      const obj  = {
+        provider: {
+          id: 999,
+          label: 'Unknown'
+        },
+        status_uni: {
+          id: 1,
+          label: 'Active'
+        },
+        approval_status_uni: {
+          id: 1,
+          label: 'Approved'
+        },
+        approval_type_uni: {
+          id: 1,
+          label: 'Needs Assessment'
+        },
+        activity: '',
+        activity_date: date + ' - ' + date,
+        no_attending: '',
+        amount: 0,
+        type_uni: {
+          id: 1,
+          label: 'PD'
+        },
+        note: '',
+        approver: '',
+        charge: 0,
+        repeat: false,
+        attendies: false,
+
+        dateOfActivityArr: [{
+          id: 109098788,
+          startdate: '2019-02-01',
+          endDate: '2019-02-01',
+          time1: '00:00',
+          time2: '00:00',
+          selectDayWeekMonth: '',
+          selectWeekDay: '',
+        }],
+        dateOfActivityArr: [{
+          location: '',
+          selectDayWeekMonth: 'selectDayWeekMonth',
+          repeatEvery: 1,
+          note: 'Note...',
+          selectDayWeekMonth: 'selectDayWeekMonth',
+          selectWeekDay: 'selectWeekDay',
+
+          repeats: { id: 1, label: 'Daily', value: 'Daily', clean: 'Day' },
+          repeatOn: [],
+          attendies: false,
+        }],
+
+        noAttendingArr: {
+          attendees: '',
+          amount: 0,
+          split: false,
+          attendeesData: [
+          ],
+        },
+
+        changed: true,
+        showEditButton: false,
+      }
+
       this.data.unshift(obj)
+      this.editedItem = obj
+
     },
     selfTitleTeacherCount(count) {
       console.log('selfTitleTeacherCount...', count )
@@ -1898,6 +2030,7 @@ data() {
     changeType(val) {
       const index = this.teachersTypeArr.indexOf(val)
       this.teachersTypeArr[index].disable = true
+      console.log('changeType', val)
     },
     searchEnter() {
       if(this.teachersSearchLength == 0) {
@@ -1953,9 +2086,12 @@ data() {
 
     },
     editAttendingitem(item) {
+      console.log('id', item.id)
       this.editedIndex = this.data.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.show_attending_dialog = true;
+
+      this.getAttdeesById(item.id)
     },
     confirmNoAttending() {
       console.log('ok', this.editedItem)
@@ -2026,13 +2162,15 @@ data() {
       console.log('787878', this.filteredList)
     },
     addAttRow() {
-      let obj = {   
-        no: '',
+      let obj = {  
+        id: Math.floor(Math.random() * 100),
+        no: 0,
         type: '',
         all: false,
         attendeeList: 'View'
       }
       this.editedItem.noAttendingArr.attendeesData.push(obj)
+      console.log(this.editedItem.noAttendingArr.attendeesData)
     },
     addDate(key) {
       this.show_dialog_child = true
@@ -2111,8 +2249,11 @@ data() {
             let arr = []
             for(let i=0; i<data.length; i++) {
 
+              let sd = data[i].start_date,
+                  ed = data[i].end_date;
+
           
-            let activityObj = {
+              let activityObj = {
                 id: data[i].id,
                 provider: {
                   id: data[i].supplier.id,
@@ -2130,20 +2271,24 @@ data() {
                   id: data[i].approval_types.id,
                   label: data[i].approval_types.name
                 },
-                activity: data[i].activity_name, // TBD If date  == null
-                activity_date: data[i].start_date + ' - ' + data[i].end_date,
+                activity: data[i].activity_name,
+                activity_date: sd == null ? 'TBD' : sd + ' - ' + ed == null ? 'TBD' : ed,
                 no_attending: data[i].total_attendee_count + ' ' + data[i].allocation.name + ' ' + data[i].attendee_type.type,
                 amount: data[i].cost != null ? data[i].cost : 0,
                 type_uni: {
                   id: data[i].type.id,
                   label: data[i].type.abbreviation
                 },
+                note: data[i].activity_note,
+                approver: '',
                 charge: data[i].total_cost,
                 repeat: data[i].has_recurring != null ? data[i].has_recurring : false,
+                attendies: false,
+                percentage: 0,
 
                 changed: false,
                 showEditButton: true,
-                attendies: false,
+                
 
                 dateOfActivityArr: [{
                   id: 109098788,
@@ -2163,16 +2308,14 @@ data() {
                   repeatOn: [],
                   attendies: false,
                 }],
+
                 noAttendingArr: {
                   attendees: '',
                   amount: 0,
                   split: false,
                   attendeesData: [
                   ],
-                },
-
-
-                
+                }
               }
               arr.push(activityObj)
             }
@@ -2237,17 +2380,254 @@ data() {
       }
 
     },
+    getAtendeeTypes() {
+        const conf = {
+            method: 'GET',
+            url: config.getAtendeeTypes,
+            headers: {
+              Accept: 'application/json',
+            }
+        }
+
+        axios(conf).then(res => {
+
+          let atendeeTypes = res.data.activityAttendyTypes;
+          let atendeeArr = [];
+
+          for(let i=0; i<atendeeTypes.length; i++) {
+            console.log(atendeeTypes[i])
+            let obj = {
+              label: atendeeTypes[i].type,
+              value: atendeeTypes[i].type,
+              disable: false
+            }
+            atendeeArr.push(obj)
+          }
+
+          this.teachersTypeArr = atendeeArr;
+
+
+        })
+    },
+    getAttdeesById(id) {
+        const conf = {
+            method: 'GET',
+            url: config.getAttendeesById + id,
+            headers: {
+              Accept: 'application/json',
+            }
+        }
+
+        axios(conf).then(res => {
+
+          let attendees = res.data.attendySuumary
+
+          for(let i=0; i<attendees.length; i++) {
+
+            let obj = {  
+              id: attendees[i].id,
+              no: parseInt(attendees[i].count),
+              type: {
+                label: attendees[i].type.type,
+                value: attendees[i].type.type,
+                disable: true
+              },
+              all: attendees[i].is_all == 0 ? false : true,
+              attendeeList: 'View'
+            }
+
+            for(let j=0; j<this.teachersTypeArr.length; j++) {
+              if(this.teachersTypeArr[j].label == attendees[i].type.type) {
+                this.teachersTypeArr[j].disable = true
+              }
+            }
+
+            this.editedItem.noAttendingArr.attendeesData.push(obj)
+
+          }
+        })
+    },
+    cancellChange(index) {
+
+      if(this.addNew && !this.duplicate) {
+
+        this.data.splice(0, 1)
+        this.addNew = false
+
+      } else if(this.addNew && this.duplicate) {
+          this.data.splice(index, 1)
+          this.addNew = false
+          this.duplicate = false
+      } else {
+
+        let d = JSON.parse(oldObject)
+        Object.assign(this.data[index], d);
+        this.data[index].changed = false
+
+      }
+
+    },
+    editActivity(index) {
+
+      console.log(this.editedItem)
+
+      const editData = {
+        supplier_id: this.editedItem.provider.id,
+        activity_status_id: this.editedItem.status_uni.id,
+        activity_approval_status_id: this.editedItem.approval_status_uni.id,
+        activity_approval_type_id: this.editedItem.approval_status_uni.id,
+        approver: this.editedItem.approver,
+        activity_name: this.editedItem.activity,
+        cost: this.editedItem.amount,
+        allocation_type_categories_id: this.editedItem.type_uni.id,
+        activity_note: this.editedItem.note
+      }
+
+      if(this.addNew) {
+
+          const conf = {
+            method: 'POST',
+            url: config.addActivity,
+            headers: {
+              Accept: 'application/json',
+            },
+            data: editData
+          }
+
+          axios(conf)
+          .then(res => {
+
+            this.$q.notify({
+              message: 'Activity Added successfully!',
+              type: 'positive',
+            })
+
+            this.data[index].changed = false
+            this.data[index].showEditButton = true
+
+            this.data[index].id = res.data.activity[0].id
+            this.data[index].add = false
+
+            this.addNew = false
+            this.statusChanged = false
+
+          })
+
+      }else {
+
+          const conf = {
+            method: 'PUT',
+            url: config.editActivity + this.editedItem.id,
+            headers: {
+              Accept: 'application/json',
+            },
+            data: editData
+          }
+
+          axios(conf)
+            .then(res => {
+
+              this.$q.notify({
+                message: 'Activity edited successfully!',
+                type: 'positive',
+              })
+              
+              this.data[index].changed = false
+              this.data[index].showEditButton = true
+
+              this.data[index].id = res.data.activity[0].id
+              this.data[index].add = false
+
+              this.addNew = false
+              this.statusChanged = false
+
+            })
+          }
+
+
+
+
+      
+    },
+    getCategoryTypes(id) {
+
+      const conf = {
+        method: 'GET',
+        url: config.getCategoryTypes + id,
+        headers: {
+          Accept: 'application/json',
+        }
+      }
+
+      axios(conf).then(res => {
+
+        let types = res.data.typesCategories;
+        let typesArray = []
+
+        for(let i=0; i<types.length; i++) {
+          let obj = {
+            id: types[i].id,
+            label: types[i].abbreviation
+          }
+          typesArray.push(obj)
+        }
+
+        this.typeArr = typesArray
+        console.log('[[[]]]', this.typesArr)
+
+      })
+    },
+    getApprovals() {
+      
+      const conf = {
+        method: 'GET',
+        url: config.getApprovals,
+        headers: {
+          Accept: 'application/json',
+        }
+      }
+
+      axios(conf).then(res => {
+        console.log('approvals', res.data)
+
+        let approvalStatus = res.data.activityApprovalStatus
+        let approvalTypes = res.data.activityApprovalTypes
+        
+        let statusArr = [], typesArr = [];
+
+        for(let i=0; i<approvalStatus.length; i++) {
+          let obj = {
+            id: approvalStatus[i].id,
+            label: approvalStatus[i].name
+          }
+          statusArr.push(obj)
+        }
+
+        for(let i=0; i<approvalTypes.length; i++) {
+          let obj = {
+            id: approvalTypes[i].id,
+            label: approvalTypes[i].name,
+            value: approvalTypes[i].name,
+          }
+          typesArr.push(obj)
+        }
+
+        this.approval = statusArr
+        this.optionsApp = typesArr
+      })
+    },
   },
   created() {
       this.getActivityByType( parseInt(this.tab), this.$route.params.id, this.count, this.current )
       this.getAdditionalInfo(1)
+      this.getAtendeeTypes()
+      this.getCategoryTypes(1)
+      this.getApprovals()
   },
   computed: {
     school() {
       return this.$route.query.name
     },
-
-
     popupAmount() {
         let attendees = this.editedItem.noAttendingArr.attendeesData,
             amount = 0;
@@ -2319,7 +2699,6 @@ data() {
   },
   watch: {
     show_attending_dialog(val) {
-      console.log('date of activity popup')
       if(val) {
         let attendesData = this.editedItem.noAttendingArr.attendeesData
         for(let i=0; i<attendesData.length; i++) {
@@ -2330,6 +2709,7 @@ data() {
         for(let i=0; i<this.teachersTypeArr.length; i++) {
           this.teachersTypeArr[i].disable = false
         }
+        this.editedItem.noAttendingArr.attendeesData = []
         // for(let i=0; i<this.weekDays.length; i++) {
         //   this.weekDays[i].checked = false
         // }
@@ -2345,6 +2725,6 @@ data() {
         // }
       }
     }
-  },
+  }
 }
 </script>

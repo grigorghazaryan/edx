@@ -45,8 +45,15 @@ const config = {
     getTotalLicense: 'https://inventory.aimtech.am/api/v1/license-total/', // + school id
 
     // Activity
-    getActivity: 'https://edxchange-activity.aimtech.am/api/v1/activity/' // + 1 / 1001,
-
+    getActivity: 'https://edxchange-activity.aimtech.am/api/v1/activity/', // + 1 / 1001,
+    getAttendeesById: 'https://edxchange-activity.aimtech.am/api/v1/get-atendee/', // + id
+    getCategoryTypes: 'https://edxchange-activity.aimtech.am/api/v1/get-types-categories/', // + 1 ? Title 1
+    editActivity: 'https://edxchange-activity.aimtech.am/api/v1/activity/', // + id
+    addActivity: 'https://edxchange-activity.aimtech.am/api/v1/activity',
+    getApprovals: 'https://edxchange-activity.aimtech.am/api/v1/get-approval',
+    getActivityBar: 'https://edxchange-activity.aimtech.am/api/v1/activity-totals/', // + 1 / + 1001
+    // Get attendee types
+    getAtendeeTypes: 'https://edxchange-activity.aimtech.am/api/v1/get-atendee-types', 
 }
 
 export default config
