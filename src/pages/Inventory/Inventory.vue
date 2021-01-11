@@ -33,7 +33,7 @@
       </q-card-section>
     </q-card>
 
-    <div class="heading-top q-mt-lg">{{ schoolName }}</div>
+    <!-- <div class="heading-top q-mt-lg">{{ schoolName }}</div> -->
 
     <div class="q-pa-sm q-mt-sm q-gutter-sm">
       <q-card>
@@ -58,7 +58,8 @@
 
         <q-separator />
 
-        <q-tab-panels v-model="tab" animated>
+        <q-tab-panels v-model="tab" animated class="tab-panels-parent">
+
           <q-tab-panel name="1" class="q-p-sm">
             <InventoryTable1 />
           </q-tab-panel>
@@ -87,6 +88,7 @@
 
       </q-card>
     </div>
+    
   </q-page>
 </template>
 
@@ -1186,6 +1188,8 @@ label.left-arrow-input:after {
     justify-content: flex-end;
     margin-top: 30px;
 }
+
+
 
 
 </style>

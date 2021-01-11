@@ -28,13 +28,19 @@ const routes = [
       {path: '/Activity/:id', component: () => import('pages/Activity/Activity.vue')},
       // -------------
       {path: '/Reimbursement', component: () => import('pages/Reimbursement/Reimbursement.vue')},
+
+
+
+      // Test
+      {path: '/A0', component: () => import('pages/BudgetTest.vue')},
       
     ]
   },
   {
     path: '/Login-1',
     component: () => import('pages/Login-1.vue')
-  }
+  },
+  
 ]
 
 // Always leave this as last one

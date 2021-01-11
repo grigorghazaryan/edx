@@ -363,22 +363,22 @@
 
         <q-separator />
 
-        <q-tab-panels v-model="tab" animated>
+        <q-tab-panels v-model="tab" animated class="tab-panels-parent">
 
           <q-tab-panel name="1" class="q-p-sm">
             <ActivityTableTitle1 />
           </q-tab-panel>
 
           <q-tab-panel name="2" class="q-p-sm">
-            <BudgetTableTitle2 />
+            <!-- <BudgetTableTitle2 /> -->
           </q-tab-panel>
 
           <q-tab-panel name="3" class="q-p-sm">
-            <BudgetTableTitle3 />
+            <!-- <BudgetTableTitle3 /> -->
           </q-tab-panel>
 
           <q-tab-panel name="4" class="q-p-sm">
-            <BudgetTableTitle4 />
+            <!-- <BudgetTableTitle4 /> -->
           </q-tab-panel>
 
           <q-tab-panel name="5" class="q-p-sm">
@@ -432,7 +432,7 @@
     export default {
         components: {
           ActivityTableTitle1,
-          BudgetTableTitle2
+          // BudgetTableTitle2
           // BudgetTableTitle2,BudgetTableTitle3,BudgetTableTitle4, BudgetTableEsser
         },
         data() {
@@ -1287,5 +1287,12 @@
     justify-content: start;
     align-items: center;
 }
+
+// .q-tab-panel {
+//     padding: 0
+// }
+// .scroll {
+//     overflow: inherit
+// }
 
 </style>
