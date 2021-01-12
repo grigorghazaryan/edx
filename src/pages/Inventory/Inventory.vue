@@ -36,6 +36,9 @@
     <!-- <div class="heading-top q-mt-lg">{{ schoolName }}</div> -->
 
     <div class="q-pa-sm q-mt-sm q-gutter-sm">
+      <div class="edx-header-parent">
+        <span class="edx-header-text">{{ schoolName }}</span>
+      </div>
       <q-card>
 
         <q-tabs
@@ -1187,6 +1190,10 @@ label.left-arrow-input:after {
     display: flex;
     justify-content: flex-end;
     margin-top: 30px;
+}
+
+.q-card {
+  margin-top: 0;
 }
 
 

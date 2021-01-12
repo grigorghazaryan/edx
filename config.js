@@ -52,6 +52,9 @@ const config = {
     addActivity: 'https://edxchange-activity.aimtech.am/api/v1/activity',
     getApprovals: 'https://edxchange-activity.aimtech.am/api/v1/get-approval',
     getActivityBar: 'https://edxchange-activity.aimtech.am/api/v1/activity-totals/', // + 1 / + 1001
+    getRcurranceTypes: 'https://edxchange-activity.aimtech.am/api/v1/get-recurrance-types',
+    getSchedules: 'https://edxchange-activity.aimtech.am/api/v1/get-schedule/', // + id
+    
     // Get attendee types
     getAtendeeTypes: 'https://edxchange-activity.aimtech.am/api/v1/get-atendee-types', 
 }

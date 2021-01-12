@@ -342,6 +342,11 @@
 
 
     <div class="q-pa-sm q-mt-sm q-gutter-sm">
+      
+      <div class="edx-header-parent">
+        <span class="edx-header-text">{{ schoolName }}</span>
+      </div>
+
       <q-card>
 
         <q-tabs
@@ -1296,6 +1301,10 @@
     display: flex;
     justify-content: start;
     align-items: center;
+}
+
+.q-card {
+  margin-top: 0;
 }
 
 // .q-tab-panel {

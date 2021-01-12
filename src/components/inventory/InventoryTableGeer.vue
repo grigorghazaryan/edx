@@ -1,6 +1,5 @@
 <template>
   <q-table
-  :title="schoolName"
     :data="data"
     :columns="columns"
     :loading="loading"
@@ -2811,11 +2810,6 @@ export default {
     this.getInventoryByType( parseInt(this.tab), this.$route.params.id, this.count, this.current )
     this.getAdditionalInfo(6)
   },
-    computed: {
-    schoolName() {
-      return this.$route.query.name
-    }
-  }
 }
 </script>
 

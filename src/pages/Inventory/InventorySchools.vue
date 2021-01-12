@@ -9,9 +9,13 @@
       </q-breadcrumbs>
     </div>
 
+    <div class="q-pa-sm q-mt-sm q-gutter-sm">
+      
+      <div class="edx-header-parent">
+        <span class="edx-header-text">Schools</span>
+      </div>
 
       <q-table
-        title="Schools" 
         :data="data"
         :columns="columns"
         row-key="id" 
@@ -37,7 +41,9 @@
         </template>
 
       </q-table>
+
     </div>
+  </div>
 </template>
 
 

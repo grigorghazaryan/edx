@@ -1,6 +1,5 @@
 <template>
     <q-table
-      :title="school" 
       :data="data" 
       :columns="columns"
       :loading="loading"
@@ -62,7 +61,124 @@
 
       <div class="q-pa-sm q-gutter-sm">
 
-          <q-dialog v-model="show_dialog">
+          <q-dialog  v-model="showDateOfActivityTable">
+            <q-card style="width: 950px; max-width: 80vw;">
+
+              <q-card-section class="row" style="display: flex; align-items: center;">
+                <span class="text-h6" style="line-height: 2.5rem">Date of activity</span>
+              </q-card-section>
+
+              <q-separator />
+
+              <q-card-section>
+
+                <DateOfActivityTable  
+                  :tableColumns="dateOfActivityColumns" 
+                  :dateOfActivity="dateOfActivityTableData" 
+                />
+
+                  <!-- <q-table
+                    class="q-mt-md q-mb-md no-shadow border"
+                   
+                    :columns="dateOfActivityColumns"
+                    row-key="id"
+                    hide-bottom
+                  >
+                    <template v-slot:body="props">
+                      <q-tr :props="props">
+
+                        <q-td key="startdate" :props="props">
+                          <span class="q-mr-md">{{ props.row.startdate }}</span>
+                          <span>{{ props.row.time1 }}</span>
+                        </q-td>
+
+                        <q-td key="endDate" :props="props">
+                          <span class="q-mr-md">{{ props.row.endDate }}</span>
+                          <span>{{ props.row.time2 }}</span>
+                        </q-td>
+
+                        <q-td key="location" 
+                        style="white-space: initial;width: 230px; max-width: 230px;"
+                        :props="props">
+                          {{ props.row.location }}
+                        </q-td>
+                        
+                        <q-td key="repeats" :props="props">
+                          {{ props.row.repeats.label }}
+                        </q-td>
+
+                        <q-td key="repeatEvery" :props="props">
+                          {{ props.row.repeatEvery }}
+                        </q-td>
+
+                        <q-td key="repeatOn" :props="props">
+                          <span v-for="weekday in props.row.repeatOn" :key="weekday.label">
+                            <span v-if="weekday.checked" class="q-mr-sm">{{ weekday.label }}</span>
+                          </span>
+                        </q-td>
+
+                        <q-td key="note" :props="props">
+                          <q-icon 
+                            name="sticky_note_2" 
+                            color="orange" 
+                            style="font-size: 2em;" 
+                            class="cursor-pointer"
+                            v-tooltip="{
+                              content: props.row.note,
+                              placement: 'top-center',
+                              classes: ['info'],
+                              targetClasses: ['it-has-a-tooltip'],
+                              offset: 19,
+                            }"
+                          >
+                          </q-icon>
+
+              
+                            
+                        </q-td>
+
+                        <q-td key="actions" :props="props">
+                          <q-btn
+                            v-if="props.row.child"
+                            @click="openDeleteDate(props.row)" 
+                            icon="delete_forever"
+                            color="red" 
+                            size=sm 
+                            no-caps
+                            round 
+                          >
+                            <q-tooltip 
+                                anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                                transition-show="flip-right"
+                                transition-hide="flip-left"
+                            >
+                              <strong>Delete</strong>
+                            </q-tooltip>
+                          </q-btn>
+                        </q-td>
+
+                      </q-tr>
+                    </template>
+
+                  </q-table> -->
+
+                  <div class="q-mt-md q-mb-md">
+                    <q-btn icon="add" color="blue" round @click="addDate(props.pageIndex)"/>
+                  </div>
+
+              </q-card-section>
+
+              <q-card-actions class="row justify-end">
+                <div>
+                  <q-btn flat label="Cancel" color="primary" v-close-popup></q-btn>
+                </div>
+              </q-card-actions>
+        
+
+            </q-card>
+          </q-dialog>
+
+          <!-- <q-dialog v-model="show_dialog">
             <q-card>
 
               <q-card-section class="row" style="width: 500px; display: flex; align-items: center;">
@@ -239,15 +355,6 @@
 
                       </div>
 
-                      <!-- <div class="row q-pr-lg q-pl-lg q-mt-lg">
-
-                        <div class="col-md-12 q-mb-md">
-                          <div class="text-subtitle2 q-mb-sm">Attendees:</div>
-                            <q-btn  :icon="editedItem.attendies ? 'remove' : 'add'" color="blue" round @click="editedItem.attendies = !editedItem.attendies"/>
-                        </div>
-
-                      </div> -->
-
                       <div v-if="editedItem.attendies" class="row q-mt-md q-pr-lg q-pl-lg">
                         <div class="col-4 q-pr-md row items-center justify-end">
                           Number of attendees:
@@ -396,7 +503,7 @@
         
 
             </q-card>
-          </q-dialog>
+          </q-dialog> -->
 
           <q-dialog v-model="show_dialog_child">
             <q-card>
@@ -929,428 +1036,430 @@
             @click="copyRowData(props.rowIndex)"
           >
 
-          <q-td auto-width>
-              <q-btn size="sm" flat
-              color="black"
-              @click="props.expand = !props.expand" 
-              :icon="props.expand ? 'keyboard_arrow_down' : 'keyboard_arrow_right'">
-              </q-btn>
-          </q-td>
-
-          <q-td
-            key="provider"
-            :props="props"
-            @click="copyRowData(props.rowIndex)"
-          >
-            <div  class="cursor-pointer" v-if="props.row.provider">
-              {{ props.row.provider.label }}
-            </div>
-
-              <q-popup-edit 
-                v-model="props.row.provider"
-                title="Provider" buttons>
-
-                <q-select  
-                    use-input
-                    hide-selected
-                    fill-input
-                    input-debounce="0"
-                    @input="detectChange(props.rowIndex)"
-                    v-model="props.row.provider" 
-                    :options="optionsSupplier"
-                    @filter="filterSupplier"
-                    style="width: 350px; max-width: 350px; padding-bottom: 32px"
+            <q-td auto-width>
+                <q-btn size="sm" 
+                  flat
+                  color="black"
+                  @click="props.expand = !props.expand, openBottomSection(props.row, props.rowIndex)" 
+                  :icon="props.expand ? 'keyboard_arrow_down' : 'keyboard_arrow_right'"
                 >
-                  <template v-slot:no-option>
-                    <q-item>
-                      <q-item-section class="text-grey">
-                        No results
-                      </q-item-section>
-                    </q-item>
-                  </template>
+                </q-btn>
+            </q-td>
 
-                </q-select>
-              </q-popup-edit>  
+            <q-td
+              key="provider"
+              :props="props"
+              @click="copyRowData(props.rowIndex)"
+            >
+              <div  class="cursor-pointer" v-if="props.row.provider">
+                {{ props.row.provider.label }}
+              </div>
 
-          </q-td>
+                <q-popup-edit 
+                  v-model="props.row.provider"
+                  title="Provider" buttons>
 
-          <q-td key="status" :props="props" @click="copyRowData(props.rowIndex)">
+                  <q-select  
+                      use-input
+                      hide-selected
+                      fill-input
+                      input-debounce="0"
+                      @input="detectChange(props.rowIndex)"
+                      v-model="props.row.provider" 
+                      :options="optionsSupplier"
+                      @filter="filterSupplier"
+                      style="width: 350px; max-width: 350px; padding-bottom: 32px"
+                  >
+                    <template v-slot:no-option>
+                      <q-item>
+                        <q-item-section class="text-grey">
+                          No results
+                        </q-item-section>
+                      </q-item>
+                    </template>
 
-              <q-icon v-if="props.row.status_uni.id == 1 " name="done" color="green" style="font-size: 1.5em">
-                <q-tooltip 
-                    anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                    transition-show="flip-right"
-                    transition-hide="flip-left"
-                >
-                    <strong>Active</strong>
-                </q-tooltip>
-              </q-icon>
+                  </q-select>
+                </q-popup-edit>  
 
-              <q-icon v-else name="cancel" color="red" style="font-size: 2em">
-                <q-tooltip 
-                    anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                    transition-show="flip-right"
-                    transition-hide="flip-left"
-                >
-                    <strong>Canceled</strong>
-                </q-tooltip>
-              </q-icon>
-              
-              <q-popup-edit  v-model="props.row.status_uni" title="Status" buttons>
-                <q-select 
-                  @input="detectChange(props.rowIndex)" 
-                  dense 
-                  outlined 
-                  v-model="props.row.status_uni" 
-                  :options="status"
-                />
-              </q-popup-edit>
+            </q-td>
 
-          </q-td>
+            <q-td key="status" :props="props" @click="copyRowData(props.rowIndex)">
 
-          <q-td key="approvals" :props="props"  @click="copyRowData(props.rowIndex)">
+                <q-icon v-if="props.row.status_uni.id == 1 " name="done" color="green" style="font-size: 1.5em">
+                  <q-tooltip 
+                      anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                      transition-show="flip-right"
+                      transition-hide="flip-left"
+                  >
+                      <strong>Active</strong>
+                  </q-tooltip>
+                </q-icon>
 
-              <q-icon v-if="props.row.approval_status_uni.label == 'Approved'" 
-              name="done" color="green" style="font-size: 1.5em">
-                <q-tooltip 
-                    anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                    transition-show="flip-right"
-                    transition-hide="flip-left"
-                >
-                    <strong>Approved</strong>
-                </q-tooltip>
-              </q-icon>
-
-              <q-icon v-else-if="props.row.approval_status_uni.label == 'Pending'" 
-              name="access_time" color="amber-7" style="font-size: 1.5em">
-                <q-tooltip 
-                    anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                    transition-show="flip-right"
-                    transition-hide="flip-left"
-                >
-                    <strong>Pending</strong>
-                </q-tooltip>
-              </q-icon>
-
-              <q-icon v-else name="unpublished" color="red" style="font-size: 2em">
-              <q-tooltip 
-                  anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                  transition-show="flip-right"
-                  transition-hide="flip-left"
-              >
-                  <strong>Declined</strong>
-              </q-tooltip>
-              </q-icon>
-
-
-
-              <q-icon v-if="props.row.approval_type_uni.label == 'Needs Assessment'"
-                name="psychology" color="blue" style="font-size: 1.5em">
-                <q-tooltip 
-                    anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                    transition-show="flip-right"
-                    transition-hide="flip-left"
-                >
-                  <strong>{{props.row.approval_type_uni.label}}</strong>
-              </q-tooltip>
-              </q-icon>
-
-              <q-icon v-else-if="props.row.approval_type_uni.label == 'Catalog'" name="category" color="blue" style="font-size: 1.5em">
-                <q-tooltip 
-                    anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                    transition-show="flip-right"
-                    transition-hide="flip-left"
-                >
-                    <strong>{{props.row.approval_type_uni.label}}</strong>
-                </q-tooltip>
-              </q-icon>
-
-              <q-icon v-else-if="props.row.approval_type_uni.label == 'Blanket Approval'" name="touch_app" color="blue" style="font-size: 1.5em">
-                <q-tooltip 
-                    anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                    transition-show="flip-right"
-                    transition-hide="flip-left"
-                >
-                    <strong>{{props.row.approval_type_uni.label}}</strong>
-                </q-tooltip>
-              </q-icon>
-
-              <q-icon v-else-if="props.row.approval_type_uni.label == 'Pre Approval'" name="how_to_reg" color="blue" style="font-size: 1.5em">
-                <q-tooltip 
-                    anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                    transition-show="flip-right"
-                    transition-hide="flip-left"
-                >
-                    <strong>{{props.row.approval_type_uni.label}}</strong>
-                </q-tooltip>
-              </q-icon>
-
-              <q-popup-edit v-model="props.row.approval_status_uni" title="Approvals" buttons >
-                <div style="width: 450px !important;max-width: 450px !important;">
-
-                    <div class="row">
-                      <div class="col-md-4">
-                          <q-select @input="detectChange(props.rowIndex)" 
-                          dense outlined v-model="props.row.approval_status_uni" 
-                          :options="approval"/>
-                      </div>
-                      <div class="col-md-7 q-ml-md">
-                          
-                          <q-option-group
-                              @input="detectChange(props.rowIndex)"
-                              :options="optionsApp"
-                              label="Notifications"
-                              type="radio"
-                              v-model="props.row.approval_type_uni.label"
-                          />
-
-                          <q-input 
-                            :disable="props.row.approval_type_uni.label !== 'Pre Approval'" 
-                            class="q-mt-md q-mb-lg" dense outlined v-model="props.row.approver" 
-                            label="Approved Name" 
-                          />
-                  
-                      </div>
-                    <q-separator />
-                    </div>
+                <q-icon v-else name="cancel" color="red" style="font-size: 2em">
+                  <q-tooltip 
+                      anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                      transition-show="flip-right"
+                      transition-hide="flip-left"
+                  >
+                      <strong>Canceled</strong>
+                  </q-tooltip>
+                </q-icon>
                 
-                </div>
-              </q-popup-edit>
+                <q-popup-edit  v-model="props.row.status_uni" title="Status" buttons>
+                  <q-select 
+                    @input="detectChange(props.rowIndex)" 
+                    dense 
+                    outlined 
+                    v-model="props.row.status_uni" 
+                    :options="status"
+                  />
+                </q-popup-edit>
 
-          </q-td>
+            </q-td>
 
-          <q-td 
-            style="white-space: initial;width: 350px; max-width: 350px;"
-            key="PDActivity" :props="props" 
-            @click="copyRowData(props.rowIndex)"
-          >
-              <span class="inline-span">{{ props.row.activity }}</span>
+            <q-td key="approvals" :props="props"  @click="copyRowData(props.rowIndex)">
 
-              <q-popup-edit v-model="props.row.activity" title="Update activity" buttons>
-                <q-input 
-                  @input="detectChange(props.rowIndex)" 
-                  type="textarea" 
-                  v-model="props.row.activity" 
-                  dense 
-                  autofocus 
-                />
-              </q-popup-edit>
-          </q-td>
-          
-          <q-td key="dateOfActivity" :props="props" @click="copyRowData(props.rowIndex)"
-              :style="{maxWidth: '200px', width: '200px'}"
-          > 
-              <span @click="editDateOfActivity(props.row)" >
-                {{ props.row.activity_date }}
-              </span>
-              <span class="q-ml-sm">
-                <q-icon name="autorenew" color="green" style="font-size: 1.5em" 
-                v-if="props.row.repeat" />
-              </span>
+                <q-icon v-if="props.row.approval_status_uni.label == 'Approved'" 
+                name="done" color="green" style="font-size: 1.5em">
+                  <q-tooltip 
+                      anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                      transition-show="flip-right"
+                      transition-hide="flip-left"
+                  >
+                      <strong>Approved</strong>
+                  </q-tooltip>
+                </q-icon>
 
-          </q-td>
+                <q-icon v-else-if="props.row.approval_status_uni.label == 'Pending'" 
+                name="access_time" color="amber-7" style="font-size: 1.5em">
+                  <q-tooltip 
+                      anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                      transition-show="flip-right"
+                      transition-hide="flip-left"
+                  >
+                      <strong>Pending</strong>
+                  </q-tooltip>
+                </q-icon>
 
-          <q-td key="noAttending" :props="props" @click="copyRowData(props.rowIndex)">
-              <div @click="editAttendingitem(props.row)">
+                <q-icon v-else name="unpublished" color="red" style="font-size: 2em">
+                <q-tooltip 
+                    anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                    transition-show="flip-right"
+                    transition-hide="flip-left"
+                >
+                    <strong>Declined</strong>
+                </q-tooltip>
+                </q-icon>
 
-                {{ props.row.no_attending }}
+
+
+                <q-icon v-if="props.row.approval_type_uni.label == 'Needs Assessment'"
+                  name="psychology" color="blue" style="font-size: 1.5em">
+                  <q-tooltip 
+                      anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                      transition-show="flip-right"
+                      transition-hide="flip-left"
+                  >
+                    <strong>{{props.row.approval_type_uni.label}}</strong>
+                </q-tooltip>
+                </q-icon>
+
+                <q-icon v-else-if="props.row.approval_type_uni.label == 'Catalog'" name="category" color="blue" style="font-size: 1.5em">
+                  <q-tooltip 
+                      anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                      transition-show="flip-right"
+                      transition-hide="flip-left"
+                  >
+                      <strong>{{props.row.approval_type_uni.label}}</strong>
+                  </q-tooltip>
+                </q-icon>
+
+                <q-icon v-else-if="props.row.approval_type_uni.label == 'Blanket Approval'" name="touch_app" color="blue" style="font-size: 1.5em">
+                  <q-tooltip 
+                      anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                      transition-show="flip-right"
+                      transition-hide="flip-left"
+                  >
+                      <strong>{{props.row.approval_type_uni.label}}</strong>
+                  </q-tooltip>
+                </q-icon>
+
+                <q-icon v-else-if="props.row.approval_type_uni.label == 'Pre Approval'" name="how_to_reg" color="blue" style="font-size: 1.5em">
+                  <q-tooltip 
+                      anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                      transition-show="flip-right"
+                      transition-hide="flip-left"
+                  >
+                      <strong>{{props.row.approval_type_uni.label}}</strong>
+                  </q-tooltip>
+                </q-icon>
+
+                <q-popup-edit v-model="props.row.approval_status_uni" title="Approvals" buttons >
+                  <div style="width: 450px !important;max-width: 450px !important;">
+
+                      <div class="row">
+                        <div class="col-md-4">
+                            <q-select @input="detectChange(props.rowIndex)" 
+                            dense outlined v-model="props.row.approval_status_uni" 
+                            :options="approval"/>
+                        </div>
+                        <div class="col-md-7 q-ml-md">
+                            
+                            <q-option-group
+                                @input="detectChange(props.rowIndex)"
+                                :options="optionsApp"
+                                label="Notifications"
+                                type="radio"
+                                v-model="props.row.approval_type_uni.label"
+                            />
+
+                            <q-input 
+                              :disable="props.row.approval_type_uni.label !== 'Pre Approval'" 
+                              class="q-mt-md q-mb-lg" dense outlined v-model="props.row.approver" 
+                              label="Approved Name" 
+                            />
+                    
+                        </div>
+                      <q-separator />
+                      </div>
+                  
+                  </div>
+                </q-popup-edit>
+
+            </q-td>
+
+            <q-td 
+              style="white-space: initial;width: 350px; max-width: 350px;"
+              key="PDActivity" :props="props" 
+              @click="copyRowData(props.rowIndex)"
+            >
+                <span class="inline-span">{{ props.row.activity }}</span>
+
+                <q-popup-edit v-model="props.row.activity" title="Update activity" buttons>
+                  <q-input 
+                    @input="detectChange(props.rowIndex)" 
+                    type="textarea" 
+                    v-model="props.row.activity" 
+                    dense 
+                    autofocus 
+                  />
+                </q-popup-edit>
+            </q-td>
+            
+            <q-td key="dateOfActivity" :props="props" @click="copyRowData(props.rowIndex)"
+                :style="{maxWidth: '200px', width: '200px'}"
+            > 
+                <span @click="editDateOfActivity(props.row, props.rowIndex)" >
+                  {{ props.row.activity_date }}
+                </span>
                 <span class="q-ml-sm">
-                    <q-icon name="people_alt" color="green" style="font-size: 1.5em"/>
+                  <q-icon name="autorenew" color="green" style="font-size: 1.5em" 
+                  v-if="props.row.repeat" />
                 </span>
 
-              </div>
-          </q-td>
+            </q-td>
 
-          <q-td key="amount" :props="props" 
-          @click="copyRowData(props.rowIndex)">
-              <div>$ {{ props.row.amount }}</div>
-              <q-popup-edit v-model="props.row.amount" title="Update amount" buttons>
-                <q-input @input="detectChange(props.rowIndex)" type="text" 
-                v-model="props.row.amount" dense autofocus />
-                <q-input v-model="props.row.percentage"  type="number"  :label="props.row.type_uni.label + ' Percentage' " dense autofocus/>
-              </q-popup-edit>
-          </q-td>
+            <q-td key="noAttending" :props="props" @click="copyRowData(props.rowIndex)">
+                <div @click="editAttendingitem(props.row)">
 
-          <q-td key="type" :props="props" @click="copyRowData(props.rowIndex)">
+                  {{ props.row.no_attending }}
+                  <span class="q-ml-sm">
+                      <q-icon name="people_alt" color="green" style="font-size: 1.5em"/>
+                  </span>
 
-              <q-chip 
-                square color="green" 
-                text-color="white" 
-                v-if="props.row.type_uni.label == 'PD'"
-              >
-                  <!-- {{props.row.type_uni.label}} -->
-                  <span>PD</span>
-                  <q-tooltip 
-                      anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                      transition-show="flip-right"
-                      transition-hide="flip-left"
-                  >
-                      <strong>Professional Development</strong>
-                  </q-tooltip>
-              </q-chip>
+                </div>
+            </q-td>
 
-              <q-chip v-else square color="purple" text-color="white" >
-                  <!-- {{props.row.type_uni.label}} -->
-                  <span>FE</span>
-                  <q-tooltip 
-                      anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                      transition-show="flip-right"
-                      transition-hide="flip-left"
-                  >
-                      <strong>Family Engagement</strong>
-                  </q-tooltip>
-              </q-chip>
+            <q-td key="amount" :props="props" 
+            @click="copyRowData(props.rowIndex)">
+                <div>$ {{ props.row.amount }}</div>
+                <q-popup-edit v-model="props.row.amount" title="Update amount" buttons>
+                  <q-input @input="detectChange(props.rowIndex)" type="text" 
+                  v-model="props.row.amount" dense autofocus />
+                  <q-input v-model="props.row.percentage"  type="number"  :label="props.row.type_uni.label + ' Percentage' " dense autofocus/>
+                </q-popup-edit>
+            </q-td>
 
-              <q-popup-edit v-model="props.row.type_uni" title="Update type" buttons>
-                <q-select 
-                  @input="detectChange(props.rowIndex)" 
-                  v-model="props.row.type_uni" 
-                  :options="typeArr"
-                />
-              </q-popup-edit>  
+            <q-td key="type" :props="props" @click="copyRowData(props.rowIndex)">
 
-          </q-td>
-
-          <q-td key="grossPD" :props="props">
-              <div>$ {{ (parseFloat(props.row.amount) + parseFloat(((props.row.amount * 12) / 100))).toFixed(2) }}</div>
-          </q-td>
-
-          <q-td key="actions" :props="props" style="min-width: 132px">
-            
-            <div v-if="props.row.changed">
-
-              <q-btn
-                @click="cancellChange(props.rowIndex)"
-                class="q-mr-sm"
-                icon="cancel"
-                color="orange" 
-                size=sm 
-                no-caps
-                round 
-              >
-                <q-tooltip 
-                    anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                    transition-show="flip-right"
-                    transition-hide="flip-left"
+                <q-chip 
+                  square color="green" 
+                  text-color="white" 
+                  v-if="props.row.type_uni.label == 'PD'"
                 >
-                  <strong>Cancel</strong>
-                </q-tooltip>
-              </q-btn>
+                    <!-- {{props.row.type_uni.label}} -->
+                    <span>PD</span>
+                    <q-tooltip 
+                        anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                        transition-show="flip-right"
+                        transition-hide="flip-left"
+                    >
+                        <strong>Professional Development</strong>
+                    </q-tooltip>
+                </q-chip>
+
+                <q-chip v-else square color="purple" text-color="white" >
+                    <!-- {{props.row.type_uni.label}} -->
+                    <span>FE</span>
+                    <q-tooltip 
+                        anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                        transition-show="flip-right"
+                        transition-hide="flip-left"
+                    >
+                        <strong>Family Engagement</strong>
+                    </q-tooltip>
+                </q-chip>
+
+                <q-popup-edit v-model="props.row.type_uni" title="Update type" buttons>
+                  <q-select 
+                    @input="detectChange(props.rowIndex)" 
+                    v-model="props.row.type_uni" 
+                    :options="typeArr"
+                  />
+                </q-popup-edit>  
+
+            </q-td>
+
+            <q-td key="grossPD" :props="props">
+                <div>$ {{ (parseFloat(props.row.amount) + parseFloat(((props.row.amount * 12) / 100))).toFixed(2) }}</div>
+            </q-td>
+
+            <q-td key="actions" :props="props" style="min-width: 132px">
               
-              <q-btn
-                @click="editActivity(props.rowIndex)"
-                class="q-mr-sm"
-                icon="save"
-                color="green" 
-                size=sm 
-                no-caps
-                round 
-              >
-                <q-tooltip 
-                    anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                    transition-show="flip-right"
-                    transition-hide="flip-left"
-                >
-                  <strong>Save</strong>
-                </q-tooltip>
-              </q-btn>
+              <div v-if="props.row.changed">
 
-            </div>
-
-            <div v-if="props.row.showEditButton && !props.row.changed">
-              <q-btn 
-                v-show="props.row.showEditButton && !props.row.changed"
-                class="q-mr-sm"
-                icon="content_copy"
-                color="orange" 
-                @click="addNew = true, duplicate = true, copyRow(props.row, props.rowIndex)"
-                size=sm 
-                no-caps
-                round 
-              >
-                <q-tooltip 
-                    anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                    transition-show="flip-right"
-                    transition-hide="flip-left"
+                <q-btn
+                  @click="cancellChange(props.rowIndex)"
+                  class="q-mr-sm"
+                  icon="cancel"
+                  color="orange" 
+                  size=sm 
+                  no-caps
+                  round 
                 >
-                    <strong>Duplicate</strong>
-                </q-tooltip>
-              </q-btn>              
-
-              <q-btn 
-                icon="delete_forever"
-                color="red" 
-                @click="openDeleteModal(props.row)" 
-                size=sm 
-                no-caps
-                round 
-              >
-                <q-tooltip 
-                    anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                    transition-show="flip-right"
-                    transition-hide="flip-left"
+                  <q-tooltip 
+                      anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                      transition-show="flip-right"
+                      transition-hide="flip-left"
+                  >
+                    <strong>Cancel</strong>
+                  </q-tooltip>
+                </q-btn>
+                
+                <q-btn
+                  @click="editActivity(props.rowIndex)"
+                  class="q-mr-sm"
+                  icon="save"
+                  color="green" 
+                  size=sm 
+                  no-caps
+                  round 
                 >
-                  <strong>Delete</strong>
-                </q-tooltip>
-              </q-btn>
-            </div>
-            
-              <!-- <q-btn 
-                v-if="props.row.changed"
-                @click="props.row.changed = false"
-                class="q-mr-sm"
-                icon="save"
-                color="green" 
-                size=sm 
-                no-caps
-                round 
-              >
-                <q-tooltip 
-                    anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                    transition-show="flip-right"
-                    transition-hide="flip-left"
-                >
+                  <q-tooltip 
+                      anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                      transition-show="flip-right"
+                      transition-hide="flip-left"
+                  >
                     <strong>Save</strong>
-                </q-tooltip>
-              </q-btn>
+                  </q-tooltip>
+                </q-btn>
 
-              <q-btn 
-                v-show="props.row.showEditButton && !props.row.changed"
-                class="q-mr-sm"
-                icon="content_copy"
-                color="orange" 
-                @click="copyRow(props.row, props.rowIndex)"
-                size=sm 
-                no-caps
-                round 
-              >
-                <q-tooltip 
-                    anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                    transition-show="flip-right"
-                    transition-hide="flip-left"
-                >
-                    <strong>Duplicate</strong>
-                </q-tooltip>
-              </q-btn>
+              </div>
 
-              <q-btn 
-                icon="delete_forever"
-                color="red" 
-                @click="openDeleteModal(props.row)" 
-                size=sm 
-                no-caps
-                round 
-              >
-                <q-tooltip 
-                    anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                    transition-show="flip-right"
-                    transition-hide="flip-left"
+              <div v-if="props.row.showEditButton && !props.row.changed">
+                <q-btn 
+                  v-show="props.row.showEditButton && !props.row.changed"
+                  class="q-mr-sm"
+                  icon="content_copy"
+                  color="orange" 
+                  @click="addNew = true, duplicate = true, copyRow(props.row, props.rowIndex)"
+                  size=sm 
+                  no-caps
+                  round 
                 >
+                  <q-tooltip 
+                      anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                      transition-show="flip-right"
+                      transition-hide="flip-left"
+                  >
+                      <strong>Duplicate</strong>
+                  </q-tooltip>
+                </q-btn>              
+
+                <q-btn 
+                  icon="delete_forever"
+                  color="red" 
+                  @click="openDeleteModal(props.row)" 
+                  size=sm 
+                  no-caps
+                  round 
+                >
+                  <q-tooltip 
+                      anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                      transition-show="flip-right"
+                      transition-hide="flip-left"
+                  >
                     <strong>Delete</strong>
-                </q-tooltip>
-              </q-btn> -->
+                  </q-tooltip>
+                </q-btn>
+              </div>
+              
+                <!-- <q-btn 
+                  v-if="props.row.changed"
+                  @click="props.row.changed = false"
+                  class="q-mr-sm"
+                  icon="save"
+                  color="green" 
+                  size=sm 
+                  no-caps
+                  round 
+                >
+                  <q-tooltip 
+                      anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                      transition-show="flip-right"
+                      transition-hide="flip-left"
+                  >
+                      <strong>Save</strong>
+                  </q-tooltip>
+                </q-btn>
 
-          </q-td>
+                <q-btn 
+                  v-show="props.row.showEditButton && !props.row.changed"
+                  class="q-mr-sm"
+                  icon="content_copy"
+                  color="orange" 
+                  @click="copyRow(props.row, props.rowIndex)"
+                  size=sm 
+                  no-caps
+                  round 
+                >
+                  <q-tooltip 
+                      anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                      transition-show="flip-right"
+                      transition-hide="flip-left"
+                  >
+                      <strong>Duplicate</strong>
+                  </q-tooltip>
+                </q-btn>
+
+                <q-btn 
+                  icon="delete_forever"
+                  color="red" 
+                  @click="openDeleteModal(props.row)" 
+                  size=sm 
+                  no-caps
+                  round 
+                >
+                  <q-tooltip 
+                      anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                      transition-show="flip-right"
+                      transition-hide="flip-left"
+                  >
+                      <strong>Delete</strong>
+                  </q-tooltip>
+                </q-btn> -->
+
+            </q-td>
 
           </q-tr>
 
@@ -1359,12 +1468,13 @@
             <q-td colspan="100%">
                 <div class="q-mt-md">
                 <div class="row">
-                    <div class="col-10 q-mr-lg">
 
-                      <div class="text-subtitle2">Date of activity:</div>
+                    <div class="col-7 q-mr-lg">
+
+                      <div class="text-subtitle2 q-mb-md">Date of activity:</div>
 
                       <q-table
-                        class="q-mt-md q-mb-md no-shadow border"
+                        class="q-mb-md no-shadow border"
                         :data="props.row.dateOfActivityArr"
                         :columns="dateOfActivityColumns"
                         row-key="id"
@@ -1372,35 +1482,58 @@
                       >
                         <template v-slot:body="props">
                           <q-tr :props="props">
+
                             <q-td key="startdate" :props="props">
-                              {{ props.row.startdate }}
+                              <span class="q-mr-md">{{ props.row.startdate }}</span>
+                              <span>{{ props.row.time1 }}</span>
                             </q-td>
+
                             <q-td key="endDate" :props="props">
-                              {{ props.row.endDate }}
+                              <span class="q-mr-md">{{ props.row.endDate }}</span>
+                              <span>{{ props.row.time2 }}</span>
                             </q-td>
-                            <q-td key="time1" :props="props">
-                              {{ props.row.time1 }}
-                            </q-td>
-                            <q-td key="time2" :props="props">
-                              {{ props.row.time2 }}
-                            </q-td>
-                            <q-td key="location" :props="props">
+
+                            <q-td key="location" 
+                            style="white-space: initial;width: 230px; max-width: 230px;"
+                            :props="props">
                               {{ props.row.location }}
                             </q-td>
+                            
                             <q-td key="repeats" :props="props">
                               {{ props.row.repeats.label }}
                             </q-td>
+
                             <q-td key="repeatEvery" :props="props">
                               {{ props.row.repeatEvery }}
                             </q-td>
+
                             <q-td key="repeatOn" :props="props">
                               <span v-for="weekday in props.row.repeatOn" :key="weekday.label">
                                 <span v-if="weekday.checked" class="q-mr-sm">{{ weekday.label }}</span>
                               </span>
                             </q-td>
+
                             <q-td key="note" :props="props">
-                              {{ props.row.note }}
+                              <!-- {{ props.row.note }} -->
+                              <q-icon 
+                                name="sticky_note_2" 
+                                color="orange" 
+                                style="font-size: 2em;" 
+                                class="cursor-pointer"
+                                v-tooltip="{
+                                  content: props.row.note,
+                                  placement: 'top-center',
+                                  classes: ['info'],
+                                  targetClasses: ['it-has-a-tooltip'],
+                                  offset: 19,
+                                }"
+                              >
+                              </q-icon>
+
+                  
+                                
                             </q-td>
+
                             <q-td key="actions" :props="props">
                               <q-btn
                                 v-if="props.row.child"
@@ -1420,6 +1553,7 @@
                                 </q-tooltip>
                               </q-btn>
                             </q-td>
+
                           </q-tr>
                         </template>
 
@@ -1430,6 +1564,9 @@
                       </div>
 
                     </div>
+                </div>
+
+                <div class="row">
 
                     <div class="col-3">
                       <div class="text-subtitle2">Attendees:</div>
@@ -1437,7 +1574,7 @@
                       <div 
                         v-if="editedItem.noAttendingArr.attendeesData.length"
                         @click="editAttendingitem(props.row)"
-                        class="cursor-pointer"
+                        class="cursor-pointer q-mt-md"
                       >
                         <div v-for="(attendee, i) in editedItem.noAttendingArr.attendeesData" :key="i">
                           <div>
@@ -1459,10 +1596,6 @@
                           dense autofocus />
                       </q-popup-edit>    
                     </div>
-
-                    
-
-
 
                     <div class="col-md-12 q-mt-md q-mb-md">
                     <q-btn icon="calendar_today" color="blue" label="Add to Google calendar" />
@@ -1503,11 +1636,18 @@
 </template>
 
 <script>
+
 import {exportFile} from 'quasar'
 import router from 'src/router'
 import lodash from 'lodash'
 import axios from 'axios'
 import config from '../../../config'
+
+import Vue from 'vue'
+import VTooltip from 'v-tooltip'
+Vue.use(VTooltip)
+
+import DateOfActivityTable from './DateOfActivityTable';
 
 function wrapCsvValue(val, formatFn) {
     let formatted = formatFn !== void 0
@@ -1534,6 +1674,9 @@ let typingTimer
 let doneTypingInterval = 500
 
 export default {
+components: {
+  DateOfActivityTable
+},
 data() {
   return {
     showRemainingBalance: false,
@@ -1557,17 +1700,16 @@ data() {
     numbersX: '',
     selectOptionsNumbersX: ['1x', '2x', '3x', '31x'],
     selectDayWeekMonth: "",
-    selectOptionsDayWeekMonth: [
-      { id: 1, label: 'Daily', value: 'Daily', clean: 'Day' },
-      { id: 1, label: 'Weekly', value: 'Weekly', clean: 'Week' },
-      { id: 1, label: 'Monthly', value: 'Monthly', clean: 'Month'},
-    ],
+    selectOptionsDayWeekMonth: [],
     time1: '00:00',
     time2: '00:00',
     allDayEvent: false,
+
     show_dialog: false,
     show_dialog_child: false,
     show_attending_dialog: false,
+    showDateOfActivityTable: false,
+
     splitActivity: false,
     confirmAttendeeModal: false,
     addNew: false,
@@ -1633,18 +1775,18 @@ data() {
         label: "End Date",
         field: "endDate"
       },
-      {
-        name: "time1",
-        align: "left",
-        label: "Start Time",
-        field: "time1"
-      },
-      {
-        name: "time2",
-        align: "left",
-        label: "End Time",
-        field: "time2"
-      },
+      // {
+      //   name: "time1",
+      //   align: "left",
+      //   label: "Start Time",
+      //   field: "time1"
+      // },
+      // {
+      //   name: "time2",
+      //   align: "left",
+      //   label: "End Time",
+      //   field: "time2"
+      // },
       {
         name: "location",
         align: "left",
@@ -1886,7 +2028,8 @@ data() {
       child: true,
       attendies: false,
     },
-    key: null
+    key: null,
+    dateOfActivityTableData: [],
   };
   },
   methods: {
@@ -2067,13 +2210,20 @@ data() {
               })
           }
     },
-    editDateOfActivity(item) {
+    editDateOfActivity(item, index) {
         
-        this.editedIndex = this.data.indexOf(item);
-        this.editedItem = Object.assign({}, item);
-        this.show_dialog = true;
+        // this.editedIndex = this.data.indexOf(item);
+        // this.editedItem = Object.assign({}, item);
+        this.showDateOfActivityTable = true
+        // this.dateOfActivityTableData = this.data[index].dateOfActivityArr
+        // console.log('0-0-0-0-', this.data[index])
+        // console.log('index', index)
+        console.log(item.id)
+        this.getSchedules(item.id, index)
 
-        console.log('editDateOfActivity', this.editedItem)
+        // this.show_dialog = true;
+
+        // console.log('editDateOfActivity', this.editedItem)
 
     },
     confirmDateOfActivity() {
@@ -2086,7 +2236,7 @@ data() {
 
     },
     editAttendingitem(item) {
-      console.log('id', item.id)
+
       this.editedIndex = this.data.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.show_attending_dialog = true;
@@ -2273,7 +2423,7 @@ data() {
                 },
                 activity: data[i].activity_name,
                 activity_date: sd == null ? 'TBD' : sd + ' - ' + ed == null ? 'TBD' : ed,
-                no_attending: data[i].total_attendee_count + ' ' + data[i].allocation.name + ' ' + data[i].attendee_type.type,
+                no_attending: data[i].attendySummary.count,
                 amount: data[i].cost != null ? data[i].cost : 0,
                 type_uni: {
                   id: data[i].type.id,
@@ -2290,24 +2440,26 @@ data() {
                 showEditButton: true,
                 
 
-                dateOfActivityArr: [{
-                  id: 109098788,
-                  startdate: data[i].start_date,
-                  endDate: data[i].end_date,
-                  time1: data[i].start_time,
-                  time2: data[i].end_time,
-                  location: data[i].location,
+                dateOfActivityArr: [
+                //   {
+                //   id: 109098788,
+                //   startdate: data[i].start_date,
+                //   endDate: data[i].end_date,
+                //   time1: data[i].start_time,
+                //   time2: data[i].end_time,
+                //   location: data[i].location,
 
-                  selectDayWeekMonth: 'selectDayWeekMonth',
-                  repeatEvery: 1,
-                  note: 'Note...))))',
-                  selectDayWeekMonth: 'selectDayWeekMonth',
-                  selectWeekDay: 'selectWeekDay',
+                //   selectDayWeekMonth: 'selectDayWeekMonth',
+                //   repeatEvery: 1,
+                //   note: 'Note...))))',
+                //   selectDayWeekMonth: 'selectDayWeekMonth',
+                //   selectWeekDay: 'selectWeekDay',
 
-                  repeats: { id: 1, label: 'Daily', value: 'Daily', clean: 'Day' },
-                  repeatOn: [],
-                  attendies: false,
-                }],
+                //   repeats: { id: 1, label: 'Daily', value: 'Daily', clean: 'Day' },
+                //   repeatOn: [],
+                //   attendies: false,
+                // }
+                ],
 
                 noAttendingArr: {
                   attendees: '',
@@ -2410,6 +2562,9 @@ data() {
         })
     },
     getAttdeesById(id) {
+
+        this.editedItem.noAttendingArr.attendeesData = []
+
         const conf = {
             method: 'GET',
             url: config.getAttendeesById + id,
@@ -2616,6 +2771,102 @@ data() {
         this.optionsApp = typesArr
       })
     },
+    getRcurranceTypes() {
+        
+        const conf = {
+            method: 'GET',
+            url: config.getRcurranceTypes,
+            headers: {
+              Accept: 'application/json',
+            }
+        }
+
+        axios(conf).then(res => {
+
+          let reccurance = res.data.recurranceType;
+          let reccArr = [];
+          
+          for(let i=0; i<reccurance.length; i++) {
+
+            let clean;
+            
+            switch(reccurance[i].recurrance_type) {
+              case "Daily":
+                clean = 'Day'
+                break;
+               case "Weekly":
+                clean =  'Week'
+                break;
+              case "Monthly":
+                clean =  'Month'
+                break;
+            }
+
+            let obj = { 
+              id: reccurance[i].id, 
+              label: reccurance[i].recurrance_type, 
+              value: reccurance[i].recurrance_type, 
+              clean: clean
+            }
+            reccArr.push(obj)
+          }
+          this.selectOptionsDayWeekMonth = reccArr
+          console.log(this.selectOptionsDayWeekMonth)
+        })
+    },
+    getSchedules(id, index) {
+      // getSchedules
+        const conf = {
+          method: 'GET',
+          url: config.getSchedules + id,
+          headers: {
+            Accept: 'application/json',
+          }
+        }
+
+        axios(conf).then(res => {
+
+          let schedules = res.data.schedules;
+          let schedulessArr = []
+
+          for(let i = 0; i<schedules.length; i++) {
+
+            let obj = {
+              id: schedules[i].id,
+              startdate: schedules[i].start_date,
+              endDate: schedules[i].end_date,
+              time1: schedules[i].start_time,
+              time2: schedules[i].end_time,
+              location: schedules[i].location,
+              repeats: {
+                label: schedules[i].type != null ?schedules[i].type : '',
+              },
+              repeatEvery: schedules[i].every,
+              repeatOn: [],
+              note: schedules[i].note,
+              attendies: false,
+              child: i != 0 ? true : false
+            }
+
+            schedulessArr.push(obj)
+
+          }
+
+          this.data[index].dateOfActivityArr = schedulessArr
+          this.dateOfActivityTableData = schedulessArr
+
+
+          console.log('#############')
+          console.log(this.data[index].dateOfActivityArr)
+          console.log(this.dateOfActivityTableData)
+          console.log('#############')
+
+        })
+    },
+    openBottomSection(row, index) {
+      this.getAttdeesById(row.id)
+      this.getSchedules(row.id, index)
+    }
   },
   created() {
       this.getActivityByType( parseInt(this.tab), this.$route.params.id, this.count, this.current )
@@ -2623,6 +2874,7 @@ data() {
       this.getAtendeeTypes()
       this.getCategoryTypes(1)
       this.getApprovals()
+      this.getRcurranceTypes()
   },
   computed: {
     school() {
@@ -2709,7 +2961,6 @@ data() {
         for(let i=0; i<this.teachersTypeArr.length; i++) {
           this.teachersTypeArr[i].disable = false
         }
-        this.editedItem.noAttendingArr.attendeesData = []
         // for(let i=0; i<this.weekDays.length; i++) {
         //   this.weekDays[i].checked = false
         // }
@@ -2728,3 +2979,28 @@ data() {
   }
 }
 </script>
+
+
+
+<style lang="scss">
+
+.tooltip {
+  &.info {
+    $color: rgba(#004499, .9);
+
+    .tooltip-inner {
+      background: $color;
+      color: white;
+      padding: 24px;
+      border-radius: 5px;
+      box-shadow: 0 5px 30px rgba(black, .1);
+      max-width: 250px;
+    }
+
+    .tooltip-arrow {
+      border-color: $color;
+    }
+  }
+}
+
+</style>

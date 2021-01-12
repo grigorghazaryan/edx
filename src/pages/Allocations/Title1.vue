@@ -67,9 +67,14 @@
       </q-card-section>
     </q-card>
 
+
     <div class="q-pa-sm q-mt-sm q-gutter-sm">
+      
+      <div class="edx-header-parent">
+        <span class="edx-header-text">{{ titleHeader }}</span>
+      </div>
+
       <q-table
-        :title="titleHeader" 
         :data="data"
         :columns="columns"
         row-key="id" 
