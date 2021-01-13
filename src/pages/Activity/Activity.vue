@@ -372,7 +372,7 @@
         <q-tab-panels v-model="tab" animated class="tab-panels-parent">
 
           <q-tab-panel name="1" class="q-p-sm">
-            <ActivityTableTitle1 />
+            <ActivityTableTitle1 :barInfo="barInfo"/>
           </q-tab-panel>
 
           <q-tab-panel name="2" class="q-p-sm">
@@ -388,7 +388,11 @@
           </q-tab-panel>
 
           <q-tab-panel name="5" class="q-p-sm">
-            <BudgetTableEsser />
+            <!-- <BudgetTableEsser /> -->
+          </q-tab-panel>
+
+          <q-tab-panel name="6" class="q-p-sm">
+            <!-- <BudgetTableEsser /> -->
           </q-tab-panel>
 
 
@@ -410,10 +414,6 @@
     import config from '../../../config'
 
     import ActivityTableTitle1 from '../../components/activity/ActivityTableTitle1'
-    import BudgetTableTitle2 from '../../components/activity/BudgetTableTitle2'
-    // import BudgetTableTitle3 from '../../components/budget/BudgetTableTitle3'
-    // import BudgetTableTitle4 from '../../components/budget/BudgetTableTitle4'
-    // import BudgetTableEsser from '../../components/budget/BudgetTableEsser'
     
     function wrapCsvValue(val, formatFn) {
         let formatted = formatFn !== void 0

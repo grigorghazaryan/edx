@@ -16,15 +16,22 @@
       <!-- Table Header -->
       <template v-slot:top-right="props">
       
-      <q-select class="q-mr-md" style="min-width: 200px; max-width: 200px" dense outlines clearable v-model="schoolYear" :options="schoolYears" label="School year"/>
+      <q-select 
+        class="q-mr-md" 
+        style="min-width: 200px; max-width: 200px" 
+        dense outlines clearable 
+        v-model="schoolYear" 
+        :options="schoolYears" label="School year"
+        :disable="showRemainingBalance"
+      />
 
-      <q-input class="q-mr-md" outlines dense v-model="filter" placeholder="Search">
+      <q-input :disable="showRemainingBalance" class="q-mr-md" outlines dense v-model="filter" placeholder="Search">
           <template v-slot:append>
           <q-icon name="search"/>
           </template>
       </q-input>
 
-      <q-select class="q-mr-md" style="min-width: 250px; max-width: 250px" dense outlines clearable 
+      <q-select :disable="showRemainingBalance" class="q-mr-md" style="min-width: 250px; max-width: 250px" dense outlines clearable 
       v-model="typeModel" :options="options" label="Type" @input="filterType"/>
 
       <q-btn square :disabled="addNew"
@@ -71,7 +78,7 @@
 
               <q-separator />
 
-              <q-card-section>
+              <q-card-section style="max-height: 60vh" class="scroll">
 
                 <DateOfActivityTable  
                   :tableColumns="dateOfActivityColumns" 
@@ -1061,6 +1068,34 @@
                 </q-btn>
             </q-td>
 
+            <q-td key="online" :props="props" @click="copyRowData(props.rowIndex)">
+
+              <span 
+                class="material-icons cursor-pointer" 
+                style="font-size: 1.5em"
+                v-if="props.row.online_uni.id == 1 "
+              >laptop_mac</span> 
+              <span 
+                class="material-icons cursor-pointer" 
+                style="font-size: 1.5em"
+                v-else
+              >emoji_transportation
+              </span>
+                
+                <q-popup-edit 
+                  v-model="props.row.online_uni" 
+                  title="Online" buttons>
+                  <q-select 
+                    @input="detectChange(props.rowIndex)" 
+                    dense 
+                    outlined 
+                    v-model="props.row.online_uni" 
+                    :options="online"
+                  />
+                </q-popup-edit>
+
+            </q-td>
+
             <q-td
               key="provider"
               :props="props"
@@ -1267,6 +1302,7 @@
                 <span @click="editDateOfActivity(props.row, props.rowIndex)" >
                   {{ props.row.activity_date }}
                 </span>
+
                 <span class="q-ml-sm">
                   <q-icon name="autorenew" color="green" style="font-size: 1.5em" 
                   v-if="props.row.repeat" />
@@ -1275,6 +1311,7 @@
             </q-td>
 
             <q-td key="noAttending" :props="props" @click="copyRowData(props.rowIndex)">
+                
                 <div @click="editAttendingitem(props.row)">
 
                   {{ props.row.no_attending }}
@@ -1337,6 +1374,10 @@
 
             <q-td key="grossPD" :props="props">
                 <div>$ {{ (parseFloat(props.row.amount) + parseFloat(((props.row.amount * props.row.percentage) / 100))).toFixed(2) }}</div>
+            </q-td>
+
+            <q-td key="RemainingBalance" :props="props">
+                <div>$ {{ (props.row.remainingBalance).toFixed(2) }}</div>
             </q-td>
 
             <q-td key="actions" :props="props" style="min-width: 132px">
@@ -1494,6 +1535,7 @@
                         :columns="dateOfActivityColumns"
                         row-key="id"
                         hide-bottom
+                        :pagination.sync="paginationDate"
                       >
                         <template v-slot:body="props">
                           <q-tr :props="props">
@@ -1552,7 +1594,7 @@
                             <q-td key="actions" :props="props">
                               <q-btn
                                 v-if="props.row.child"
-                                @click="openDeleteDate(props.row)" 
+                                @click="openDeleteDate(props.row, props.rowIndex)" 
                                 icon="delete_forever"
                                 color="red" 
                                 size=sm 
@@ -1692,14 +1734,25 @@ export default {
 components: {
   DateOfActivityTable
 },
+props: {
+  barInfo: {
+    required: true
+  }
+},
 data() {
   return {
+
+    totalPDremainder: this.barInfo.totalsAmount.PD,
+    totalFEremainder: this.barInfo.totalsAmount.FE,
+
+    ////////////////////////////
     showRemainingBalance: false,
     detectChangeOldData: {},
     tab: '1',
     pages: 1,
     pagination: { rowsPerPage: 10 },
-    paginationAttendee: { rowsPerPage: 10 },
+    paginationAttendee: { rowsPerPage: 100 },
+    paginationDate: { rowsPerPage: 100 },
     current: 1,
     count: 10,
     mode: 'list',
@@ -1739,7 +1792,18 @@ data() {
     {
       id: 2,
       label: "Canceled"
-    }],
+    }
+    ],
+    online: [
+    {
+      id: 1,
+      label: "Online"
+    }, 
+    {
+      id: 2,
+      label: "On Site"
+    }
+    ],
 
     optionsApp: [],
     approvedName: '',
@@ -1850,6 +1914,13 @@ data() {
         style: 'width: 30px'
       },
       {
+        name: "online",
+        align: "left",
+        label: "",
+        field: "online",
+        sortable: true
+      },
+      {
         name: "provider",
         align: "left",
         label: "Provider",
@@ -1911,6 +1982,12 @@ data() {
         field: "grossPD"
       },
       {
+        name: 'RemainingBalance',
+        align: 'left',
+        label: 'Remaining Balance',
+        field: 'RemainingBalance'
+      },
+      {
         name: "actions",
         align: "left",
         label: "Actions",
@@ -1922,6 +1999,7 @@ data() {
 
     visibleColumns: [
       "toggle",
+      "online",
       "provider", 
       "status", 
       "approvals",
@@ -1931,7 +2009,6 @@ data() {
       "amount",
       "type",
       "grossPD",
-      "RB",
       "actions"
     ],
 
@@ -2056,6 +2133,7 @@ data() {
       allDayEvent: false,
     },
     key: null,
+    index: null,
     dateOfActivityTableData: [],
   };
   },
@@ -2265,18 +2343,55 @@ data() {
     },
     editAttendingitem(item) {
 
+      this.item = item
+
       this.editedIndex = this.data.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.show_attending_dialog = true;
 
       this.getAttdeesById(item.id)
+
     },
     confirmNoAttending() {
-      console.log('ok', this.editedItem)
-      if (this.editedIndex > -1) {
-        Object.assign(this.data[this.editedIndex], this.editedItem);
-      } 
-      this.close()
+
+      let item = this.item
+
+      let attendees = this.editedItem.noAttendingArr.attendeesData;
+      let attendeesArr = []
+
+      for(let i=0; i<attendees.length; i++) {
+        console.log('doc', attendees[i])
+        let obj = {
+          count: attendees[i].no,
+          type_id: attendees[i].type.id,
+          is_all: attendees[i].all
+        }
+        attendeesArr.push(obj)
+      }
+
+
+      const conf = {
+          method: 'POST',
+          url: config.addAttendee + item.id,
+          headers: {
+            Accept: 'application/json',
+          },
+          data: attendeesArr
+      }
+
+      axios(conf).then(res => {
+        console.log('response === ', res.data)
+            this.$q.notify({
+              message: 'Attendees added!',
+              type: 'positive',
+            })
+      })
+
+      // if (this.editedIndex > -1) {
+      //   Object.assign(this.data[this.editedIndex], this.editedItem);
+      // } 
+      // this.close()
+
     },
     close () {
       this.show_dialog = false
@@ -2299,14 +2414,41 @@ data() {
       this.item = row
       this.confirm = true
     },
-    openDeleteDate(item) {
+    openDeleteDate(item, key) {
+      this.key = key
       this.item = item
       this.confirmDate = true
     },
     deleteDate() {
+
+      console.log(this.key)
+      console.log(this.data[this.index].dateOfActivityArr[this.key])
+
       let item = this.item
-      const index = this.data[this.key].dateOfActivityArr.indexOf(item)
-      this.data[this.key].dateOfActivityArr.splice(index, 1)
+
+      const conf = {
+          method: 'DELETE',
+          url: config.removeSchedule + item.id,
+          headers: {
+            Accept: 'application/json',
+          }
+      }
+
+      // console.log( this.data[this.key] )
+
+      axios(conf).then(res => {
+
+        const index = this.data[this.index].dateOfActivityArr.indexOf(item)
+        console.log('index', index);
+
+        this.data[this.index].dateOfActivityArr.splice(index, 1)
+          this.$q.notify({
+            message: 'Deleted!',
+            type: 'positive',
+          })
+
+      })
+    
     },
     deleteItem() {
         let item = this.item
@@ -2327,9 +2469,6 @@ data() {
               type: 'positive',
             })
         })
-        .catch(err => {
-          console.log('err', err)
-        })
     },
     openDeleteTeacherModal(item) {
       this.item = item
@@ -2340,17 +2479,28 @@ data() {
       this.confirmAttendeeModal = true
     },
     deleteAttendee() {
+
       let item = this.item
-      const index = this.editedItem.noAttendingArr.attendeesData.indexOf(item)
-      
-      console.log(item)
-      console.log(index)
+      // this.editedItem.noAttendingArr.attendeesData.splice(index, 1)
+
+      const conf = {
+          method: 'DELETE',
+          url: config.removeAttendee + item.id,
+          headers: {
+            Accept: 'application/json',
+          }
+      }
+
+      axios(conf).then(res => {
+        const index = this.editedItem.noAttendingArr.attendeesData.indexOf(item)
+        this.editedItem.noAttendingArr.attendeesData.splice(index, 1)
+      })
 
       // Return Type to Enabled
       const typeIndex = this.teachersTypeArr.indexOf(item.type)
       this.teachersTypeArr[typeIndex].disable = false
 
-      this.editedItem.noAttendingArr.attendeesData.splice(index, 1)
+
     },
     deleteTeacherItem() {
       let item = this.item
@@ -2448,11 +2598,35 @@ data() {
             for(let i=0; i<data.length; i++) {
 
               let sd = data[i].start_date,
-                  ed = data[i].end_date;
+                  ed = data[i].end_date,
+                  fullDate = sd + ' - ' + ed;
+              
 
+              let charge
+
+              if(data[i].cost != null) {
+                charge = parseFloat(data[i].cost) + ((parseFloat(data[i].cost) * parseFloat(data[i].upcharge_percentage)) / 100 )
+              }else {
+                charge = 0
+              }
+
+              if(data[i].type.id == 1) {
+                this.totalPDremainder = this.totalPDremainder - charge
+              }else {
+                this.totalFEremainder = this.totalFEremainder - charge
+              }
+
+              // PD = 1 totalPDremainder
+              // FE = 2 totalFEremainder
           
               let activityObj = {
+                // remainingBalance: charge,
+                remainingBalance: data[i].type.id == 1 ? this.totalPDremainder : this.totalFEremainder,
                 id: data[i].id,
+                online_uni: {
+                    id: 2,
+                    label: "On Site"
+                },
                 provider: {
                   id: data[i].supplier.id,
                   label: data[i].supplier.short_name
@@ -2470,7 +2644,7 @@ data() {
                   label: data[i].approval_types.name
                 },
                 activity: data[i].activity_name,
-                activity_date: sd == null ? 'TBD' : sd + ' - ' + ed == null ? 'TBD' : ed,
+                activity_date: sd == null ? 'TBD' : fullDate,
                 no_attending: data[i].attendySummary.count,
                 amount: data[i].cost != null ? data[i].cost : 0,
                 percentage: parseInt(data[i].upcharge_percentage),
@@ -2588,32 +2762,36 @@ data() {
           data: data
       }
       axios(conf).then(res => {
-        console.log('add schedule : ', res.data)
+
+        this.getSchedules(this.item.id, this.key)
+
+
+        this.show_dialog_child = false
+            
+          //   let schedule = res.data.schedule;
+
+          //   let obj = {
+          //     id: schedule.id,
+          //     startdate: schedule.start_date,
+          //     endDate: schedule.end_date,
+          //     time1: schedule.start_time,
+          //     time2: schedule.end_time,
+          //     location: schedule.location,
+
+          //     repeats: {
+          //       label: '',
+          //     },
+
+          //     repeatEvery: '',
+          //     repeatOn: [],
+          //     note: '',
+          //     attendies: false,
+          //     child: true
+          //   }
+
+          // this.data[this.key].dateOfActivityArr.push(obj)
+          // this.dateOfActivityTableData.push(obj)
       })
-
-      // console.log(conf)
-
-      // this.data[this.key].dateOfActivityArr.push(newObj)
-      // console.log(this.data[this.key].dateOfActivityArr)
-
-      // this.tempDateOfActivity = {
-      //   startdate: '2020/06/14',
-      //   endDate: '2020/06/24',
-      //   time1: '00:00',
-      //   time2: '00:00',
-      //   location: 'Location...',
-      //   selectDayWeekMonth: '',
-      //   selectWeekDay: '',
-      //   note: 'Note...',
-      //   selectDayWeekMonth: '',
-      //   selectWeekDay: '',
-      //   repeats: { id: 1, label: 'Daily', value: 'Daily', clean: 'Day' },
-      //   repeatOn: [],
-      //   repeat: false,
-      //   multi: false,
-      //   child: true,
-      //   attendies: false,
-      // }
 
     },
     getAtendeeTypes() {
@@ -2631,8 +2809,9 @@ data() {
           let atendeeArr = [];
 
           for(let i=0; i<atendeeTypes.length; i++) {
-            console.log(atendeeTypes[i])
+            console.log('876324978623459786243598762348976', atendeeTypes[i])
             let obj = {
+              id: atendeeTypes[i].id,
               label: atendeeTypes[i].type,
               value: atendeeTypes[i].type,
               disable: false
@@ -2667,6 +2846,7 @@ data() {
               id: attendees[i].id,
               no: parseInt(attendees[i].count),
               type: {
+                id: attendees[i].type.id,
                 label: attendees[i].type.type,
                 value: attendees[i].type.type,
                 disable: true
@@ -2951,6 +3131,7 @@ data() {
         })
     },
     openBottomSection(row, index) {
+      this.index = index
       this.getAttdeesById(row.id)
       this.getSchedules(row.id, index)
     }
@@ -3067,6 +3248,7 @@ data() {
       if(val) {
         this.visibleColumns = [
           "toggle",
+          "online",
           "provider", 
           "status", 
           "approvals",
@@ -3076,11 +3258,24 @@ data() {
           "amount",
           "type",
           "grossPD",
-          "RB",
+          "RemainingBalance",
           "actions"
         ]
       }else {
-        this.visibleColumns = []
+        this.visibleColumns = [
+          "toggle",
+          "online",
+          "provider", 
+          "status", 
+          "approvals",
+          "PDActivity", 
+          "dateOfActivity", 
+          "noAttending",
+          "amount",
+          "type",
+          "grossPD",
+          "actions"
+        ]
       }
     }
   }

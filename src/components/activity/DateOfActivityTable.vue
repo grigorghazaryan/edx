@@ -5,6 +5,7 @@
         :columns="tableColumns"
         row-key="id"
         hide-bottom
+        :pagination.sync="paginationDate"
     >
         <template v-slot:body="props">
             <q-tr :props="props">
@@ -94,6 +95,11 @@ Vue.use(VTooltip)
 
 export default {
     name: 'DateOfActivityPopup',
+    data() {
+        return {
+            paginationDate: { rowsPerPage: 100 },
+        }
+    },
     props: {
         dateOfActivity: {
             required: true

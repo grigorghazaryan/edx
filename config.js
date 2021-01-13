@@ -56,7 +56,9 @@ const config = {
     getRcurranceTypes: 'https://edxchange-activity.aimtech.am/api/v1/get-recurrance-types',
     getSchedules: 'https://edxchange-activity.aimtech.am/api/v1/get-schedule/', // + id
     addSchedule: 'https://edxchange-activity.aimtech.am/api/v1/add-schedule/', // + id
-
+    removeSchedule: 'https://edxchange-activity.aimtech.am/api/v1/remove-schedule/', // + id
+    removeAttendee: 'https://edxchange-activity.aimtech.am/api/v1/remove-attendy/', // + id,
+    addAttendee: 'https://edxchange-activity.aimtech.am/api/v1/add-attendy/', // + id
     // Get attendee types
     getAtendeeTypes: 'https://edxchange-activity.aimtech.am/api/v1/get-atendee-types', 
 }
