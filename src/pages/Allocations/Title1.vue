@@ -1035,7 +1035,6 @@
 
           axios(conf)
           .then(res => {
-            console.log('DELETE RES :', res)
             const index = this.data.indexOf(item)
             this.data.splice(index, 1)
               this.$q.notify({

@@ -50,11 +50,13 @@ const config = {
     getCategoryTypes: 'https://edxchange-activity.aimtech.am/api/v1/get-types-categories/', // + 1 ? Title 1
     editActivity: 'https://edxchange-activity.aimtech.am/api/v1/activity/', // + id
     addActivity: 'https://edxchange-activity.aimtech.am/api/v1/activity',
+    deleteActivity: 'https://edxchange-activity.aimtech.am/api/v1/remove-activity/', // + id
     getApprovals: 'https://edxchange-activity.aimtech.am/api/v1/get-approval',
     getActivityBar: 'https://edxchange-activity.aimtech.am/api/v1/activity-totals/', // + 1 / + 1001
     getRcurranceTypes: 'https://edxchange-activity.aimtech.am/api/v1/get-recurrance-types',
     getSchedules: 'https://edxchange-activity.aimtech.am/api/v1/get-schedule/', // + id
-    
+    addSchedule: 'https://edxchange-activity.aimtech.am/api/v1/add-schedule/', // + id
+
     // Get attendee types
     getAtendeeTypes: 'https://edxchange-activity.aimtech.am/api/v1/get-atendee-types', 
 }

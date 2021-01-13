@@ -2,6 +2,7 @@
     <q-table
       :data="data" 
       :columns="columns"
+      :visible-columns="visibleColumns"
       :loading="loading"
       class="no-shadow"
       row-key="id"
@@ -510,11 +511,14 @@
 
               <q-card-section class="row" style="width: 500px; display: flex; align-items: center;">
                 <q-icon name="calendar_today" class="text-orange q-mr-sm" style="font-size: 2em"/>
-                <span class="text-h6" style="line-height: 2.5rem">Schedule Activity (2)</span>
+                <span class="text-h6" style="line-height: 2.5rem">Schedule Activity</span>
               </q-card-section>
 
         
-              <q-card-section class="q-pt-none q-pb-none q-pr-none q-pl-none">
+              <q-card-section
+                style="max-height: 60vh"
+                class="scroll q-pt-none q-pb-none q-pr-none q-pl-none"
+              >
                 <div class="row">
 
                   <div class="col-12">
@@ -525,38 +529,49 @@
                       <div class="row q-mt-lg">
 
                         <div class="col-3 q-pr-md row items-center justify-end">Start date:</div>
-                        <div class="col-3">
-                          <q-input :readonly="allDayEvent" outlined dense v-model="tempDateOfActivity.startdate">
-                            <template v-slot:append>
-                              <q-icon name="event" class="cursor-pointer">
-                                <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                  <q-date :disabled="allDayEvent" :readonly="allDayEvent" v-model="tempDateOfActivity.startdate" :options="optionsFn">
-                                    <div class="row items-center justify-end">
-                                      <q-btn v-close-popup label="Close" color="primary" flat />
-                                    </div>
-                                  </q-date>
-                                </q-popup-proxy>
-                              </q-icon>
-                            </template>
-                          </q-input>
-                        </div>
+                          <div class="col-3">
+                            <q-input :readonly="tempDateOfActivity.allDayEvent" outlined dense v-model="tempDateOfActivity.startdate">
+                              <template v-slot:append>
+                                <q-icon name="event" class="cursor-pointer">
+                                  <q-popup-proxy transition-show="scale" transition-hide="scale">
+                                    <q-date 
+                                    :disabled="tempDateOfActivity.allDayEvent" 
+                                    :readonly="tempDateOfActivity.allDayEvent" 
+                                    v-model="tempDateOfActivity.startdate" 
+                                    
+                                    >
+                                    <!-- :options="optionsFn" -->
+                                      <div class="row items-center justify-end">
+                                        <q-btn v-close-popup label="Close" color="primary" flat />
+                                      </div>
+                                    </q-date>
+                                  </q-popup-proxy>
+                                </q-icon>
+                              </template>
+                            </q-input>
+                          </div>
 
                         <div class="col-2 q-pr-md row items-center justify-end">End date:</div>
-                        <div class="col-3">
-                          <q-input :readonly="allDayEvent" outlined dense v-model="tempDateOfActivity.endDate">
-                            <template v-slot:append>
-                              <q-icon name="event" class="cursor-pointer">
-                                <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                  <q-date :disabled="allDayEvent" :readonly="allDayEvent" v-model="tempDateOfActivity.endDate" :options="optionsFn">
-                                    <div class="row items-center justify-end">
-                                      <q-btn v-close-popup label="Close" color="primary" flat />
-                                    </div>
-                                  </q-date>
-                                </q-popup-proxy>
-                              </q-icon>
-                            </template>
-                          </q-input>
-                        </div>
+                          <div class="col-3">
+                            <q-input :readonly="tempDateOfActivity.allDayEvent" outlined dense v-model="tempDateOfActivity.endDate">
+                              <template v-slot:append>
+                                <q-icon name="event" class="cursor-pointer">
+                                  <q-popup-proxy transition-show="scale" transition-hide="scale">
+                                    <q-date 
+                                      :disabled="tempDateOfActivity.allDayEvent" 
+                                      :readonly="tempDateOfActivity.allDayEvent" 
+                                      v-model="tempDateOfActivity.endDate" 
+                                    >
+                                    <!-- :options="optionsFn" -->
+                                      <div class="row items-center justify-end">
+                                        <q-btn v-close-popup label="Close" color="primary" flat />
+                                      </div>
+                                    </q-date>
+                                  </q-popup-proxy>
+                                </q-icon>
+                              </template>
+                            </q-input>
+                          </div>
 
                       </div>
 
@@ -564,11 +579,11 @@
 
                         <div class="col-3 q-pr-md row items-center justify-end">Start time:</div>
                         <div class="col-3">
-                          <q-input :readonly="allDayEvent"  outlined dense v-model="tempDateOfActivity.time1">
+                          <q-input :readonly="tempDateOfActivity.allDayEvent"  outlined dense v-model="tempDateOfActivity.time1">
                             <template v-slot:append>
                               <q-icon name="access_time" class="cursor-pointer">
                                 <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                  <q-time :disabled="allDayEvent" :readonly="allDayEvent" v-model="tempDateOfActivity.time1">
+                                  <q-time :disabled="tempDateOfActivity.allDayEvent" :readonly="tempDateOfActivity.allDayEvent" v-model="tempDateOfActivity.time1">
                                     <div class="row items-center justify-end">
                                       <q-btn v-close-popup label="Close" color="primary" flat />
                                     </div>
@@ -581,11 +596,11 @@
 
                         <div class="col-2 q-pr-md row items-center justify-end">End time:</div>
                         <div class="col-3">
-                          <q-input :readonly="allDayEvent"  outlined dense v-model="tempDateOfActivity.time2">
+                          <q-input :readonly="tempDateOfActivity.allDayEvent"  outlined dense v-model="tempDateOfActivity.time2">
                             <template v-slot:append>
                               <q-icon name="access_time" class="cursor-pointer">
                                 <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                  <q-time :disabled="allDayEvent" :readonly="allDayEvent" v-model="tempDateOfActivity.time2">
+                                  <q-time :disabled="tempDateOfActivity.allDayEvent" :readonly="tempDateOfActivity.allDayEvent" v-model="tempDateOfActivity.time2">
                                     <div class="row items-center justify-end">
                                       <q-btn v-close-popup label="Close" color="primary" flat />
                                     </div>
@@ -597,7 +612,7 @@
                         </div>
 
                         <div class="col-4 q-pl-lg q-mt-md">
-                          <span class="q-ml-md"><q-checkbox v-model="allDayEvent" label="All day event" /></span>
+                          <span class="q-ml-md"><q-checkbox v-model="tempDateOfActivity.allDayEvent" label="All day event" /></span>
                         </div>
 
                       </div>
@@ -823,7 +838,7 @@
               <q-card-actions class="row justify-end">
                 <div>
                   <q-btn flat label="Cancel" color="primary" v-close-popup></q-btn>
-                  <q-btn flat label="Confirm" color="primary" v-close-popup  @click="confirmNewDate()"></q-btn>
+                  <q-btn flat label="Confirm" color="primary"  @click="confirmNewDate"></q-btn>
                 </div>
               </q-card-actions>
         
@@ -832,182 +847,182 @@
           </q-dialog>
 
           <q-dialog v-model="show_attending_dialog">
-          <q-card>
+            <q-card>
 
-              <q-card-section 
-                class="row justify-start items-center" 
-                style="width: 550px"
-              >
-                <q-icon class="q-mr-sm" name="people_alt"  color="green" style="font-size: 1.5em"/>
-                <div class="text-h6">Activity Attendees</div>
-              </q-card-section>
+                <q-card-section 
+                  class="row justify-start items-center" 
+                  style="width: 550px"
+                >
+                  <q-icon class="q-mr-sm" name="people_alt"  color="green" style="font-size: 1.5em"/>
+                  <div class="text-h6">Activity Attendees</div>
+                </q-card-section>
 
-              <q-card-section>
-                <div>
+                <q-card-section>
+                  <div>
 
-                  <q-table
-                    :data="editedItem.noAttendingArr.attendeesData"
-                    :columns="attendeesColumn"
-                    row-key="id"
-                    hide-bottom
-                    :pagination.sync="paginationAttendee"
-                  >
-                  
-                    <template v-slot:body="props">
+                    <q-table
+                      :data="editedItem.noAttendingArr.attendeesData"
+                      :columns="attendeesColumn"
+                      row-key="id"
+                      hide-bottom
+                      :pagination.sync="paginationAttendee"
+                    >
+                    
+                      <template v-slot:body="props">
 
-                      <q-tr :props="props">
+                        <q-tr :props="props">
 
-                        <q-td key="no" :props="props">
-                          <q-input 
-                            type="number" 
-                            dense 
-                            outlined 
-                            v-model="props.row.no"
-                            @input="selfTitleTeacherCount(props.row.no)"
-                            :readonly="props.row.all"
-                          />
-                        </q-td>
-
-                        <q-td key="type" :props="props" style="width: 200px">
-                          <q-select 
-                            dense 
-                            outlined 
-                            v-model="props.row.type" 
-                            :options="teachersTypeArr"  
-                            @input="changeType(props.row.type)"
-                          />
-                        </q-td>
-                        
-                        <q-td key="all" :props="props">
-                          <q-checkbox v-model="props.row.all" />
-                        </q-td>
-
-                        <q-td key="attendeeList" :props="props" class="row">
-
-                          <div @click="props.expand = !props.expand" class="cursor-pointer" >
-                            <q-btn color="blue"  round dense icon="perm_identity"/>
-                          </div>
-
-                          <q-btn
-                              icon="delete_forever"
-                              color="red" 
-                              @click="openAttendeDeleteModal(props.row)" 
-                              round dense
-                            >
-                          </q-btn>
-
-                        </q-td>
-
-                      </q-tr>
-
-                      <q-tr v-show="props.expand" :props="props">
-                        <q-td colspan="100%" class="q-td--no-hover">
-
+                          <q-td key="no" :props="props">
                             <q-input 
-                              outlined 
+                              type="number" 
                               dense 
-                              v-on:keyup.enter="searchEnter"
-                              v-model="attendingSearch"
-                              label="Search" 
-                              class="q-mt-lg q-mb-sm">
+                              outlined 
+                              v-model="props.row.no"
+                              @input="selfTitleTeacherCount(props.row.no)"
+                              :readonly="props.row.all"
+                            />
+                          </q-td>
 
-                              <template v-slot:prepend>
-                                <q-icon name="search" />
-                              </template>
+                          <q-td key="type" :props="props" style="width: 200px">
+                            <q-select 
+                              dense 
+                              outlined 
+                              v-model="props.row.type" 
+                              :options="teachersTypeArr"  
+                              @input="changeType(props.row.type)"
+                            />
+                          </q-td>
+                          
+                          <q-td key="all" :props="props">
+                            <q-checkbox v-model="props.row.all" />
+                          </q-td>
 
-                            </q-input>
+                          <q-td key="attendeeList" :props="props" class="row">
 
-                            <q-list bordered separator class="q-mb-lg" style="height: 195px; overflow-y: scroll;">
+                            <div @click="props.expand = !props.expand" class="cursor-pointer" >
+                              <q-btn color="blue"  round dense icon="perm_identity"/>
+                            </div>
 
-                              <q-item v-for="teacher in filteredList" :key="teacher.id">
-                                <q-item-section>
-                                  <div class="w-100 row justify-between items-center">
-                                    <div class="text-subtitle2">{{ teacher.name }}</div>
-                                    <q-btn 
-                                      icon="delete_forever"
-                                      color="red" 
-                                      size=sm 
-                                      no-caps
-                                      @click="openDeleteTeacherModal(teacher)"
-                                    ></q-btn>
-                                  </div>
-                                </q-item-section>
-                              </q-item>
+                            <q-btn
+                                icon="delete_forever"
+                                color="red" 
+                                @click="openAttendeDeleteModal(props.row)" 
+                                round dense
+                              >
+                            </q-btn>
 
-                                                              
-                              <div v-if="teachersSearchLength == 0">
-                                  <p class="q-mt-md q-ml-md">
-                                    <q-icon name="warning" style="font-size: 1.5em"/>
-                                    No matching records found 
-                                  </p>
-                              </div>
-                            
-                            </q-list>
+                          </q-td>
 
-                        </q-td>
-                      </q-tr>
+                        </q-tr>
 
-                    </template>
+                        <q-tr v-show="props.expand" :props="props">
+                          <q-td colspan="100%" class="q-td--no-hover">
 
-                  </q-table>
-                  <q-btn 
-                    v-if="editedItem.noAttendingArr.attendeesData.length < teachersTypeArr.length"
-                    round 
-                    dense 
-                    color="secondary" 
-                    icon="add" 
-                    class="q-mt-md"  
-                    @click="addAttRow"
-                  />
+                              <q-input 
+                                outlined 
+                                dense 
+                                v-on:keyup.enter="searchEnter"
+                                v-model="attendingSearch"
+                                label="Search" 
+                                class="q-mt-lg q-mb-sm">
 
-                </div>
-              </q-card-section>
-              
-              <q-card-actions class="row justify-end">
-                  <q-btn flat label="Cancel" color="primary" v-close-popup></q-btn>
-                  <q-btn flat label="Confirm" color="primary" @click="confirmNoAttending" ></q-btn>
-              </q-card-actions>
+                                <template v-slot:prepend>
+                                  <q-icon name="search" />
+                                </template>
 
-          </q-card>
+                              </q-input>
+
+                              <q-list bordered separator class="q-mb-lg" style="height: 195px; overflow-y: scroll;">
+
+                                <q-item v-for="teacher in filteredList" :key="teacher.id">
+                                  <q-item-section>
+                                    <div class="w-100 row justify-between items-center">
+                                      <div class="text-subtitle2">{{ teacher.name }}</div>
+                                      <q-btn 
+                                        icon="delete_forever"
+                                        color="red" 
+                                        size=sm 
+                                        no-caps
+                                        @click="openDeleteTeacherModal(teacher)"
+                                      ></q-btn>
+                                    </div>
+                                  </q-item-section>
+                                </q-item>
+
+                                                                
+                                <div v-if="teachersSearchLength == 0">
+                                    <p class="q-mt-md q-ml-md">
+                                      <q-icon name="warning" style="font-size: 1.5em"/>
+                                      No matching records found 
+                                    </p>
+                                </div>
+                              
+                              </q-list>
+
+                          </q-td>
+                        </q-tr>
+
+                      </template>
+
+                    </q-table>
+                    <q-btn 
+                      v-if="editedItem.noAttendingArr.attendeesData.length < teachersTypeArr.length"
+                      round 
+                      dense 
+                      color="secondary" 
+                      icon="add" 
+                      class="q-mt-md"  
+                      @click="addAttRow"
+                    />
+
+                  </div>
+                </q-card-section>
+                
+                <q-card-actions class="row justify-end">
+                    <q-btn flat label="Cancel" color="primary" v-close-popup></q-btn>
+                    <q-btn flat label="Confirm" color="primary" @click="confirmNoAttending" ></q-btn>
+                </q-card-actions>
+
+            </q-card>
           </q-dialog>
 
           <q-dialog v-model="confirm" persistent>
-          <q-card>
-              <q-card-section class="row items-center">
-              <span class="q-ml-sm">Are you sure to delete this item?</span>
-              </q-card-section>
+            <q-card>
+                <q-card-section class="row items-center">
+                <span class="q-ml-sm">Are you sure to delete this item?</span>
+                </q-card-section>
 
-              <q-card-actions align="right">
-              <q-btn flat label="No, thanks" color="primary" v-close-popup />
-              <q-btn label="Yes" color="red" v-close-popup @click="deleteItem" />
-              </q-card-actions>
-          </q-card>
+                <q-card-actions align="right">
+                <q-btn flat label="No, thanks" color="primary" v-close-popup />
+                <q-btn label="Yes" color="red" v-close-popup @click="deleteItem" />
+                </q-card-actions>
+            </q-card>
           </q-dialog>
 
           <q-dialog v-model="confirmTeacherModal" persistent>
-          <q-card>
-              <q-card-section class="row items-center">
-              <span class="q-ml-sm">Are you sure to delete this item?</span>
-              </q-card-section>
+            <q-card>
+                <q-card-section class="row items-center">
+                <span class="q-ml-sm">Are you sure to delete this item?</span>
+                </q-card-section>
 
-              <q-card-actions align="right">
-              <q-btn flat label="No, thanks" color="primary" v-close-popup />
-              <q-btn label="Yes" color="red" v-close-popup @click="deleteTeacherItem" />
-              </q-card-actions>
-          </q-card>
+                <q-card-actions align="right">
+                <q-btn flat label="No, thanks" color="primary" v-close-popup />
+                <q-btn label="Yes" color="red" v-close-popup @click="deleteTeacherItem" />
+                </q-card-actions>
+            </q-card>
           </q-dialog>
 
           <q-dialog v-model="confirmAttendeeModal" persistent>
-          <q-card>
-              <q-card-section class="row items-center">
-              <span class="q-ml-sm">Are you sure to delete this?</span>
-              </q-card-section>
+            <q-card>
+                <q-card-section class="row items-center">
+                <span class="q-ml-sm">Are you sure to delete this?</span>
+                </q-card-section>
 
-              <q-card-actions align="right">
-              <q-btn flat label="No, thanks" color="primary" v-close-popup />
-              <q-btn label="Yes" color="red" v-close-popup @click="deleteAttendee" />
-              </q-card-actions>
-          </q-card>
+                <q-card-actions align="right">
+                <q-btn flat label="No, thanks" color="primary" v-close-popup />
+                <q-btn label="Yes" color="red" v-close-popup @click="deleteAttendee" />
+                </q-card-actions>
+            </q-card>
           </q-dialog>
 
           <q-dialog v-model="confirmDate" persistent>
@@ -1276,7 +1291,7 @@
                 <q-popup-edit v-model="props.row.amount" title="Update amount" buttons>
                   <q-input @input="detectChange(props.rowIndex)" type="text" 
                   v-model="props.row.amount" dense autofocus />
-                  <q-input v-model="props.row.percentage"  type="number"  :label="props.row.type_uni.label + ' Percentage' " dense autofocus/>
+                  <q-input @input="detectChange(props.rowIndex)" v-model="props.row.percentage"  type="number"  :label="props.row.type_uni.label + ' Percentage' " dense autofocus/>
                 </q-popup-edit>
             </q-td>
 
@@ -1321,7 +1336,7 @@
             </q-td>
 
             <q-td key="grossPD" :props="props">
-                <div>$ {{ (parseFloat(props.row.amount) + parseFloat(((props.row.amount * 12) / 100))).toFixed(2) }}</div>
+                <div>$ {{ (parseFloat(props.row.amount) + parseFloat(((props.row.amount * props.row.percentage) / 100))).toFixed(2) }}</div>
             </q-td>
 
             <q-td key="actions" :props="props" style="min-width: 132px">
@@ -1560,7 +1575,7 @@
                       </q-table>
 
                       <div class="q-mt-md q-mb-md">
-                        <q-btn icon="add" color="blue" round @click="addDate(props.pageIndex)"/>
+                        <q-btn icon="add" color="blue" round @click="addDate(props.pageIndex, props.row)"/>
                       </div>
 
                     </div>
@@ -1703,7 +1718,7 @@ data() {
     selectOptionsDayWeekMonth: [],
     time1: '00:00',
     time2: '00:00',
-    allDayEvent: false,
+
 
     show_dialog: false,
     show_dialog_child: false,
@@ -1905,6 +1920,21 @@ data() {
     data: [],
     tempDataX: [],
 
+    visibleColumns: [
+      "toggle",
+      "provider", 
+      "status", 
+      "approvals",
+      "PDActivity", 
+      "dateOfActivity", 
+      "noAttending",
+      "amount",
+      "type",
+      "grossPD",
+      "RB",
+      "actions"
+    ],
+
 
     editedIndex: null,
     editedItem: {
@@ -2016,17 +2046,14 @@ data() {
       time1: '00:00',
       time2: '00:00',
       location: 'Location...',
-      selectDayWeekMonth: '',
-      selectWeekDay: '',
       note: 'Note...',
-      selectDayWeekMonth: '',
-      selectWeekDay: '',
+      repeatEvery: 0,
       repeats: { id: 1, label: 'Daily', value: 'Daily', clean: 'Day' },
       repeatOn: [],
       repeat: false,
-      multi: false,
       child: true,
       attendies: false,
+      allDayEvent: false,
     },
     key: null,
     dateOfActivityTableData: [],
@@ -2036,7 +2063,7 @@ data() {
     optionsFn (date) {
       // let start = this.editedItem.dateOfActivityArr[0].startdate
       // let end = this.editedItem.dateOfActivityArr[0].endDate
-      return date >= '2020/06/14' && date <= '2020/06/25'
+      // return date >= '2020/06/14' && date <= '2020/06/25'
     },
     detectChange(index) {
 
@@ -2120,6 +2147,7 @@ data() {
           id: 1,
           label: 'PD'
         },
+        percentage: 12,
         note: '',
         approver: '',
         charge: 0,
@@ -2266,8 +2294,9 @@ data() {
         this.data = this.tempData
       }
     },
-    openDeleteModal(item) {
-      this.item = item
+    openDeleteModal(row) {
+      
+      this.item = row
       this.confirm = true
     },
     openDeleteDate(item) {
@@ -2280,9 +2309,27 @@ data() {
       this.data[this.key].dateOfActivityArr.splice(index, 1)
     },
     deleteItem() {
-      let item = this.item
-      const index = this.data.indexOf(item)
-      this.data.splice(index, 1)
+        let item = this.item
+
+        const conf = {
+            method: 'DELETE',
+            url: config.deleteActivity + item.id,
+            headers: {
+                Accept: 'application/json',
+            }
+        }
+
+        axios(conf).then(res => {
+          const index = this.data.indexOf(item)
+          this.data.splice(index, 1)
+            this.$q.notify({
+              message: res.data,
+              type: 'positive',
+            })
+        })
+        .catch(err => {
+          console.log('err', err)
+        })
     },
     openDeleteTeacherModal(item) {
       this.item = item
@@ -2322,9 +2369,10 @@ data() {
       this.editedItem.noAttendingArr.attendeesData.push(obj)
       console.log(this.editedItem.noAttendingArr.attendeesData)
     },
-    addDate(key) {
+    addDate(index, row) {
       this.show_dialog_child = true
-      this.key = key
+      this.key = index
+      this.item = row
     },
     // Parsing activity
     parsineActivity() {
@@ -2425,6 +2473,7 @@ data() {
                 activity_date: sd == null ? 'TBD' : sd + ' - ' + ed == null ? 'TBD' : ed,
                 no_attending: data[i].attendySummary.count,
                 amount: data[i].cost != null ? data[i].cost : 0,
+                percentage: parseInt(data[i].upcharge_percentage),
                 type_uni: {
                   id: data[i].type.id,
                   label: data[i].type.abbreviation
@@ -2434,7 +2483,6 @@ data() {
                 charge: data[i].total_cost,
                 repeat: data[i].has_recurring != null ? data[i].has_recurring : false,
                 attendies: false,
-                percentage: 0,
 
                 changed: false,
                 showEditButton: true,
@@ -2505,31 +2553,67 @@ data() {
     },
     confirmNewDate() {
 
-      const newObj = this.tempDateOfActivity
-      newObj.id = Math.floor(Math.random() * 100)
+      const tempData = this.tempDateOfActivity
+      console.log('New obj : ', tempData)
 
-
-      this.data[this.key].dateOfActivityArr.push(newObj)
-      console.log(this.data[this.key].dateOfActivityArr)
-
-      this.tempDateOfActivity = {
-        startdate: '2020/06/14',
-        endDate: '2020/06/24',
-        time1: '00:00',
-        time2: '00:00',
-        location: 'Location...',
-        selectDayWeekMonth: '',
-        selectWeekDay: '',
-        note: 'Note...',
-        selectDayWeekMonth: '',
-        selectWeekDay: '',
-        repeats: { id: 1, label: 'Daily', value: 'Daily', clean: 'Day' },
-        repeatOn: [],
-        repeat: false,
-        multi: false,
-        child: true,
-        attendies: false,
+      let repeatOnArr = []
+      for(let i=0; i<tempData.repeatOn.length; i++) {
+        if(tempData.repeatOn[i].checked) {
+          repeatOnArr.push(i)
+        }
       }
+
+      let data = {
+        start_date: tempData.startdate,
+        end_date: tempData.endDate,
+        start_time: tempData.time1,
+        end_time: tempData.time2,
+        is_full_day: tempData.allDayEvent,
+        is_recurring: tempData.repeat,
+        recurrance_type_id: tempData.repeats.id,
+        day_of_week: repeatOnArr,
+        number_of_occurrences: tempData.repeatEvery,
+        note: tempData.note,
+        location: tempData.location,
+      }
+
+      console.log('final arr', data)
+
+      const conf = {
+          method: 'POST',
+          url: config.addSchedule + this.item.id,
+          headers: {
+            Accept: 'application/json',
+          },
+          data: data
+      }
+      axios(conf).then(res => {
+        console.log('add schedule : ', res.data)
+      })
+
+      // console.log(conf)
+
+      // this.data[this.key].dateOfActivityArr.push(newObj)
+      // console.log(this.data[this.key].dateOfActivityArr)
+
+      // this.tempDateOfActivity = {
+      //   startdate: '2020/06/14',
+      //   endDate: '2020/06/24',
+      //   time1: '00:00',
+      //   time2: '00:00',
+      //   location: 'Location...',
+      //   selectDayWeekMonth: '',
+      //   selectWeekDay: '',
+      //   note: 'Note...',
+      //   selectDayWeekMonth: '',
+      //   selectWeekDay: '',
+      //   repeats: { id: 1, label: 'Daily', value: 'Daily', clean: 'Day' },
+      //   repeatOn: [],
+      //   repeat: false,
+      //   multi: false,
+      //   child: true,
+      //   attendies: false,
+      // }
 
     },
     getAtendeeTypes() {
@@ -2635,10 +2719,13 @@ data() {
         activity_name: this.editedItem.activity,
         cost: this.editedItem.amount,
         allocation_type_categories_id: this.editedItem.type_uni.id,
-        activity_note: this.editedItem.note
+        activity_note: this.editedItem.note,
+        upcharge_percentage: this.editedItem.percentage,
       }
 
       if(this.addNew) {
+
+          editData.school_id = this.$route.params.id
 
           const conf = {
             method: 'POST',
@@ -2974,6 +3061,26 @@ data() {
         // for(let i=0; i<this.weekDays.length; i++) {
         //   this.weekDays[i].checked = false
         // }
+      }
+    },
+    showRemainingBalance(val) {
+      if(val) {
+        this.visibleColumns = [
+          "toggle",
+          "provider", 
+          "status", 
+          "approvals",
+          "PDActivity", 
+          "dateOfActivity", 
+          "noAttending",
+          "amount",
+          "type",
+          "grossPD",
+          "RB",
+          "actions"
+        ]
+      }else {
+        this.visibleColumns = []
       }
     }
   }
