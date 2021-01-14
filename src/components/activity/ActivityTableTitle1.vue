@@ -54,12 +54,13 @@
         dense
         outlines
         label="Status"
-        :options="options"
+        :options="typeArr"
         v-model="typeModel"
       >
         <template v-if="typeModel" v-slot:append>
           <q-icon name="cancel" @click.stop="typeModel = '', filterActivity()" class="cursor-pointer" />
         </template>
+        
       </q-select>
 
       <q-btn square :disabled="addNew"
@@ -814,10 +815,13 @@
 
                                     <q-list bordered separator class="q-mb-lg" style="height: 195px; overflow-y: scroll;">
 
-                                      <q-item v-for="teacher in filteredList" :key="teacher.id">
+                                      <q-item v-for="teacher in attendingTeacherList" :key="teacher.id">
                                         <q-item-section>
                                           <div class="w-100 row justify-between items-center">
-                                            <div class="text-subtitle2">{{ teacher.name }}</div>
+                                            <div class="text-subtitle2">
+                                              {{ teacher.first_name }}
+                                              {{ teacher.last_name }}
+                                            </div>
                                             <q-btn 
                                               icon="delete_forever"
                                               color="red" 
@@ -830,12 +834,12 @@
                                       </q-item>
 
                                                                       
-                                      <div v-if="teachersSearchLength == 0">
+                                      <!-- <div v-if="attendingTeacherList.length == 0">
                                           <p class="q-mt-md q-ml-md">
                                             <q-icon name="warning" style="font-size: 1.5em"/>
                                             No matching records found 
                                           </p>
-                                      </div>
+                                      </div> -->
                                     
                                     </q-list>
 
@@ -895,6 +899,8 @@
                 <q-card-section>
                   <div>
 
+                    <h2>doc</h2>
+
                     <q-table
                       :data="editedItem.noAttendingArr.attendeesData"
                       :columns="attendeesColumn"
@@ -934,8 +940,10 @@
 
                           <q-td key="attendeeList" :props="props" class="row">
 
-                            <div @click="props.expand = !props.expand" class="cursor-pointer" >
-                              <q-btn color="blue"  round dense icon="perm_identity"/>
+                            <div 
+                            @click="props.expand = !props.expand, getParticipiant(props.row)" 
+                            class="cursor-pointer" >
+                              <q-btn color="blue" round dense icon="perm_identity"/>
                             </div>
 
                             <q-btn
@@ -959,7 +967,9 @@
                                 v-on:keyup.enter="searchEnter"
                                 v-model="attendingSearch"
                                 label="Search" 
-                                class="q-mt-lg q-mb-sm">
+                                class="q-mt-lg q-mb-sm"
+                                @input="searchParticipant"
+                              >
 
                                 <template v-slot:prepend>
                                   <q-icon name="search" />
@@ -969,10 +979,14 @@
 
                               <q-list bordered separator class="q-mb-lg" style="height: 195px; overflow-y: scroll;">
 
-                                <q-item v-for="teacher in filteredList" :key="teacher.id">
+                                <q-item v-for="teacher in attendingTeacherList" :key="teacher.id">
                                   <q-item-section>
                                     <div class="w-100 row justify-between items-center">
-                                      <div class="text-subtitle2">{{ teacher.name }}</div>
+                                      <div class="text-subtitle2">
+                                        {{ teacher.first_name }}
+                                        {{ teacher.last_name }}
+                                        {{ teacher.id }}
+                                      </div>
                                       <q-btn 
                                         icon="delete_forever"
                                         color="red" 
@@ -985,7 +999,7 @@
                                 </q-item>
 
                                                                 
-                                <div v-if="teachersSearchLength == 0">
+                                <div v-if="!attendingTeacherList.length">
                                     <p class="q-mt-md q-ml-md">
                                       <q-icon name="warning" style="font-size: 1.5em"/>
                                       No matching records found 
@@ -1790,6 +1804,7 @@ data() {
 
     totalPDremainder: this.barInfo.totalsAmount.PD,
     totalFEremainder: this.barInfo.totalsAmount.FE,
+    final: false,
 
     ////////////////////////////
     showRemainingBalance: false,
@@ -2099,11 +2114,6 @@ data() {
     typeModel: '',
 
     attendingTeacherList: [
-      // {id: 1, name: 'Luke Skywalker'},
-      // {id: 2, name: 'Han Solo'},
-      // {id: 3, name: 'Jar Jar Binks'},
-      // {id: 4, name: 'R2-D2'},
-      // {id: 5, name: 'Yoda'}
     ],
     attendingSearch: '',
     teachersSearchLength: 0,
@@ -2112,6 +2122,9 @@ data() {
     optionsSupplierForFilter: [],
 
     item: '',
+    teacherItem: {},
+    attendeeItem: {},
+
     confirm: false,
     confirmDate: false,
     confirmTeacherModal: false,
@@ -2330,14 +2343,58 @@ data() {
       console.log('changeType', val)
     },
     searchEnter() {
-      if(this.teachersSearchLength == 0) {
-        let obj = {
-          id: Math.floor(Math.random() * 1000),
-          name: this.attendingSearch
-        }
-        this.attendingTeacherList.push(obj)
-        this.attendingSearch = ''
+
+      if(!this.attendingTeacherList.length) {
+
+      let obj = {
+        searchParties: this.attendingSearch,
+        summary_id: this.attendeeItem.id, 
+        type_id: this.attendeeItem.type.id, 
       }
+
+      const conf = {
+        method: 'POST',
+        url: config.addParticipant + this.$route.params.id + '/' + this.item.id,
+        headers: {
+          Accept: 'application/json',
+        },
+        data: attendeesArr
+      }
+
+      axios(conf).then(res => {
+            console.log('Participant === ', res.data)
+            this.$q.notify({
+              message: 'Participant added!',
+              type: 'positive',
+            })
+      })
+      //   let obj = {
+      //     id: Math.floor(Math.random() * 1000),
+      //     name: this.attendingSearch
+      //   }
+      //   this.attendingTeacherList.push(obj)
+      //   
+
+      // addParticipant
+      this.attendingSearch = ''
+      }
+    },
+    searchParticipant() {
+      console.log('attendingSearch', this.attendingSearch)
+      // searchParticipant + schoold ID?searchParties=test
+
+      const conf = {
+        method: 'GET',
+        url: config.searchParticipant + this.$route.params.id + '?searchParties=' + this.attendingSearch,
+        headers: {
+          Accept: 'application/json',
+        }
+      }
+
+      axios(conf).then(res => {
+        this.attendingTeacherList = res.data.participants
+        console.log('searchParticipant', res.data.participants)
+      })
     },
     exportTable() {
           // naive encoding to csv format
@@ -2505,6 +2562,7 @@ data() {
     
     },
     deleteItem() {
+
         let item = this.item
 
         const conf = {
@@ -2525,7 +2583,7 @@ data() {
         })
     },
     openDeleteTeacherModal(item) {
-      this.item = item
+      this.teacherItem = item
       this.confirmTeacherModal = true
     },
     openAttendeDeleteModal(item) {
@@ -2557,10 +2615,33 @@ data() {
 
     },
     deleteTeacherItem() {
-      let item = this.item
-      const index = this.filteredList.indexOf(item)
-      this.filteredList.splice(index, 1)
-      console.log('787878', this.filteredList)
+
+        let item = this.item
+
+        const conf = {
+          method: 'DELETE',
+          url: config.deleteAttendyParticipant + this.teacherItem.id + '/' + item.id,
+          headers: {
+              Accept: 'application/json',
+          }
+        }
+
+        axios(conf).then(res => {
+          const index = this.attendingTeacherList.indexOf(item)
+          this.attendingTeacherList.splice(index, 1)
+
+            this.$q.notify({
+              message: 'Deleted!',
+              type: 'positive',
+            })
+
+        })
+
+      console.log('teacher id', teacherItem.id)
+      console.log('item id', item.id)
+
+      // const index = this.attendingTeacherList.indexOf(item)
+      // this.attendingTeacherList.splice(index, 1)
     },
     addAttRow() {
       let obj = {  
@@ -2583,7 +2664,111 @@ data() {
 
     },
     // Parsing activity
-    parsineActivity() {
+    activityParsing(data, final) {
+
+      console.log('activity parsing 000000')
+
+      let arr = []
+      for(let i=0; i<data.length; i++) {
+
+        let sd = data[i].start_date,
+            ed = data[i].end_date,
+            fullDate = sd + ' - ' + ed;
+
+        let charge;
+
+        if(data[i].cost != null) {
+          charge = parseFloat(data[i].cost) + ((parseFloat(data[i].cost) * parseFloat(data[i].upcharge_percentage)) / 100 )
+        }else {
+          charge = 0
+        }
+
+        if(data[i].type.id == 1) {
+          // PD
+          if(final == 1) {
+            this.totalPDremainder = this.totalPDremainder - charge
+          }else {
+            this.totalPDremainder = (this.totalPDremainder / 2) - charge
+          }
+        }else {
+          // FE
+          if(final == 1) {
+            this.totalFEremainder = this.totalFEremainder - charge
+          }else {
+            this.totalFEremainder = (this.totalFEremainder / 2) - charge
+          }
+        }
+
+        // PD = 1 totalPDremainder
+        // FE = 2 totalFEremainder
+        let isOnline;
+        if(data[i].is_online == 1) {
+          isOnline = 'Online'
+        }else {
+          isOnline = 'On Site'
+        }
+
+    
+        let activityObj = {
+          // remainingBalance: charge,
+          remainingBalance: data[i].type.id == 1 ? this.totalPDremainder : this.totalFEremainder,
+          id: data[i].id,
+          online_uni: {
+              id: data[i].is_online,
+              label: isOnline
+          },
+          provider: {
+            id: data[i].supplier.id,
+            label: data[i].supplier.short_name
+          },
+          status_uni: {
+            id: data[i].status.id,
+            label: data[i].status.name
+          },
+          approval_status_uni: {
+            id: data[i].approval_status.id,
+            label: data[i].approval_status.name
+          },
+          approval_type_uni: {
+            id: data[i].approval_types.id,
+            label: data[i].approval_types.name
+          },
+          activity: data[i].activity_name,
+          activity_date: sd == null ? 'TBD' : fullDate,
+          no_attending: data[i].attendySummary.count,
+          amount: data[i].cost != null ? data[i].cost : 0,
+          percentage: parseInt(data[i].upcharge_percentage),
+          type_uni: {
+            id: data[i].type.id,
+            label: data[i].type.abbreviation
+          },
+          note: data[i].activity_note,
+          approver: '',
+          charge: data[i].total_cost,
+          repeat: data[i].has_recurring != null ? data[i].has_recurring : false,
+          attendies: false,
+
+          changed: false,
+          showEditButton: true,
+          
+
+          dateOfActivityArr: [
+          ],
+
+          noAttendingArr: {
+            attendees: '',
+            amount: 0,
+            split: false,
+            attendeesData: [
+            ],
+          }
+        }
+
+        arr.push(activityObj)
+
+      }
+
+      return arr
 
     },
     changePagination (val) {
@@ -2648,9 +2833,11 @@ data() {
 
         axios(conf).then(res => {
 
-            console.log('======', res)
             let data = res.data.activity
             this.pages = res.data.pagesCount
+
+            let final = res.data.isSchoolAllocationFinal
+            this.final = final
 
 
             if(res.data.isSchoolAllocationFinal == 1) {
@@ -2659,123 +2846,13 @@ data() {
               this.$emit('final', false)
             }
 
-            let arr = []
-            for(let i=0; i<data.length; i++) {
+            console.log('grigorghazarian', data)
+            let finalResult = this.activityParsing(data, final)
 
-              let sd = data[i].start_date,
-                  ed = data[i].end_date,
-                  fullDate = sd + ' - ' + ed;
-              
+            console.log('010101010101010101010101010', finalResult)
 
-              let charge
-
-              if(data[i].cost != null) {
-                charge = parseFloat(data[i].cost) + ((parseFloat(data[i].cost) * parseFloat(data[i].upcharge_percentage)) / 100 )
-              }else {
-                charge = 0
-              }
-
-              if(data[i].type.id == 1) {
-                // PD
-                if(res.data.isSchoolAllocationFinal == 1) {
-                  this.totalPDremainder = this.totalPDremainder - charge
-                }else {
-                  this.totalPDremainder = (this.totalPDremainder / 2) - charge
-                }
-              }else {
-                // FE
-                if(res.data.isSchoolAllocationFinal == 1) {
-                  this.totalFEremainder = this.totalFEremainder - charge
-                }else {
-                  this.totalFEremainder = (this.totalFEremainder / 2) - charge
-                }
-              }
-
-              // PD = 1 totalPDremainder
-              // FE = 2 totalFEremainder
-          
-              let activityObj = {
-                // remainingBalance: charge,
-                remainingBalance: data[i].type.id == 1 ? this.totalPDremainder : this.totalFEremainder,
-                id: data[i].id,
-                online_uni: {
-                    id: 2,
-                    label: "On Site"
-                },
-                provider: {
-                  id: data[i].supplier.id,
-                  label: data[i].supplier.short_name
-                },
-                status_uni: {
-                  id: data[i].status.id,
-                  label: data[i].status.name
-                },
-                approval_status_uni: {
-                  id: data[i].approval_status.id,
-                  label: data[i].approval_status.name
-                },
-                approval_type_uni: {
-                  id: data[i].approval_types.id,
-                  label: data[i].approval_types.name
-                },
-                activity: data[i].activity_name,
-                activity_date: sd == null ? 'TBD' : fullDate,
-                no_attending: data[i].attendySummary.count,
-                amount: data[i].cost != null ? data[i].cost : 0,
-                percentage: parseInt(data[i].upcharge_percentage),
-                type_uni: {
-                  id: data[i].type.id,
-                  label: data[i].type.abbreviation
-                },
-                note: data[i].activity_note,
-                approver: '',
-                charge: data[i].total_cost,
-                repeat: data[i].has_recurring != null ? data[i].has_recurring : false,
-                attendies: false,
-
-                changed: false,
-                showEditButton: true,
-                
-
-                dateOfActivityArr: [
-                //   {
-                //   id: 109098788,
-                //   startdate: data[i].start_date,
-                //   endDate: data[i].end_date,
-                //   time1: data[i].start_time,
-                //   time2: data[i].end_time,
-                //   location: data[i].location,
-
-                //   selectDayWeekMonth: 'selectDayWeekMonth',
-                //   repeatEvery: 1,
-                //   note: 'Note...))))',
-                //   selectDayWeekMonth: 'selectDayWeekMonth',
-                //   selectWeekDay: 'selectWeekDay',
-
-                //   repeats: { id: 1, label: 'Daily', value: 'Daily', clean: 'Day' },
-                //   repeatOn: [],
-                //   attendies: false,
-                // }
-                ],
-
-                noAttendingArr: {
-                  attendees: '',
-                  amount: 0,
-                  split: false,
-                  attendeesData: [
-                  ],
-                }
-              }
-              arr.push(activityObj)
-            }
-
-            console.log('arr ===== ', arr)
-
-            // // Allocation parsing function here
-            // let finalResult = this.allocationParsing(data)
-            
-            this.data = arr
-            this.tempDataX = arr
+            this.data = finalResult
+            this.tempDataX = finalResult
 
             this.loading = false
         });
@@ -2888,7 +2965,7 @@ data() {
           let atendeeArr = [];
 
           for(let i=0; i<atendeeTypes.length; i++) {
-            console.log('876324978623459786243598762348976', atendeeTypes[i])
+            
             let obj = {
               id: atendeeTypes[i].id,
               label: atendeeTypes[i].type,
@@ -2980,11 +3057,13 @@ data() {
         allocation_type_categories_id: this.editedItem.type_uni.id,
         activity_note: this.editedItem.note,
         upcharge_percentage: this.editedItem.percentage,
+        is_online: this.editedItem.online_uni.id,
       }
 
       if(this.addNew) {
 
           editData.school_id = this.$route.params.id
+          editData.allocation_id = parseInt(this.tab)
 
           const conf = {
             method: 'POST',
@@ -3006,7 +3085,10 @@ data() {
             this.data[index].changed = false
             this.data[index].showEditButton = true
 
-            this.data[index].id = res.data.activity[0].id
+            if (res.data.activity[0]) {
+              this.data[index].id = res.data.activity[0].id
+            }
+            
             this.data[index].add = false
 
             this.addNew = false
@@ -3043,7 +3125,7 @@ data() {
               this.statusChanged = false
 
             })
-          }
+      }
 
 
 
@@ -3068,13 +3150,13 @@ data() {
         for(let i=0; i<types.length; i++) {
           let obj = {
             id: types[i].id,
-            label: types[i].abbreviation
+            label: types[i].name,
+            name: types[i].name
           }
           typesArray.push(obj)
         }
 
         this.typeArr = typesArray
-        console.log('[[[]]]', this.typesArr)
 
       })
     },
@@ -3253,7 +3335,69 @@ data() {
       }
     },
     filterActivity() {
-      console.log('filterActivity')
+
+      this.loading = true
+
+      let uri = '';
+
+      if(this.filter != '') {
+        uri += '&search=' + this.filter
+      }
+
+      if(this.schoolYear) {
+        uri += '&year=' + this.schoolYear.id
+      }
+
+      if(this.typeModel != '') {
+        uri += '&type=' + this.typeModel.id
+      }
+
+      console.log('URI', uri)
+
+      const conf = {
+        method: 'GET',
+        url: config.filterActivity + this.tab + '/' + this.$route.params.id + '?' + uri,
+        headers: {
+          Accept: 'application/json',
+        }
+      }
+
+      axios(conf).then(res => {
+
+        this.pages = res.data.pagesCount
+        let data = res.data.activity
+        
+
+        let filteredData = this.activityParsing(data, this.final)
+
+        this.data = filteredData
+        this.tempDataX = filteredData
+
+        this.loading = false
+      });
+    },
+    getParticipiant(value) {
+      
+      console.log(this.item)
+      console.log('value', value)
+
+      this.attendeeItem = value
+
+      let id = value.id
+      const conf = {
+        method: 'GET',
+        url: config.getAttendyParticipant + id,
+        headers: {
+          Accept: 'application/json',
+        }
+      }
+      axios(conf).then(res => {
+        console.log('res', res)
+        let attendeeSchool = res.data.attendeeSchool
+        this.attendingTeacherList = attendeeSchool
+      })
+
+      // getAttendyParticipant
     }
   },
   created() {
@@ -3281,12 +3425,12 @@ data() {
         
         return parseFloat(amount)
     },
-    filteredList() {
-        let searchString = this.attendingSearch.toLowerCase();
-        let x = this.attendingTeacherList.filter(item => item.name.toLowerCase().includes(searchString));
-        this.teachersSearchLength = x.length
-        return x
-    },
+    // filteredList() {
+    //     let searchString = this.attendingSearch.toLowerCase();
+    //     let x = this.attendingTeacherList.filter(item => item.first_name.toLowerCase().includes(searchString));
+    //     this.teachersSearchLength = x.length
+    //     return x
+    // },
     // timeTotal() {
     //   let t1 = parseInt(this.editedItem.dateOfActivityArr.time1.substring(0,2))
     //   let t2 = parseInt(this.editedItem.dateOfActivityArr.time2.substring(0,2))

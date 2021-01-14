@@ -60,8 +60,14 @@ const config = {
     removeAttendee: 'https://edxchange-activity.aimtech.am/api/v1/remove-attendy/', // + id,
     addAttendee: 'https://edxchange-activity.aimtech.am/api/v1/add-attendy/', // + id
     filterActivity: 'https://edxchange-activity.aimtech.am/api/v1/filter-activity/', // 1/1001?search=test&type=1&year=1015
+    
+    
     // Get attendee types
     getAtendeeTypes: 'https://edxchange-activity.aimtech.am/api/v1/get-atendee-types', 
+    getAttendyParticipant: 'https://edxchange-activity.aimtech.am/api/v1/get-attendy-participiant/', // + id
+    deleteAttendyParticipant: 'https://edxchange-activity.aimtech.am/api/v1/remove-attendy-parties/', // + 24/318,
+    addParticipant: 'https://edxchange-activity.aimtech.am/api/v1/add-participant/', // + 1001/318
+    searchParticipant: 'https://edxchange-activity.aimtech.am/api/v1/search-attendy-participant/', // 1001?searchParties=test
 }
 
 export default config
