@@ -899,8 +899,6 @@
                 <q-card-section>
                   <div>
 
-                    <h2>doc</h2>
-
                     <q-table
                       :data="editedItem.noAttendingArr.attendeesData"
                       :columns="attendeesColumn"
@@ -1437,7 +1435,9 @@
             </q-td>
 
             <q-td key="RemainingBalance" :props="props">
-                <div>$ {{ (props.row.remainingBalance).toFixed(2) }}</div>
+                <div>
+                  $ <span :class=" props.row.remainingBalance > 0 ? 'text-positive' : 'text-negative' ">{{ (props.row.remainingBalance).toFixed(2) }}</span>
+                </div>
             </q-td>
 
             <q-td key="actions" :props="props" style="min-width: 132px">
@@ -2358,11 +2358,12 @@ data() {
         headers: {
           Accept: 'application/json',
         },
-        data: attendeesArr
+        data: obj
       }
 
       axios(conf).then(res => {
             console.log('Participant === ', res.data)
+            this.attendingTeacherList.push(res.data.participant)
             this.$q.notify({
               message: 'Participant added!',
               type: 'positive',
@@ -3328,7 +3329,6 @@ data() {
       clearTimeout(typingTimer);
     },
     doneTyping() {
-      console.log('Typing done!')
       if(this.filter.length > 1 || this.filter.length == 0) {
         console.log('Send Request...')
         this.filterActivity()
@@ -3336,7 +3336,7 @@ data() {
     },
     filterActivity() {
 
-      this.loading = true
+      // this.loading = true
 
       let uri = '';
 
@@ -3398,7 +3398,7 @@ data() {
       })
 
       // getAttendyParticipant
-    }
+    },
   },
   created() {
       this.getActivityByType( parseInt(this.tab), this.$route.params.id, this.count, this.current )
