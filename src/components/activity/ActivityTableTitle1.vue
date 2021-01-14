@@ -15,24 +15,52 @@
 
       <!-- Table Header -->
       <template v-slot:top-right="props">
-      
-      <q-select 
-        class="q-mr-md" 
-        style="min-width: 200px; max-width: 200px" 
-        dense outlines clearable 
-        v-model="schoolYear" 
-        :options="schoolYears" label="School year"
+
+      <q-input
         :disable="showRemainingBalance"
-      />
-
-      <q-input :disable="showRemainingBalance" class="q-mr-md" outlines dense v-model="filter" placeholder="Search">
-          <template v-slot:append>
-          <q-icon name="search"/>
-          </template>
+        class="q-mr-md"
+        outlines
+        dense
+        v-model="filter"
+        placeholder="Search"
+        @keyup="keyUpFilter" 
+        @keydown="keyDownFilter"
+        style="min-width: 250px; max-width: 250px"
+      >
+        <template v-slot:append>
+          <q-icon name="search" />
+        </template>
       </q-input>
+      
+      <q-select class="q-mr-md" style="min-width: 200px; max-width: 200px" 
+        dense outlines 
+        v-model="schoolYear" 
+        :options="schoolYears" 
+        label="School year" 
+        @input="filterActivity"
+        :disable="showRemainingBalance"
+      >
+        <template v-if="schoolYear" v-slot:append>
+          <q-icon name="cancel" @click.stop="schoolYear = '', filterActivity()" class="cursor-pointer" />
+        </template>
 
-      <q-select :disable="showRemainingBalance" class="q-mr-md" style="min-width: 250px; max-width: 250px" dense outlines clearable 
-      v-model="typeModel" :options="options" label="Type" @input="filterType"/>
+      </q-select>
+
+      <q-select
+        :disable="showRemainingBalance" 
+        @input="filterActivity"
+        class="q-mr-md"
+        style="min-width: 250px; max-width: 250px"
+        dense
+        outlines
+        label="Status"
+        :options="options"
+        v-model="typeModel"
+      >
+        <template v-if="typeModel" v-slot:append>
+          <q-icon name="cancel" @click.stop="typeModel = '', filterActivity()" class="cursor-pointer" />
+        </template>
+      </q-select>
 
       <q-btn square :disabled="addNew"
        class="q-mr-md" style="background-color: #546bfa" text-color="white" icon="add" 
@@ -171,7 +199,7 @@
                   </q-table> -->
 
                   <div class="q-mt-md q-mb-md">
-                    <q-btn icon="add" color="blue" round @click="addDate(props.pageIndex)"/>
+                    <q-btn icon="add" color="blue" round @click="addDate(index, item)"/>
                   </div>
 
               </q-card-section>
@@ -1072,27 +1100,45 @@
 
               <span 
                 class="material-icons cursor-pointer" 
-                style="font-size: 1.5em"
+                style="font-size: 1.7em; color: #4daf4f"
                 v-if="props.row.online_uni.id == 1 "
-              >laptop_mac</span> 
+              >
+                laptop_mac
+                <q-tooltip 
+                    anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                    transition-show="flip-right"
+                    transition-hide="flip-left"
+                >
+                    <strong>Online</strong>
+                </q-tooltip>
+              </span> 
+
               <span 
                 class="material-icons cursor-pointer" 
-                style="font-size: 1.5em"
+                style="font-size: 1.7em; color: #2196f3"
                 v-else
-              >emoji_transportation
+              >
+                emoji_transportation
+                    <q-tooltip 
+                        anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                        transition-show="flip-right"
+                        transition-hide="flip-left"
+                    >
+                        <strong>On Site</strong>
+                    </q-tooltip>
               </span>
                 
-                <q-popup-edit 
+              <q-popup-edit 
+                v-model="props.row.online_uni" 
+                title="Online" buttons>
+                <q-select 
+                  @input="detectChange(props.rowIndex)" 
+                  dense 
+                  outlined 
                   v-model="props.row.online_uni" 
-                  title="Online" buttons>
-                  <q-select 
-                    @input="detectChange(props.rowIndex)" 
-                    dense 
-                    outlined 
-                    v-model="props.row.online_uni" 
-                    :options="online"
-                  />
-                </q-popup-edit>
+                  :options="online"
+                />
+              </q-popup-edit>
 
             </q-td>
 
@@ -2044,11 +2090,7 @@ data() {
     },
 
     schoolYear: null,
-    schoolYears: [
-      'School Year 20-21',
-      'School Year 19-20',
-      'School Year 18-19'
-    ],
+    schoolYears: [],
     filter: "",
     options: [
       'Professional Development', 
@@ -2201,6 +2243,12 @@ data() {
       let date = this.getToday()
 
       const obj  = {
+        remainingBalance: 0,
+        id: 0,
+        online_uni: {
+            id: 2,
+            label: "On Site"
+        },
         provider: {
           id: 999,
           label: 'Unknown'
@@ -2317,6 +2365,12 @@ data() {
           }
     },
     editDateOfActivity(item, index) {
+
+        this.item = item
+        this.index = index
+
+        console.log('this.item ',this.item)
+        console.log('this index', this.index)
         
         // this.editedIndex = this.data.indexOf(item);
         // this.editedItem = Object.assign({}, item);
@@ -2324,7 +2378,7 @@ data() {
         // this.dateOfActivityTableData = this.data[index].dateOfActivityArr
         // console.log('0-0-0-0-', this.data[index])
         // console.log('index', index)
-        console.log(item.id)
+        // console.log(item.id)
         this.getSchedules(item.id, index)
 
         // this.show_dialog = true;
@@ -2520,9 +2574,13 @@ data() {
       console.log(this.editedItem.noAttendingArr.attendeesData)
     },
     addDate(index, row) {
+
+      console.log('row', row, 'index', index)
+
       this.show_dialog_child = true
       this.key = index
       this.item = row
+
     },
     // Parsing activity
     parsineActivity() {
@@ -2594,6 +2652,13 @@ data() {
             let data = res.data.activity
             this.pages = res.data.pagesCount
 
+
+            if(res.data.isSchoolAllocationFinal == 1) {
+              this.$emit('final', true)
+            }else {
+              this.$emit('final', false)
+            }
+
             let arr = []
             for(let i=0; i<data.length; i++) {
 
@@ -2611,9 +2676,19 @@ data() {
               }
 
               if(data[i].type.id == 1) {
-                this.totalPDremainder = this.totalPDremainder - charge
+                // PD
+                if(res.data.isSchoolAllocationFinal == 1) {
+                  this.totalPDremainder = this.totalPDremainder - charge
+                }else {
+                  this.totalPDremainder = (this.totalPDremainder / 2) - charge
+                }
               }else {
-                this.totalFEremainder = this.totalFEremainder - charge
+                // FE
+                if(res.data.isSchoolAllocationFinal == 1) {
+                  this.totalFEremainder = this.totalFEremainder - charge
+                }else {
+                  this.totalFEremainder = (this.totalFEremainder / 2) - charge
+                }
               }
 
               // PD = 1 totalPDremainder
@@ -2727,8 +2802,12 @@ data() {
     },
     confirmNewDate() {
 
+      console.log('confirm new date')
+      console.log('this.item ',this.item)
+      
+
       const tempData = this.tempDateOfActivity
-      console.log('New obj : ', tempData)
+      // console.log('New obj : ', tempData)
 
       let repeatOnArr = []
       for(let i=0; i<tempData.repeatOn.length; i++) {
@@ -2768,29 +2847,29 @@ data() {
 
         this.show_dialog_child = false
             
-          //   let schedule = res.data.schedule;
+            let schedule = res.data.schedule;
 
-          //   let obj = {
-          //     id: schedule.id,
-          //     startdate: schedule.start_date,
-          //     endDate: schedule.end_date,
-          //     time1: schedule.start_time,
-          //     time2: schedule.end_time,
-          //     location: schedule.location,
+            let obj = {
+              id: schedule.id,
+              startdate: schedule.start_date,
+              endDate: schedule.end_date,
+              time1: schedule.start_time,
+              time2: schedule.end_time,
+              location: schedule.location,
 
-          //     repeats: {
-          //       label: '',
-          //     },
+              repeats: {
+                label: '',
+              },
 
-          //     repeatEvery: '',
-          //     repeatOn: [],
-          //     note: '',
-          //     attendies: false,
-          //     child: true
-          //   }
+              repeatEvery: '',
+              repeatOn: [],
+              note: '',
+              attendies: false,
+              child: true
+            }
 
-          // this.data[this.key].dateOfActivityArr.push(obj)
-          // this.dateOfActivityTableData.push(obj)
+          this.data[this.key].dateOfActivityArr.push(obj)
+          this.dateOfActivityTableData.push(obj)
       })
 
     },
@@ -3134,6 +3213,47 @@ data() {
       this.index = index
       this.getAttdeesById(row.id)
       this.getSchedules(row.id, index)
+    },
+    getSchoolYears() {
+      const conf = {
+        method: 'GET',
+        url: config.getSchoolYears,
+        headers: {
+          Accept: 'application/json',
+        }
+      }
+      axios(conf).then(res => {
+        console.log('getSchoolYears',  res)
+
+        let data = res.data, schoolsArr = []
+        for(let i=0; i<data.length; i++) {
+          let obj = {
+            id: data[i].id,
+            label: data[i].year_name,
+            value: data[i].year_name
+          }
+          schoolsArr.push(obj)
+        }
+        this.schoolYears = schoolsArr
+      })
+    },
+    // Filter key events
+    keyUpFilter() {
+      clearTimeout(typingTimer);
+      typingTimer = setTimeout(this.doneTyping, doneTypingInterval);
+    },
+    keyDownFilter() {
+      clearTimeout(typingTimer);
+    },
+    doneTyping() {
+      console.log('Typing done!')
+      if(this.filter.length > 1 || this.filter.length == 0) {
+        console.log('Send Request...')
+        this.filterActivity()
+      }
+    },
+    filterActivity() {
+      console.log('filterActivity')
     }
   },
   created() {
@@ -3143,6 +3263,7 @@ data() {
       this.getCategoryTypes(1)
       this.getApprovals()
       this.getRcurranceTypes()
+      this.getSchoolYears()
   },
   computed: {
     school() {

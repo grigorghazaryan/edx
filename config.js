@@ -59,6 +59,7 @@ const config = {
     removeSchedule: 'https://edxchange-activity.aimtech.am/api/v1/remove-schedule/', // + id
     removeAttendee: 'https://edxchange-activity.aimtech.am/api/v1/remove-attendy/', // + id,
     addAttendee: 'https://edxchange-activity.aimtech.am/api/v1/add-attendy/', // + id
+    filterActivity: 'https://edxchange-activity.aimtech.am/api/v1/filter-activity/', // 1/1001?search=test&type=1&year=1015
     // Get attendee types
     getAtendeeTypes: 'https://edxchange-activity.aimtech.am/api/v1/get-atendee-types', 
 }
