@@ -2443,7 +2443,7 @@ export default {
         }
 
         let statusObj = {
-          id: data[i].condition_id,
+          id: data[i].status_id,
           label: statusName
         }
         data[i].status_uni = statusObj
@@ -2600,7 +2600,8 @@ export default {
         serial_number: this.editedItem.serial_number,
         location: this.editedItem.location,
         location_information_note: this.editedItem.location_information_note,
-        note:  this.editedItem.note
+        note:  this.editedItem.note,
+        purchase_date: this.editedItem.purchase_date
       }
 
       const modifyData = {
@@ -2617,6 +2618,7 @@ export default {
         new_sticker_range_end: this.statusChangeObject.stickerRangeEnd,
         allocation_type_id: this.allocationSelected.id,
         school_id: this.statusChangeObject.schoolToTransfer && this.statusChangeObject.schoolToTransfer.id,
+        purchase_date: this.editedItem.purchase_date,
 
       }
 

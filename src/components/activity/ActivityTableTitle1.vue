@@ -1159,6 +1159,7 @@
               :props="props"
               @click="copyRowData(props.rowIndex)"
             >
+            
               <div  class="cursor-pointer" v-if="props.row.provider">
                 {{ props.row.provider.label }}
               </div>

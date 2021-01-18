@@ -26,6 +26,7 @@ const routes = [
       // ------------------------------------------------------------------------------
       {path: '/Activity', component: () => import('pages/Activity/ActivitySchools.vue')},
       {path: '/Activity/:id', component: () => import('pages/Activity/Activity.vue')},
+      {path: '/ActivityProcesses', component: () => import('pages/Activity/ActivityProcesses.vue')},
       // -------------
       {path: '/Reimbursement', component: () => import('pages/Reimbursement/Reimbursement.vue')},
 
