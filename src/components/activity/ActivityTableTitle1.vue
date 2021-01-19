@@ -815,9 +815,11 @@
 
                                     <q-list bordered separator class="q-mb-lg" style="height: 195px; overflow-y: scroll;">
 
-                                      <q-item v-for="teacher in attendingTeacherList" :key="teacher.id">
+                                      <q-item
+                                        v-for="teacher in attendingTeacherList" :key="teacher.id">
                                         <q-item-section>
-                                          <div class="w-100 row justify-between items-center">
+
+                                          <div @click="addAttendee(teacher)" class="w-100 row justify-between items-center">
                                             <div class="text-subtitle2">
                                               {{ teacher.first_name }}
                                               {{ teacher.last_name }}
@@ -830,6 +832,7 @@
                                               @click="openDeleteTeacherModal(teacher)"
                                             ></q-btn>
                                           </div>
+
                                         </q-item-section>
                                       </q-item>
 
@@ -977,9 +980,11 @@
 
                               <q-list bordered separator class="q-mb-lg" style="height: 195px; overflow-y: scroll;">
 
-                                <q-item v-for="teacher in attendingTeacherList" :key="teacher.id">
+                                <q-item 
+                                  
+                                  v-for="teacher in attendingTeacherList" :key="teacher.id">
                                   <q-item-section>
-                                    <div class="w-100 row justify-between items-center">
+                                    <div @click="addAttendee(teacher)" class="w-100 row justify-between items-center">
                                       <div class="text-subtitle2">
                                         {{ teacher.first_name }}
                                         {{ teacher.last_name }}
@@ -1614,7 +1619,9 @@
                             <q-td key="location" 
                             style="white-space: initial;width: 230px; max-width: 230px;"
                             :props="props">
-                              {{ props.row.location }}
+                              <span class="inline-span">
+                                {{ props.row.location }}
+                              </span>
                             </q-td>
                             
                             <q-td key="repeats" :props="props">
@@ -1625,10 +1632,8 @@
                               {{ props.row.repeatEvery }}
                             </q-td>
 
-                            <q-td key="repeatOn" :props="props">
-                              <span v-for="weekday in props.row.repeatOn" :key="weekday.label">
-                                <span v-if="weekday.checked" class="q-mr-sm">{{ weekday.label }}</span>
-                              </span>
+                            <q-td key="repeatOn" :props="props" style="white-space: initial;width: 230px; max-width: 230px;">
+                                <span class="inline-span">{{ props.row.repeatsOn }}</span>
                             </q-td>
 
                             <q-td key="note" :props="props">
@@ -2381,6 +2386,32 @@ data() {
       this.attendingSearch = ''
       }
     },
+    addAttendee(teacher) {
+
+        let obj = {
+          searchParties: teacher.first_name,
+          summary_id: this.attendeeItem.id, 
+          type_id: this.attendeeItem.type.id, 
+        }
+
+        const conf = {
+          method: 'POST',
+          url: config.addParticipant + this.$route.params.id + '/' + this.item.id,
+          headers: {
+            Accept: 'application/json',
+          },
+          data: obj
+        }
+
+        axios(conf).then(res => {
+            console.log('Participant === ', res.data)
+            this.attendingTeacherList.push(res.data.participant)
+            this.$q.notify({
+              message: 'Participant added!',
+              type: 'positive',
+            })
+        })
+    },
     searchParticipant() {
       console.log('attendingSearch', this.attendingSearch)
       // searchParticipant + schoold ID?searchParties=test
@@ -2923,10 +2954,10 @@ data() {
 
         this.getSchedules(this.item.id, this.key)
 
-
         this.show_dialog_child = false
             
             let schedule = res.data.schedule;
+            console.log('res schedule', schedule)
 
             let obj = {
               id: schedule.id,
@@ -3241,7 +3272,7 @@ data() {
             reccArr.push(obj)
           }
           this.selectOptionsDayWeekMonth = reccArr
-          console.log(this.selectOptionsDayWeekMonth)
+          console.log('selectOptionsDayWeekMonth = ', this.selectOptionsDayWeekMonth)
         })
     },
     getSchedules(id, index) {
@@ -3257,9 +3288,15 @@ data() {
         axios(conf).then(res => {
 
           let schedules = res.data.schedules;
+          console.log('=======', schedules)
           let schedulessArr = []
 
           for(let i = 0; i<schedules.length; i++) {
+
+            // let repeats = '';
+            // for(let j=0; j<schedules[i].repeatOn.length; j++) {
+            //   repeats += this.weekDays[parseInt(schedules[i].repeatOn[j])].label + ', '
+            // }
 
             let obj = {
               id: schedules[i].id,
@@ -3269,10 +3306,12 @@ data() {
               time2: schedules[i].end_time,
               location: schedules[i].location,
               repeats: {
-                label: schedules[i].type != null ?schedules[i].type : '',
+                id: parseInt(schedules[i].recurrance_type_id),
+                label: schedules[i].type
               },
+              repeatsOn: schedules[i].reapeatDays,
+              repeatsId: schedules[i].repeatOn,
               repeatEvery: schedules[i].every,
-              repeatOn: [],
               note: schedules[i].note,
               attendies: false,
               child: i != 0 ? true : false
