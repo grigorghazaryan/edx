@@ -9,8 +9,9 @@
       </q-breadcrumbs>
     </div>
 
-    <q-card class="bg-transparent no-shadow no-border">
+    <q-card class="bg-transparent no-shadow no-border" v-if="this.barInfo">
       <q-card-section class="q-pa-none">
+        {{this.barInfo}}
         <div class="row q-col-gutter-sm ">
 
           <div class="col-md-2 col-sm-12 col-xs-12">
@@ -35,7 +36,8 @@
               </q-item-section>
               <q-item-section class="q-ml-none">
                 <q-item-label class="text-grey-7">Total FE</q-item-label>
-                <q-item-label class="text-dark text-h6 text-weight-bolder">
+                <q-item-label class="text-dark text-h6 text-weight-bolder"
+                v-if="this.barInfo">
                   <div>$ {{barInfo.totalsAmount.FE}}</div>
                   <div v-if="!isFinal" class="fs-1">$ {{ (barInfo.totalsAmount.FE / 2).toFixed(2) }}</div>
                 </q-item-label>

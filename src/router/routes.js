@@ -29,7 +29,13 @@ const routes = [
       {path: '/ActivityProcesses', component: () => import('pages/Activity/ActivityProcesses.vue')},
       // -------------
       {path: '/Reimbursement', component: () => import('pages/Reimbursement/Reimbursement.vue')},
-
+      // Schools
+      {path: '/Schools', component: () => import('pages/Schools/Schools.vue')},
+      {path: '/Schools/:id', component: () => import('pages/Schools/SchoolsNested.vue')},
+      {path: '/SchoolYear', component: () => import('pages/Schools/SchoolYear.vue')},
+      // Vendors
+      {path: '/Vendors', component: () => import('pages/Schools/VendorSchools.vue')},
+      {path: '/Vendors/:id', component: () => import('pages/Schools/Vendors.vue')},
 
 
       // Test

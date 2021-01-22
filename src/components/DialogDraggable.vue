@@ -1,7 +1,7 @@
 <template>
   <q-dialog v-model="swDialog" persistent ref="myDialog" @show="onShow" @hide="onHide">
-    <q-card style="width: 550px; max-width: 80vw;">
-      <q-bar class="bg-indigo-12 text-white q-pa-lg" :class="draggable?'cursor-move':''">
+    <q-card style="width: 650px; max-width: 80vw;">
+      <q-bar class="bg-white q-pa-lg" :class="draggable?'cursor-move':''">
         <div class="text-h6">{{title}}</div>
       </q-bar>
         <slot></slot>

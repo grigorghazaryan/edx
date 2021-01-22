@@ -215,333 +215,6 @@
             </q-card>
           </q-dialog>
 
-          <!-- <q-dialog v-model="show_dialog">
-            <q-card>
-
-              <q-card-section class="row" style="width: 500px; display: flex; align-items: center;">
-                <q-icon name="calendar_today" class="text-orange q-mr-sm" style="font-size: 2em"/>
-                <span class="text-h6" style="line-height: 2.5rem">Schedule Activity</span>
-              </q-card-section>
-
-        
-              <q-card-section class="q-pt-none q-pb-none q-pr-none q-pl-none">
-                <div class="row">
-
-                  <div class="col-12">
-                    <div class="q-mt-sm q-mb-md">
-
-                      <q-separator class="q-mt-md q-mb-md"/>
-
-                        <div class="row q-mt-lg">
-
-                          <div class="col-3 q-pr-md row items-center justify-end">Start date:</div>
-                          
-                          <div class="col-3">
-                            <q-input :readonly="allDayEvent" outlined dense v-model="editedItem.dateOfActivityArr[0].startdate">
-                              <template v-slot:append>
-                                <q-icon name="event" class="cursor-pointer">
-                                  <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                    <q-date :disabled="allDayEvent" :readonly="allDayEvent" v-model="editedItem.dateOfActivityArr[0].startdate" mask="MM/DD/YYYY">
-                                      <div class="row items-center justify-end">
-                                        <q-btn v-close-popup label="Close" color="primary" flat />
-                                      </div>
-                                    </q-date>
-                                  </q-popup-proxy>
-                                </q-icon>
-                              </template>
-                            </q-input>
-                          </div>
-
-                          <div class="col-2 q-pr-md row items-center justify-end">End date:</div>
-                          
-                          <div class="col-3">
-                            <q-input :readonly="allDayEvent" outlined dense v-model="editedItem.dateOfActivityArr[0].endDate">
-                              <template v-slot:append>
-                                <q-icon name="event" class="cursor-pointer">
-                                  <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                    <q-date :disabled="allDayEvent" :readonly="allDayEvent" v-model="editedItem.dateOfActivityArr[0].endDate" mask="MM/DD/YYYY">
-                                      <div class="row items-center justify-end">
-                                        <q-btn v-close-popup label="Close" color="primary" flat />
-                                      </div>
-                                    </q-date>
-                                  </q-popup-proxy>
-                                </q-icon>
-                              </template>
-                            </q-input>
-                          </div>
-
-                        </div>
-
-                        <div class="row q-mt-md q-mt-md">
-
-                          <div class="col-3 q-pr-md row items-center justify-end">Start time:</div>
-                          <div class="col-3">
-                            <q-input  :readonly="allDayEvent" outlined dense v-model="editedItem.dateOfActivityArr[0].time1">
-                              <template v-slot:append>
-                                <q-icon name="access_time" class="cursor-pointer">
-                                  <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                    <q-time  :disabled="allDayEvent" :readonly="allDayEvent" v-model="editedItem.dateOfActivityArr[0].time1">
-                                      <div class="row items-center justify-end">
-                                        <q-btn v-close-popup label="Close" color="primary" flat />
-                                      </div>
-                                    </q-time>
-                                  </q-popup-proxy>
-                                </q-icon>
-                              </template>
-                            </q-input>
-                          </div>
-
-                          <div class="col-2 q-pr-md row items-center justify-end">End time:</div>
-                          <div class="col-3">
-                            <q-input  :readonly="allDayEvent" outlined dense v-model="editedItem.dateOfActivityArr[0].time2">
-                              <template v-slot:append>
-                                <q-icon name="access_time" class="cursor-pointer">
-                                  <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                    <q-time  :disabled="allDayEvent" :readonly="allDayEvent" v-model="editedItem.dateOfActivityArr[0].time2">
-                                      <div class="row items-center justify-end">
-                                        <q-btn v-close-popup label="Close" color="primary" flat />
-                                      </div>
-                                    </q-time>
-                                  </q-popup-proxy>
-                                </q-icon>
-                              </template>
-                            </q-input>
-                          </div>
-
-                          <div class="col-4 q-pl-lg q-mt-md">
-                            <span class="q-ml-md"><q-checkbox v-model="allDayEvent" label="All day event" /></span>
-                          </div>
-
-                        </div>
-
-                      <q-separator class="q-mt-md q-mb-md"/>
-
-                        <div class="row q-pr-lg q-pl-lg">
-
-                          <div class="col-md-12 q-mb-md">
-                            <div class="text-subtitle2 q-mb-sm">Location: </div>
-                            <q-input outlined v-model="editedItem.dateOfActivityArr[0].location" dense/>
-                          </div>
-
-                          <div class="col-md-12">
-                            <div class="text-subtitle2 q-mb-sm">Note: </div>
-                            <q-input outlined type="textarea" dense v-model="editedItem.dateOfActivityArr[0].note"/>
-                          </div>
-
-                        </div>
-
-                      <q-separator class="q-mt-md q-mb-md"/>
-
-                      <div class="row">
-                        <div class="col-3 text-right q-pr-md">
-                          <q-checkbox :disable="editedItem.multi" v-model="editedItem.repeat" label="Repeat" />
-                        </div>
-                      </div>
-
-                      <div v-if="editedItem.repeat">
-
-                        <div class="row q-mt-md">
-                          <div class="col-3 q-pr-md row items-center justify-end">
-                            Repeats:
-                          </div>
-                          <div class="col-3">
-                            <q-select dense outlined v-model="editedItem.dateOfActivityArr[0].repeats" :options="selectOptionsDayWeekMonth"  />
-                          </div>
-                        </div>
-
-                        <div class="row q-mt-md">
-                          <div class="col-3 q-pr-md row items-center justify-end">Every:</div>
-                          <div class="col-2">
-                            <q-input outlined v-model="editedItem.dateOfActivityArr[0].repeatEvery" dense/>
-                          </div>
-                          <div class="col-2 row items-center justify-start q-pl-sm">
-                            <span>{{ editedItem.dateOfActivityArr[0].repeats.clean }}(s)</span>
-                          </div>
-                        </div>
-
-                        <div class="row q-mt-md">
-                          <div class="col-3 q-pr-md row items-center justify-end">On:</div>
-                          <div class="col-9">
-                            <q-btn-group push>
-                              <q-btn 
-                                v-for="(week, i) in weekDays" :key="week.label"
-                                :color=" week.checked ? 'amber' : 'yellow' " 
-                                glossy
-                                text-color="black" 
-                                push 
-                                :label="week.label.charAt(0)"
-                                @click="repeatOnWeekDay(week, i)"
-                              />
-                            </q-btn-group>
-                          </div>
-                        </div>
-
-                      </div>
-
-                      <q-separator class="q-mt-md"></q-separator>
-
-                      <div class="row q-pr-lg q-pl-lg q-mt-lg">
-
-                        <div class="col-md-12 q-mb-md">
-                          <div class="text-subtitle2 q-mb-sm">Attendees:</div>
-                            <q-btn  :icon="editedItem.attendies ? 'remove' : 'add'" 
-                            color="blue" 
-                            round 
-                            @click="editedItem.attendies = !editedItem.attendies"/>
-                        </div>
-
-                      </div>
-
-                      <div v-if="editedItem.attendies" class="row q-mt-md q-pr-lg q-pl-lg">
-                        <div class="col-4 q-pr-md row items-center justify-end">
-                          Number of attendees:
-                        </div>
-                        <div class="col-2">
-                          <q-input dense outlined v-model="editedItem.noAttendingArr.attendees"/>
-                        </div>
-                      </div>
-
-                      <div v-if="editedItem.attendies" class="q-mt-md q-pr-lg q-pl-lg">
-                        <div>
-
-                          <q-table
-                            :data="editedItem.noAttendingArr.attendeesData"
-                            :columns="attendeesColumn"
-                            row-key="no"
-                            hide-bottom
-                            class="no-scroll"
-                            :pagination.sync="paginationAttendee"
-                          >
-                          
-                            <template v-slot:body="props">
-
-                              <q-tr :props="props">
-
-                                <q-td key="no" :props="props">
-                                  <q-input 
-                                    type="number" 
-                                    dense 
-                                    outlined 
-                                    v-model="props.row.no"
-                                    @input="selfTitleTeacherCount(props.row.no)"
-                                    :readonly="props.row.all"
-                                  />
-                                </q-td>
-
-                                <q-td key="type" :props="props" style="width: 200px">
-                                  <q-select 
-                                    dense 
-                                    outlined 
-                                    v-model="props.row.type" 
-                                    :options="teachersTypeArr"  
-                                    @input="changeType(props.row.type)"
-                                  />
-                                </q-td>
-                                
-                                <q-td key="all" :props="props">
-                                  <q-checkbox v-model="props.row.all" />
-                                </q-td>
-
-                                <q-td key="attendeeList" :props="props" class="row">
-
-                                  <div @click="props.expand = !props.expand" class="cursor-pointer" >
-                                    <q-btn color="blue"  round dense icon="perm_identity"/>
-                                  </div>
-
-                                  <q-btn
-                                      icon="delete_forever"
-                                      color="red" 
-                                      @click="openAttendeDeleteModal(props.row)" 
-                                      round dense
-                                    >
-                                  </q-btn>
-
-                                </q-td>
-
-                              </q-tr>
-
-                              <q-tr v-show="props.expand" :props="props">
-                                <q-td colspan="100%" class="q-td--no-hover">
-
-                                    <q-input 
-                                      outlined 
-                                      dense 
-                                      v-on:keyup.enter="searchEnter"
-                                      v-model="attendingSearch"
-                                      label="Search" 
-                                      class="q-mt-lg q-mb-sm">
-
-                                      <template v-slot:prepend>
-                                        <q-icon name="search" />
-                                      </template>
-
-                                    </q-input>
-
-                                    <q-list bordered separator class="q-mb-lg" style="height: 195px; overflow-y: scroll;">
-
-                                      <q-item v-for="teacher in filteredList" :key="teacher.id">
-                                        <q-item-section>
-                                          <div class="w-100 row justify-between items-center">
-                                            <div class="text-subtitle2">{{ teacher.name }}</div>
-                                            <q-btn 
-                                              icon="delete_forever"
-                                              color="red" 
-                                              size=sm 
-                                              no-caps
-                                              @click="openDeleteTeacherModal(teacher)"
-                                            ></q-btn>
-                                          </div>
-                                        </q-item-section>
-                                      </q-item>
-
-                                                                      
-                                      <div v-if="teachersSearchLength == 0">
-                                          <p class="q-mt-md q-ml-md">
-                                            <q-icon name="warning" style="font-size: 1.5em"/>
-                                            No matching records found 
-                                          </p>
-                                      </div>
-                                    
-                                    </q-list>
-
-                                </q-td>
-                              </q-tr>
-
-                            </template>
-
-                          </q-table>
-
-                      <q-btn 
-                        v-if="editedItem.noAttendingArr.attendeesData.length < teachersTypeArr.length"
-                        round 
-                        dense 
-                        color="secondary" 
-                        icon="add" 
-                        class="q-mt-md"  
-                        @click="addAttRow"
-                      />
-                        </div>
-                      </div>
-
-                      <q-separator class="q-mt-md q-mb-lg"></q-separator>
-
-                    </div> 
-                  </div>
-                
-                </div>
-              </q-card-section>
-
-              <q-card-actions class="row justify-end">
-                <div>
-                  <q-btn flat label="Cancel" color="primary" v-close-popup></q-btn>
-                  <q-btn flat label="Confirm" color="primary" v-close-popup  @click="confirmDateOfActivity"></q-btn>
-                </div>
-              </q-card-actions>
-        
-
-            </q-card>
-          </q-dialog> -->
-
           <q-dialog v-model="show_dialog_child">
             <q-card>
 
@@ -566,15 +239,14 @@
 
                         <div class="col-3 q-pr-md row items-center justify-end">Start date:</div>
                           <div class="col-3">
-                            <q-input :readonly="tempDateOfActivity.allDayEvent" outlined dense v-model="tempDateOfActivity.startdate">
+                            <q-input :readonly="tempDateOfActivity.is_full_day" outlined dense v-model="tempDateOfActivity.startdate">
                               <template v-slot:append>
                                 <q-icon name="event" class="cursor-pointer">
                                   <q-popup-proxy transition-show="scale" transition-hide="scale">
                                     <q-date 
-                                    :disabled="tempDateOfActivity.allDayEvent" 
-                                    :readonly="tempDateOfActivity.allDayEvent" 
+                                    :disabled="tempDateOfActivity.is_full_day" 
+                                    :readonly="tempDateOfActivity.is_full_day" 
                                     v-model="tempDateOfActivity.startdate" 
-                                    
                                     >
                                     <!-- :options="optionsFn" -->
                                       <div class="row items-center justify-end">
@@ -589,13 +261,13 @@
 
                         <div class="col-2 q-pr-md row items-center justify-end">End date:</div>
                           <div class="col-3">
-                            <q-input :readonly="tempDateOfActivity.allDayEvent" outlined dense v-model="tempDateOfActivity.endDate">
+                            <q-input :readonly="tempDateOfActivity.is_full_day" outlined dense v-model="tempDateOfActivity.endDate">
                               <template v-slot:append>
                                 <q-icon name="event" class="cursor-pointer">
                                   <q-popup-proxy transition-show="scale" transition-hide="scale">
                                     <q-date 
-                                      :disabled="tempDateOfActivity.allDayEvent" 
-                                      :readonly="tempDateOfActivity.allDayEvent" 
+                                      :disabled="tempDateOfActivity.is_full_day" 
+                                      :readonly="tempDateOfActivity.is_full_day" 
                                       v-model="tempDateOfActivity.endDate" 
                                     >
                                     <!-- :options="optionsFn" -->
@@ -615,11 +287,11 @@
 
                         <div class="col-3 q-pr-md row items-center justify-end">Start time:</div>
                         <div class="col-3">
-                          <q-input :readonly="tempDateOfActivity.allDayEvent"  outlined dense v-model="tempDateOfActivity.time1">
+                          <q-input :readonly="tempDateOfActivity.is_full_day"  outlined dense v-model="tempDateOfActivity.time1">
                             <template v-slot:append>
                               <q-icon name="access_time" class="cursor-pointer">
                                 <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                  <q-time :disabled="tempDateOfActivity.allDayEvent" :readonly="tempDateOfActivity.allDayEvent" v-model="tempDateOfActivity.time1">
+                                  <q-time :disabled="tempDateOfActivity.is_full_day" :readonly="tempDateOfActivity.is_full_day" v-model="tempDateOfActivity.time1">
                                     <div class="row items-center justify-end">
                                       <q-btn v-close-popup label="Close" color="primary" flat />
                                     </div>
@@ -632,11 +304,11 @@
 
                         <div class="col-2 q-pr-md row items-center justify-end">End time:</div>
                         <div class="col-3">
-                          <q-input :readonly="tempDateOfActivity.allDayEvent"  outlined dense v-model="tempDateOfActivity.time2">
+                          <q-input :readonly="tempDateOfActivity.is_full_day"  outlined dense v-model="tempDateOfActivity.time2">
                             <template v-slot:append>
                               <q-icon name="access_time" class="cursor-pointer">
                                 <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                  <q-time :disabled="tempDateOfActivity.allDayEvent" :readonly="tempDateOfActivity.allDayEvent" v-model="tempDateOfActivity.time2">
+                                  <q-time :disabled="tempDateOfActivity.is_full_day" :readonly="tempDateOfActivity.is_full_day" v-model="tempDateOfActivity.time2">
                                     <div class="row items-center justify-end">
                                       <q-btn v-close-popup label="Close" color="primary" flat />
                                     </div>
@@ -648,7 +320,7 @@
                         </div>
 
                         <div class="col-4 q-pl-lg q-mt-md">
-                          <span class="q-ml-md"><q-checkbox v-model="tempDateOfActivity.allDayEvent" label="All day event" /></span>
+                          <span class="q-ml-md"><q-checkbox v-model="tempDateOfActivity.is_full_day" label="All day event" /></span>
                         </div>
 
                       </div>
@@ -703,13 +375,13 @@
                           <div class="col-9">
                             <q-btn-group push>
                               <q-btn 
-                                v-for="(week, i) in weekDays" :key="week.label"
+                                v-for="(week, i) in weekDays" :key="i"
                                 :color=" week.checked ? 'amber' : 'yellow' " 
                                 glossy
                                 text-color="black" 
                                 push 
                                 :label="week.label.charAt(0)"
-                                @click="repeatOnWeekDayChild(week, i)"
+                                @click="repeatOnWeekDayChild(i)"
                               />
                             </q-btn-group>
                           </div>
@@ -778,7 +450,7 @@
                                   <q-checkbox v-model="props.row.all" />
                                 </q-td>
 
-                                <q-td key="attendeeList" :props="props" class="row">
+                                <q-td key="attendeeList" style="width: 100px" :props="props" class="row">
 
                                   <div @click="props.expand = !props.expand" class="cursor-pointer" >
                                     <q-btn color="blue"  round dense icon="perm_identity"/>
@@ -802,7 +474,7 @@
                                     <q-input 
                                       outlined 
                                       dense 
-                                      v-on:keyup.enter="searchEnter"
+                                      v-on:keyup.enter="openAddParticipantPopup"
                                       v-model="attendingSearch"
                                       label="Search" 
                                       class="q-mt-lg q-mb-sm">
@@ -816,13 +488,14 @@
                                     <q-list bordered separator class="q-mb-lg" style="height: 195px; overflow-y: scroll;">
 
                                       <q-item
-                                        v-for="teacher in attendingTeacherList" :key="teacher.id">
+                                        v-for="(teacher, index) in attendingTeacherList" :key="index">
                                         <q-item-section>
 
                                           <div @click="addAttendee(teacher)" class="w-100 row justify-between items-center">
                                             <div class="text-subtitle2">
                                               {{ teacher.first_name }}
                                               {{ teacher.last_name }}
+                                              {{ teacher.email }}
                                             </div>
                                             <q-btn 
                                               icon="delete_forever"
@@ -880,7 +553,8 @@
               <q-card-actions class="row justify-end">
                 <div>
                   <q-btn flat label="Cancel" color="primary" v-close-popup></q-btn>
-                  <q-btn flat label="Confirm" color="primary"  @click="confirmNewDate"></q-btn>
+                  <q-btn v-if="!isEditSchedule" flat label="Confirm" color="primary"  @click="confirmNewDate"></q-btn>
+                  <q-btn v-else flat label="Save" color="primary"  @click="editSchedule"></q-btn>
                 </div>
               </q-card-actions>
         
@@ -889,11 +563,10 @@
           </q-dialog>
 
           <q-dialog v-model="show_attending_dialog">
-            <q-card>
+             <q-card style="width: 500px; max-width: 80vw;">
 
                 <q-card-section 
-                  class="row justify-start items-center" 
-                  style="width: 550px"
+                  class="row justify-start items-center"
                 >
                   <q-icon class="q-mr-sm" name="people_alt"  color="green" style="font-size: 1.5em"/>
                   <div class="text-h6">Activity Attendees</div>
@@ -939,7 +612,7 @@
                             <q-checkbox v-model="props.row.all" />
                           </q-td>
 
-                          <q-td key="attendeeList" :props="props" class="row">
+                          <q-td key="attendeeList" style="width: 100px" :props="props" class="row">
 
                             <div 
                             @click="props.expand = !props.expand, getParticipiant(props.row)" 
@@ -965,7 +638,7 @@
                               <q-input 
                                 outlined 
                                 dense 
-                                v-on:keyup.enter="searchEnter"
+                                v-on:keyup.enter="openAddParticipantPopup"
                                 v-model="attendingSearch"
                                 label="Search" 
                                 class="q-mt-lg q-mb-sm"
@@ -982,13 +655,13 @@
 
                                 <q-item 
                                   
-                                  v-for="teacher in attendingTeacherList" :key="teacher.id">
+                                  v-for="(teacher, index) in attendingTeacherList" :key="index">
                                   <q-item-section>
                                     <div @click="addAttendee(teacher)" class="w-100 row justify-between items-center">
                                       <div class="text-subtitle2">
                                         {{ teacher.first_name }}
                                         {{ teacher.last_name }}
-                                        {{ teacher.id }}
+                                        {{ teacher.email }}
                                       </div>
                                       <q-btn 
                                         icon="delete_forever"
@@ -1087,6 +760,48 @@
                 <q-btn flat label="No, thanks" color="primary" v-close-popup />
                 <q-btn label="Yes" color="red" v-close-popup @click="deleteDate" />
               </q-card-actions>
+            </q-card>
+          </q-dialog>
+
+          <q-dialog v-model="addParticipantModal">
+
+            <q-card style="width: 550px; max-width: 80vw;">
+
+              <q-card-section class="row" style="width: 500px; display: flex; align-items: center;">
+                <q-icon name="perm_identity" class="text-blue q-mr-sm" style="font-size: 2em"/>
+                <span class="text-h6" style="line-height: 2.5rem">Create New Attendee</span>
+              </q-card-section>
+
+        
+              <q-card-section
+                style="max-height: 60vh"
+                class="scroll q-pt-none q-pb-none"
+              >
+                <div class="row">
+
+                  <div class="col-12">
+                    <q-input outlined v-model="addNewAttendee.firstName" label="First Name" />
+                  </div>
+
+                  <div class="col-12 q-mt-sm">
+                    <q-input outlined v-model="addNewAttendee.lastName" label="Last Name" />
+                  </div>
+
+                  <div class="col-12 q-mt-sm">
+                    <q-input outlined v-model="addNewAttendee.email" label="Email" />
+                  </div>
+                
+                </div>
+              </q-card-section>
+
+              <q-card-actions class="row justify-end">
+                <div>
+                  <q-btn flat label="Cancel" color="primary" v-close-popup></q-btn>
+                  <q-btn flat label="Add" color="primary" @click="addParticipant"></q-btn>
+                </div>
+              </q-card-actions>
+        
+
             </q-card>
           </q-dialog>
 
@@ -1368,8 +1083,18 @@
                 </span>
 
                 <span class="q-ml-sm">
-                  <q-icon name="autorenew" color="green" style="font-size: 1.5em" 
-                  v-if="props.row.repeat" />
+                  <q-icon 
+                    name="autorenew" 
+                    color="green" 
+                    style="font-size: 1.5em" 
+                    v-if="props.row.repeat" 
+                  />
+                  <q-icon 
+                    name="all_inclusive" 
+                    color="blue" 
+                    style="font-size: 1.5em" 
+                    v-if="props.row.multi" 
+                  />
                 </span>
 
             </q-td>
@@ -1401,7 +1126,7 @@
                 <q-chip 
                   square color="green" 
                   text-color="white" 
-                  v-if="props.row.type_uni.label == 'PD'"
+                  v-if="props.row.type_uni.name == 'PD'"
                 >
                     <!-- {{props.row.type_uni.label}} -->
                     <span>PD</span>
@@ -1604,7 +1329,7 @@
                         :pagination.sync="paginationDate"
                       >
                         <template v-slot:body="props">
-                          <q-tr :props="props">
+                          <q-tr :props="props" @click="openEditSchedulePopup(props.row)">
 
                             <q-td key="startdate" :props="props">
                               <span class="q-mr-md">{{ props.row.startdate }}</span>
@@ -1660,7 +1385,7 @@
                             <q-td key="actions" :props="props">
                               <q-btn
                                 v-if="props.row.child"
-                                @click="openDeleteDate(props.row, props.rowIndex)" 
+                                @click.stop="openDeleteDate(props.row, props.rowIndex)" 
                                 icon="delete_forever"
                                 color="red" 
                                 size=sm 
@@ -1811,6 +1536,7 @@ data() {
     totalPDremainder: this.barInfo.totalsAmount.PD,
     totalFEremainder: this.barInfo.totalsAmount.FE,
     final: false,
+    isEditSchedule: false,
 
     ////////////////////////////
     showRemainingBalance: false,
@@ -1832,12 +1558,12 @@ data() {
     selectOptions: ['Kansas', 'New York', 'Yerevan'],
     selectWeekDay: "",
     selectOptionsWeekDays: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-    numbersX: '',
-    selectOptionsNumbersX: ['1x', '2x', '3x', '31x'],
-    selectDayWeekMonth: "",
-    selectOptionsDayWeekMonth: [],
-    time1: '00:00',
-    time2: '00:00',
+    // numbersX: '',
+    // selectOptionsNumbersX: ['1x', '2x', '3x', '31x'],
+    // selectDayWeekMonth: "",
+    // selectOptionsDayWeekMonth: [],
+    // time1: '00:00',
+    // time2: '00:00',
 
 
     show_dialog: false,
@@ -1901,7 +1627,7 @@ data() {
       {
         name: "attendeeList",
         align: "left",
-        label: "Attendees",
+        label: "Actions",
         field: "attendeeList",
         sortable: true
       },
@@ -2012,8 +1738,10 @@ data() {
         name: "PDActivity", 
         align: "left",
         label: "Activity", 
-        field: "PDActivity",
-        sortable: true
+        // field: "PDActivity",
+        // field: row => row.name,
+        // format: val => `${val}`,
+        sortable: false
       },
       {
         name: "dateOfActivity",
@@ -2131,9 +1859,11 @@ data() {
     teacherItem: {},
     attendeeItem: {},
 
+
     confirm: false,
     confirmDate: false,
     confirmTeacherModal: false,
+    addParticipantModal: false,
     titlesArr: [
       {
         label: 'Title I',
@@ -2191,11 +1921,18 @@ data() {
       repeat: false,
       child: true,
       attendies: false,
-      allDayEvent: false,
+      is_full_day: false,
     },
     key: null,
     index: null,
     dateOfActivityTableData: [],
+    addNewAttendee: {
+      firstName: '',
+      lastName: '',
+      email: ''
+    },
+    reg: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/,
+
   };
   },
   methods: {
@@ -2285,7 +2022,7 @@ data() {
           label: 'Needs Assessment'
         },
         activity: '',
-        activity_date: date + ' - ' + date,
+        activity_date: 'TBD',
         no_attending: '',
         amount: 0,
         type_uni: {
@@ -2348,19 +2085,46 @@ data() {
       this.teachersTypeArr[index].disable = true
       console.log('changeType', val)
     },
-    searchEnter() {
+    openAddParticipantPopup() {
+      this.addParticipantModal = true
+      
+      this.addNewAttendee.firstName = ''
+      this.addNewAttendee.lastName = ''
+      this.addNewAttendee.email = ''
 
-      if(!this.attendingTeacherList.length) {
+      let text = this.attendingSearch.split(" ")
+      for(let i=0; i<text.length; i++) {
+
+        if (this.reg.test(text[i])) {
+          this.addNewAttendee.email = text[i]
+        } else {
+          if(i == 0) {
+            this.addNewAttendee.firstName = text[0]
+          }
+          if(i == 1) {
+            this.addNewAttendee.lastName = text[1]
+          }
+        }
+
+
+
+      }
+      
+    },
+    addParticipant() {
 
       let obj = {
         searchParties: this.attendingSearch,
         summary_id: this.attendeeItem.id, 
         type_id: this.attendeeItem.type.id, 
+        first_name: this.addNewAttendee.first_name,
+        last_name: this.addNewAttendee.last_name,
+        email: this.addNewAttendee.email,
       }
 
       const conf = {
         method: 'POST',
-        url: config.addParticipant + this.$route.params.id + '/' + this.item.id,
+        url: config.addNewParticipant + this.$route.params.id + '/' + this.item.id,
         headers: {
           Accept: 'application/json',
         },
@@ -2368,28 +2132,76 @@ data() {
       }
 
       axios(conf).then(res => {
-            console.log('Participant === ', res.data)
-            this.attendingTeacherList.push(res.data.participant)
+            
             this.$q.notify({
               message: 'Participant added!',
               type: 'positive',
             })
-      })
-      //   let obj = {
-      //     id: Math.floor(Math.random() * 1000),
-      //     name: this.attendingSearch
-      //   }
-      //   this.attendingTeacherList.push(obj)
-      //   
 
-      // addParticipant
-      this.attendingSearch = ''
-      }
+            setTimeout(()=>{
+              this.addParticipantModal = false
+            }, 1000)
+      })
+
     },
+
+    openEditSchedulePopup(schedule) {
+      console.log('schedule', schedule)
+
+      this.isEditSchedule = true
+      
+      if(!schedule.is_full_day) {
+        schedule.is_full_day = false
+      }
+      
+      if(!schedule.repeat) {
+        schedule.repeat = false
+      }
+
+      this.tempDateOfActivity = schedule
+      this.show_dialog_child = true
+
+      console.log('tempDateOfActivity', this.tempDateOfActivity)
+
+    },
+    // searchEnter() {
+
+    //   if(!this.attendingTeacherList.length) {
+
+    //     let obj = {
+    //       searchParties: this.attendingSearch,
+    //       summary_id: this.attendeeItem.id, 
+    //       type_id: this.attendeeItem.type.id, 
+    //     }
+
+    //     const conf = {
+    //       method: 'POST',
+    //       url: config.addParticipant + this.$route.params.id + '/' + this.item.id,
+    //       headers: {
+    //         Accept: 'application/json',
+    //       },
+    //       data: obj
+    //     }
+
+    //     axios(conf).then(res => {
+    //           console.log('Participant === ', res.data)
+    //           this.attendingTeacherList.push(res.data.participant)
+    //           this.$q.notify({
+    //             message: 'Participant added!',
+    //             type: 'positive',
+    //           })
+    //     })
+
+    //     this.attendingSearch = ''
+
+    //   }
+    // },
     addAttendee(teacher) {
 
+      console.log(teacher, 'searchPartiesIdsearchPartiesIdsearchPartiesId')
+
         let obj = {
-          searchParties: teacher.first_name,
+          searchPartiesId: teacher.id,
           summary_id: this.attendeeItem.id, 
           type_id: this.attendeeItem.type.id, 
         }
@@ -2404,8 +2216,6 @@ data() {
         }
 
         axios(conf).then(res => {
-            console.log('Participant === ', res.data)
-            this.attendingTeacherList.push(res.data.participant)
             this.$q.notify({
               message: 'Participant added!',
               type: 'positive',
@@ -2650,6 +2460,7 @@ data() {
     deleteTeacherItem() {
 
         let item = this.item
+        console.log('item', item)
 
         const conf = {
           method: 'DELETE',
@@ -2660,21 +2471,17 @@ data() {
         }
 
         axios(conf).then(res => {
+
           const index = this.attendingTeacherList.indexOf(item)
           this.attendingTeacherList.splice(index, 1)
 
-            this.$q.notify({
-              message: 'Deleted!',
-              type: 'positive',
-            })
+          this.$q.notify({
+            message: 'Deleted!',
+            type: 'positive',
+          })
 
         })
 
-      console.log('teacher id', teacherItem.id)
-      console.log('item id', item.id)
-
-      // const index = this.attendingTeacherList.indexOf(item)
-      // this.attendingTeacherList.splice(index, 1)
     },
     addAttRow() {
       let obj = {  
@@ -2773,12 +2580,14 @@ data() {
           percentage: parseInt(data[i].upcharge_percentage),
           type_uni: {
             id: data[i].type.id,
-            label: data[i].type.abbreviation
+            label: data[i].type.name,
+            name: data[i].type.abbreviation
           },
           note: data[i].activity_note,
           approver: '',
           charge: data[i].total_cost,
           repeat: data[i].has_recurring != null ? data[i].has_recurring : false,
+          multi: data[i].has_multi_schedule != null ? data[i].has_multi_schedule : false,
           attendies: false,
 
           changed: false,
@@ -2879,10 +2688,7 @@ data() {
               this.$emit('final', false)
             }
 
-            console.log('grigorghazarian', data)
             let finalResult = this.activityParsing(data, final)
-
-            console.log('010101010101010101010101010', finalResult)
 
             this.data = finalResult
             this.tempDataX = finalResult
@@ -2900,14 +2706,16 @@ data() {
       }
       
     },
-    repeatOnWeekDayChild(week, index) {
+    repeatOnWeekDayChild(index) {
 
       if(this.weekDays[index].checked) {
         this.weekDays[index].checked = false
-      }else {
+      }
+      else {
         this.weekDays[index].checked = true
         this.tempDateOfActivity.repeatOn = [...this.weekDays]
       }
+      console.log(this.tempDateOfActivity)
       
     },
     confirmNewDate() {
@@ -2920,18 +2728,21 @@ data() {
       // console.log('New obj : ', tempData)
 
       let repeatOnArr = []
-      for(let i=0; i<tempData.repeatOn.length; i++) {
-        if(tempData.repeatOn[i].checked) {
-          repeatOnArr.push(i)
+      if(tempData.repeatOn.length) {
+        for(let i=0; i<tempData.repeatOn.length; i++) {
+          if(tempData.repeatOn[i].checked) {
+            repeatOnArr.push(i)
+          }
         }
       }
+
 
       let data = {
         start_date: tempData.startdate,
         end_date: tempData.endDate,
         start_time: tempData.time1,
         end_time: tempData.time2,
-        is_full_day: tempData.allDayEvent,
+        is_full_day: tempData.is_full_day,
         is_recurring: tempData.repeat,
         recurrance_type_id: tempData.repeats.id,
         day_of_week: repeatOnArr,
@@ -2939,8 +2750,6 @@ data() {
         note: tempData.note,
         location: tempData.location,
       }
-
-      console.log('final arr', data)
 
       const conf = {
           method: 'POST',
@@ -2950,37 +2759,96 @@ data() {
           },
           data: data
       }
+
       axios(conf).then(res => {
 
         this.getSchedules(this.item.id, this.key)
 
         this.show_dialog_child = false
+
+        this.$q.notify({
+            message: 'Schedule Added!',
+            type: 'positive',
+          })
             
-            let schedule = res.data.schedule;
-            console.log('res schedule', schedule)
+          //   let schedule = res.data.schedule;
+          //   console.log('res schedule', schedule)
 
-            let obj = {
-              id: schedule.id,
-              startdate: schedule.start_date,
-              endDate: schedule.end_date,
-              time1: schedule.start_time,
-              time2: schedule.end_time,
-              location: schedule.location,
+          //   let obj = {
+          //     id: schedule.id,
+          //     startdate: schedule.start_date,
+          //     endDate: schedule.end_date,
+          //     time1: schedule.start_time,
+          //     time2: schedule.end_time,
+          //     location: schedule.location,
 
-              repeats: {
-                label: '',
-              },
+          //     repeats: {
+          //       label: '',
+          //     },
 
-              repeatEvery: '',
-              repeatOn: [],
-              note: '',
-              attendies: false,
-              child: true
-            }
+          //     repeatEvery: '',
+          //     repeatOn: [],
+          //     note: '',
+          //     attendies: false,
+          //     child: true
+          //   }
 
-          this.data[this.key].dateOfActivityArr.push(obj)
-          this.dateOfActivityTableData.push(obj)
+          // this.data[this.key].dateOfActivityArr.push(obj)
+          // this.dateOfActivityTableData.push(obj)
       })
+
+    },
+    editSchedule() {
+
+      console.log('schedule id : ', this.tempDateOfActivity.id)
+      console.log('activity id : ', this.item.id)
+
+      const tempData = this.tempDateOfActivity
+      console.log('tempData', tempData)
+      let repeatOnArr = []
+
+      if(tempData.repeatOn) {
+        for(let i=0; i<tempData.repeatOn.length; i++) {
+          if(tempData.repeatOn[i].checked) {
+            repeatOnArr.push(i)
+          }
+        }
+      }
+
+      let data = {
+        start_date: tempData.startdate,
+        end_date: tempData.endDate,
+        start_time: tempData.time1,
+        end_time: tempData.time2,
+        is_full_day: tempData.is_full_day,
+        is_recurring: tempData.repeat,
+        recurrance_type_id: tempData.repeats.id,
+        day_of_week: repeatOnArr,
+        number_of_occurrences: tempData.repeatEvery,
+        note: tempData.note,
+        location: tempData.location,
+      }
+
+      const conf = {
+          method: 'PUT',
+          url: config.editSchedule + this.tempDateOfActivity.id + '/' + this.item.id,
+          headers: {
+            Accept: 'application/json',
+          },
+          data: data
+      }
+
+      axios(conf).then(res => {
+
+        this.getSchedules(this.item.id, this.index)
+        this.show_dialog_child = false
+
+        this.$q.notify({
+            message: 'Schedule Edited!',
+            type: 'positive',
+          })
+
+      });
 
     },
     getAtendeeTypes() {
@@ -3184,12 +3052,19 @@ data() {
           let obj = {
             id: types[i].id,
             label: types[i].name,
-            name: types[i].name
+            name: types[i].abbreviation
           }
           typesArray.push(obj)
         }
 
         this.typeArr = typesArray
+        console.log('2222222')
+        console.log('2222222')
+        console.log('2222222')
+        console.log(res.data)
+        console.log('2222222')
+        console.log('2222222')
+        console.log('2222222')
 
       })
     },
@@ -3287,16 +3162,12 @@ data() {
 
         axios(conf).then(res => {
 
+console.log('mmmmm', this.data[index])
+
           let schedules = res.data.schedules;
-          console.log('=======', schedules)
           let schedulessArr = []
 
           for(let i = 0; i<schedules.length; i++) {
-
-            // let repeats = '';
-            // for(let j=0; j<schedules[i].repeatOn.length; j++) {
-            //   repeats += this.weekDays[parseInt(schedules[i].repeatOn[j])].label + ', '
-            // }
 
             let obj = {
               id: schedules[i].id,
@@ -3305,6 +3176,8 @@ data() {
               time1: schedules[i].start_time,
               time2: schedules[i].end_time,
               location: schedules[i].location,
+              repeat: schedules[i].is_recurring == 1 ? true : false,
+              is_full_day: schedules[i].is_full_day == 1 ? true : false,
               repeats: {
                 id: parseInt(schedules[i].recurrance_type_id),
                 label: schedules[i].type
@@ -3324,7 +3197,6 @@ data() {
           this.data[index].dateOfActivityArr = schedulessArr
           this.dateOfActivityTableData = schedulessArr
 
-
           console.log('#############')
           console.log(this.data[index].dateOfActivityArr)
           console.log(this.dateOfActivityTableData)
@@ -3334,6 +3206,7 @@ data() {
     },
     openBottomSection(row, index) {
       this.index = index
+      this.item = row
       this.getAttdeesById(row.id)
       this.getSchedules(row.id, index)
     },
@@ -3541,12 +3414,23 @@ data() {
     },
     show_dialog_child(val) {
       console.log('date of activity popup child')
+
       if(val) {
 
+        let repeatsId = this.tempDateOfActivity.repeatsId
+        if(repeatsId) {
+          for(let i=0; i<repeatsId.length; i++) {
+            this.weekDays[repeatsId[i]].checked = true
+          }
+        }
+        
+
+        
       }else {
-        // for(let i=0; i<this.weekDays.length; i++) {
-        //   this.weekDays[i].checked = false
-        // }
+        this.isEditSchedule = false
+        for(let i=0; i<this.weekDays.length; i++) {
+          this.weekDays[i].checked = false
+        }
       }
     },
     showRemainingBalance(val) {

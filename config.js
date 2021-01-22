@@ -56,6 +56,7 @@ const config = {
     getRcurranceTypes: 'https://edxchange-activity.aimtech.am/api/v1/get-recurrance-types',
     getSchedules: 'https://edxchange-activity.aimtech.am/api/v1/get-schedule/', // + id
     addSchedule: 'https://edxchange-activity.aimtech.am/api/v1/add-schedule/', // + id
+    editSchedule: 'https://edxchange-activity.aimtech.am/api/v1/edit-schedule/', // + 101/336
     removeSchedule: 'https://edxchange-activity.aimtech.am/api/v1/remove-schedule/', // + id
     removeAttendee: 'https://edxchange-activity.aimtech.am/api/v1/remove-attendy/', // + id,
     addAttendee: 'https://edxchange-activity.aimtech.am/api/v1/add-attendy/', // + id
@@ -67,6 +68,7 @@ const config = {
     getAttendyParticipant: 'https://edxchange-activity.aimtech.am/api/v1/get-attendy-participiant/', // + id
     deleteAttendyParticipant: 'https://edxchange-activity.aimtech.am/api/v1/remove-attendy-parties/', // + 24/318,
     addParticipant: 'https://edxchange-activity.aimtech.am/api/v1/add-participant/', // + 1001/318
+    addNewParticipant: 'https://edxchange-activity.aimtech.am/api/v1/add-participant-and-assign-to-activity/', // + 1001/318,
     searchParticipant: 'https://edxchange-activity.aimtech.am/api/v1/search-attendy-participant/', // 1001?searchParties=test
 }
 
