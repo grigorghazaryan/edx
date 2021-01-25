@@ -114,91 +114,6 @@
                   :dateOfActivity="dateOfActivityTableData" 
                 />
 
-                  <!-- <q-table
-                    class="q-mt-md q-mb-md no-shadow border"
-                   
-                    :columns="dateOfActivityColumns"
-                    row-key="id"
-                    hide-bottom
-                  >
-                    <template v-slot:body="props">
-                      <q-tr :props="props">
-
-                        <q-td key="startdate" :props="props">
-                          <span class="q-mr-md">{{ props.row.startdate }}</span>
-                          <span>{{ props.row.time1 }}</span>
-                        </q-td>
-
-                        <q-td key="endDate" :props="props">
-                          <span class="q-mr-md">{{ props.row.endDate }}</span>
-                          <span>{{ props.row.time2 }}</span>
-                        </q-td>
-
-                        <q-td key="location" 
-                        style="white-space: initial;width: 230px; max-width: 230px;"
-                        :props="props">
-                          {{ props.row.location }}
-                        </q-td>
-                        
-                        <q-td key="repeats" :props="props">
-                          {{ props.row.repeats.label }}
-                        </q-td>
-
-                        <q-td key="repeatEvery" :props="props">
-                          {{ props.row.repeatEvery }}
-                        </q-td>
-
-                        <q-td key="repeatOn" :props="props">
-                          <span v-for="weekday in props.row.repeatOn" :key="weekday.label">
-                            <span v-if="weekday.checked" class="q-mr-sm">{{ weekday.label }}</span>
-                          </span>
-                        </q-td>
-
-                        <q-td key="note" :props="props">
-                          <q-icon 
-                            name="sticky_note_2" 
-                            color="orange" 
-                            style="font-size: 2em;" 
-                            class="cursor-pointer"
-                            v-tooltip="{
-                              content: props.row.note,
-                              placement: 'top-center',
-                              classes: ['info'],
-                              targetClasses: ['it-has-a-tooltip'],
-                              offset: 19,
-                            }"
-                          >
-                          </q-icon>
-
-              
-                            
-                        </q-td>
-
-                        <q-td key="actions" :props="props">
-                          <q-btn
-                            v-if="props.row.child"
-                            @click="openDeleteDate(props.row)" 
-                            icon="delete_forever"
-                            color="red" 
-                            size=sm 
-                            no-caps
-                            round 
-                          >
-                            <q-tooltip 
-                                anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                                transition-show="flip-right"
-                                transition-hide="flip-left"
-                            >
-                              <strong>Delete</strong>
-                            </q-tooltip>
-                          </q-btn>
-                        </q-td>
-
-                      </q-tr>
-                    </template>
-
-                  </q-table> -->
-
                   <div class="q-mt-md q-mb-md">
                     <q-btn icon="add" color="blue" round @click="addDate(index, item)"/>
                   </div>
@@ -509,13 +424,7 @@
                                         </q-item-section>
                                       </q-item>
 
-                                                                      
-                                      <!-- <div v-if="attendingTeacherList.length == 0">
-                                          <p class="q-mt-md q-ml-md">
-                                            <q-icon name="warning" style="font-size: 1.5em"/>
-                                            No matching records found 
-                                          </p>
-                                      </div> -->
+                                                                  
                                     
                                     </q-list>
 

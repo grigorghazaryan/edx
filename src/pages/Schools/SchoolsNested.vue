@@ -63,6 +63,7 @@
 </template>
 
 <script>
+
 import SchoolInformation from 'components/schools/SchoolInformation'
 import Campuses from 'components/schools/Campuses'
 import SchoolYearParameter from 'components/schools/SchoolYearParameter'
@@ -84,6 +85,9 @@ export default {
         schoolName() {
             return this.$route.query.name
         }
+    },
+    created() {
+        console.log('nested', this.$route.params.id)
     }
 }
 </script>

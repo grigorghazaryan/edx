@@ -78,12 +78,14 @@
             </div>
         </div>
 
-        <div class="row q-mt-lg q-mb-lg">
+        <div class="row q-mt-lg q-mb-lg" v-if="additionalAddresses != null">
             <div class="col-md-12 q-mb-md">
                 <div class="text-subtitle2">Additional addresses</div>
             </div>
             <div class="col-md-12">
-                <SchoolsTable />
+                <SchoolsTable
+                 :addressData="additionalAddresses"
+                />
             </div>
         </div>
 
@@ -92,6 +94,9 @@
 
 <script>
 import SchoolsTable from './SchoolsTable';
+
+import axios from 'axios'
+import config from '../../../config'
 
 export default {
     components: {
@@ -105,13 +110,76 @@ export default {
             address2: '',
             city: '',
             state: '',
-            states: ['State 1', 'State 2'],
+            states: [],
             zip: '',
             phone: '',
             ext: '',
             fax: '',
             url: '',
+            //
+            additionalAddresses: null,
+
         }
+    },
+    methods: {
+        getSchoolInformation() {
+
+            const conf = {
+                method: 'GET',
+                url: config.getSchoolInformationById + this.$route.params.id,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+
+                    let schoolInfo = res.data.school[0]
+
+                    this.additionalAddresses = schoolInfo.address
+
+                    this.schoolName = schoolInfo.school_name
+                    this.schoolAbbriviation = schoolInfo.abbreviation
+                    this.address1 = schoolInfo.primary_address.address.address_line_1
+                    this.address2 = schoolInfo.primary_address.address.address_line_2
+                    this.city = schoolInfo.primary_address.address.city
+                    this.state = {
+                        id: schoolInfo.primary_address.address.state.id,
+                        label: schoolInfo.primary_address.address.state.name
+                    }
+                    this.zip = schoolInfo.primary_address.address.postal_code
+                    this.phone = schoolInfo.primary_address.address.phone
+                    this.ext = schoolInfo.primary_address.address.extension
+                    this.fax = schoolInfo.primary_address.address.fax
+                    this.url = schoolInfo.url
+
+            })
+        },
+        getStates() {
+            const conf = {
+                method: 'GET',
+                url: config.getStates,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+                let states = res.data.states
+                let statesFinalArray = []
+                for(let i=0; i<states.length; i++) {
+                    statesFinalArray.push({
+                        id: states[i].id,
+                        label: states[i].name
+                    })
+                }
+                this.states = statesFinalArray
+            })
+        }
+    },
+    created() {
+        this.getSchoolInformation()
+        this.getStates()
     }
 }
 </script>

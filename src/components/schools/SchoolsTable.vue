@@ -1,5 +1,6 @@
 <template>
     <div>
+
         <q-table
             :data="data"
             :columns="columns"
@@ -31,7 +32,7 @@
 
                     <q-td key="state" :props="props">
                         <div  class="cursor-pointer">
-                            {{ props.row.state }}
+                            {{ props.row.state.lable }}
                         </div>
                     </q-td>
 
@@ -55,7 +56,7 @@
 
                     <q-td key="type" :props="props">
                         <div  class="cursor-pointer">
-                            {{ props.row.type }}
+                            {{ props.row.type.label }}
                         </div>
                     </q-td>
 
@@ -116,6 +117,11 @@
 
 <script>
 export default {
+    props: {
+        addressData: {
+            required: true
+        }
+    },
     data() {
         return {
             data: [
@@ -206,6 +212,30 @@ export default {
                 }
             ],
         }
+    },
+    created() {
+        console.log('kkklllllkkklll', this.addressData )
+        let data = this.addressData, dataArr = []
+        for(let i=0; i<data.length; i++) {
+            dataArr.push({
+                id: data[i].id,
+                address1: data[i].address.address_line_1,
+                address2: data[i].address.address_line_2,
+                city: data[i].address.city,
+                state: {
+                    id: data[i].address.state.id,
+                    label: data[i].address.state.name
+                },
+                zip: data[i].address.postal_code,
+                phone: data[i].address.phone,
+                fax: data[i].address.fax,
+                type: {
+                    id: data[i].address.type.id,
+                    label: data[i].address.type.name
+                }
+            })
+        }
+        this.data = dataArr
     }
 }
 </script>
