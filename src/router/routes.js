@@ -34,8 +34,8 @@ const routes = [
       {path: '/Schools/:id', component: () => import('pages/Schools/SchoolsNested.vue')},
       {path: '/SchoolYear', component: () => import('pages/Schools/SchoolYear.vue')},
       // Vendors
-      {path: '/Vendors', component: () => import('pages/Schools/VendorSchools.vue')},
-      {path: '/Vendors/:id', component: () => import('pages/Schools/Vendors.vue')},
+      {path: '/Vendors', component: () => import('pages/Schools/Vendors.vue')},
+      {path: '/Vendors/:id', component: () => import('pages/Schools/VendorsNested.vue')},
 
 
       // Test

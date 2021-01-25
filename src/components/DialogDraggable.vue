@@ -1,6 +1,6 @@
 <template>
   <q-dialog v-model="swDialog" persistent ref="myDialog" @show="onShow" @hide="onHide">
-    <q-card style="width: 650px; max-width: 80vw;">
+    <q-card :style="style">
       <q-bar class="bg-white q-pa-lg" :class="draggable?'cursor-move':''">
         <div class="text-h6">{{title}}</div>
       </q-bar>
@@ -15,7 +15,8 @@ export default {
   props: {
     draggable: { type: Boolean, default: true },
     modelDialog: { type: Boolean, default: false },
-    title: { type: String, default: "Titulo" }
+    title: { type: String, default: "Popup" },
+    width: { type: Number, default: 650  },
   },
   data() {
     return {
@@ -29,7 +30,6 @@ export default {
       this.swDialog = val;
     }
   },
-
   methods: {
     onShow() {
       let dialogElements = document.getElementsByClassName("q-dialog");
@@ -65,7 +65,12 @@ export default {
       document.addEventListener("mousemove", this.onDrag);
       document.addEventListener("mouseup", this.onLetGo);
     }
-  }
+  },
+  computed: {
+    style () {
+      return 'width: ' + this.width + 'px'
+    }
+  },
 };
 </script>
 

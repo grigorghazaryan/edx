@@ -70,6 +70,8 @@ const config = {
     addParticipant: 'https://edxchange-activity.aimtech.am/api/v1/add-participant/', // + 1001/318
     addNewParticipant: 'https://edxchange-activity.aimtech.am/api/v1/add-participant-and-assign-to-activity/', // + 1001/318,
     searchParticipant: 'https://edxchange-activity.aimtech.am/api/v1/search-attendy-participant/', // 1001?searchParties=test
+
+    getSuppliers: 'https://edxchange-supplier.aimtech.am/api/v1/supplier',
 }
 
 export default config
