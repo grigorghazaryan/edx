@@ -196,6 +196,12 @@ export default {
         },
         statesData: { 
             required: true
+        },
+        type: {
+            required: true
+        },
+        id: {
+            required: false
         }
     },
     data() {
@@ -318,6 +324,14 @@ export default {
         },
         addAddress() {
 
+            let endPoint;
+            if(this.type == 1) {
+                endPoint = config.addSchoolAddress + this.$route.params.id
+            }
+            if(this.type == 2) {
+                endPoint = config.addCampusAddress + this.id
+            }
+
             let data = {
                 address_line_1: this.address.address1,
                 address_line_2: this.address.address2,
@@ -331,7 +345,7 @@ export default {
 
             const conf = {
                 method: 'POST',
-                url: config.addSchoolAddress + this.$route.params.id,
+                url: endPoint,
                 headers: {
                     Accept: 'application/json',
                 },
@@ -371,7 +385,6 @@ export default {
 
         },
         editAddress() {
-
             
             let data = {
                 address_line_1: this.address.address1,
@@ -427,9 +440,17 @@ export default {
         },
         removeAddress() {
 
+            let endPoint;
+            if(this.type == 1) {
+                endPoint = config.removeAddress + this.address.id + '/' + this.$route.params.id
+            }
+            if(this.type == 2) {
+                endPoint = config.removeCampusAddress + this.address.id + '/' + this.id
+            }
+
             const conf = {
                 method: 'DELETE',
-                url: config.removeAddress + this.address.id + '/' + this.$route.params.id,
+                url: endPoint,
                 headers: {
                     Accept: 'application/json',
                 }

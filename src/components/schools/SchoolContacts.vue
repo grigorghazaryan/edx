@@ -3,7 +3,7 @@
 
         <div class="row justify-between align-center q-pr-lg q-pl-lg">
             <div class="text-subtitle1">Contact List</div>
-            <q-btn class="bg-blue" color="white" label="Add contact" />
+            <q-btn @click="isShowAddContactPopup=true" class="bg-blue" color="white" label="Add contact" />
         </div>
 
         <q-separator class="q-mt-sm q-mb-lg"/>
@@ -14,6 +14,7 @@
             row-key="id"
             hide-bottom
             class="no-shadow"
+            :pagination.sync="pagination"
         >
             <template v-slot:body="props">
 
@@ -21,13 +22,13 @@
 
                     <q-td key="firstName" :props="props">
                         <div  class="cursor-pointer">
-                            {{ props.row.firstName }}
+                            {{ props.row.first_name }}
                         </div>
                     </q-td>
 
                     <q-td key="lastName" :props="props">
                         <div  class="cursor-pointer">
-                            {{ props.row.lastName }}
+                            {{ props.row.last_name }}
                         </div>
                     </q-td>
 
@@ -73,17 +74,37 @@
 
         </q-table>
 
-        <dialog-draggable :modelDialog="isShowPopup" :title="'Edit contact'" @onHide="isShowPopup=false">
+        <dialog-draggable :modelDialog="isShowAddContactPopup" :title="'Contact Info'" @onHide="isShowAddContactPopup=false">
         
             <div class="q-pa-md">
                 <div class="row q-mb-sm">
                     <div class="col-md-12">
-                        <q-input outlined dense v-model="address1" label="Address Line 1" />
+                        <q-input outlined dense v-model="first_name" label="First Name" />
                     </div>
                 </div>
                 <div class="row q-mb-sm">
                     <div class="col-md-12">
-                        <q-input outlined dense v-model="address2" label="Address Line 2" />
+                        <q-input outlined dense v-model="last_name" label="Last Name" />
+                    </div>
+                </div>
+                <div class="row q-mb-sm">
+                    <div class="col-md-12">
+                        <q-input outlined dense v-model="title" label="Title" />
+                    </div>
+                </div>
+                <div class="row q-mb-sm">
+                    <div class="col-md-12">
+                        <q-input outlined dense v-model="department" label="Department" />
+                    </div>
+                </div>
+                <div class="row q-mb-sm">
+                    <div class="col-md-12">
+                        <q-input outlined dense v-model="address_line_1" label="Address Line 1" />
+                    </div>
+                </div>
+                <div class="row q-mb-sm">
+                    <div class="col-md-12">
+                        <q-input outlined dense v-model="address_line_2" label="Address Line 2" />
                     </div>
                 </div>
                 <div class="row q-mb-sm">
@@ -94,19 +115,24 @@
                         <q-select outlined dense v-model="state" :options="states" label="State" />
                     </div>
                     <div class="col-md-2">
-                        <q-input outlined dense v-model="zip1" label="Zip Code" />
+                        <q-input outlined dense v-model="zip" label="Zip" />
                     </div>
                 </div>
 
                 <div class="row q-mb-sm">
                     <div class="col-md-4">
-                        <q-input outlined dense v-model="phone" label="Phone 1" />
+                        <q-input outlined dense v-model="phone" label="Phone" />
                     </div>
                     <div class="col-md-4 q-pl-sm">
-                        <q-input outlined dense v-model="phone" label="Phone 2" />
+                        <q-input outlined dense v-model="extension" label="Ext" />
                     </div>
                     <div class="col-md-4 q-pl-sm">
                         <q-input outlined dense v-model="fax" label="Fax" />
+                    </div>
+                </div>
+                <div class="row q-mb-sm">
+                    <div class="col-md-12">
+                        <q-input outlined dense v-model="email" label="Email" />
                     </div>
                 </div>
             </div>
@@ -115,7 +141,7 @@
 
             <q-card-actions align="right">
                 <q-btn flat label="Cancel" color="primary" v-close-popup/>
-                <q-btn flat label="Save" color="primary" v-close-popup/>
+                <q-btn flat label="Add" color="primary"  @click="addContact"/>
             </q-card-actions>
 
         </dialog-draggable>
@@ -124,6 +150,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+import config from '../../../config'
 import dialogDraggable from '../../components/DialogDraggable'
 
 export default {
@@ -132,17 +160,7 @@ export default {
     },
     data() {
         return {
-            data: [
-                {
-                    id: 1,
-                    firstName: 'Anakin',
-                    lastName: 'Skywalker',
-                    title: 'School Dean',
-                    department: 'Administration',
-                    phone: '(414) 234-5566',
-                    email: 'hansolo@skywalker.com'
-                }
-            ],
+            data: [],
             columns: [
                 {
                     name: "firstName",
@@ -187,23 +205,125 @@ export default {
                     sortable: true
                 },
             ],
-            isShowPopup: false,
-            //
-            address1: '',
-            address2: '',
+            pagination: { rowsPerPage: 1000 },
+            isShowAddContactPopup: false,
+
+            first_name: '',
+            last_name: '',
+            title: '',
+            department: '',
+            address_line_1: '',
+            address_line_2: '',
             city: '',
             state: '',
-            states: ['State 1', 'State 2'],
-            zip1: '',
-            zip2: '',
+            states: [],
+            zip: '',
             phone: '',
+            extension: '',
             fax: '',
+            email: ''
         }
     },
     methods: {
         openEditContactPopup() {
-            this.isShowPopup = true
-        }
+            this.isShowAddContactPopup = true
+        },
+        getSchoolContacts() {
+
+            const conf = {
+                method: 'GET',
+                url: config.getSchoolContacts + this.$route.params.id,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+                console.log('axios(conf).then(res => {', )
+                let contacts = res.data.contactsInfo
+
+                let contactsArr = []
+                for(let i=0; i<contacts.length; i++) {
+                    contactsArr.push({
+                        id: contacts[i].id,
+                        first_name: contacts[i].first_name,
+                        last_name: contacts[i].last_name,
+                        title: contacts[i].title,
+                        department: contacts[i].department,
+                        phone: contacts[i].phone,
+                        email: contacts[i].email,
+                    })
+                }
+                this.data = contactsArr
+                
+            })
+
+        },
+        addContact() {
+            let data = {
+                first_name: this.first_name,
+                last_name: this.last_name,
+                title: this.title,
+                department: this.department,
+                phone: this.phone,
+                extension: this.extension,
+                address_line_1: this.address1, 
+                address_line_2: this.address2,
+                city: this.city,
+                state_id: this.state.id,
+                postal_code: this.zip,
+                email: this.email
+            }
+            
+            const conf = {
+                method: 'POST',
+                url: config.addSchoolContact + this.$route.params.id,
+                headers: {
+                    Accept: 'application/json',
+                },
+                data: data
+            }
+
+            axios(conf).then(res => {
+
+                this.data.push(res.data.contact)
+
+                this.$q.notify({
+                    message: 'Contact addes successfully!',
+                    type: 'positive',
+                })
+
+                this.isShowAddContactPopup = false
+
+            })
+        },
+        getStates() {
+            const conf = {
+                method: 'GET',
+                url: config.getStates,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+                let states = res.data.states
+                let statesFinalArray = []
+
+                for(let i=0; i<states.length; i++) {
+                    statesFinalArray.push({
+                        id: states[i].id,
+                        label: states[i].name
+                    })
+                }
+
+                this.states = statesFinalArray
+            })
+        },
+    },
+    created() {
+        this.getSchoolContacts()
+        this.getStates()
     }
 }
 </script>

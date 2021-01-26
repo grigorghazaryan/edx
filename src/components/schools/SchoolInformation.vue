@@ -94,6 +94,7 @@
                 <SchoolsTable
                  :addressData="additionalAddresses"
                  :statesData="states"
+                 :type="1"
                 />
             </div>
         </div>

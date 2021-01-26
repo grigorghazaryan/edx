@@ -26,9 +26,14 @@ const config = {
     removeAddress: 'https://edxchange-school.aimtech.am/api/v1/remove-school-address/', // 1/1001
 
     // GET SCHOOL COMPUS
-    getSchoolCompus: 'https://edxchange-school.aimtech.am/api/v1/get-school-campuses/', // + id
-
-
+    getSchoolCompuses: 'https://edxchange-school.aimtech.am/api/v1/get-school-campuses/', // + id
+    addCampusAddress: 'https://edxchange-school.aimtech.am/api/v1/add-campus-address/', // 
+    removeCampusAddress: 'https://edxchange-school.aimtech.am/api/v1/remove-campus-address/',
+    addCampus: 'https://edxchange-school.aimtech.am/api/v1/add-campus/', // + id
+    getSchoolContacts: 'https://edxchange-school.aimtech.am/api/v1/get-school-contacts/',
+    addSchoolContact: 'https://edxchange-school.aimtech.am/api/v1/add-school-contacts/',
+    
+    
     // Get States
     getStates: 'https://edxchange-school.aimtech.am/api/v1/get-states-list',
 
