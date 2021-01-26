@@ -19,6 +19,12 @@ const config = {
     getAllocationByYears: 'https://edxchange-allocation.aimtech.am/api/v1/allocations-by-school-year/',
     filterSchool: 'https://edxchange-school.aimtech.am/api/v1/filter-school?search=',
     getSchoolInformationById: 'https://edxchange-school.aimtech.am/api/v1/get-school/', // + id
+    addSchoolAddress: 'https://edxchange-school.aimtech.am/api/v1/add-school-address/', // + id
+    editSchool: 'https://edxchange-school.aimtech.am/api/v1/school/', // + id
+    getAddressTypes: 'https://edxchange-school.aimtech.am/api/v1/get-address-types',
+    editAddress: 'https://edxchange-school.aimtech.am/api/v1/edit-address/', // + id
+    removeAddress: 'https://edxchange-school.aimtech.am/api/v1/remove-school-address/', // 1/1001
+
 
     // Get States
     getStates: 'https://edxchange-school.aimtech.am/api/v1/get-states-list',

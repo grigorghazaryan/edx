@@ -13,7 +13,7 @@
         </div>
         <div class="row q-mb-sm">
             <div class="col-md-4">
-                <q-input outlined dense v-model="schoolAbbriviation" label="School Shortname" />
+                <q-input outlined dense v-model="schoolShortName" label="School Shortname" />
             </div>
         </div>
 
@@ -72,19 +72,28 @@
             </div>
         </div>
 
-        <div class="row q-mb-sm">
+        <div class="row q-mb-md">
             <div class="col-md-4">
                 <q-input outlined dense v-model="url" label="URL" />
             </div>
         </div>
 
-        <div class="row q-mt-lg q-mb-lg" v-if="additionalAddresses != null">
+        <div class="row q-mb-sm">
+            <div class="col-md-4 text-right">
+                <q-btn @click="editSchoolInfo" color="primary" label="Save" />
+            </div>
+        </div>
+
+
+
+        <div class="row q-mt-lg q-mb-lg" v-if="additionalAddresses != null && states != null">
             <div class="col-md-12 q-mb-md">
                 <div class="text-subtitle2">Additional addresses</div>
             </div>
             <div class="col-md-12">
                 <SchoolsTable
                  :addressData="additionalAddresses"
+                 :statesData="states"
                 />
             </div>
         </div>
@@ -106,11 +115,12 @@ export default {
         return {
             schoolName: '',
             schoolAbbriviation: '',
+            schoolShortName: '',
             address1: '',
             address2: '',
             city: '',
             state: '',
-            states: [],
+            states: null,
             zip: '',
             phone: '',
             ext: '',
@@ -135,11 +145,13 @@ export default {
             axios(conf).then(res => {
 
                     let schoolInfo = res.data.school[0]
+                    console.log('///////////--------->', schoolInfo)
 
                     this.additionalAddresses = schoolInfo.address
 
                     this.schoolName = schoolInfo.school_name
                     this.schoolAbbriviation = schoolInfo.abbreviation
+                    this.schoolShortName = schoolInfo.short_name
                     this.address1 = schoolInfo.primary_address.address.address_line_1
                     this.address2 = schoolInfo.primary_address.address.address_line_2
                     this.city = schoolInfo.primary_address.address.city
@@ -167,14 +179,50 @@ export default {
             axios(conf).then(res => {
                 let states = res.data.states
                 let statesFinalArray = []
+
                 for(let i=0; i<states.length; i++) {
                     statesFinalArray.push({
                         id: states[i].id,
                         label: states[i].name
                     })
                 }
+
                 this.states = statesFinalArray
             })
+        },
+        editSchoolInfo() {
+
+            let data = {
+                name: this.schoolName,
+                abbreviation: this.schoolAbbriviation,
+                short_name: this.schoolShortName,
+                primaryAddress: {
+                    address_line_1: this.address1,
+                    address_line_2: this.address2,
+                    city: this.city,
+                    state_id: this.state.id,
+                    postal_code: this.zip,
+                    phone: this.phone,
+                    extension: this.ext,
+                    fax: this.fax,
+                    url: this.url,
+                }
+            }
+
+            const conf = {
+                method: 'PUT',
+                url: config.editSchool + this.$route.params.id,
+                headers: {
+                    Accept: 'application/json',
+                },
+                data: data
+            }
+
+            axios(conf).then(res => {
+                this.getSchoolInformation()
+            })
+
+            console.log(data)
         }
     },
     created() {
