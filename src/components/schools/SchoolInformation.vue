@@ -205,8 +205,8 @@ export default {
                     phone: this.phone,
                     extension: this.ext,
                     fax: this.fax,
-                    url: this.url,
-                }
+                },
+                url: this.url,
             }
 
             const conf = {

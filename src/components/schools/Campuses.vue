@@ -8,19 +8,43 @@
 
         <q-separator class="q-mt-sm q-mb-lg"/>
 
-        <!-- <q-list bordered class="rounded-borders">
-            <q-expansion-item
-                switch-toggle-side
-                expand-separator
-                label="El Puente North"
+            <q-table
+                :data="data" 
+                :columns="columns"
+                :loading="loading"
+                class="no-shadow"
+                row-key="id"
+                hide-bottom
+                :pagination.sync="pagination"
             >
-                <q-card>
-                    <q-card-section> -->
-                        <SchoolsTable />
-                    <!-- </q-card-section>
-                </q-card>
-            </q-expansion-item>
-        </q-list> -->
+                <!-- Table Body -->
+                <template v-slot:body="props">
+      
+                    <q-tr :props="props">
+                        <q-td key="name" :props="props">
+                            <div>
+                                {{ props.row.name }}
+                            </div>
+                        </q-td>
+                    </q-tr>
+
+                    <q-tr :props="props">
+                        <q-td colspan="100%">
+                            <div class="q-mt-md">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p>
+                                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores, excepturi!
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </q-td>
+                    </q-tr>
+
+                </template>
+            </q-table>
+        
     </div>
 </template>
 
@@ -33,6 +57,36 @@ export default {
     },
     data() {
         return {
+            loading: false,
+            data: [
+                {
+                    name: 'Grigor'
+                },
+                {
+                    name: 'Grigor'
+                }
+            ],
+            columns: [
+                {
+                    name: "name",
+                    align: "left",
+                    label: "Name",
+                    field: "name",
+                    sortable: true
+                },
+            ],
+            pagination: { rowsPerPage: 1000 },
+        }
+    },
+    methods: {
+        getCompuses() {
+            const conf = {
+                method: 'GET',
+                url: config.getStates,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
         }
     }
 }

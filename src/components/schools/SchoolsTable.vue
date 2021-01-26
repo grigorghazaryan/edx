@@ -448,7 +448,16 @@ export default {
             })
         },
         clearInputValues() {
-            
+            this.address = {
+                address1: '',
+                address2: '',
+                city: '',
+                state: null,
+                zip: '',
+                phone: '',
+                fax: '',
+                type:  null
+            }
         }
     },
     created() {
@@ -480,5 +489,12 @@ export default {
 
         this.getAddressTypes()
     },
+    watch: {
+        isAddAddressOpened(val) {
+            if(!val) {
+                this.clearInputValues()
+            }
+        }
+    }
 }
 </script>

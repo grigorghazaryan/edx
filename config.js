@@ -25,6 +25,9 @@ const config = {
     editAddress: 'https://edxchange-school.aimtech.am/api/v1/edit-address/', // + id
     removeAddress: 'https://edxchange-school.aimtech.am/api/v1/remove-school-address/', // 1/1001
 
+    // GET SCHOOL COMPUS
+    getSchoolCompus: 'https://edxchange-school.aimtech.am/api/v1/get-school-campuses/', // + id
+
 
     // Get States
     getStates: 'https://edxchange-school.aimtech.am/api/v1/get-states-list',
