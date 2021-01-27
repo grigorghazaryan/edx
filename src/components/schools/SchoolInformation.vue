@@ -1,96 +1,108 @@
 <template>
     <div class="q-pa-lg q-mt-md">
 
-        <div class="row q-mb-sm">
-            <div class="col-md-4">
-                <q-input outlined dense v-model="schoolName" label="School Name" />
-            </div>
-        </div>
-        <div class="row q-mb-sm">
-            <div class="col-md-4">
-                <q-input outlined dense v-model="schoolAbbriviation" label="School Abbriviation" />
-            </div>
-        </div>
-        <div class="row q-mb-sm">
-            <div class="col-md-4">
-                <q-input outlined dense v-model="schoolShortName" label="School Shortname" />
-            </div>
-        </div>
+        <div class="row">
+            <div class="col-md-4 bordered-box">
 
-        
+                <div class="text-subtitle1 row justify-start items-center q-mb-md">
+                    <q-icon class="q-mr-sm" name="contact_page"  color="green" style="font-size: 1.5em"/>
+                    <b>School Names</b>
+                </div>
 
-        <div class="row q-mb-md q-mt-md">
-            <div class="text-subtitle2">Primary Address</div>
-        </div>
-
-        <div class="row q-mb-sm">
-            <div class="col-md-4">
-                <q-input outlined dense v-model="address1" label="Address Line 1" />
-            </div>
-        </div>
-        <div class="row q-mb-sm">
-            <div class="col-md-4">
-                <q-input outlined dense v-model="address2" label="Address Line 2" />
-            </div>
-        </div>
-        <div class="row q-mb-sm">
-            <div class="col-md-4">
-                <div class="row">
-                    <div class="col-md-6 q-pr-sm">
-                        <q-input outlined dense v-model="city" label="City" />
+                <div class="row q-mb-sm">
+                    <div class="col-md-12">
+                        <q-input outlined dense v-model="schoolName" label="School Name" />
                     </div>
-                    <div class="col-md-4 q-pr-sm">
-                        <q-select outlined dense v-model="state" :options="states" label="State" />
+                </div>
+                <div class="row q-mb-sm">
+                    <div class="col-md-12">
+                        <q-input outlined dense v-model="schoolAbbriviation" label="School Abbriviation" />
                     </div>
-                    <div class="col-md-2">
-                        <q-input outlined dense v-model="zip" label="Zip" />
+                </div>
+                <div class="row q-mb-sm">
+                    <div class="col-md-12">
+                        <q-input outlined dense v-model="schoolShortName" label="School Shortname" />
+                    </div>
+                </div>
+
+                <div class="text-subtitle1 row justify-start items-center q-mb-md q-mt-md">
+                    <q-icon class="q-mr-sm" name="contact_page"  color="green" style="font-size: 1.5em"/>
+                    <b>Primary Address</b>
+                </div>
+
+                <div class="row q-mb-sm">
+                    <div class="col-md-12">
+                        <q-input outlined dense v-model="address1" label="Address Line 1" />
+                    </div>
+                </div>
+                <div class="row q-mb-sm">
+                    <div class="col-md-12">
+                        <q-input outlined dense v-model="address2" label="Address Line 2" />
+                    </div>
+                </div>
+                <div class="row q-mb-sm">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-6 q-pr-sm">
+                                <q-input outlined dense v-model="city" label="City" />
+                            </div>
+                            <div class="col-md-4 q-pr-sm">
+                                <q-select outlined dense v-model="state" :options="states" label="State" />
+                            </div>
+                            <div class="col-md-2">
+                                <q-input outlined dense v-model="zip" label="Zip" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row q-mb-sm">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-3 q-pr-sm">
+                                <q-input outlined dense v-model="phone" label="Phone" />
+                            </div>
+                            <div class="col-md-2">
+                                <q-input outlined dense v-model="ext" label="Ext" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row q-mb-sm">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-3 q-pr-sm">
+                                <q-input outlined dense v-model="fax" label="Fax" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row q-mb-md">
+                    <div class="col-md-12">
+                        <q-input outlined dense v-model="url" label="URL" />
+                    </div>
+                </div>
+
+                <div class="row q-mb-sm">
+                    <div class="col-md-12 text-right">
+                        <q-btn @click="editSchoolInfo" color="primary" label="Save" />
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="row q-mb-sm">
-            <div class="col-md-4">
-                <div class="row">
-                    <div class="col-md-3 q-pr-sm">
-                        <q-input outlined dense v-model="phone" label="Phone" />
-                    </div>
-                    <div class="col-md-2">
-                        <q-input outlined dense v-model="ext" label="Ext" />
-                    </div>
+
+
+        <div class="row q-mt-lg q-mb-lg " v-if="additionalAddresses != null && states != null">            
+            <div class="col-md-9 bordered-box">
+                
+                <div class="text-subtitle1 row justify-start items-center q-mb-md">
+                    <q-icon class="q-mr-sm" name="location_on"  color="green" style="font-size: 1.5em"/>
+                    <b>Additional addresses</b>
                 </div>
-            </div>
-        </div>
 
-        <div class="row q-mb-sm">
-            <div class="col-md-4">
-                <div class="row">
-                    <div class="col-md-3 q-pr-sm">
-                        <q-input outlined dense v-model="fax" label="Fax" />
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row q-mb-md">
-            <div class="col-md-4">
-                <q-input outlined dense v-model="url" label="URL" />
-            </div>
-        </div>
-
-        <div class="row q-mb-sm">
-            <div class="col-md-4 text-right">
-                <q-btn @click="editSchoolInfo" color="primary" label="Save" />
-            </div>
-        </div>
-
-
-
-        <div class="row q-mt-lg q-mb-lg" v-if="additionalAddresses != null && states != null">
-            <div class="col-md-12 q-mb-md">
-                <div class="text-subtitle2">Additional addresses</div>
-            </div>
-            <div class="col-md-12">
                 <SchoolsTable
                  :addressData="additionalAddresses"
                  :statesData="states"

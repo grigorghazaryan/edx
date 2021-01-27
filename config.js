@@ -32,6 +32,21 @@ const config = {
     addCampus: 'https://edxchange-school.aimtech.am/api/v1/add-campus/', // + id
     getSchoolContacts: 'https://edxchange-school.aimtech.am/api/v1/get-school-contacts/',
     addSchoolContact: 'https://edxchange-school.aimtech.am/api/v1/add-school-contacts/',
+    editSchoolContact: 'https://edxchange-school.aimtech.am/api/v1/edit-school-contacts/',
+    deleteSchoolContact: 'https://edxchange-school.aimtech.am/api/v1/remove-school-contact/', // + 17/1001
+
+    // Vendor
+    getVendorInformationById: 'https://edxchange-supplier.aimtech.am/api/v1/get-supplier/', // + id
+    editVendor: 'https://edxchange-supplier.aimtech.am/api/v1/supplier/', // + id
+    addVendorAddress: 'https://edxchange-supplier.aimtech.am/api/v1/add-supplier-address/',
+    editVendorAddress: 'https://edxchange-supplier.aimtech.am/api/v1/edit-supplier-address/',
+    removeVendorAddress: 'https://edxchange-supplier.aimtech.am/api/v1/remove-supplier-address/',
+    //
+    getVendorContacts: 'https://edxchange-supplier.aimtech.am/api/v1/get-supplier-contacts/',
+    addVendorContact: 'https://edxchange-supplier.aimtech.am/api/v1/add-supplier-contacts/',
+    editVendorContact: 'https://edxchange-supplier.aimtech.am/api/v1/edit-supplier-contacts/',
+    deleteVendorContact: 'https://edxchange-supplier.aimtech.am/api/v1/remove-supplier-contact/',
+
     
     
     // Get States

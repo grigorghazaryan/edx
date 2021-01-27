@@ -2,111 +2,175 @@
     <div class="q-mt-md">
 
         <div class="row justify-between align-center q-pr-lg q-pl-lg">
-            <div class="text-subtitle1">Contact List</div>
-            <q-btn class="bg-blue" color="white" label="Add contact" />
+
+           <div class="text-subtitle1 row justify-start items-center">
+                <q-icon class="q-mr-sm" name="contact_phone"  color="green" style="font-size: 1.5em"/>
+                <b>Vendor Contacts</b>
+            </div>
+
+            <q-btn @click="isShowAddContactPopup=true" class="bg-blue" color="white" label="Add contact" />
+
         </div>
 
-        <q-separator class="q-mt-sm q-mb-lg"/>
+        <q-separator class="q-mt-sm"/>
 
-        <q-table
-            :data="data"
-            :columns="columns"
-            row-key="id"
-            hide-bottom
-            class="no-shadow"
-        >
-            <template v-slot:body="props">
+        <div class="row">
+            <div class="col-md-10">
+                <q-table
+                    :data="data"
+                    :columns="columns"
+                    row-key="id"
+                    hide-bottom
+                    class="no-shadow"
+                    :pagination.sync="pagination"
+                >
+                    <template v-slot:body="props">
 
-                <q-tr :props="props" @click="openEditContactPopup">
+                        <q-tr :props="props">
 
-                    <q-td key="firstName" :props="props">
-                        <div  class="cursor-pointer">
-                            {{ props.row.firstName }}
-                        </div>
-                    </q-td>
+                            <q-td key="firstName" :props="props">
+                                <div  class="cursor-pointer">
+                                    {{ props.row.first_name }}
+                                </div>
+                            </q-td>
 
-                    <q-td key="lastName" :props="props">
-                        <div  class="cursor-pointer">
-                            {{ props.row.lastName }}
-                        </div>
-                    </q-td>
+                            <q-td key="lastName" :props="props">
+                                <div  class="cursor-pointer">
+                                    {{ props.row.last_name }}
+                                </div>
+                            </q-td>
 
-                    <q-td key="title" :props="props">
-                        <div  class="cursor-pointer">
-                            {{ props.row.title }}
-                        </div>
-                    </q-td>
+                            <q-td key="title" :props="props">
+                                <div  class="cursor-pointer">
+                                    {{ props.row.title }}
+                                </div>
+                            </q-td>
 
-                    <q-td key="department" :props="props">
-                        <div  class="cursor-pointer">
-                            {{ props.row.department }}
-                        </div>
-                    </q-td>
+                            <q-td key="department" :props="props">
+                                <div  class="cursor-pointer">
+                                    {{ props.row.department }}
+                                </div>
+                            </q-td>
 
-                    <q-td key="phone" :props="props">
-                        <div  class="cursor-pointer">
-                            {{ props.row.phone }}
-                        </div>
-                    </q-td>
+                            <q-td key="phone" :props="props">
+                                <div  class="cursor-pointer">
+                                    {{ props.row.phone }}
+                                </div>
+                            </q-td>
 
-                    <q-td key="email" :props="props">
-                        <div  class="cursor-pointer">
-                            {{ props.row.email }}
-                        </div>
-                    </q-td>
+                            <q-td key="email" :props="props">
+                                <div  class="cursor-pointer">
+                                    {{ props.row.email }}
+                                </div>
+                            </q-td>
 
-                </q-tr>
+                            <q-td key="action" :props="props">
+                                <q-fab padding="xs" color="purple" icon="keyboard_arrow_up" direction="up">
+                                    <q-fab-action
+                                        icon="edit"
+                                        color="blue" 
+                                        size=sm 
+                                        no-caps
+                                        round 
+                                        class="q-mr-sm"
+                                        @click="openEditContactPopup(props.row)"
+                                    >
+                                        <q-tooltip 
+                                            anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                                            transition-show="flip-right"
+                                            transition-hide="flip-left"
+                                        >
+                                            <strong>Edit</strong>
+                                        </q-tooltip>
+                                    </q-fab-action>
 
-                <q-tr v-show="props.expand" :props="props">
-                    <q-td colspan="100%">
-                        <div class="q-mt-md">
-                            <div class="row">
-                                <p>
-                                    Lorem, ipsum dolor.
-                                </p>
-                            </div>
-                        </div>
-                    </q-td>
-                </q-tr>
+                                    <q-fab-action
+                                        icon="delete_forever"
+                                        color="red" 
+                                        size=sm 
+                                        no-caps
+                                        round
+                                        @click="isDeleteContactPopup=true, contacts=props.row"
+                                    >
+                                        <q-tooltip 
+                                            anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                                            transition-show="flip-right"
+                                            transition-hide="flip-left"
+                                        >
+                                            <strong>Delete</strong>
+                                        </q-tooltip>
+                                    </q-fab-action>
 
-            </template>
+                                </q-fab>
+                            </q-td>
 
-        </q-table>
+                        </q-tr>
 
-        <dialog-draggable :modelDialog="isShowPopup" :title="'Edit contact'" @onHide="isShowPopup=false">
+                    </template>
+
+                </q-table>
+            </div>
+        </div>
+
+        <dialog-draggable :modelDialog="isShowAddContactPopup" :title="'Contact Info'" @onHide="isShowAddContactPopup=false">
         
             <div class="q-pa-md">
                 <div class="row q-mb-sm">
                     <div class="col-md-12">
-                        <q-input outlined dense v-model="address1" label="Address Line 1" />
+                        <q-input outlined dense v-model="contacts.first_name" label="First Name" />
                     </div>
                 </div>
                 <div class="row q-mb-sm">
                     <div class="col-md-12">
-                        <q-input outlined dense v-model="address2" label="Address Line 2" />
+                        <q-input outlined dense v-model="contacts.last_name" label="Last Name" />
                     </div>
                 </div>
                 <div class="row q-mb-sm">
-                    <div class="col-md-8 q-pr-sm">
-                        <q-input outlined dense v-model="city" label="City" />
+                    <div class="col-md-12">
+                        <q-input outlined dense v-model="contacts.title" label="Title" />
                     </div>
-                    <div class="col-md-2 q-pr-sm">
-                        <q-select outlined dense v-model="state" :options="states" label="State" />
+                </div>
+                <div class="row q-mb-sm">
+                    <div class="col-md-12">
+                        <q-input outlined dense v-model="contacts.department" label="Department" />
+                    </div>
+                </div>
+                <div class="row q-mb-sm">
+                    <div class="col-md-12">
+                        <q-input outlined dense v-model="contacts.address_line_1" label="Address Line 1" />
+                    </div>
+                </div>
+                <div class="row q-mb-sm">
+                    <div class="col-md-12">
+                        <q-input outlined dense v-model="contacts.address_line_2" label="Address Line 2" />
+                    </div>
+                </div>
+                <div class="row q-mb-sm">
+                    <div class="col-md-7 q-pr-sm">
+                        <q-input outlined dense v-model="contacts.city" label="City" />
+                    </div>
+                    <div class="col-md-3 q-pr-sm">
+                        <q-select outlined dense v-model="contacts.state" :options="states" label="State" />
                     </div>
                     <div class="col-md-2">
-                        <q-input outlined dense v-model="zip1" label="Zip Code" />
+                        <q-input outlined dense v-model="contacts.postal_code" label="Zip" />
                     </div>
                 </div>
 
                 <div class="row q-mb-sm">
                     <div class="col-md-4">
-                        <q-input outlined dense v-model="phone" label="Phone 1" />
+                        <q-input outlined dense v-model="contacts.phone" label="Phone" />
                     </div>
                     <div class="col-md-4 q-pl-sm">
-                        <q-input outlined dense v-model="phone" label="Phone 2" />
+                        <q-input outlined dense v-model="contacts.extension" label="Ext" />
                     </div>
                     <div class="col-md-4 q-pl-sm">
-                        <q-input outlined dense v-model="fax" label="Fax" />
+                        <q-input outlined dense v-model="contacts.fax" label="Fax" />
+                    </div>
+                </div>
+                <div class="row q-mb-sm">
+                    <div class="col-md-12">
+                        <q-input outlined dense v-model="contacts.email" label="Email" />
                     </div>
                 </div>
             </div>
@@ -115,15 +179,31 @@
 
             <q-card-actions align="right">
                 <q-btn flat label="Cancel" color="primary" v-close-popup/>
-                <q-btn flat label="Save" color="primary" v-close-popup/>
+                <q-btn v-if="edit" flat label="Save" color="primary"  @click="editContact"/>
+                <q-btn v-else flat label="Add" color="primary"  @click="addContact"/>
             </q-card-actions>
 
         </dialog-draggable>
+
+        <q-dialog v-model="isDeleteContactPopup" persistent>
+            <q-card>
+                <q-card-section class="row items-center">
+                    <span class="q-ml-sm">Are you sure to delete this Contact?</span>
+                </q-card-section>
+
+                <q-card-actions align="right">
+                    <q-btn flat label="No, thanks" color="primary" v-close-popup />
+                    <q-btn label="Yes" color="red" @click="removeContact" />
+                </q-card-actions>
+            </q-card>
+        </q-dialog>
 
     </div>
 </template>
 
 <script>
+import axios from 'axios'
+import config from '../../../config'
 import dialogDraggable from '../../components/DialogDraggable'
 
 export default {
@@ -132,17 +212,7 @@ export default {
     },
     data() {
         return {
-            data: [
-                {
-                    id: 1,
-                    firstName: 'Anakin',
-                    lastName: 'Skywalker',
-                    title: 'School Dean',
-                    department: 'Administration',
-                    phone: '(414) 234-5566',
-                    email: 'hansolo@skywalker.com'
-                }
-            ],
+            data: [],
             columns: [
                 {
                     name: "firstName",
@@ -186,23 +256,233 @@ export default {
                     field: "email",
                     sortable: true
                 },
+                {
+                    name: "action",
+                    align: "right",
+                    label: "Actions",
+                    field: "action",
+                    sortable: true,
+                    style: 'width: 30px',
+                }
             ],
-            isShowPopup: false,
-            //
-            address1: '',
-            address2: '',
-            city: '',
-            state: '',
-            states: ['State 1', 'State 2'],
-            zip1: '',
-            zip2: '',
-            phone: '',
-            fax: '',
+            pagination: { rowsPerPage: 1000 },
+            isShowAddContactPopup: false,
+            isDeleteContactPopup: false,
+            edit: false,
+            states: [],
+
+            contacts: {
+                first_name: '',
+                last_name: '',
+                title: '',
+                department: '',
+                address_line_1: '',
+                address_line_2: '',
+                city: '',
+                state: '',
+                postal_code: '',
+                phone: '',
+                extension: '',
+                fax: '',
+                email: ''
+            }
         }
     },
     methods: {
-        openEditContactPopup() {
-            this.isShowPopup = true
+        openEditContactPopup(contact) {
+            console.log('contact', contact)
+            this.isShowAddContactPopup = true
+            this.contacts = {...contact}
+            this.edit = true
+        },
+        getVendorContacts() {
+
+            const conf = {
+                method: 'GET',
+                url: config.getVendorContacts + this.$route.params.id,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+                let contacts = res.data.contactsInfo
+
+                let contactsArr = []
+                for(let i=0; i<contacts.length; i++) {
+                    contacts[i].state = {
+                        id: contacts[i].state.id,
+                        label: contacts[i].state.name
+                    }
+                    contactsArr.push(contacts[i])
+                }
+                this.data = contactsArr
+                
+            })
+
+        },
+        addContact() {
+
+            let data = {
+                first_name: this.contacts.first_name,
+                last_name: this.contacts.last_name,
+                title: this.contacts.title,
+                department: this.contacts.department,
+                phone: this.contacts.phone,
+                extension: this.contacts.extension,
+                fax: this.contacts.fax,
+                address_line_1: this.contacts.address_line_1, 
+                address_line_2: this.contacts.address_line_2,
+                city: this.contacts.city,
+                state_id: this.contacts.state.id,
+                postal_code: this.contacts.postal_code,
+                email: this.contacts.email
+            }
+            
+            const conf = {
+                method: 'POST',
+                url: config.addVendorContact + this.$route.params.id,
+                headers: {
+                    Accept: 'application/json',
+                },
+                data: data
+            }
+
+            axios(conf).then(res => {
+
+                let contact = res.data.contact
+                contact.state = {
+                        id: contact.state.id,
+                        label: contact.state.name
+                    }
+
+                this.data.push(contact)
+                
+
+                this.$q.notify({
+                    message: 'Contact addes successfully!',
+                    type: 'positive',
+                })
+
+                this.isShowAddContactPopup = false
+
+            })
+        },
+        editContact() {
+
+            let data = {
+                first_name: this.contacts.first_name,
+                last_name: this.contacts.last_name,
+                title: this.contacts.title,
+                department: this.contacts.department,
+                phone: this.contacts.phone,
+                extension: this.contacts.extension,
+                fax: this.contacts.fax,
+                address_line_1: this.contacts.address_line_1, 
+                address_line_2: this.contacts.address_line_2,
+                city: this.contacts.city,
+                state_id: this.contacts.state.id,
+                postal_code: this.contacts.postal_code,
+                email: this.contacts.email
+            }
+            
+            const conf = {
+                method: 'PUT',
+                url: config.editVendorContact + this.contacts.id,
+                headers: {
+                    Accept: 'application/json',
+                },
+                data: data
+            }
+
+            axios(conf).then(res => {
+                
+                this.getVendorContacts()
+
+                this.$q.notify({
+                    message: 'Contact Edited successfully!',
+                    type: 'positive',
+                })
+
+                this.isShowAddContactPopup = false
+
+            })
+
+        },
+        getStates() {
+            const conf = {
+                method: 'GET',
+                url: config.getStates,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+                let states = res.data.states
+                let statesFinalArray = []
+
+                for(let i=0; i<states.length; i++) {
+                    statesFinalArray.push({
+                        id: states[i].id,
+                        label: states[i].name
+                    })
+                }
+
+                this.states = statesFinalArray
+            })
+        },
+        removeContact() {
+            
+            const conf = {
+                method: 'DELETE',
+                url: config.deleteVendorContact + this.contacts.id + '/' + this.$route.params.id,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+
+                const index = this.data.indexOf(this.contacts)
+                this.data.splice(index, 1)
+
+                this.$q.notify({
+                    message: 'Contact Deleted!',
+                    type: 'positive',
+                })
+
+                this.isDeleteContactPopup = false
+
+            })
+
+        }
+    },
+    created() {
+        this.getVendorContacts()
+        this.getStates()
+    },
+    watch: {
+        isShowAddContactPopup(val) {
+            if(!val) {
+                this.contacts = {
+                    first_name: '',
+                    last_name: '',
+                    title: '',
+                    department: '',
+                    address_line_1: '',
+                    address_line_2: '',
+                    city: '',
+                    state: '',
+                    states: [],
+                    zip: '',
+                    phone: '',
+                    extension: '',
+                    fax: '',
+                    email: ''
+                }
+                this.edit = false
+            }
         }
     }
 }

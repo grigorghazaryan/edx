@@ -62,7 +62,6 @@
                     </q-td>
 
                     <q-td key="action" :props="props">
-
                         <q-fab padding="xs" color="purple" icon="keyboard_arrow_up" direction="up">
                             <q-fab-action
                                 icon="edit"
@@ -100,8 +99,6 @@
                             </q-fab-action>
 
                         </q-fab>
-
-                        
                     </q-td>
 
                 </q-tr>
@@ -172,7 +169,7 @@
 
                 <q-card-actions align="right">
                     <q-btn flat label="No, thanks" color="primary" v-close-popup />
-                    <q-btn label="Yes" color="red" v-close-popup @click="removeAddress" />
+                    <q-btn label="Yes" color="red" @click="removeAddress" />
                 </q-card-actions>
             </q-card>
         </q-dialog>
@@ -331,6 +328,9 @@ export default {
             if(this.type == 2) {
                 endPoint = config.addCampusAddress + this.id
             }
+            if(this.type == 3) {
+                endPoint = config.addVendorAddress + this.$route.params.id
+            }
 
             let data = {
                 address_line_1: this.address.address1,
@@ -385,6 +385,13 @@ export default {
 
         },
         editAddress() {
+
+            let endPoint;
+            if(this.type == 3) {
+                endPoint = config.editVendorAddress + this.address.id
+            }else {
+                endPoint = config.editAddress + this.address.id
+            }
             
             let data = {
                 address_line_1: this.address.address1,
@@ -399,7 +406,7 @@ export default {
 
             const conf = {
                 method: 'PUT',
-                url: config.editAddress + this.address.id,
+                url: endPoint,
                 headers: {
                     Accept: 'application/json',
                 },
@@ -447,6 +454,9 @@ export default {
             if(this.type == 2) {
                 endPoint = config.removeCampusAddress + this.address.id + '/' + this.id
             }
+            if(this.type == 3) {
+                endPoint = config.removeVendorAddress + this.address.id + '/' + this.$route.params.id
+            }
 
             const conf = {
                 method: 'DELETE',
@@ -465,6 +475,8 @@ export default {
                     message: 'Address Deleted!',
                     type: 'positive',
                 })
+
+                this.isDeleteAddressOpened = false
 
             })
         },

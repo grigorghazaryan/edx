@@ -2,7 +2,10 @@
     <div class="q-pa-lg">
         
         <div class="row justify-between align-center">
-            <div class="text-subtitle1">Campus Name</div>
+            <div class="text-subtitle1 row justify-start items-center">
+                <q-icon class="q-mr-sm" name="people_alt"  color="green" style="font-size: 1.5em"/>
+                Campus Name
+            </div>
             <q-btn @click="isAddCampusOpened=true" class="bg-blue" color="white" label="Add Campus" />
         </div>
 
@@ -21,14 +24,25 @@
             <template v-slot:body="props">
     
                 <q-tr :props="props">
+
+                    <q-td auto-width>
+                        <q-btn 
+                            size="sm" flat color="black"
+                            @click="props.expand = !props.expand, openBottomSection(props.row, props.rowIndex)" 
+                            :icon="props.expand ? 'keyboard_arrow_down' : 'keyboard_arrow_right'"
+                        >
+                        </q-btn>
+                    </q-td>
+
                     <q-td key="name" :props="props">
                         <div>
                             {{ props.row.name }}
                         </div>
                     </q-td>
+
                 </q-tr>
 
-                <q-tr :props="props">
+                <q-tr :props="props" v-show="props.expand">
                     <q-td colspan="100%">
                         <div class="q-mt-md">
                             <div class="row">
@@ -92,6 +106,10 @@ export default {
             loading: false,
             data: [],
             columns: [
+                {
+                    name: "toggle",
+                    style: 'width: 20px'
+                },
                 {
                     name: "name",
                     align: "left",

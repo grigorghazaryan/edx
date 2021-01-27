@@ -89,6 +89,11 @@ span.edx-header-text {
   position: absolute;
 }
 
+.bordered-box {
+  border: 1px solid #bcbcbc;
+  padding: 1rem;
+}
+
 
 /* .q-tab-panel {
   padding: 0 !important;
