@@ -2,7 +2,11 @@
   <q-dialog v-model="swDialog" persistent ref="myDialog" @show="onShow" @hide="onHide">
     <q-card :style="style">
       <q-bar class="bg-white q-pa-lg" :class="draggable?'cursor-move':''">
-        <div class="text-h6">{{title}}</div>
+        
+        <div class="text-subtitle1 row justify-start items-center">
+            <q-icon class="q-mr-sm" :name="icon"  :color="color" style="font-size: 1.5em"/>
+            <span>{{title}}</span>
+        </div>
       </q-bar>
         <slot></slot>
     </q-card>
@@ -17,6 +21,8 @@ export default {
     modelDialog: { type: Boolean, default: false },
     title: { type: String, default: "Popup" },
     width: { type: Number, default: 650  },
+    icon: { type: String, default: "contact_page" },
+    color: { type: String, default: "green" }
   },
   data() {
     return {
@@ -68,14 +74,20 @@ export default {
   },
   computed: {
     style () {
-      return 'width: ' + this.width + 'px'
+      return 'width: ' + this.width + 'px !important'
     }
   },
 };
 </script>
 
 <style>
+
 .cursor-move {
   cursor: move;
 }
+
+.q-dialog__inner--minimized > div {
+    max-width: none;
+}
+
 </style>

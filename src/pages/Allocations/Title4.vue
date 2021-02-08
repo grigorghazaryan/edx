@@ -9,6 +9,8 @@
       </q-breadcrumbs>
     </div>
 
+     <Tabs />
+
     <q-card class="bg-transparent no-shadow no-border">
       <q-card-section class="q-pa-none">
         <div class="row q-col-gutter-sm">
@@ -526,6 +528,7 @@
 </template>
 
 <script>
+ import Tabs from 'components/tab/Tab'
     import {exportFile} from 'quasar'
     import lodash from 'lodash'
     import axios from 'axios'
@@ -557,6 +560,7 @@ let typingTimer
 let doneTypingInterval = 500
 
 export default {
+  components: { Tabs },
     data() {
       return {
         confirm: false,

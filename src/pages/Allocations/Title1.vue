@@ -198,7 +198,7 @@
               
               <q-td key="school" :props="props">
 
-                <div v-if="!props.row.add || props.row.add == false" class="text-pre-wrap cursor-pointer">{{ props.row.school.school_name }}</div>
+                <div v-if="!props.row.add || props.row.add == false" class="text-pre-wrap cursor-pointer">{{ props.row.school.name }}</div>
                 <q-select
                   v-else
                   outlined
@@ -856,8 +856,6 @@
               this.data = data
               this.tempData = data
 
-              console.log(' getAllocationByType DATA = ', this.data)
-
               this.loading = false
           })
         },
@@ -870,7 +868,6 @@
             }
           }
           axios(conf).then(res => {
-            console.log('schools', res)
             let schoolsArr = []
             for(let i=0; i<res.data.length; i++) {
               let obj = {
@@ -893,7 +890,6 @@
             }
           }
           axios(conf).then(res => {
-            console.log('getSchoolYears',  res)
 
             let data = res.data, schoolsArr = []
             for(let i=0; i<data.length; i++) {
@@ -1075,8 +1071,6 @@
       computed: {
         titleHeader() {
           let title = '';
-
-          console.log(this.schoolYear)
 
           this.schoolYear == '' 
             ? title = this.schoolYears[0] && this.schoolYears[0].value

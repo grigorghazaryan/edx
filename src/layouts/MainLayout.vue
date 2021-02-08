@@ -903,38 +903,34 @@ export default {
   },
 
   methods: {
+    containsObject(obj, list) {
+      let i;
+      for (i = 0; i < list.length; i++) {
+        console.log(list[i], obj)
+          if (JSON.stringify(list[i]) === JSON.stringify(obj)) {
+              return true;
+          }
+      }
+      return false;
+    },
     addDataToLS(name, path) {
 
       let tabs = JSON.parse(localStorage.getItem('tabs'))
-
       let currentTab = { name, path }
 
-      if(!tabs.length) {
+      // if(!tabs.length) {
+      //     tabs.push(currentTab)
+      //     localStorage.setItem('tabs', JSON.stringify(tabs))
+      // } else {
+        let x = this.containsObject(currentTab, tabs)
+        if(!x) {
           tabs.push(currentTab)
           localStorage.setItem('tabs', JSON.stringify(tabs))
-      }
-      else {
-        for(let i=0; i<tabs.length; i++) {
-
-          console.log('9898989898', tabs[i])
-
-          // if(JSON.stringify(tabs[i]) != JSON.stringify(currentTab)) {
-          //   alert('!!!!!!')
-          //   tabs.push(currentTab)
-          //   console.log('tabs', tabs)
-          //   localStorage.setItem('tabs', JSON.stringify(tabs))
-          // }else {
-          //   alert('++++')
-          // }
-        
-
-        } 
-      }
-
+        }
+      // }
 
     },
     drawerClick (e) {
-      console.log(this.miniState)
       if(this.miniState) {
         e.preventDefault()
       }

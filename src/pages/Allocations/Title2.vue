@@ -861,7 +861,6 @@ export default {
           }
         }
         axios(conf).then(res => {
-          console.log('getSchoolYears',  res)
 
           let data = res.data, schoolsArr = []
           for(let i=0; i<data.length; i++) {
@@ -1021,8 +1020,6 @@ export default {
             this.data = data
             this.tempData = data
 
-            console.log('DATA = ', this.data)
-
             this.loading = false
         })
       },
@@ -1117,7 +1114,6 @@ export default {
           }
         }
         axios(conf).then(res => {
-          console.log('schools', res)
           let schoolsArr = []
           for(let i=0; i<res.data.length; i++) {
             let obj = {

@@ -9,6 +9,8 @@
       </q-breadcrumbs>
     </div>
 
+    <Tabs />
+
     <div class="q-pa-sm q-mt-sm q-gutter-sm">
       
       <div class="edx-header-parent">
@@ -171,12 +173,14 @@
 import axios from 'axios'
 import config from '../../../config'
 import dialogDraggable from '../../components/DialogDraggable'
+import Tabs from '../../components/tab/Tab'
 
 let typingTimer, doneTypingInterval = 500;
 
 export default {
   components: {
-      dialogDraggable
+      dialogDraggable,
+      Tabs
   },
   data () {
     return {

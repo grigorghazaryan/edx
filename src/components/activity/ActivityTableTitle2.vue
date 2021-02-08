@@ -10,7 +10,7 @@
     >
       <!-- Loading -->
       <template v-slot:loading>
-        <q-inner-loading showing color="primary" />
+      <q-inner-loading showing color="primary" />
       </template>
 
       <!-- Table Header -->
@@ -93,6 +93,8 @@
       </q-btn>
 
       <q-checkbox v-model="showRemainingBalance" label="Show remaining balance" />
+
+
 
       <div class="q-pa-sm q-gutter-sm">
 
@@ -1444,7 +1446,7 @@ data() {
     ////////////////////////////
     showRemainingBalance: false,
     detectChangeOldData: {},
-    tab: '1',
+    tab: '2',
     pages: 1,
     pagination: { rowsPerPage: 10 },
     paginationAttendee: { rowsPerPage: 100 },
@@ -2047,7 +2049,6 @@ data() {
       })
 
     },
-
     openEditSchedulePopup(schedule) {
       console.log('schedule', schedule)
 
@@ -2067,38 +2068,6 @@ data() {
       console.log('tempDateOfActivity', this.tempDateOfActivity)
 
     },
-    // searchEnter() {
-
-    //   if(!this.attendingTeacherList.length) {
-
-    //     let obj = {
-    //       searchParties: this.attendingSearch,
-    //       summary_id: this.attendeeItem.id, 
-    //       type_id: this.attendeeItem.type.id, 
-    //     }
-
-    //     const conf = {
-    //       method: 'POST',
-    //       url: config.addParticipant + this.$route.params.id + '/' + this.item.id,
-    //       headers: {
-    //         Accept: 'application/json',
-    //       },
-    //       data: obj
-    //     }
-
-    //     axios(conf).then(res => {
-    //           console.log('Participant === ', res.data)
-    //           this.attendingTeacherList.push(res.data.participant)
-    //           this.$q.notify({
-    //             message: 'Participant added!',
-    //             type: 'positive',
-    //           })
-    //     })
-
-    //     this.attendingSearch = ''
-
-    //   }
-    // },
     addAttendee(teacher) {
 
       console.log(teacher, 'searchPartiesIdsearchPartiesIdsearchPartiesId')
@@ -2822,8 +2791,6 @@ data() {
               }
             }
 
-            console.log('ashg askdhjg asdhjg asdhjg asdhjg asjdh ', obj)
-
             this.editedItem.noAttendingArr.attendeesData.push(obj)
 
           }
@@ -3100,8 +3067,6 @@ console.log('mmmmm', this.data[index])
 
           }
 
-
-
           this.data[index].dateOfActivityArr = schedulessArr
           this.dateOfActivityTableData = schedulessArr
 
@@ -3223,9 +3188,9 @@ console.log('mmmmm', this.data[index])
   },
   created() {
       this.getActivityByType( parseInt(this.tab), this.$route.params.id, this.count, this.current )
-      this.getAdditionalInfo(1)
+      this.getAdditionalInfo(parseInt(this.tab))
       this.getAtendeeTypes()
-      this.getCategoryTypes(1)
+      this.getCategoryTypes(parseInt(this.tab))
       this.getApprovals()
       this.getRcurranceTypes()
       this.getSchoolYears()

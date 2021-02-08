@@ -1,23 +1,3 @@
-
-<template>
-    <div class="q-pa-sm">
-
-    <div class="q-pa-md q-gutter-sm">
-      <q-breadcrumbs>
-        <q-breadcrumbs-el icon="dashboard" label="Dashboard" to="/" />
-        <q-breadcrumbs-el label="Inventory" />
-        <q-breadcrumbs-el label="License" />
-      </q-breadcrumbs>
-    </div>
-
-    <Tabs />
-
-    <div class="q-pa-sm q-mt-sm q-gutter-sm">
-      
-      <div class="edx-header-parent">
-        <span class="edx-header-text">Schools</span>
-      </div>
-
       <q-table
         :data="data"
         :columns="columns"
@@ -43,8 +23,6 @@
             placeholder="Search"
             style="min-width: 250px; max-width: 250px"
           >
-            <!-- @keyup="keyUpFilter" 
-            @keydown="keyDownFilter" -->
             <template v-slot:append>
               <q-icon name="search" />
             </template>
@@ -105,81 +83,3 @@
         </template>
 
       </q-table>
-
-    </div>
-  </div>
-</template>
-
-
-<script>
-import axios from 'axios'
-import config from '../../../config'
-import Tabs from 'components/tab/Tab'
-export default {
-  components: { Tabs },
-  data () {
-    return {
-      loading: true,
-      pagination: { rowsPerPage: 10 },
-      current: 1,
-      count: 10,
-      columns: [
-        {
-          name: "name",
-          align: "left",
-          label: "Name",
-          field: "date",
-          sortable: true
-        },
-      ],
-      data: [
-      ],
-      rowsPerPageArr: ['5', '10', '25', '50', '75', '100'], 
-      mode: 'list',
-      filter: '',
-    }
-  },
-  methods: {
-    getSchools(limit, page) {
-      const conf = {
-        method: 'GET',
-        url: config.getSchools + '?limit=' + limit + '&page=' + page,
-        headers: {
-          Accept: 'application/json',
-        }
-      }
-      axios(conf).then(res => {
-        this.pages = res.data.pagesCount
-        let schoolsArr = []
-        for(let i=0; i<res.data.schools.length; i++) {
-          let obj = {
-            id: res.data.schools[i].id,
-            name: res.data.schools[i].school_name
-          }
-          schoolsArr.push(obj)
-        }
-        this.data = schoolsArr
-        this.loading = false
-      })
-    },
-    changeRoute(id, name) {
-      this.$router.push({
-        path: '/License/' + id,
-        query: { name }
-      })
-    },
-    changePagination (val) {
-      this.current = val
-      this.getSchools(this.count, this.current)
-    },
-    changeRowsPerPage() {
-      this.count = this.pagination.rowsPerPage
-      this.current = 1
-      this.getSchools(this.count, this.current)
-    },
-  },
-  created() {
-    this.getSchools(this.count, this.current)
-  }
-}
-</script>

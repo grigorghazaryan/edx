@@ -1,36 +1,50 @@
 <template>
+<div>
   <div class="q-mt-mg q-mb-md tab-parent">
-      <router-link 
-        v-for="(tab, index) in tabs" :key="index"
+      
+    <router-link 
+        v-for="(tab, index) in tabss" :key="index"
         :to="tab.path" 
-        class="tab-item text-primary">
+        class="tab-item text-primary"
+        :class="{ 'active' : $route.path == tab.path }"
+    >
+
         {{ tab.name }}
-        <q-icon name="close" class="cursor-pointer"/>
-      </router-link>
+        <q-icon v-if="$route.path != tab.path" @click="removeTab(index)" name="close" class="cursor-pointer"/>
+
+    </router-link>
+
+  </div>
   </div>
 </template>
 
 <script>
+// import { LocalStorage } from 'quasar'
+
 export default {
     name: 'Tab',
     data() {
         return {
-            tabs: []
+            tabs: [],
+            tabss: JSON.parse(localStorage.getItem('tabs')),
         }
     },
     methods: {
-
+        removeTab(index) {
+            // let tabs = JSON.parse(localStorage.getItem('tabs'))
+            this.tabss.splice(index, 1)
+            localStorage.setItem('tabs', JSON.stringify(this.tabss))
+            // this.tabss = tabs
+        }
     },
     created() {
-        console.log('Tab. Created!')
-        let tabs = localStorage.getItem('tabs') 
-        if(!tabs) {
+        // let tabs = localStorage.getItem('tabs') 
+        if(!this.tabss) {
             localStorage.setItem('tabs', JSON.stringify([]))
         }
         else {
-            tabs = JSON.parse(tabs)
-            console.log(tabs)
-            this.tabs = tabs
+            // tabs = JSON.parse(tabs)
+            // this.tabs = tabs
         }
     }
 }
@@ -38,6 +52,7 @@ export default {
 
 <style lang="scss" scoped>
 .tab-parent {
+
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -45,15 +60,22 @@ export default {
         padding: .5rem 0 0;
 
     .tab-item {
-            background: #e6e6e6;
-    box-sizing: border-box;
-    border: 1px solid #d2d2d2;
-    margin-right: 5px;
-    padding: 5px 15px;
-    border-top-right-radius: 5px;
-    border-top-left-radius: 5px;
-    border-bottom: none;
-    text-decoration: none;
+
+        background: #e6e6e6;
+        box-sizing: border-box;
+        border: 1px solid #d2d2d2;
+        margin-right: 5px;
+        padding: 5px 15px;
+        border-top-right-radius: 5px;
+        border-top-left-radius: 5px;
+        border-bottom: none;
+        text-decoration: none;
+
+        &.active {
+            background: green;
+            border: 1px solid green;
+            color: #fff !important;
+        }
     }
 }
 </style>
