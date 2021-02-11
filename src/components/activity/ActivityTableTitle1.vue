@@ -1480,15 +1480,9 @@ data() {
     duplicate: false,
 
     approval : [],
-    status : [ 
-    {
-      id: 1,
-      label: "Active"
-    }, 
-    {
-      id: 2,
-      label: "Canceled"
-    }
+    status: [ 
+      { id: 1, label: "Active" }, 
+      { id: 2, label: "Canceled" }
     ],
     online: [
     {
@@ -1750,8 +1744,7 @@ data() {
     ],
     typeModel: '',
 
-    attendingTeacherList: [
-    ],
+    attendingTeacherList: [],
     attendingSearch: '',
     teachersSearchLength: 0,
 
@@ -2244,10 +2237,6 @@ data() {
             })
       })
 
-      // if (this.editedIndex > -1) {
-      //   Object.assign(this.data[this.editedIndex], this.editedItem);
-      // } 
-      // this.close()
 
     },
     close () {
@@ -2398,9 +2387,6 @@ data() {
       console.log(this.editedItem.noAttendingArr.attendeesData)
     },
     addDate(index, row) {
-
-      console.log('row', row, 'index', index)
-
       this.show_dialog_child = true
       this.key = index
       this.item = row
@@ -2517,19 +2503,14 @@ data() {
 
     },
     changePagination (val) {
-
-      console.log('change pagination')
       this.current = val
       this.getActivityByType( parseInt(this.tab), this.$route.params.id, this.count, val )
     },
     changeRowsPerPage() {
-
-      
       this.count = this.pagination.rowsPerPage
       this.current = 1
 
       this.getActivityByType( parseInt(this.tab), this.$route.params.id, this.count, this.current )
-
     },
     filterSupplier (val, update, abort) {
       update(() => {
@@ -2704,8 +2685,6 @@ data() {
     },
     editSchedule() {
 
-      console.log('schedule id : ', this.tempDateOfActivity.id)
-      console.log('activity id : ', this.item.id)
 
       const tempData = this.tempDateOfActivity
       console.log('tempData', tempData)

@@ -8,15 +8,14 @@
         :pagination.sync="paginationDate"
     >
         <template v-slot:body="props">
-
-            <q-tr :props="props" v-show="props.rowIndex == 0 || props.rowIndex != 0 && expand">
+            <q-tr :props="props" class="cursor-pointer" @click="openEditSchedulePopup(props.row)" v-show="props.rowIndex == 0 || props.rowIndex != 0 && expand">
 
                 <q-td auto-width>
                     <q-btn size="sm" 
                     v-if="props.rowIndex == 0"
                     flat
                     color="black"
-                    @click="expand = !expand" 
+                    @click.stop="expand = !expand" 
                     :icon="expand ? 'keyboard_arrow_down' : 'keyboard_arrow_right'"
                     >
                     </q-btn>
@@ -38,26 +37,20 @@
                     {{ props.row.location }}
                 </q-td>
                 
-                <q-td key="repeats" :props="props">
+                <q-td key="reccurance" :props="props">
                     {{ props.row.repeats.label }}
-                </q-td>
-
-                <q-td key="repeatEvery" :props="props">
                     {{ props.row.repeatEvery }}
-                </q-td>
-
-                <q-td key="repeatOn" :props="props">
                     <span v-for="weekday in props.row.repeatOn" :key="weekday.label">
-                    <span v-if="weekday.checked" class="q-mr-sm">{{ weekday.label }}</span>
+                        <span v-if="weekday.checked" class="q-mr-sm">{{ weekday.label }}</span>
                     </span>
                 </q-td>
 
                 <q-td key="note" :props="props">
                     <q-icon 
-                    name="sticky_note_2" 
-                    color="orange" 
-                    style="font-size: 2em;" 
-                    class="cursor-pointer"
+                        name="sticky_note_2" 
+                        color="orange" 
+                        style="font-size: 2em;" 
+                        class="cursor-pointer"
                         v-tooltip="{
                             content: props.row.note,
                             placement: 'top-center',
@@ -73,14 +66,15 @@
                 </q-td>
 
                 <q-td key="actions" :props="props">
-                    <q-btn
-                    v-if="dateOfActivity.child"
                     
-                    icon="delete_forever"
-                    color="red" 
-                    size=sm 
-                    no-caps
-                    round 
+                    <q-btn
+                        v-if="props.rowIndex != 0"
+                        icon="delete_forever"
+                        color="red" 
+                        size=sm 
+                        no-caps
+                        round 
+                        @click.stop="openDeleteDate(props.row)"
                     >
                     <q-tooltip 
                         anchor="top middle" self="bottom middle" :offset="[10, 10]"
@@ -91,8 +85,8 @@
                     </q-tooltip>
                     </q-btn>
                 </q-td>
-            </q-tr>
 
+            </q-tr>
         </template>
 
     </q-table>  
@@ -134,22 +128,10 @@ export default {
                     field: "location"
                 },
                 {
-                    name: "repeats",
+                    name: "reccurance",
                     align: "left",
-                    label: "Repeats",
-                    field: "repeats"
-                },
-                {
-                    name: "repeatEvery",
-                    align: "left",
-                    label: "Repeat every",
-                    field: "repeatEvery"
-                },
-                {
-                    name: "repeatOn",
-                    align: "left",
-                    label: "Repeat on",
-                    field: "repeatOn"
+                    label: "Recurranse",
+                    field: "reccurance"
                 },
                 {
                     name: "note",
@@ -169,13 +151,15 @@ export default {
     props: {
         dateOfActivity: {
             required: true
-        },
-        // tableColumns: {
-        //     required: true
-        // }
+        }
     },
     methods: {
-
+        openEditSchedulePopup(schedule) {
+            this.$emit("openEditPopup", schedule)
+        },
+        openDeleteDate(schedule) {
+            this.$emit("openDeletePopup", schedule)
+        }
     },
     created() {
 
@@ -184,4 +168,27 @@ export default {
 
     }
 }
+
 </script>
+
+<style lang="scss" scoped>
+
+.tooltip {
+  &.info {
+    $color: rgba(#004499, .9);
+
+    .tooltip-inner {
+      background: $color;
+      color: white;
+      padding: 24px;
+      border-radius: 5px;
+      box-shadow: 0 5px 30px rgba(black, .1);
+      max-width: 250px;
+    }
+
+    .tooltip-arrow {
+      border-color: $color;
+    }
+  }
+}
+</style>

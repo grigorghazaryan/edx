@@ -113,8 +113,8 @@
           align="left"
           narrow-indicator
         >
-          <q-tab name="0" label="Title Markup"/>
-          <q-tab name="1" label="Title I"/>
+          <q-tab name="1" label="Title Markup"/>
+          <q-tab name="11" label="Title I"/>
           <q-tab name="2" label="Title II"/>
           <q-tab name="3" label="Title III"/>
           <q-tab name="4" label="Title IV"/>
@@ -127,11 +127,11 @@
 
         <q-tab-panels v-model="tab" animated class="tab-panels-parent">
 
-          <q-tab-panel name="0" class="q-p-sm">
-            <ActivityTableTitle0/>
+          <q-tab-panel name="1" class="q-p-sm">
+            <ActivityTableTitle0 :barInfo="barInfo" @final="finalResult"/>
           </q-tab-panel>
 
-          <q-tab-panel name="1" class="q-p-sm">
+          <q-tab-panel name="11" class="q-p-sm">
             <ActivityTableTitle1 :barInfo="barInfo" @final="finalResult"/>
           </q-tab-panel>
 
@@ -191,7 +191,7 @@
         data() {
           return {
             schoolName: '',
-            tab: '0',
+            tab: '1',
             mode: 'list',
             isFinal: false,
             loading: false,
