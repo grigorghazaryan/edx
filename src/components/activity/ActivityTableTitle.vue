@@ -15,11 +15,15 @@
             <!-- Table Header -->
             <template v-slot:top-right="props">
 
-                <!-- <q-input
+                <q-input
+                    :disable="showRemainingBalance"
                     class="q-mr-md"
                     outlines
                     dense
+                    v-model="filter"
                     placeholder="Search"
+                    @keyup="keyUpFilter" 
+                    @keydown="keyDownFilter"
                     style="min-width: 250px; max-width: 250px"
                 >
                     <template v-slot:append>
@@ -29,26 +33,34 @@
       
                 <q-select class="q-mr-md" style="min-width: 200px; max-width: 200px" 
                     dense outlines 
+                    v-model="schoolYear" 
+                    :options="schoolYears" 
                     label="School year" 
+                    @input="filterActivity"
+                    :disable="showRemainingBalance"
                 >
-                    <template v-slot:append>
-                    <q-icon name="cancel" class="cursor-pointer" />
+                    <template v-if="schoolYear" v-slot:append>
+                    <q-icon name="cancel" @click.stop="schoolYear = '', filterActivity()" class="cursor-pointer" />
                     </template>
 
                 </q-select>
 
                 <q-select
+                    :disable="showRemainingBalance" 
+                    @input="filterActivity"
                     class="q-mr-md"
                     style="min-width: 250px; max-width: 250px"
                     dense
                     outlines
                     label="Status"
+                    :options="typeArr"
+                    v-model="typeModel"
                 >
-                    <template v-slot:append>
-                    <q-icon name="cancel" class="cursor-pointer" />
+                    <template v-if="typeModel" v-slot:append>
+                    <q-icon name="cancel" @click.stop="typeModel = '', filterActivity()" class="cursor-pointer" />
                     </template>
                     
-                </q-select> -->
+                </q-select>
 
                 <q-btn 
                     square
@@ -1296,12 +1308,16 @@
 </template>
 
 <script>
+
 import dialogDraggable from '../../components/DialogDraggable'
 import DateOfActivityTable from './DateOfActivityTable';
 
 import axios from 'axios'
 import config from '../../../config'
 import DialogDraggable from '../DialogDraggable.vue';
+
+let typingTimer
+let doneTypingInterval = 500
 
 
 export default {
@@ -1314,6 +1330,9 @@ export default {
     },
     props: {
         barInfo: {
+            required: true
+        },
+        title: {
             required: true
         }
     },
@@ -1329,6 +1348,11 @@ export default {
             //
             totalPDremainder: this.barInfo.totalsAmount.PD,
             totalFEremainder: this.barInfo.totalsAmount.FE,
+            //
+            filter: '',
+            schoolYear: null,
+            schoolYears: [],
+            typeModel: '',
             //
             data: [],
             columns: [
@@ -1470,7 +1494,7 @@ export default {
             status: [{ id: 1, label: "Active" }, { id: 2, label: "Canceled" }],
             approval: [],
             optionsApp: [],
-            typeArr: [ { id: 1, label: 'Hello' }],
+            typeArr: [],
             teachersTypeArr: [],
             // supplier
             optionsSupplier: [],
@@ -1851,6 +1875,31 @@ export default {
         },
         duplicateItem() {
             this.addActivity();
+        },
+
+        // Get School Years
+        getSchoolYears() {
+            const conf = {
+                method: 'GET',
+                url: config.getSchoolYears,
+                headers: {
+                Accept: 'application/json',
+                }
+            }
+            axios(conf).then(res => {
+                console.log('getSchoolYears',  res)
+
+                let data = res.data, schoolsArr = []
+                for(let i=0; i<data.length; i++) {
+                let obj = {
+                    id: data[i].id,
+                    label: data[i].year_name,
+                    value: data[i].year_name
+                }
+                schoolsArr.push(obj)
+                }
+                this.schoolYears = schoolsArr
+            })
         },
 
         // Get schedules by id
@@ -2531,6 +2580,62 @@ export default {
             })
     
         },
+        filterActivity() {
+
+      // this.loading = true
+
+      let uri = '';
+
+      if(this.filter != '') {
+        uri += '&search=' + this.filter
+      }
+
+      if(this.schoolYear) {
+        uri += '&year=' + this.schoolYear.id
+      }
+
+      if(this.typeModel != '') {
+        uri += '&type=' + this.typeModel.id
+      }
+
+      console.log('URI', uri)
+
+      const conf = {
+        method: 'GET',
+        url: config.filterActivity + this.tab + '/' + this.$route.params.id + '?' + uri,
+        headers: {
+          Accept: 'application/json',
+        }
+      }
+
+      axios(conf).then(res => {
+
+        this.pages = res.data.pagesCount
+        let data = res.data.activity
+        
+
+        let filteredData = this.activityParsing(data, this.final)
+
+        this.data = filteredData
+        this.tempDataX = filteredData
+
+        this.loading = false
+      });
+        },
+        // Filter key events
+        keyUpFilter() {
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(this.doneTyping, doneTypingInterval);
+        },
+        keyDownFilter() {
+            clearTimeout(typingTimer);
+        },
+        doneTyping() {
+            if(this.filter.length > 1 || this.filter.length == 0) {
+                console.log('Send Request...')
+                this.filterActivity()
+            }
+        },
     },
     watch: {
         showRemainingBalance(val) {
@@ -2575,6 +2680,7 @@ export default {
         },
     },
     created() {
+        this.tab = this.title.toString()
         let tab = parseInt(this.tab)
         this.getActivityByType( tab, this.$route.params.id, this.count, this.current )
         this.getAdditionalInfo(tab)
@@ -2582,6 +2688,7 @@ export default {
         this.getAtendeeTypes() 
         this.getApprovals()
         this.getRcurranceTypes()
+        this.getSchoolYears()
     }
 
 }

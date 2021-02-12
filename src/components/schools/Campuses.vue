@@ -67,12 +67,14 @@
             <div class="q-pa-md"> 
                 <div class="row q-mb-sm">
                     <div class="col-md-12 q-mb-sm">
-                        <q-input outlined v-model="campus.name" label="Name" />
+                        <div class="text-subtitle2">Name</div>
+                        <q-input outlined v-model="campus.name" />
                     </div>
                 </div>
                 <div class="row q-mb-sm">
                     <div class="col-md-12 q-mb-sm">
-                        <q-input outlined v-model="campus.description" label="Description" />
+                        <div class="text-subtitle2">Description</div>
+                        <q-input outlined v-model="campus.description"/>
                     </div>
                 </div>
             </div>

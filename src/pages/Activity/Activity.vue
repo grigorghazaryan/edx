@@ -113,8 +113,7 @@
           align="left"
           narrow-indicator
         >
-          <q-tab name="1" label="Title Markup"/>
-          <q-tab name="11" label="Title I"/>
+          <q-tab name="1" label="Title I"/>
           <q-tab name="2" label="Title II"/>
           <q-tab name="3" label="Title III"/>
           <q-tab name="4" label="Title IV"/>
@@ -128,31 +127,27 @@
         <q-tab-panels v-model="tab" animated class="tab-panels-parent">
 
           <q-tab-panel name="1" class="q-p-sm">
-            <ActivityTableTitle0 :barInfo="barInfo" @final="finalResult"/>
-          </q-tab-panel>
-
-          <q-tab-panel name="11" class="q-p-sm">
-            <ActivityTableTitle1 :barInfo="barInfo" @final="finalResult"/>
+            <ActivityTableTitle :title="1" :barInfo="barInfo" @final="finalResult"/>
           </q-tab-panel>
 
           <q-tab-panel name="2" class="q-p-sm">
-            <ActivityTableTitle2 :barInfo="barInfo" @final="finalResult"/>
+            <ActivityTableTitle :title="2" :barInfo="barInfo" @final="finalResult"/>
           </q-tab-panel>
 
           <q-tab-panel name="3" class="q-p-sm">
-            <ActivityTableTitle3 :barInfo="barInfo" @final="finalResult"/>
+            <ActivityTableTitle :title="3" :barInfo="barInfo" @final="finalResult"/>
           </q-tab-panel>
 
           <q-tab-panel name="4" class="q-p-sm">
-            <ActivityTableTitle4 :barInfo="barInfo" @final="finalResult"/>
+            <ActivityTableTitle :title="4" :barInfo="barInfo" @final="finalResult"/>
           </q-tab-panel>
 
           <q-tab-panel name="5" class="q-p-sm">
-            <ActivityTableTitle5 :barInfo="barInfo" @final="finalResult"/>
+            <ActivityTableTitle :title="5" :barInfo="barInfo" @final="finalResult"/>
           </q-tab-panel>
 
           <q-tab-panel name="6" class="q-p-sm">
-            <ActivityTableTitle6 :barInfo="barInfo" @final="finalResult"/>
+            <ActivityTableTitle :title="6" :barInfo="barInfo" @final="finalResult"/>
           </q-tab-panel>
 
 
@@ -169,24 +164,12 @@
     import axios from 'axios'
     import config from '../../../config'
 
-    import ActivityTableTitle0 from '../../components/activity/ActivityTableTitle0'
-    import ActivityTableTitle1 from '../../components/activity/ActivityTableTitle1'
-    import ActivityTableTitle2 from '../../components/activity/ActivityTableTitle2'
-    import ActivityTableTitle3 from '../../components/activity/ActivityTableTitle3'
-    import ActivityTableTitle4 from '../../components/activity/ActivityTableTitle4'
-    import ActivityTableTitle5 from '../../components/activity/ActivityTableTitle5'
-    import ActivityTableTitle6 from '../../components/activity/ActivityTableTitle6'
+    import ActivityTableTitle from '../../components/activity/ActivityTableTitle'
     
 
     export default {
         components: {
-          ActivityTableTitle0,
-          ActivityTableTitle1,
-          ActivityTableTitle2,
-          ActivityTableTitle3,
-          ActivityTableTitle4,
-          ActivityTableTitle5,
-          ActivityTableTitle6
+          ActivityTableTitle
         },
         data() {
           return {

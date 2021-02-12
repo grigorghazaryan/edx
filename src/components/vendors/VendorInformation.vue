@@ -11,17 +11,35 @@
 
                 <div class="row q-mb-sm">
                     <div class="col-md-12">
-                        <q-input outlined dense v-model="vendorName" label="Vendor Name" />
+                        <div class="text-subtitle2">Vendor Name</div>
+                        <q-input
+                            outlined
+                            v-model="vendorName" 
+                            dense 
+                            autofocus
+                        />
                     </div>
                 </div>
                 <div class="row q-mb-sm">
                     <div class="col-md-12">
-                        <q-input outlined dense v-model="vendorAbbriviation" label="Vendor Abbriviation" />
+                        <div class="text-subtitle2">Vendor Abbriviation</div>
+                        <q-input
+                            outlined
+                            v-model="vendorAbbriviation" 
+                            dense 
+                            autofocus
+                        />
                     </div>
                 </div>
                 <div class="row q-mb-sm">
                     <div class="col-md-12">
-                        <q-input outlined dense v-model="vendorShortName" label="Vendor Shortname" />
+                        <div class="text-subtitle2">Vendor Shortname</div>
+                        <q-input
+                            outlined
+                            v-model="vendorShortName" 
+                            dense 
+                            autofocus
+                        />
                     </div>
                 </div>
 
@@ -32,25 +50,45 @@
 
                 <div class="row q-mb-sm">
                     <div class="col-md-12">
-                        <q-input outlined dense v-model="address1" label="Address Line 1" />
+                        <div class="text-subtitle2">Address Line 1</div>
+                        <q-input
+                            outlined
+                            v-model="address1" 
+                            dense 
+                            autofocus
+                        />
                     </div>
                 </div>
                 <div class="row q-mb-sm">
                     <div class="col-md-12">
-                        <q-input outlined dense v-model="address2" label="Address Line 2" />
+                        <div class="text-subtitle2">Address Line 2</div>
+                        <q-input
+                            outlined
+                            v-model="address2" 
+                            dense 
+                            autofocus
+                        />
                     </div>
                 </div>
                 <div class="row q-mb-sm">
                     <div class="col-md-12">
                         <div class="row">
                             <div class="col-md-6 q-pr-sm">
-                                <q-input outlined dense v-model="city" label="City" />
+                                <div class="text-subtitle2">City</div>
+                                <q-input
+                                    outlined
+                                    v-model="city" 
+                                    dense 
+                                    autofocus
+                                />
                             </div>
                             <div class="col-md-4 q-pr-sm">
-                                <q-select outlined dense v-model="state" :options="states" label="State" />
+                                <div class="text-subtitle2">State</div>
+                                <q-select outlined dense v-model="state" :options="states" />
                             </div>
                             <div class="col-md-2">
-                                <q-input outlined dense v-model="zip" label="Zip" />
+                                <div class="text-subtitle2">Zip</div>
+                                <q-input outlined dense v-model="zip" />
                             </div>
                         </div>
                     </div>
@@ -60,10 +98,12 @@
                     <div class="col-md-12">
                         <div class="row">
                             <div class="col-md-3 q-pr-sm">
-                                <q-input outlined dense v-model="phone" label="Phone" />
+                                <div class="text-subtitle2">Phone</div>
+                                <q-input outlined dense v-model="phone"/>
                             </div>
                             <div class="col-md-2">
-                                <q-input outlined dense v-model="ext" label="Ext" />
+                                <div class="text-subtitle2">Ext</div>
+                                <q-input outlined dense v-model="ext"/>
                             </div>
                         </div>
                     </div>
@@ -73,7 +113,8 @@
                     <div class="col-md-12">
                         <div class="row">
                             <div class="col-md-3 q-pr-sm">
-                                <q-input outlined dense v-model="fax" label="Fax" />
+                                <div class="text-subtitle2">Fax</div>
+                                <q-input outlined dense v-model="fax" />
                             </div>
                         </div>
                     </div>
@@ -81,7 +122,8 @@
 
                 <div class="row q-mb-md">
                     <div class="col-md-12">
-                        <q-input outlined dense v-model="url" label="URL" />
+                        <div class="text-subtitle2">URL</div>
+                        <q-input outlined dense v-model="url" />
                     </div>
                 </div>
 

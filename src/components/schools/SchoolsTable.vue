@@ -115,38 +115,47 @@
              <div class="q-pa-md"> 
                 <div class="row q-mb-sm">
                     <div class="col-md-12 q-mb-sm">
-                        <q-input outlined v-model="address.address1" label="Address Line 1" />
+                        <div class="text-subtitle2">Address Line 1</div>
+                        <q-input outlined dense v-model="address.address1"/>
                     </div>
                 </div>
                 <div class="row q-mb-sm">
                     <div class="col-md-12 q-mb-sm">
-                        <q-input outlined v-model="address.address2" label="Address Line 2" />
+                        <div class="text-subtitle2">Address Line 2</div>
+                        <q-input outlined dense v-model="address.address2"/>
                     </div>
                 </div>
                 <div class="row q-mb-sm">
                     <div class="col-md-5 q-mb-sm q-pr-sm">
-                        <q-input outlined v-model="address.city" label="City" />
+                        <div class="text-subtitle2">City</div>
+                        <q-input outlined dense v-model="address.city"/>
                     </div>
                     <div class="col-md-5 q-mb-sm q-pr-sm">
-                        <q-select outlined v-model="address.state" :options="states" label="State" />
+                        <div class="text-subtitle2">State</div>
+                        <q-select outlined dense v-model="address.state" :options="states" label="State" />
                     </div>
                     <div class="col-md-2 q-mb-sm">
-                        <q-input outlined v-model="address.zip" label="Zip" />
+                        <div class="text-subtitle2">Zip</div>
+                        <q-input outlined dense v-model="address.zip"/>
                     </div>
                 </div>
                 <div class="row q-mb-sm">
                     <div class="col-md-12 q-mb-sm">
-                        <q-input outlined v-model="address.phone" label="Phone" />
+                        <div class="text-subtitle2">Phone</div>
+                        <q-input outlined dense v-model="address.phone"/>
                     </div>
                 </div>
                 <div class="row q-mb-sm">
                     <div class="col-md-12 q-mb-sm">
-                        <q-input outlined v-model="address.fax" label="Fax" />
+                        <div class="text-subtitle2">Fax</div>
+                        <q-input outlined dense v-model="address.fax"/>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <q-select outlined v-model="address.type" :options="types" label="Type" />
+                        
+                        <div class="text-subtitle2">Type</div>
+                        <q-select outlined dense v-model="address.type" :options="types" label="Type" />
                     </div>
                 </div>
             </div>
@@ -289,6 +298,8 @@ export default {
     },
     methods: {
         getAddressTypes() {
+
+            console.log('get addressses types')
 
             const conf = {
                 method: 'GET',
@@ -505,8 +516,8 @@ export default {
                 address2: data[i].address.address_line_2,
                 city: data[i].address.city,
                 state: {
-                    id: data[i].address.state.id,
-                    label: data[i].address.state.name
+                    id: data[i].address.state && data[i].address.state.id,
+                    label: data[i].address.state && data[i].address.state.name
                 },
                 zip: data[i].address.postal_code,
                 phone: data[i].address.phone,
@@ -518,7 +529,6 @@ export default {
             })
         }
         this.data = dataArr
-        console.log(this.data, 'this.data')
 
         this.getAddressTypes()
     },

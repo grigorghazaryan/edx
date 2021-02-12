@@ -117,60 +117,73 @@
             <div class="q-pa-md">
                 <div class="row q-mb-sm">
                     <div class="col-md-12">
-                        <q-input outlined dense v-model="contacts.first_name" label="First Name" />
+                        <div class="text-subtitle2">First Name</div>
+                        <q-input outlined dense v-model="contacts.first_name"/>
                     </div>
                 </div>
                 <div class="row q-mb-sm">
                     <div class="col-md-12">
-                        <q-input outlined dense v-model="contacts.last_name" label="Last Name" />
+                        <div class="text-subtitle2">Last Name</div>
+                        <q-input outlined dense v-model="contacts.last_name"/>
                     </div>
                 </div>
                 <div class="row q-mb-sm">
                     <div class="col-md-12">
-                        <q-input outlined dense v-model="contacts.title" label="Title" />
+                        <div class="text-subtitle2">Title</div>
+                        <q-input outlined dense v-model="contacts.title"/>
                     </div>
                 </div>
                 <div class="row q-mb-sm">
                     <div class="col-md-12">
-                        <q-input outlined dense v-model="contacts.department" label="Department" />
+                        <div class="text-subtitle2">Department</div>
+                        <q-input outlined dense v-model="contacts.department"/>
                     </div>
                 </div>
                 <div class="row q-mb-sm">
                     <div class="col-md-12">
-                        <q-input outlined dense v-model="contacts.address_line_1" label="Address Line 1" />
+                        <div class="text-subtitle2">Address Line 1</div>
+                        <q-input outlined dense v-model="contacts.address_line_1"/>
                     </div>
                 </div>
                 <div class="row q-mb-sm">
                     <div class="col-md-12">
-                        <q-input outlined dense v-model="contacts.address_line_2" label="Address Line 2" />
+                        <div class="text-subtitle2">Address Line 2</div>
+                        <q-input outlined dense v-model="contacts.address_line_2"/>
                     </div>
                 </div>
                 <div class="row q-mb-sm">
                     <div class="col-md-7 q-pr-sm">
-                        <q-input outlined dense v-model="contacts.city" label="City" />
+                        <div class="text-subtitle2">City</div>
+                        <q-input outlined dense v-model="contacts.city"/>
                     </div>
                     <div class="col-md-3 q-pr-sm">
-                        <q-select outlined dense v-model="contacts.state" :options="states" label="State" />
+                        <div class="text-subtitle2">State</div>
+                        <q-select outlined dense v-model="contacts.state" :options="states"/>
                     </div>
-                    <div class="col-md-2">
-                        <q-input outlined dense v-model="contacts.postal_code" label="Zip" />
+                    <div class="col-md-2 q-pr-sm">
+                        <div class="text-subtitle2">Zip</div>
+                        <q-input outlined dense v-model="contacts.postal_code"/>
                     </div>
                 </div>
 
                 <div class="row q-mb-sm">
                     <div class="col-md-4">
-                        <q-input outlined dense v-model="contacts.phone" label="Phone" />
+                        <div class="text-subtitle2">Phone</div>
+                        <q-input outlined dense v-model="contacts.phone"/>
                     </div>
                     <div class="col-md-4 q-pl-sm">
-                        <q-input outlined dense v-model="contacts.extension" label="Ext" />
+                        <div class="text-subtitle2">Ext</div>
+                        <q-input outlined dense v-model="contacts.extension"/>
                     </div>
                     <div class="col-md-4 q-pl-sm">
-                        <q-input outlined dense v-model="contacts.fax" label="Fax" />
+                        <div class="text-subtitle2">Fax</div>
+                        <q-input outlined dense v-model="contacts.fax"/>
                     </div>
                 </div>
                 <div class="row q-mb-sm">
                     <div class="col-md-12">
-                        <q-input outlined dense v-model="contacts.email" label="Email" />
+                        <div class="text-subtitle2">Email</div>
+                        <q-input outlined dense v-model="contacts.email"/>
                     </div>
                 </div>
             </div>
