@@ -166,7 +166,6 @@
 
     import ActivityTableTitle from '../../components/activity/ActivityTableTitle'
     
-
     export default {
         components: {
           ActivityTableTitle
