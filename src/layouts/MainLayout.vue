@@ -385,7 +385,7 @@
                   <q-icon name="person"/>
                 </q-item-section>
                 <q-item-section>
-                  <q-item-label>TeacherSalaries</q-item-label>
+                  <q-item-label>Teacher Salaries</q-item-label>
                 </q-item-section>
               </q-item>
 
@@ -558,6 +558,49 @@
               </q-list>
             </q-menu>
           </q-item>
+
+          <!-- ### -->
+          <q-expansion-item v-if="!miniState"
+            icon="account_balance"
+            label="Material purchases"
+          >
+            <q-list class="bg-sidebar-opened">
+              <q-item to="/Material" @click="addDataToLS('Material', '/Material')"  
+              active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
+                <q-item-section avatar>
+                  <q-icon name="account_balance"/>
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label>Material purchases</q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </q-expansion-item>
+
+          <q-item v-else active-class="q-item-no-link-highlighting">
+            <q-item-section avatar>
+              <q-icon name="account_balance"/>
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>Material purchases</q-item-label>
+            </q-item-section>
+            <q-menu
+              anchor="top right"
+              self="top left"
+            >
+              <q-list style="min-width: 100px">
+                <q-item clickable  v-close-popup to="/Material" @click="addDataToLS('Material', '/Material')"  active-class="q-item-no-link-highlighting">
+                  <q-item-section avatar>
+                    <q-icon name="account_balance"/>
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>Material purchases</q-item-label>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </q-menu>
+          </q-item>
+          <!-- ### -->
 
           <q-expansion-item v-if="!miniState"
             icon="attach_money"

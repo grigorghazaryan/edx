@@ -28,6 +28,9 @@ const routes = [
       {path: '/Activity/:id', component: () => import('pages/Activity/Activity.vue')},
       {path: '/ActivityProcesses', component: () => import('pages/Activity/ActivityProcesses.vue')},
       // -------------
+      {path: '/Material', component: () => import('pages/Material/MaterialSchools.vue')},
+      {path: '/Material/:id', component: () => import('pages/Material/Material.vue')},
+      // -------------
       {path: '/Reimbursement', component: () => import('pages/Reimbursement/Reimbursement.vue')},
       // Schools
       {path: '/Schools', component: () => import('pages/Schools/Schools.vue')},
