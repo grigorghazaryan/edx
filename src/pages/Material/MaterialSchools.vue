@@ -27,7 +27,6 @@
           <q-inner-loading showing color="primary" />
         </template>
 
-
         <!-- Table Header -->
         <template v-slot:top-right="props">
 
@@ -62,8 +61,6 @@
           </q-btn>
           
         </template>
-
-        
 
         <!-- Table Body -->
         <template v-slot:body="props">

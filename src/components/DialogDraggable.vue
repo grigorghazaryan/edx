@@ -1,8 +1,7 @@
 <template>
   <q-dialog v-model="swDialog" persistent ref="myDialog" @show="onShow" @hide="onHide">
     <q-card :style="style">
-      <q-bar class="bg-white q-pa-lg" :class="draggable?'cursor-move':''">
-        
+      <q-bar class="q-pa-lg cursor-move" :class="bgcolor">
         <div class="text-subtitle1 row justify-start items-center">
             <q-icon class="q-mr-sm" :name="icon"  :color="color" style="font-size: 1.5em"/>
             <span>{{title}}</span>
@@ -22,7 +21,8 @@ export default {
     title: { type: String, default: "Popup" },
     width: { type: Number, default: 650  },
     icon: { type: String, default: "contact_page" },
-    color: { type: String, default: "green" }
+    color: { type: String, default: "green" },
+    bgcolor: { type: String, default: "bg-blue-grey-2" },
   },
   data() {
     return {
