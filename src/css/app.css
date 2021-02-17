@@ -1,4 +1,42 @@
 @import url('https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/5.8.55/css/materialdesignicons.min.css');
+@import url('./edxchangeClass.css');
+
+:root {
+  --blue: #01b3ed;
+  --indigo: #6610f2;
+  --purple: #6f42c1;
+  --pink: #d63384;
+  --red: #ff0000;
+  --orange: #ffba00;
+  --yellow: #ffba00;
+  --green: #74b100;
+  --teal: #67981a;
+  --cyan: #0583c5;
+  --white: #fff;
+  --gray: #999999;
+  --gray-dark: #343a40;
+  --primary: #ff5a5f;
+  --secondary: #666666;
+  --success: #67981a;
+  --info: #3f93f3;
+  --warning: #ffba00;
+  --danger: #ff0000;
+  --light: #f0f0f0;
+  --dark: #000;
+  --white: #fff;
+  --gray: #999999;
+  --darker-light: #cccccc;
+  --dark-red: #cc0000;
+  --lighter-dark: #262626;
+  --green: #74b100;
+  --gray-01: #e8edef;
+  --gray-02: #f5f5f5;
+  --gray-03: #eeeeee;
+  --gray-04: #eef1f2;
+  --gray-05: #ecf0f1;
+  --gray-06: #f0f2f3;
+}
+
 
 /* app global css */
 /* Chrome, Safari, Edge, Opera */

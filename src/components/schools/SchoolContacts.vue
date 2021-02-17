@@ -8,7 +8,7 @@
                 <b>School Contacts</b>
             </div>
 
-            <q-btn @click="isShowAddContactPopup=true" class="bg-blue" color="white" label="Add contact" />
+            <q-btn @click="isShowAddContactPopup=true" class="edx-bg-purple" text-color="white" label="Add contact" />
 
         </div>
 

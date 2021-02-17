@@ -90,14 +90,13 @@
         </template>
       </q-select>
 
-      <q-btn :disabled="addNew" square class="q-mr-md" style="background-color: #546bfa" text-color="white" icon="add" 
+      <q-btn :disabled="addNew" square class="q-mr-md edx-bg-purple" text-color="white" icon="add" 
       @click="addNew = true, addNewRow()" no-caps>Add</q-btn>
 
       <q-btn
         icon-right="archive"
         label="Export to Excel"
-        color="teal"
-        text-color="white"
+        class="edx-bg-green" text-color="white"
         no-caps
         @click="exportTable"
       />
@@ -142,883 +141,6 @@
             </q-card-actions>
           </q-card>
         </q-dialog>
-
-        <!-- <q-dialog v-model="onpremise" persistent>
-          <q-card style="width: 700px; max-width: 80vw;">
-            
-            <q-toolbar>
-
-              <q-avatar>
-                <span class="mdi mdi-school mdi-24px" style="color: blue"></span>
-              </q-avatar>
-
-              <q-toolbar-title class="row justify-between">
-                On Premise
-                <div v-if="editedItem.quantity > 1">
-                  {{ editedItem.quantity - statusChangeObject.quantity }}
-                  left
-                </div>
-              </q-toolbar-title>
-
-            </q-toolbar>
-
-            <q-card-section>
-              <div class="row">
-
-                <div class="col-2 q-pr-sm q-pl-sm">
-                  <div class="text-subtitle2 q-mb-sm">Qty</div>
-                  <q-input 
-                    outlined 
-                    dense 
-                    v-model="statusChangeObject.quantity" 
-                    :disable="editedItem.quantity <= 1" 
-                    :rules="[ val => val <= editedItem.quantity || 'Number cant be more than ' + editedItem.quantity]"
-                  />
-                </div>
-
-                <div class="col-5 q-pr-sm q-pl-sm">
-                  <div class="text-subtitle2 q-mb-sm">Location</div>
-                  <q-input  outlined dense v-model="statusChangeObject.location" />
-                </div>
-
-                <div class="col-5 q-pr-sm q-pl-sm">
-                  <div class="text-subtitle2 q-mb-sm">Location within school</div>
-                  <q-input  outlined dense v-model="statusChangeObject.locationWithinSchool" />
-                </div>
-
-                <div class="col-12 q-pr-sm q-pl-sm q-mt-md">
-                  <div class="text-subtitle2 q-mb-sm">Note</div>
-                  <q-input outlined type="textarea" dense v-model="statusChangeObject.note" />
-                </div>
-
-                <div class="full-width" v-if="editedItem.identification_uni && editedItem.identification_uni.id == 5">
-
-                  <div class="row">
-
-                    <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
-                      <div class="text-subtitle2 q-mb-sm">Curent Sticker range</div>
-                      <q-input outlined dense v-model="editedItem.sticker_range_start" />
-                    </div>
-
-                    <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
-                      <div class="text-subtitle2 q-mb-sm">&nbsp; </div>
-                      <q-input outlined dense v-model="editedItem.sticker_range_end" />
-                    </div>
-
-                  </div>
-
-                  <div class="row" v-if="statusChangeObject.quantity <= 1">
-                      <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
-                        <div class="text-subtitle2 q-mb-sm">Sticker ID</div>
-                        <q-input outlined dense v-model="statusChangeObject.stickerRangeStart" />
-                      </div>
-                  </div>
-                  
-                  <div class="row" v-if="statusChangeObject.quantity > 1 && statusChangeObject.quantity != editedItem.quantity">
-                    
-                    <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
-                      <div class="text-subtitle2 q-mb-sm">New Sticker range</div>
-                      <q-input outlined dense v-model="statusChangeObject.stickerRangeStart" />
-                    </div>
-
-                    <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
-                      <div class="text-subtitle2 q-mb-sm">&nbsp; </div>
-                      <q-input outlined dense v-model="statusChangeObject.stickerRangeEnd" />
-                    </div>
-
-                  </div>
-
-                </div>
-
-              </div>
-            </q-card-section>
-            
-            <q-card-actions align="right">
-              <q-btn
-                flat
-                label="Cancel"
-                color="primary"
-                v-close-popup
-                @click="cancelStatus"
-              ></q-btn>
-              <q-btn
-                flat
-                label="Confirm"
-                color="primary"
-                @click="confirmStatusChanges"
-              ></q-btn>
-            </q-card-actions>
-
-          </q-card>
-        </q-dialog> -->
-
-        <!-- <q-dialog v-model="offpremise" persistent>
-          <q-card style="width: 700px; max-width: 80vw;">
-            <q-toolbar>
-
-              <q-avatar>
-                <span class="mdi mdi-home mdi-24px" style="color: orange"></span>
-              </q-avatar>
-              
-              <q-toolbar-title class="row justify-between">
-                Off Premise
-                <div v-if="editedItem.quantity > 1">
-                  {{ editedItem.quantity - statusChangeObject.quantity }}
-                  left
-                </div>
-              </q-toolbar-title>
-
-            </q-toolbar>
-
-            <q-card-section>
-              <div class="row">
-
-                <div class="col-2 q-pr-sm q-pl-sm">
-                  <div class="text-subtitle2 q-mb-sm">Qty</div>
-                  <q-input 
-                    outlined 
-                    dense 
-                    v-model="statusChangeObject.quantity" 
-                    :disable="editedItem.quantity <= 1" 
-                    :rules="[ val => val <= editedItem.quantity || 'Number cant be more than ' + editedItem.quantity]"
-                  />
-                </div>
-
-                <div class="col-5 q-pr-sm q-pl-sm">
-                  <div class="text-subtitle2 q-mb-sm">Location</div>
-                  <q-input disable outlined dense v-model="statusChangeObject.location" />
-                </div>
-
-                <div class="col-5 q-pr-sm q-pl-sm">
-                  <div class="text-subtitle2 q-mb-sm">Location within school</div>
-                  <q-input disable outlined dense v-model="statusChangeObject.locationWithinSchool" />
-                </div>
-
-                <div class="col-12 q-pr-sm q-pl-sm q-mt-md">
-                  <div class="text-subtitle2 q-mb-sm">Note</div>
-                  <q-input outlined type="textarea" dense v-model="statusChangeObject.note" />
-                </div>
-
-                <div class="full-width" v-if="editedItem.identification_uni && editedItem.identification_uni.id == 5">
-
-                  <div class="row">
-
-                    <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
-                      <div class="text-subtitle2 q-mb-sm">Curent Sticker range</div>
-                      <q-input outlined dense v-model="editedItem.sticker_range_start" />
-                    </div>
-
-                    <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
-                      <div class="text-subtitle2 q-mb-sm">&nbsp; </div>
-                      <q-input outlined dense v-model="editedItem.sticker_range_end" />
-                    </div>
-
-                  </div>
-
-                  <div class="row" v-if="statusChangeObject.quantity > 1 && statusChangeObject.quantity != editedItem.quantity">
-                      <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
-                        <div class="text-subtitle2 q-mb-sm">Sticker ID</div>
-                        <q-input outlined dense v-model="statusChangeObject.stickerRangeStart" />
-                      </div>
-                  </div>
-                  
-                  <div class="row" v-if="statusChangeObject.quantity > 1">
-                    
-                    <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
-                      <div class="text-subtitle2 q-mb-sm">New Sticker range</div>
-                      <q-input outlined dense v-model="statusChangeObject.stickerRangeStart" />
-                    </div>
-
-                    <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
-                      <div class="text-subtitle2 q-mb-sm">&nbsp; </div>
-                      <q-input outlined dense v-model="statusChangeObject.stickerRangeEnd" />
-                    </div>
-
-                  </div>
-
-                </div>
-
-              </div>
-            </q-card-section>
-            
-            <q-card-actions align="right">
-              <q-btn
-                flat
-                label="Cancel"
-                color="primary"
-                v-close-popup
-                @click="cancelStatus"
-              ></q-btn>
-              <q-btn
-                flat
-                label="Confirm"
-                color="primary"
-                @click="confirmStatusChanges"
-              ></q-btn>
-            </q-card-actions>
-
-          </q-card>
-        </q-dialog> -->
-
-        <!-- <q-dialog v-model="disposed" persistent>
-          <q-card style="width: 700px; max-width: 80vw;">
-            <q-toolbar>
-
-              <q-avatar>
-                <span class="mdi mdi-recycle mdi-24px" style="color: green"></span>
-              </q-avatar>
-
-              <q-toolbar-title class="row justify-between">
-                Disposed
-                <div v-if="editedItem.quantity > 1">
-                  {{ editedItem.quantity - statusChangeObject.quantity }}
-                  left
-                </div>
-              </q-toolbar-title>
-
-            </q-toolbar>
-
-            <q-card-section>
-              <div class="row">
-
-                <div class="col-2 q-pr-sm q-pl-sm">
-                  <div class="text-subtitle2 q-mb-sm">Qty</div>
-                  <q-input 
-                    outlined 
-                    dense 
-                    v-model="statusChangeObject.quantity" 
-                    :disable="editedItem.quantity <= 1" 
-                    :rules="[ val => val <= editedItem.quantity || 'Number cant be more than ' + editedItem.quantity]"
-                  />
-                </div>
-
-                <div class="col-5 q-pr-sm q-pl-sm">
-                  <div class="text-subtitle2 q-mb-sm">Location</div>
-                  <q-input disable outlined dense v-model="statusChangeObject.location" />
-                </div>
-
-                <div class="col-5 q-pr-sm q-pl-sm">
-                  <div class="text-subtitle2 q-mb-sm">Location within school</div>
-                  <q-input disable outlined dense v-model="statusChangeObject.locationWithinSchool" />
-                </div>
-
-                <div class="col-9 q-pr-sm q-pl-sm q-mt-md">
-                  <div class="text-subtitle2 q-mb-sm">Note</div>
-                  <q-input outlined type="textarea" dense v-model="statusChangeObject.note" />
-                </div>
-
-                <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
-                  <div class="text-subtitle2 q-mb-sm">Show until</div>
-                  <q-input dense outlined v-model="statusChangeObject.showUntil">
-                    <template v-slot:append>
-                      <q-icon name="event" class="cursor-pointer">
-                        <q-popup-proxy transition-show="scale" transition-hide="scale">
-                        <q-date v-model="statusChangeObject.showUntil" mask="YYYY-MM-DD">
-                          <div class="row items-center justify-end q-gutter-sm">
-                            <q-btn label="Cancel" color="primary" flat v-close-popup />
-                            <q-btn label="OK" color="primary" flat v-close-popup />
-                          </div>
-                        </q-date>
-                      </q-popup-proxy>
-                      </q-icon>
-                    </template>
-                  </q-input>
-                </div>
-                
-                <div class="full-width" v-if="editedItem.identification_uni && editedItem.identification_uni.id == 5">
-
-                  <div class="row">
-
-                    <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
-                      <div class="text-subtitle2 q-mb-sm">Curent Sticker range</div>
-                      <q-input outlined dense v-model="editedItem.sticker_range_start" />
-                    </div>
-
-                    <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
-                      <div class="text-subtitle2 q-mb-sm">&nbsp; </div>
-                      <q-input outlined dense v-model="editedItem.sticker_range_end" />
-                    </div>
-
-                  </div>
-
-                  <div class="row" v-if="statusChangeObject.quantity > 1 && statusChangeObject.quantity != editedItem.quantity">
-                      <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
-                        <div class="text-subtitle2 q-mb-sm">Sticker ID</div>
-                        <q-input outlined dense v-model="statusChangeObject.stickerRangeStart" />
-                      </div>
-                  </div>
-                  
-                  <div class="row" v-if="statusChangeObject.quantity > 1">
-                    
-                    <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
-                      <div class="text-subtitle2 q-mb-sm">New Sticker range</div>
-                      <q-input outlined dense v-model="statusChangeObject.stickerRangeStart" />
-                    </div>
-
-                    <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
-                      <div class="text-subtitle2 q-mb-sm">&nbsp; </div>
-                      <q-input outlined dense v-model="statusChangeObject.stickerRangeEnd" />
-                    </div>
-
-                  </div>
-
-                </div>
-
-              </div>
-            </q-card-section>
-            
-            <q-card-actions align="right">
-              <q-btn
-                flat
-                label="Cancel"
-                color="primary"
-                v-close-popup
-                @click="cancelStatus"
-              ></q-btn>
-              <q-btn
-                flat
-                label="Confirm"
-                color="primary"
-                @click="confirmStatusChanges"
-              ></q-btn>
-            </q-card-actions>
-
-          </q-card>
-        </q-dialog> -->
-
-        <!-- <q-dialog v-model="lost" persistent>
-          <q-card style="width: 700px; max-width: 80vw;">
-            
-            <q-toolbar>
-
-              <q-avatar>
-                <span class="mdi mdi-map-marker-question mdi-red mdi-24px" style="color: red"></span>
-              </q-avatar>
-
-              <q-toolbar-title class="row justify-between">
-                Lost
-                <div v-if="editedItem.quantity > 1">
-                  {{ editedItem.quantity - statusChangeObject.quantity }}
-                  left
-                </div>
-              </q-toolbar-title>
-
-            </q-toolbar>
-
-            <q-card-section>
-              <div class="row">
-
-                <div class="col-2 q-pr-sm q-pl-sm">
-                  <div class="text-subtitle2 q-mb-sm">Qty</div>
-                  <q-input 
-                    outlined 
-                    dense 
-                    v-model="statusChangeObject.quantity" 
-                    :disable="editedItem.quantity <= 1" 
-                    :rules="[ val => val <= editedItem.quantity || 'Number cant be more than ' + editedItem.quantity]"
-                  />
-                </div>
-
-                <div class="col-5 q-pr-sm q-pl-sm">
-                  <div class="text-subtitle2 q-mb-sm">Location</div>
-                  <q-input disable outlined dense v-model="statusChangeObject.location" />
-                </div>
-
-                <div class="col-5 q-pr-sm q-pl-sm">
-                  <div class="text-subtitle2 q-mb-sm">Location within school</div>
-                  <q-input disable outlined dense v-model="statusChangeObject.locationWithinSchool" />
-                </div>
-
-                <div class="col-9 q-pr-sm q-pl-sm q-mt-md">
-                  <div class="text-subtitle2 q-mb-sm">Note</div>
-                  <q-input outlined type="textarea" dense v-model="statusChangeObject.note" />
-                </div>
-
-                <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
-                  <div class="text-subtitle2 q-mb-sm">Show until</div>
-                  <q-input dense outlined v-model="statusChangeObject.showUntil">
-                    <template v-slot:append>
-                      <q-icon name="event" class="cursor-pointer">
-                        <q-popup-proxy transition-show="scale" transition-hide="scale">
-                        <q-date v-model="statusChangeObject.showUntil" mask="YYYY-MM-DD">
-                          <div class="row items-center justify-end q-gutter-sm">
-                            <q-btn label="Cancel" color="primary" flat v-close-popup />
-                            <q-btn label="OK" color="primary" flat v-close-popup />
-                          </div>
-                        </q-date>
-                      </q-popup-proxy>
-                      </q-icon>
-                    </template>
-                  </q-input>
-                </div>
-
-                <div class="full-width" v-if="editedItem.identification_uni && editedItem.identification_uni.id == 5">
-
-                  <div class="row">
-
-                    <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
-                      <div class="text-subtitle2 q-mb-sm">Curent Sticker range</div>
-                      <q-input outlined dense v-model="editedItem.sticker_range_start" />
-                    </div>
-
-                    <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
-                      <div class="text-subtitle2 q-mb-sm">&nbsp; </div>
-                      <q-input outlined dense v-model="editedItem.sticker_range_end" />
-                    </div>
-
-                  </div>
-
-                  <div class="row" v-if="statusChangeObject.quantity <= 1">
-                      <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
-                        <div class="text-subtitle2 q-mb-sm">Sticker ID</div>
-                        <q-input outlined dense v-model="statusChangeObject.stickerRangeStart" />
-                      </div>
-                  </div>
-                  
-                  <div class="row" v-if="statusChangeObject.quantity > 1 && statusChangeObject.quantity != editedItem.quantity">
-                    
-                    <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
-                      <div class="text-subtitle2 q-mb-sm">New Sticker range</div>
-                      <q-input outlined dense v-model="statusChangeObject.stickerRangeStart" />
-                    </div>
-
-                    <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
-                      <div class="text-subtitle2 q-mb-sm">&nbsp; </div>
-                      <q-input outlined dense v-model="statusChangeObject.stickerRangeEnd" />
-                    </div>
-
-                  </div>
-
-                </div>
-
-              </div>
-            </q-card-section>
-            
-            <q-card-actions align="right">
-              <q-btn
-                flat
-                label="Cancel"
-                color="primary"
-                v-close-popup
-                @click="cancelStatus"
-              ></q-btn>
-              <q-btn
-                flat
-                label="Confirm"
-                color="primary"
-                @click="confirmStatusChanges"
-              ></q-btn>
-            </q-card-actions>
-
-          </q-card>
-        </q-dialog> -->
-
-        <!-- <q-dialog v-model="stolen" persistent>
-          <q-card style="width: 700px; max-width: 80vw;">
-            
-            <q-toolbar>
-
-              <q-avatar>
-                <span
-                class="mdi mdi-robber mdi-red mdi-24px"
-                style="color: black"
-              ></span>
-              </q-avatar>
-
-              <q-toolbar-title class="row justify-between">
-                Stolen
-                <div v-if="editedItem.quantity > 1">
-                  {{ editedItem.quantity - statusChangeObject.quantity }}
-                  left
-                </div>
-              </q-toolbar-title>
-
-            </q-toolbar>
-
-            <q-card-section>
-              <div class="row">
-
-                <div class="col-2 q-pr-sm q-pl-sm">
-                  <div class="text-subtitle2 q-mb-sm">Qty</div>
-                  <q-input 
-                    outlined 
-                    dense 
-                    v-model="statusChangeObject.quantity" 
-                    :disable="editedItem.quantity <= 1" 
-                    :rules="[ val => val <= editedItem.quantity || 'Number cant be more than ' + editedItem.quantity]"
-                  />
-                </div>
-
-                <div class="col-5 q-pr-sm q-pl-sm">
-                  <div class="text-subtitle2 q-mb-sm">Location</div>
-                  <q-input disable outlined dense v-model="statusChangeObject.location" />
-                </div>
-
-                <div class="col-5 q-pr-sm q-pl-sm">
-                  <div class="text-subtitle2 q-mb-sm">Location within school</div>
-                  <q-input disable outlined dense v-model="statusChangeObject.locationWithinSchool" />
-                </div>
-
-                <div class="col-9 q-pr-sm q-pl-sm q-mt-md">
-                  <div class="text-subtitle2 q-mb-sm">Note</div>
-                  <q-input outlined type="textarea" dense v-model="statusChangeObject.note" />
-                </div>
-
-                <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
-                  <div class="text-subtitle2 q-mb-sm">Show until</div>
-                  <q-input dense outlined v-model="statusChangeObject.showUntil">
-                    <template v-slot:append>
-                      <q-icon name="event" class="cursor-pointer">
-                        <q-popup-proxy transition-show="scale" transition-hide="scale">
-                        <q-date v-model="statusChangeObject.showUntil" mask="YYYY-MM-DD">
-                          <div class="row items-center justify-end q-gutter-sm">
-                            <q-btn label="Cancel" color="primary" flat v-close-popup />
-                            <q-btn label="OK" color="primary" flat v-close-popup />
-                          </div>
-                        </q-date>
-                      </q-popup-proxy>
-                      </q-icon>
-                    </template>
-                  </q-input>
-                </div>
-                
-                <div class="full-width" v-if="editedItem.identification_uni && editedItem.identification_uni.id == 5">
-
-                  <div class="row">
-
-                    <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
-                      <div class="text-subtitle2 q-mb-sm">Curent Sticker range</div>
-                      <q-input outlined dense v-model="editedItem.sticker_range_start" />
-                    </div>
-
-                    <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
-                      <div class="text-subtitle2 q-mb-sm">&nbsp; </div>
-                      <q-input outlined dense v-model="editedItem.sticker_range_end" />
-                    </div>
-
-                  </div>
-
-                  <div class="row" v-if="statusChangeObject.quantity <= 1">
-                      <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
-                        <div class="text-subtitle2 q-mb-sm">Sticker ID</div>
-                        <q-input outlined dense v-model="statusChangeObject.stickerRangeStart" />
-                      </div>
-                  </div>
-                  
-                  <div class="row" v-if="statusChangeObject.quantity > 1 && statusChangeObject.quantity != editedItem.quantity">
-                    
-                    <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
-                      <div class="text-subtitle2 q-mb-sm">New Sticker range</div>
-                      <q-input outlined dense v-model="statusChangeObject.stickerRangeStart" />
-                    </div>
-
-                    <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
-                      <div class="text-subtitle2 q-mb-sm">&nbsp; </div>
-                      <q-input outlined dense v-model="statusChangeObject.stickerRangeEnd" />
-                    </div>
-
-                  </div>
-
-                </div>
-
-              </div>
-            </q-card-section>
-            
-            <q-card-actions align="right">
-              <q-btn
-                flat
-                label="Cancel"
-                color="primary"
-                v-close-popup
-                @click="cancelStatus"
-              ></q-btn>
-              <q-btn
-                flat
-                label="Confirm"
-                color="primary"
-                @click="confirmStatusChanges"
-              ></q-btn>
-            </q-card-actions>
-
-          </q-card>
-        </q-dialog> -->
-
-        <!-- <q-dialog v-model="transfered" persistent>
-          <q-card style="width: 800px; max-width: 80vw;">
-            <q-toolbar>
-
-              <q-avatar>
-                <span class="mdi mdi-truck-delivery mdi-24px" style="color: orange"></span>
-              </q-avatar>
-
-              <q-toolbar-title class="row justify-between">
-                Transfer
-                <div v-if="editedItem.quantity > 1">
-                  {{ editedItem.quantity - statusChangeObject.quantity }}
-                  left
-                </div>
-              </q-toolbar-title>
-
-            </q-toolbar>
-
-            <q-card-section>
-              <div class="row">
-
-                <div class="col-2 q-pr-sm q-pl-sm">
-                  <div class="text-subtitle2 q-mb-sm">Qty</div>
-                  <q-input 
-                    outlined 
-                    dense 
-                    v-model="statusChangeObject.quantity" 
-                    :disable="editedItem.quantity <= 1" 
-                    :rules="[ val => val <= editedItem.quantity || 'Number cant be more than ' + editedItem.quantity]"
-                  />
-                </div>
-
-                <div class="col-4 q-pr-sm q-pl-sm">
-                  <div class="text-subtitle2 q-mb-sm">School to transfer to</div>
-                  <q-select  
-                    dense
-                    outlined
-                    use-input
-                    hide-selected
-                    fill-input
-                    input-debounce="0"
-                    :options="optionsSchool"
-                    @filter="filterSchool"
-                    v-model="statusChangeObject.schoolToTransfer"
-                  >
-                    <template v-slot:no-option>
-                      <q-item>
-                        <q-item-section class="text-grey">
-                          No results
-                        </q-item-section>
-                      </q-item>
-                    </template>
-
-                  </q-select>
-                </div>
-
-                <div class="col-2 q-pr-sm q-pl-sm">
-                  <div class="text-subtitle2 q-mb-sm">Allocation</div>
-                  <q-select outlined dense v-model="allocationSelected" :options="optionsAllocation"/>
-                </div>
-
-                <div class="col-4 q-pr-sm q-pl-sm">
-                  <div class="text-subtitle2 q-mb-sm">Location within school</div>
-                  <q-input outlined dense v-model="statusChangeObject.locationWithinSchool" />
-                </div>
-
-                <div class="col-9 q-pr-sm q-pl-sm q-mt-md">
-                  <div class="text-subtitle2 q-mb-sm">Transfer Note</div>
-                  <q-input outlined type="textarea" dense v-model="statusChangeObject.note" />
-                </div>
-
-                <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
-                  <div class="text-subtitle2 q-mb-sm">Show until</div>
-                  <q-input dense outlined v-model="statusChangeObject.showUntil">
-                    <template v-slot:append>
-                      <q-icon name="event" class="cursor-pointer">
-                        <q-popup-proxy transition-show="scale" transition-hide="scale">
-                        <q-date v-model="statusChangeObject.showUntil" mask="YYYY-MM-DD">
-                          <div class="row items-center justify-end q-gutter-sm">
-                            <q-btn label="Cancel" color="primary" flat v-close-popup />
-                            <q-btn label="OK" color="primary" flat v-close-popup />
-                          </div>
-                        </q-date>
-                      </q-popup-proxy>
-                      </q-icon>
-                    </template>
-                  </q-input>
-                </div>
-
-                <div class="full-width" v-if="editedItem.identification_uni && editedItem.identification_uni.id == 5">
-
-                  <div class="row">
-
-                    <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
-                      <div class="text-subtitle2 q-mb-sm">Curent Sticker range</div>
-                      <q-input outlined dense v-model="editedItem.sticker_range_start" />
-                    </div>
-
-                    <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
-                      <div class="text-subtitle2 q-mb-sm">&nbsp; </div>
-                      <q-input outlined dense v-model="editedItem.sticker_range_end" />
-                    </div>
-
-                  </div>
-
-                  <div class="row" v-if="statusChangeObject.quantity <= 1">
-                      <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
-                        <div class="text-subtitle2 q-mb-sm">Sticker ID</div>
-                        <q-input outlined dense v-model="statusChangeObject.stickerRangeStart" />
-                      </div>
-                  </div>
-                  
-                  <div class="row" v-if="statusChangeObject.quantity > 1 && statusChangeObject.quantity != editedItem.quantity">
-                    
-                    <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
-                      <div class="text-subtitle2 q-mb-sm">New Sticker range</div>
-                      <q-input outlined dense v-model="statusChangeObject.stickerRangeStart" />
-                    </div>
-
-                    <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
-                      <div class="text-subtitle2 q-mb-sm">&nbsp; </div>
-                      <q-input outlined dense v-model="statusChangeObject.stickerRangeEnd" />
-                    </div>
-
-                  </div>
-
-                </div>
-
-
-              </div>
-            </q-card-section>
-            
-            <q-card-actions align="right">
-              <q-btn
-                flat
-                label="Cancel"
-                color="primary"
-                v-close-popup
-                @click="cancelStatus"
-              ></q-btn>
-              <q-btn
-                flat
-                label="Confirm"
-                color="primary"
-                @click="confirmStatusChanges"
-              ></q-btn>
-            </q-card-actions>
-
-          </q-card>
-        </q-dialog> -->
-
-        <!-- <q-dialog v-model="stored" persistent>
-          <q-card style="width: 700px; max-width: 80vw;">
-            <q-toolbar>
-
-              <q-avatar>
-                <span class="mdi mdi-dolly mdi-red mdi-24px" style="color: blue"></span>
-              </q-avatar>
-
-              <q-toolbar-title class="row justify-between">
-                Stored
-                <div v-if="editedItem.quantity > 1">
-                  {{ editedItem.quantity - statusChangeObject.quantity }}
-                  left
-                </div>
-              </q-toolbar-title>
-
-            </q-toolbar>
-
-            <q-card-section>
-              <div class="row">
-
-                <div class="col-2 q-pr-sm q-pl-sm">
-                  <div class="text-subtitle2 q-mb-sm">Qty</div>
-                  <q-input 
-                    outlined 
-                    dense 
-                    v-model="statusChangeObject.quantity" 
-                    :disable="editedItem.quantity <= 1" 
-                    :rules="[ val => val <= editedItem.quantity || 'Number cant be more than ' + editedItem.quantity]"
-                  />
-                </div>
-
-                <div class="col-5 q-pr-sm q-pl-sm">
-                  <div class="text-subtitle2 q-mb-sm">Location</div>
-                  <q-input disable outlined dense v-model="statusChangeObject.location" />
-                </div>
-
-                <div class="col-5 q-pr-sm q-pl-sm">
-                  <div class="text-subtitle2 q-mb-sm">Location within school</div>
-                  <q-input disable outlined dense v-model="statusChangeObject.locationWithinSchool" />
-                </div>
-
-                <div class="col-9 q-pr-sm q-pl-sm q-mt-md">
-                  <div class="text-subtitle2 q-mb-sm">Note</div>
-                  <q-input outlined type="textarea" dense v-model="statusChangeObject.note" />
-                </div>
-
-                <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
-                  <div class="text-subtitle2 q-mb-sm">Show until</div>
-                  <q-input dense outlined v-model="statusChangeObject.showUntil">
-                    <template v-slot:append>
-                      <q-icon name="event" class="cursor-pointer">
-                        <q-popup-proxy transition-show="scale" transition-hide="scale">
-                        <q-date v-model="statusChangeObject.showUntil" mask="YYYY-MM-DD">
-                          <div class="row items-center justify-end q-gutter-sm">
-                            <q-btn label="Cancel" color="primary" flat v-close-popup />
-                            <q-btn label="OK" color="primary" flat v-close-popup />
-                          </div>
-                        </q-date>
-                      </q-popup-proxy>
-                      </q-icon>
-                    </template>
-                  </q-input>
-                </div>
-                
-                <div class="full-width" v-if="editedItem.identification_uni && editedItem.identification_uni.id == 5">
-
-                  <div class="row">
-
-                    <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
-                      <div class="text-subtitle2 q-mb-sm">Curent Sticker range</div>
-                      <q-input outlined dense v-model="editedItem.sticker_range_start" />
-                    </div>
-
-                    <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
-                      <div class="text-subtitle2 q-mb-sm">&nbsp; </div>
-                      <q-input outlined dense v-model="editedItem.sticker_range_end" />
-                    </div>
-
-                  </div>
-
-                  <div class="row" v-if="statusChangeObject.quantity <= 1">
-                      <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
-                        <div class="text-subtitle2 q-mb-sm">Sticker ID</div>
-                        <q-input outlined dense v-model="statusChangeObject.stickerRangeStart" />
-                      </div>
-                  </div>
-                  
-                  <div class="row" v-if="statusChangeObject.quantity > 1 && statusChangeObject.quantity != editedItem.quantity">
-                    
-                    <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
-                      <div class="text-subtitle2 q-mb-sm">New Sticker range</div>
-                      <q-input outlined dense v-model="statusChangeObject.stickerRangeStart" />
-                    </div>
-
-                    <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
-                      <div class="text-subtitle2 q-mb-sm">&nbsp; </div>
-                      <q-input outlined dense v-model="statusChangeObject.stickerRangeEnd" />
-                    </div>
-
-                  </div>
-
-                </div>
-
-              </div>
-            </q-card-section>
-            
-            <q-card-actions align="right">
-              <q-btn
-                flat
-                label="Cancel"
-                color="primary"
-                v-close-popup
-                @click="cancelStatus"
-              ></q-btn>
-              <q-btn
-                flat
-                label="Confirm"
-                color="primary"
-                @click="confirmStatusChanges"
-              ></q-btn>
-            </q-card-actions>
-
-          </q-card>
-        </q-dialog> -->
 
       </div>
 
@@ -1195,16 +317,10 @@
           </q-popup-proxy>
         </q-td>
 
-        <q-td
-          key="condition"
-          :props="props"
-        >
+        <q-td key="condition" :props="props">
 
           <div v-if="props.row.condition.label == 'Excelent'">
-            <span
-              class="mdi mdi-circle-slice-7 mdi-24px"
-              style="color: blue"
-            >
+            <span class="mdi mdi-circle-slice-7 mdi-24px edx-blue">
               <q-tooltip
                 anchor="top middle"
                 self="bottom middle"
@@ -1218,10 +334,7 @@
           </div>
 
           <div v-else-if="props.row.condition.label == 'Very Good'">
-            <span
-              class="mdi mdi-circle-slice-6 mdi-24px"
-              style="color: green"
-            >
+            <span class="mdi mdi-circle-slice-6 mdi-24px edx-green">
               <q-tooltip
                 anchor="top middle"
                 self="bottom middle"
@@ -1235,10 +348,7 @@
           </div>
 
           <div v-else-if="props.row.condition.label == 'Good'">
-            <span
-              class="mdi mdi-circle-slice-5 mdi-24px"
-              style="color: #ccad14"
-            >
+            <span class="mdi mdi-circle-slice-5 mdi-24px edx-warning">
               <q-tooltip
                 anchor="top middle"
                 self="bottom middle"
@@ -1252,10 +362,7 @@
           </div>
 
           <div v-else-if="props.row.condition.label == 'Fair'">
-            <span
-              class="mdi mdi-circle-slice-4 mdi-24px"
-              style="color: orange"
-            >
+            <span class="mdi mdi-circle-slice-4 mdi-24px edx-warning">
               <q-tooltip
                 anchor="top middle"
                 self="bottom middle"
@@ -1269,10 +376,7 @@
           </div>
 
           <div v-else>
-            <span
-              class="mdi mdi-circle-slice-2 mdi-24px"
-              style="color: red"
-            >
+            <span class="mdi mdi-circle-slice-2 mdi-24px edx-red">
               <q-tooltip
                 anchor="top middle"
                 self="bottom middle"
@@ -1301,15 +405,9 @@
 
         </q-td>
 
-        <q-td
-          key="status"
-          :props="props"
-        >
+        <q-td key="status" :props="props">
           <div v-if="props.row.status_uni.label == 'On Premise'">
-            <span
-              class="mdi mdi-school mdi-24px"
-              style="color: blue"
-            >
+            <span class="mdi mdi-school mdi-24px edx-blue">
               <q-tooltip
                 anchor="top middle"
                 self="bottom middle"
@@ -1324,10 +422,7 @@
           </div>
 
           <div v-else-if="props.row.status_uni.label == 'Off Premise'">
-            <span
-              class="mdi mdi-home mdi-24px"
-              style="color: orange"
-            >
+            <span class="mdi mdi-home mdi-24px edx-orange">
               <q-tooltip
                 anchor="top middle"
                 self="bottom middle"
@@ -1342,10 +437,7 @@
           </div>
 
           <div v-else-if="props.row.status_uni.label == 'Disposed'">
-            <span
-              class="mdi mdi-recycle mdi-24px"
-              style="color: green"
-            >
+            <span class="mdi mdi-recycle mdi-24px edx-green">
               <q-tooltip
                 anchor="top middle"
                 self="bottom middle"
@@ -1360,10 +452,7 @@
           </div>
 
           <div v-else-if="props.row.status_uni.label == 'Lost'">
-            <span
-              class="mdi mdi-map-marker-question mdi-red mdi-24px"
-              style="color: red"
-            >
+            <span class="mdi mdi-map-marker-question mdi-red mdi-24px edx-red" >
               <q-tooltip
                 anchor="top middle"
                 self="bottom middle"
@@ -1378,10 +467,7 @@
           </div>
 
           <div v-else-if="props.row.status_uni.label == 'Stolen'">
-            <span
-              class="mdi mdi-robber mdi-red mdi-24px"
-              style="color: black"
-            >
+            <span class="mdi mdi-robber mdi-red mdi-24px edx-dark">
               <q-tooltip
                 anchor="top middle"
                 self="bottom middle"
@@ -1396,10 +482,7 @@
           </div>
 
           <div v-else-if="props.row.status_uni.label == 'Transfered'">
-            <span
-              class="mdi mdi-truck-delivery mdi-24px"
-              style="color: orange"
-            >
+            <span class="mdi mdi-truck-delivery mdi-24px edx-orange">
               <q-tooltip
                 anchor="top middle"
                 self="bottom middle"
@@ -1414,10 +497,7 @@
           </div>
 
           <div v-else>
-            <span
-              class="mdi mdi-dolly mdi-red mdi-24px"
-              style="color: blue"
-            >
+            <span class="mdi mdi-dolly mdi-red mdi-24px edx-blue">
               <q-tooltip
                 anchor="top middle"
                 self="bottom middle"
@@ -1452,9 +532,9 @@
 
               <q-btn
                 @click="cancellChange(props.rowIndex)"
-                class="q-mr-sm"
                 icon="cancel"
-                color="orange" 
+                text-color="white" 
+                class="q-mr-sm edx-bg-orange"
                 size=sm 
                 no-caps
                 round 
@@ -1470,9 +550,9 @@
               
               <q-btn
                 @click="editInventory(props.rowIndex)"
-                class="q-mr-sm"
+                text-color="white" 
+                class="q-mr-sm edx-bg-green"
                 icon="save"
-                color="green" 
                 size=sm 
                 no-caps
                 round 
@@ -1490,12 +570,13 @@
 
             <div v-if="props.row.showEditButton && !props.row.changed">
               <q-btn 
-                icon="delete_forever"
-                color="red" 
-                @click="openDeleteModal(props.row)" 
-                size=sm 
-                no-caps
-                round 
+                  icon="delete_forever"
+                    text-color="white" 
+                    class="q-mr-sm edx-bg-red"
+                    @click="openDeleteModal(props.row)" 
+                    size=sm 
+                    no-caps
+                    round 
               >
                 <q-tooltip 
                     anchor="top middle" self="bottom middle" :offset="[10, 10]"

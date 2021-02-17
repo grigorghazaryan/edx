@@ -19,17 +19,18 @@
             <!-- Table Header -->
             <template v-slot:top-right="props">
 
-                <q-btn :disabled="addNew" square class="q-mr-md" style="background-color: #546bfa" text-color="white" icon="add" 
-                @click="addNew = true, addNewRow()" no-caps>Add</q-btn>
+              <q-btn :disabled="addNew" square class="q-mr-md edx-bg-purple" text-color="white" icon="add" 
+              @click="addNew = true, addNewRow()" no-caps>Add</q-btn>
 
-                <q-btn
-                    icon-right="archive"
-                    label="Export to Excel"
-                    color="teal"
-                    text-color="white"
-                    no-caps
-                    @click="exportTable"
-                />
+              <q-btn
+                icon-right="archive"
+                label="Export to Excel"
+                class="edx-bg-green" text-color="white"
+                no-caps
+                @click="exportTable"
+              />
+
+                
 
                 <q-btn
                     flat
@@ -228,9 +229,9 @@
 
                     <q-btn
                         @click="cancellChange(props.rowIndex)"
-                        class="q-mr-sm"
                         icon="cancel"
-                        color="orange" 
+                        text-color="white" 
+                        class="q-mr-sm edx-bg-orange"
                         size=sm 
                         no-caps
                         round 
@@ -246,13 +247,13 @@
                     
                     <q-btn
                         @click="editInventory(props.rowIndex)"
-                        class="q-mr-sm"
+                        text-color="white" 
+                        class="q-mr-sm edx-bg-green"
                         icon="save"
-                        color="green" 
                         size=sm 
                         no-caps
                         round 
-                    >
+                      >
                         <q-tooltip 
                             anchor="top middle" self="bottom middle" :offset="[10, 10]"
                             transition-show="flip-right"
@@ -266,12 +267,13 @@
 
                     <div v-if="props.row.showEditButton && !props.row.changed">
                     <q-btn 
-                        icon="delete_forever"
-                        color="red" 
-                        @click="openDeleteModal(props.row)" 
-                        size=sm 
-                        no-caps
-                        round 
+                       icon="delete_forever"
+                    text-color="white" 
+                    class="q-mr-sm edx-bg-red"
+                    @click="openDeleteModal(props.row)" 
+                    size=sm 
+                    no-caps
+                    round 
                     >
                         <q-tooltip 
                             anchor="top middle" self="bottom middle" :offset="[10, 10]"

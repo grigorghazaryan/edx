@@ -1,0 +1,202 @@
+.edx-bg-blue {
+    background-color: var(--blue);
+}
+.edx-bg-indigo {
+    background-color: var(--indigo);
+}
+.edx-bg-purple {
+    background-color: var(--purple);
+}
+.edx-bg-pink {
+    background-color: var(--pink);
+}
+.edx-bg-red {
+    background-color: var(--red);
+}
+.edx-bg-orange {
+    background-color: var(--orange);
+}
+.edx-bg-yellow {
+    background-color: var(--yellow);
+}
+.edx-bg-green {
+    background-color: var(--green);
+}
+.edx-bg-teal {
+    background-color: var(--teal);
+}
+.edx-bg-cyan {
+    background-color: var(--cyan);
+}
+.edx-bg-white {
+    background-color: var(--white);
+}
+.edx-bg-gray {
+    background-color: var(--gray);
+}
+.edx-bg-gray-01 {
+    background-color: var(--gray-01);
+}
+.edx-bg-gray-02 {
+    background-color: var(--gray-02);
+}
+.edx-bg-gray-03 {
+    background-color: var(--gray-03);
+}
+.edx-bg-gray-04 {
+    background-color: var(--gray-04);
+}
+.edx-bg-gray-05 {
+    background-color: var(--gray-05);
+}
+.edx-bg-gray-06 {
+    background-color: var(--gray-06);
+}
+.edx-bg-gray-dark {
+    background-color: var(--gray-dark);
+}
+.edx-bg-primary {
+    background-color: var(--primary);
+}
+.edx-bg-secondary {
+    background-color: var(--secondary);
+}
+.edx-bg-success {
+    background-color: var(--success);
+}
+.edx-bg-info {
+    background-color: var(--info);
+}
+.edx-bg-warning {
+    background-color: var(--warning);
+}
+.edx-bg-danger {
+    background-color: var(--danger);
+}
+.edx-bg-light {
+    background-color: var(--light);
+}
+.edx-bg-dark {
+    background-color: var(--dark);
+}
+.edx-bg-white {
+    background-color: var(--white);
+}
+.edx-bg-gray {
+    background-color: var(--gray);
+}
+.edx-bg-darker-light {
+    background-color: var(--darker-light);
+}
+.edx-bg-dark-red {
+    background-color: var(--dark-red);
+}
+.edx-bg-lighter-dark {
+    background-color: var(--lighter-dark);
+}
+.edx-bg-lighter-green {
+    background-color: var(--green);
+}
+
+
+/* COLORS */
+
+.edx-blue {
+    color: var(--blue);
+}
+.edx-indigo {
+    color: var(--indigo);
+}
+.edx-purple {
+    color: var(--purple);
+}
+.edx-pink {
+    color: var(--pink);
+}
+.edx-red {
+    color: var(--red);
+}
+.edx-orange {
+    color: var(--orange);
+}
+.edx-yellow {
+    color: var(--yellow);
+}
+.edx-green {
+    color: var(--green);
+}
+.edx-teal {
+    color: var(--teal);
+}
+.edx-cyan {
+    color: var(--cyan);
+}
+.edx-white {
+    color: var(--white);
+}
+.edx-gray {
+    color: var(--gray);
+}
+.edx-gray-01 {
+    color: var(--gray-01);
+}
+.edx-gray-02 {
+    color: var(--gray-02);
+}
+.edx-gray-03 {
+    color: var(--gray-03);
+}
+.edx-gray-04 {
+    color: var(--gray-04);
+}
+.edx-gray-05 {
+    color: var(--gray-05);
+}
+.edx-gray-06 {
+    color: var(--gray-06);
+}
+.edx-gray-dark {
+    color: var(--gray-dark);
+}
+.edx-primary {
+    color: var(--primary);
+}
+.edx-secondary {
+    color: var(--secondary);
+}
+.edx-success {
+    color: var(--success);
+}
+.edx-info {
+    color: var(--info);
+}
+.edx-warning {
+    color: var(--warning);
+}
+.edx-danger {
+    color: var(--danger);
+}
+.edx-light {
+    color: var(--light);
+}
+.edx-dark {
+    color: var(--dark);
+}
+.edx-white {
+    color: var(--white);
+}
+.edx-gray {
+    color: var(--gray);
+}
+.edx-darker-light {
+    color: var(--darker-light);
+}
+.edx-dark-red {
+    color: var(--dark-red);
+}
+.edx-lighter-dark {
+    color: var(--lighter-dark);
+}
+.edx-lighter-green {
+    color: var(--green);
+}

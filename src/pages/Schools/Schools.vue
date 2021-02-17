@@ -50,8 +50,8 @@
 
             <q-btn 
               square
-              class="q-mr-md" 
-              style="background-color: #546bfa" text-color="white" icon="add" 
+              class="q-mr-md edx-bg-purple"
+              text-color="white" icon="add" 
               @click="showPopup" 
               no-caps
             >
@@ -111,6 +111,7 @@
             <div class="q-pa-md flex flex-center">
               <q-pagination
                 v-model="current"
+                color="red"
                 :max-pages="6"
                 :max="pages"
                 :direction-links="true"

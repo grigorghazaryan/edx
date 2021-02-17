@@ -129,7 +129,7 @@
 
                 <div class="row q-mb-sm">
                     <div class="col-md-12 text-right">
-                        <q-btn @click="editVendorInfo" color="primary" label="Save" />
+                        <q-btn @click="editVendorInfo" class="edx-bg-purple" text-color="white" label="Save" />
                     </div>
                 </div>
             </div>

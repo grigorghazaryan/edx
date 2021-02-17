@@ -51,8 +51,7 @@
 
             <q-btn 
               square
-              class="q-mr-md" 
-              style="background-color: #546bfa" text-color="white" icon="add" 
+              class="q-mr-md edx-bg-purple" text-color="white" icon="add" 
               @click="showPopup" 
               no-caps
             >

@@ -108,7 +108,7 @@
         </q-table>
 
         <div class="q-mt-md q-mb-sm q-ml-md">
-            <q-btn @click="isAddAddressOpened = true" icon="add" color="blue" round/>
+            <q-btn @click="isAddAddressOpened = true" icon="add" class="edx-bg-purple" text-color="white" round/>
         </div>
 
         <dialog-draggable :width="600" :modelDialog="isAddAddressOpened" :title="edit ? 'Edit Address' : 'Add Address'" @onHide="isAddAddressOpened=false">

@@ -64,9 +64,7 @@
 
                 <q-btn 
                     square
-                    class="q-mr-md" 
-                    style="background-color: #546bfa" 
-                    text-color="white" 
+                    class="q-mr-md edx-bg-purple" text-color="white"
                     icon="add" 
                     no-caps
                     @click="openNewActivityPopup"
@@ -77,9 +75,9 @@
                 <q-btn
                     icon-right="archive"
                     label="Export to Excel"
-                    color="teal" 
-                    text-color="white"
+                    class="edx-bg-green" text-color="white"
                     no-caps
+                    @click="exportTable"
                 />
 
                 <q-btn
@@ -205,8 +203,8 @@
                     
                     <q-td key="online" :props="props">
                         <span 
-                            class="material-icons cursor-pointer" 
-                            style="font-size: 1.7em; color: #4daf4f"
+                            class="material-icons cursor-pointer edx-green" 
+                            style="font-size: 1.7em"
                             v-if="props.row.online_uni.id == 1 "
                         >
                             laptop_mac
@@ -219,8 +217,8 @@
                             </q-tooltip>
                         </span> 
                         <span 
-                            class="material-icons cursor-pointer" 
-                            style="font-size: 1.7em; color: #2196f3"
+                            class="material-icons cursor-pointer edx-blue" 
+                            style="font-size: 1.7em"
                             v-else
                         >
                             emoji_transportation
@@ -242,7 +240,7 @@
 
                     <q-td key="status" :props="props">
 
-                        <q-icon v-if="props.row.status_uni.id == 1 " name="done" color="green" style="font-size: 1.5em">
+                        <q-icon v-if="props.row.status_uni.id == 1 " name="done" class="edx-green" style="font-size: 1.5em">
                             <q-tooltip 
                                 anchor="top middle" self="bottom middle" :offset="[10, 10]"
                                 transition-show="flip-right"
@@ -252,7 +250,7 @@
                             </q-tooltip>
                         </q-icon>
 
-                        <q-icon v-else name="cancel" color="red" style="font-size: 2em">
+                        <q-icon v-else name="cancel" class="edx-red" style="font-size: 2em">
                             <q-tooltip 
                                 anchor="top middle" self="bottom middle" :offset="[10, 10]"
                                 transition-show="flip-right"
@@ -267,7 +265,7 @@
                     <q-td key="approvals" :props="props">
 
                         <q-icon v-if="props.row.approval_status_uni.label == 'Approved'" 
-                        name="done" color="green" style="font-size: 1.5em">
+                        name="done" class="edx-green" style="font-size: 1.5em">
                             <q-tooltip 
                                 anchor="top middle" self="bottom middle" :offset="[10, 10]"
                                 transition-show="flip-right"
@@ -278,7 +276,7 @@
                         </q-icon>
 
                         <q-icon v-else-if="props.row.approval_status_uni.label == 'Pending'" 
-                        name="access_time" color="amber-7" style="font-size: 1.5em">
+                        name="access_time" class="edx-orange" style="font-size: 1.5em">
                         <q-tooltip 
                             anchor="top middle" self="bottom middle" :offset="[10, 10]"
                             transition-show="flip-right"
@@ -288,7 +286,7 @@
                         </q-tooltip>
                         </q-icon>
 
-                        <q-icon v-else name="unpublished" color="red" style="font-size: 2em">
+                        <q-icon v-else name="unpublished" class="edx-red" style="font-size: 2em">
                         <q-tooltip 
                             anchor="top middle" self="bottom middle" :offset="[10, 10]"
                             transition-show="flip-right"
@@ -299,7 +297,7 @@
                         </q-icon>
 
                         <q-icon v-if="props.row.approval_type_uni.label == 'Needs Assessment'"
-                        name="psychology" color="blue" style="font-size: 1.5em">
+                        name="psychology" class="edx-blue" style="font-size: 1.5em">
                         <q-tooltip 
                             anchor="top middle" self="bottom middle" :offset="[10, 10]"
                             transition-show="flip-right"
@@ -309,7 +307,7 @@
                         </q-tooltip>
                         </q-icon>
 
-                        <q-icon v-else-if="props.row.approval_type_uni.label == 'Catalog'" name="category" color="blue" style="font-size: 1.5em">
+                        <q-icon v-else-if="props.row.approval_type_uni.label == 'Catalog'" name="category" class="edx-blue" style="font-size: 1.5em">
                         <q-tooltip 
                             anchor="top middle" self="bottom middle" :offset="[10, 10]"
                             transition-show="flip-right"
@@ -319,7 +317,7 @@
                         </q-tooltip>
                         </q-icon>
 
-                        <q-icon v-else-if="props.row.approval_type_uni.label == 'Blanket Approval'" name="touch_app" color="blue" style="font-size: 1.5em">
+                        <q-icon v-else-if="props.row.approval_type_uni.label == 'Blanket Approval'" name="touch_app" class="edx-blue" style="font-size: 1.5em">
                         <q-tooltip 
                             anchor="top middle" self="bottom middle" :offset="[10, 10]"
                             transition-show="flip-right"
@@ -329,7 +327,7 @@
                         </q-tooltip>
                         </q-icon>
 
-                        <q-icon v-else-if="props.row.approval_type_uni.label == 'Pre Approval'" name="how_to_reg" color="blue" style="font-size: 1.5em">
+                        <q-icon v-else-if="props.row.approval_type_uni.label == 'Pre Approval'" name="how_to_reg" class="edx-blue" style="font-size: 1.5em">
                         <q-tooltip 
                             anchor="top middle" self="bottom middle" :offset="[10, 10]"
                             transition-show="flip-right"
@@ -359,13 +357,13 @@
                         <span class="q-ml-sm">
                             <q-icon 
                                 name="autorenew" 
-                                color="green" 
+                                class="edx-green"
                                 style="font-size: 1.5em" 
                                 v-if="props.row.repeat" 
                             />
                             <q-icon 
                                 name="all_inclusive" 
-                                color="blue" 
+                                class="edx-blue"
                                 style="font-size: 1.5em" 
                                 v-if="props.row.multi" 
                             />
@@ -379,7 +377,7 @@
 
                             {{ props.row.no_attending }}
                             <span class="q-ml-sm">
-                                <q-icon name="people_alt" color="green" style="font-size: 1.5em"/>
+                                <q-icon name="people_alt" class="edx-green" style="font-size: 1.5em"/>
                             </span>
 
                         </div>
@@ -392,7 +390,7 @@
                     <q-td key="type" :props="props">
 
                         <q-chip 
-                            square color="green" 
+                            square class="edx-bg-green"
                             text-color="white" 
                             v-if="props.row.type_uni.name == 'PD'"
                         >
@@ -406,7 +404,7 @@
                             </q-tooltip>
                         </q-chip>
 
-                        <q-chip v-else square color="purple" text-color="white" >
+                        <q-chip v-else square class="edx-bg-purple" text-color="white" >
                             <span>FE</span>
                             <q-tooltip 
                                 anchor="top middle" self="bottom middle" :offset="[10, 10]"

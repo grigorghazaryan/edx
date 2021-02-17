@@ -9,7 +9,7 @@
       </q-breadcrumbs>
     </div>
 
-             <Tabs />
+    <Tabs />
 
     <q-card class="bg-transparent no-shadow no-border">
       <q-card-section class="q-pa-none">
@@ -84,14 +84,13 @@
 
           <q-select class="q-mr-md" style="min-width: 200px; max-width: 200px" dense outlines clearable v-model="model" :options="options" label="Status" @input="filterAllocation"/>
 
-          <q-btn :disabled="addNew" square class="q-mr-md" style="background-color: #546bfa" text-color="white" icon="add" 
+          <q-btn :disabled="addNew" square class="q-mr-md edx-bg-purple" text-color="white" icon="add" 
           @click="addNew = true, addNewRow()" no-caps>Add</q-btn>
 
           <q-btn
             icon-right="archive"
             label="Export to Excel"
-            color="teal" 
-            text-color="white"
+            class="edx-bg-green" text-color="white"
             no-caps
             @click="exportTable"
           />
@@ -243,7 +242,7 @@
               </q-td>
               
               <q-td key="status" :props="props">
-                  <q-chip class="cursor-pointer" square color="purple" text-color="white" v-if="props.row.status_string == 'Final'">
+                                  <q-chip square class="cursor-pointer edx-bg-purple" text-color="white" v-if="props.row.status_string == 'Final'">
                     FN
                     <q-tooltip 
                         anchor="top middle" self="bottom middle" :offset="[10, 10]"
@@ -254,7 +253,7 @@
                     </q-tooltip>
                   </q-chip>
 
-                  <q-chip class="cursor-pointer" square color="green" text-color="white" v-else>
+                <q-chip square class="cursor-pointer edx-bg-green" text-color="white" v-else>
                     PR
                     <q-tooltip 
                         anchor="top middle" self="bottom middle" :offset="[10, 10]"
@@ -275,12 +274,12 @@
                 
                   <q-btn
                     @click="cancellChange(props.rowIndex)"
-                    class="q-mr-sm"
                     icon="cancel"
-                    color="orange" 
-                    size=sm 
-                    no-caps
-                    round 
+                      text-color="white" 
+                      class="q-mr-sm edx-bg-orange"
+                      size=sm 
+                      no-caps
+                      round 
                   >
                     <q-tooltip 
                         anchor="top middle" self="bottom middle" :offset="[10, 10]"
@@ -293,9 +292,9 @@
                   
                   <q-btn
                     @click="editAllocation(props.rowIndex)"
-                    class="q-mr-sm"
+                    text-color="white" 
+                    class="q-mr-sm edx-bg-green"
                     icon="save"
-                    color="green" 
                     size=sm 
                     no-caps
                     round 
@@ -322,7 +321,8 @@
                   </q-btn> -->
                   <q-btn 
                     icon="delete_forever"
-                    color="red" 
+                    text-color="white" 
+                    class="q-mr-sm edx-bg-red"
                     @click="openDeleteModal(props.row)" 
                     size=sm 
                     no-caps

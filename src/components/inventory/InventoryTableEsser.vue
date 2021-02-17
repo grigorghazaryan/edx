@@ -90,14 +90,13 @@
         </template>
       </q-select>
 
-      <q-btn :disabled="addNew" square class="q-mr-md" style="background-color: #546bfa" text-color="white" icon="add" 
+      <q-btn :disabled="addNew" square class="q-mr-md edx-bg-purple" text-color="white" icon="add" 
       @click="addNew = true, addNewRow()" no-caps>Add</q-btn>
 
       <q-btn
         icon-right="archive"
         label="Export to Excel"
-        color="teal"
-        text-color="white"
+        class="edx-bg-green" text-color="white"
         no-caps
         @click="exportTable"
       />
@@ -319,16 +318,10 @@
           </q-popup-proxy>
         </q-td>
 
-        <q-td
-          key="condition"
-          :props="props"
-        >
+        <q-td key="condition" :props="props">
 
           <div v-if="props.row.condition.label == 'Excelent'">
-            <span
-              class="mdi mdi-circle-slice-7 mdi-24px"
-              style="color: blue"
-            >
+            <span class="mdi mdi-circle-slice-7 mdi-24px edx-blue">
               <q-tooltip
                 anchor="top middle"
                 self="bottom middle"
@@ -342,10 +335,7 @@
           </div>
 
           <div v-else-if="props.row.condition.label == 'Very Good'">
-            <span
-              class="mdi mdi-circle-slice-6 mdi-24px"
-              style="color: green"
-            >
+            <span class="mdi mdi-circle-slice-6 mdi-24px edx-green">
               <q-tooltip
                 anchor="top middle"
                 self="bottom middle"
@@ -359,10 +349,7 @@
           </div>
 
           <div v-else-if="props.row.condition.label == 'Good'">
-            <span
-              class="mdi mdi-circle-slice-5 mdi-24px"
-              style="color: #ccad14"
-            >
+            <span class="mdi mdi-circle-slice-5 mdi-24px edx-warning">
               <q-tooltip
                 anchor="top middle"
                 self="bottom middle"
@@ -376,10 +363,7 @@
           </div>
 
           <div v-else-if="props.row.condition.label == 'Fair'">
-            <span
-              class="mdi mdi-circle-slice-4 mdi-24px"
-              style="color: orange"
-            >
+            <span class="mdi mdi-circle-slice-4 mdi-24px edx-warning">
               <q-tooltip
                 anchor="top middle"
                 self="bottom middle"
@@ -393,10 +377,7 @@
           </div>
 
           <div v-else>
-            <span
-              class="mdi mdi-circle-slice-2 mdi-24px"
-              style="color: red"
-            >
+            <span class="mdi mdi-circle-slice-2 mdi-24px edx-red">
               <q-tooltip
                 anchor="top middle"
                 self="bottom middle"
@@ -425,15 +406,9 @@
 
         </q-td>
 
-        <q-td
-          key="status"
-          :props="props"
-        >
+        <q-td key="status" :props="props">
           <div v-if="props.row.status_uni.label == 'On Premise'">
-            <span
-              class="mdi mdi-school mdi-24px"
-              style="color: blue"
-            >
+            <span class="mdi mdi-school mdi-24px edx-blue">
               <q-tooltip
                 anchor="top middle"
                 self="bottom middle"
@@ -448,10 +423,7 @@
           </div>
 
           <div v-else-if="props.row.status_uni.label == 'Off Premise'">
-            <span
-              class="mdi mdi-home mdi-24px"
-              style="color: orange"
-            >
+            <span class="mdi mdi-home mdi-24px edx-orange">
               <q-tooltip
                 anchor="top middle"
                 self="bottom middle"
@@ -466,10 +438,7 @@
           </div>
 
           <div v-else-if="props.row.status_uni.label == 'Disposed'">
-            <span
-              class="mdi mdi-recycle mdi-24px"
-              style="color: green"
-            >
+            <span class="mdi mdi-recycle mdi-24px edx-green">
               <q-tooltip
                 anchor="top middle"
                 self="bottom middle"
@@ -484,10 +453,7 @@
           </div>
 
           <div v-else-if="props.row.status_uni.label == 'Lost'">
-            <span
-              class="mdi mdi-map-marker-question mdi-red mdi-24px"
-              style="color: red"
-            >
+            <span class="mdi mdi-map-marker-question mdi-red mdi-24px edx-red" >
               <q-tooltip
                 anchor="top middle"
                 self="bottom middle"
@@ -502,10 +468,7 @@
           </div>
 
           <div v-else-if="props.row.status_uni.label == 'Stolen'">
-            <span
-              class="mdi mdi-robber mdi-red mdi-24px"
-              style="color: black"
-            >
+            <span class="mdi mdi-robber mdi-red mdi-24px edx-dark">
               <q-tooltip
                 anchor="top middle"
                 self="bottom middle"
@@ -520,10 +483,7 @@
           </div>
 
           <div v-else-if="props.row.status_uni.label == 'Transfered'">
-            <span
-              class="mdi mdi-truck-delivery mdi-24px"
-              style="color: orange"
-            >
+            <span class="mdi mdi-truck-delivery mdi-24px edx-orange">
               <q-tooltip
                 anchor="top middle"
                 self="bottom middle"
@@ -538,10 +498,7 @@
           </div>
 
           <div v-else>
-            <span
-              class="mdi mdi-dolly mdi-red mdi-24px"
-              style="color: blue"
-            >
+            <span class="mdi mdi-dolly mdi-red mdi-24px edx-blue">
               <q-tooltip
                 anchor="top middle"
                 self="bottom middle"
@@ -576,12 +533,12 @@
 
               <q-btn
                 @click="cancellChange(props.rowIndex)"
-                class="q-mr-sm"
-                icon="cancel"
-                color="orange" 
-                size=sm 
-                no-caps
-                round 
+                  icon="cancel"
+                  text-color="white" 
+                  class="q-mr-sm edx-bg-orange"
+                  size=sm 
+                  no-caps
+                  round 
               >
                 <q-tooltip 
                     anchor="top middle" self="bottom middle" :offset="[10, 10]"
@@ -594,12 +551,12 @@
               
               <q-btn
                 @click="editInventory(props.rowIndex)"
-                class="q-mr-sm"
-                icon="save"
-                color="green" 
-                size=sm 
-                no-caps
-                round 
+                  text-color="white" 
+                  class="q-mr-sm edx-bg-green"
+                  icon="save"
+                  size=sm 
+                  no-caps
+                  round 
               >
                 <q-tooltip 
                     anchor="top middle" self="bottom middle" :offset="[10, 10]"
@@ -614,12 +571,13 @@
 
             <div v-if="props.row.showEditButton && !props.row.changed">
               <q-btn 
-                icon="delete_forever"
-                color="red" 
-                @click="openDeleteModal(props.row)" 
-                size=sm 
-                no-caps
-                round 
+                 icon="delete_forever"
+                    text-color="white" 
+                    class="q-mr-sm edx-bg-red"
+                    @click="openDeleteModal(props.row)" 
+                    size=sm 
+                    no-caps
+                    round 
               >
                 <q-tooltip 
                     anchor="top middle" self="bottom middle" :offset="[10, 10]"

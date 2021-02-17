@@ -2,7 +2,7 @@
   <div class="q-pa-md">
     <q-layout view="hHh Lpr lff" class="shadow-2 rounded-borders">
 
-      <q-header elevated class="bg-black">
+      <q-header elevated class="edx-bg-dark">
         <q-toolbar>
           <q-btn flat @click="miniState = !miniState" round dense icon="menu" />
           <q-toolbar-title>Header</q-toolbar-title>
@@ -59,7 +59,7 @@
         show-if-above
         :mini="miniState"
         bordered
-        content-class="bg-grey-sidebar text-white"
+        content-class="edx-bg-dark text-white"
         @click="drawerClick"
       >
         <q-scroll-area class="fit">
@@ -78,7 +78,7 @@
             icon="person"
             label="Management"
           >
-            <q-list class="bg-sidebar-opened">
+            <q-list class="bg-sidebar-opened edx-bg-lighter-dark">
               <q-item to="/Schools" 
               @click="addDataToLS('Schools', 'Schools')"  
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
@@ -90,7 +90,7 @@
                 </q-item-section>
               </q-item>
             </q-list>
-            <q-list class="bg-sidebar-opened">
+            <q-list class="bg-sidebar-opened edx-bg-lighter-dark">
               <q-item to="/Vendors" 
               @click="addDataToLS('Administration', 'Vendors')"  
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
@@ -102,7 +102,7 @@
                 </q-item-section>
               </q-item>
             </q-list>
-            <q-list class="bg-sidebar-opened">
+            <q-list class="bg-sidebar-opened edx-bg-lighter-dark">
               <q-item to="/SchoolYear" 
               @click="addDataToLS('School Year', 'SchoolYear')"  
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
@@ -166,7 +166,7 @@
             icon="person"
             label="Administration"
           >
-            <q-list class="bg-sidebar-opened">
+            <q-list class="bg-sidebar-opened edx-bg-lighter-dark">
               <q-item to="/Users" 
               @click="addDataToLS('Users', 'Users')"  
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
@@ -231,7 +231,7 @@
             class="menu-parent"
             v-if="!miniState"
           >
-            <q-list class="bg-sidebar-opened">
+            <q-list class="bg-sidebar-opened edx-bg-lighter-dark">
               <q-item to="/Allocations/Title1" @click="addDataToLS('Title I', '/Allocations/Title1')"  
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
@@ -365,7 +365,7 @@
             icon="person"
             label="Resources"
           >
-            <q-list class="bg-sidebar-opened">
+            <q-list class="bg-sidebar-opened edx-bg-lighter-dark">
               
               <q-item to="/ManageTeachers" 
               @click="addDataToLS('Manage Teachers', 'ManageTeachers')"  
@@ -444,7 +444,7 @@
             icon="person"
             label="Inventory"
           >
-            <q-list class="bg-sidebar-opened">
+            <q-list class="bg-sidebar-opened edx-bg-lighter-dark">
               <q-item to="/Inventory" @click="addDataToLS('Inventory', '/Inventory')"   
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
@@ -502,7 +502,7 @@
             icon="account_balance"
             label="Activities"
           >
-            <q-list class="bg-sidebar-opened">
+            <q-list class="bg-sidebar-opened edx-bg-lighter-dark">
               <q-item to="/Activity" @click="addDataToLS('Activities', '/Activity')"  
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
@@ -514,7 +514,7 @@
               </q-item>
             </q-list>
 
-            <q-list class="bg-sidebar-opened">
+            <q-list class="bg-sidebar-opened edx-bg-lighter-dark">
               <q-item to="/ActivityProcesses" @click="addDataToLS('Activity Processes', '/ActivityProcesses')"  
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
@@ -564,7 +564,7 @@
             icon="account_balance"
             label="Material purchases"
           >
-            <q-list class="bg-sidebar-opened">
+            <q-list class="bg-sidebar-opened edx-bg-lighter-dark">
               <q-item to="/Material" @click="addDataToLS('Material', '/Material')"  
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
@@ -606,7 +606,7 @@
             icon="attach_money"
             label="Expenses"
           >
-            <q-list class="bg-sidebar-opened">
+            <q-list class="bg-sidebar-opened edx-bg-lighter-dark">
               <q-item to="/Expenses" @click="addDataToLS('Expenses', '/Expenses')"  
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
@@ -647,7 +647,7 @@
             icon="money"
             label="Reimbursement"
           >
-            <q-list class="bg-sidebar-opened">
+            <q-list class="bg-sidebar-opened edx-bg-lighter-dark">
               <q-item to="/ManageUsers" @click="addDataToLS('Manage Users', '/ManageUsers')" 
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
@@ -699,7 +699,7 @@
             icon="attach_money"
             label="Reporting"
           >
-            <q-list class="bg-sidebar-opened">
+            <q-list class="bg-sidebar-opened edx-bg-lighter-dark">
               <q-item to="/AllocationReports" @click="addDataToLS('Allocation Reports', '/AllocationReports')"  
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
@@ -711,7 +711,7 @@
               </q-item>
             </q-list>
 
-            <q-list class="bg-sidebar-opened">
+            <q-list class="bg-sidebar-opened edx-bg-lighter-dark">
               <q-item to="/BillingReports" @click="addDataToLS('Billing Reports', '/BillingReports')"  
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
@@ -723,7 +723,7 @@
               </q-item>
             </q-list>
 
-            <q-list class="bg-sidebar-opened">
+            <q-list class="bg-sidebar-opened edx-bg-lighter-dark">
               <q-item to="/ActivityReports" @click="addDataToLS('Activity Reports', '/ActivityReports')"  
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
@@ -735,7 +735,7 @@
               </q-item>
             </q-list>
 
-            <q-list class="bg-sidebar-opened">
+            <q-list class="bg-sidebar-opened edx-bg-lighter-dark">
               <q-item to="/InventoryReports" @click="addDataToLS('Inventory Reports', '/InventoryReports')"  
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
@@ -747,7 +747,7 @@
               </q-item>
             </q-list>
 
-            <q-list class="bg-sidebar-opened">
+            <q-list class="bg-sidebar-opened edx-bg-lighter-dark">
               <q-item to="/ReimbursementReports" @click="addDataToLS('Reimbursement Reports', '/ReimbursementReports')"  
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
@@ -837,7 +837,7 @@
             icon="school"
             label="Teacher Costs"
           >
-            <q-list class="bg-sidebar-opened">
+            <q-list class="bg-sidebar-opened edx-bg-lighter-dark">
               <q-item to="/TeacherCosts/BudgetEstimates"  
               @click="addDataToLS('Budget Estimates', '/TeacherCosts/BudgetEstimates')" 
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
@@ -893,7 +893,7 @@
             icon="developer_mode"
             label="Development"
           >
-            <q-list class="bg-sidebar-opened">
+            <q-list class="bg-sidebar-opened edx-bg-lighter-dark">
               <q-item to="/Login-1"  active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
                   <q-icon name="email"/>
@@ -915,7 +915,7 @@
         -->
       </q-drawer>
 
-    <q-page-container class="bg-grey-2">
+    <q-page-container class="edx-bg-gray-02">
       <router-view/>
     </q-page-container>
 
@@ -998,42 +998,42 @@ export default {
 
 <style lang="scss">
 
-.scroll.relative-position.fit.hide-scrollbar {
-  background: #304156 !important;
-}
+// .scroll.relative-position.fit.hide-scrollbar {
+//   background: #304156 !important;
+// }
 
-.bg-grey-sidebar {
-  background: #304156 !important;
-}
+// .bg-grey-sidebar {
+//   background: #304156 !important;
+// }
 
-.bg-sidebar-opened {
-  background: #1f2d3d !important;
-}
+// .bg-sidebar-opened edx-bg-lighter-dark {
+//   background: #1f2d3d !important;
+// }
 
-.q-item.q-item-type.row.no-wrap {
-    cursor: pointer;
-}
+// .q-item.q-item-type.row.no-wrap {
+//     cursor: pointer;
+// }
 
-a.q-item.q-item-type.row.no-wrap.q-item--clickable.q-link.cursor-pointer.q-focusable.q-hoverable {
-    background: #304156;
-    color: #fff;
-}
-.q-item__section--avatar {
-    color: inherit;
-    min-width: 34px;
-}
+// a.q-item.q-item-type.row.no-wrap.q-item--clickable.q-link.cursor-pointer.q-focusable.q-hoverable {
+//     background: #304156;
+//     color: #fff;
+// }
+// .q-item__section--avatar {
+//     color: inherit;
+//     min-width: 34px;
+// }
 
-.q-menu {
-  border-radius: 0;
-}
+// .q-menu {
+//   border-radius: 0;
+// }
 
-.sidebar-dropdown-bottom-menu {
-  padding-left: 40px;
-}
+// .sidebar-dropdown-bottom-menu {
+//   padding-left: 40px;
+// }
 
-a.q-item.q-item-type.row.no-wrap.q-item--clickable.q-link.cursor-pointer.q-focusable.q-hoverable {
-    background: #1f2d3d;
-    color: #fff;
-}
+// a.q-item.q-item-type.row.no-wrap.q-item--clickable.q-link.cursor-pointer.q-focusable.q-hoverable {
+//     background: #1f2d3d;
+//     color: #fff;
+// }
 
 </style>
