@@ -83,11 +83,14 @@ const config = {
     getTotalLicense: 'https://inventory.aimtech.am/api/v1/license-total/', // + school id
 
     // Activity
-    getActivity: 'https://edxchange-activity.aimtech.am/api/v1/activity/', // + 1 / 1001,
+    // getActivity: 'https://edxchange-activity.aimtech.am/api/v1/activity/', // + 1 / 1001,
+    getActivity: 'https://edxchange-activity.aimtech.am/api/v1/item/', // + 1/1001/ if activity : 1 , if material : 2, ...,
     getAttendeesById: 'https://edxchange-activity.aimtech.am/api/v1/get-atendee/', // + id
     getCategoryTypes: 'https://edxchange-activity.aimtech.am/api/v1/get-types-categories/', // + 1 ? Title 1
-    editActivity: 'https://edxchange-activity.aimtech.am/api/v1/activity/', // + id
-    addActivity: 'https://edxchange-activity.aimtech.am/api/v1/activity',
+    editActivity: 'https://edxchange-activity.aimtech.am/api/v1/item/', // + id
+    // editActivity: 'https://edxchange-activity.aimtech.am/api/v1/activity/', // + id
+    // addActivity: 'https://edxchange-activity.aimtech.am/api/v1/activity',
+    addActivity: 'https://edxchange-activity.aimtech.am/api/v1/item/', // + if activity : 1 , if material : 2, ...,
     deleteActivity: 'https://edxchange-activity.aimtech.am/api/v1/remove-activity/', // + id
     getApprovals: 'https://edxchange-activity.aimtech.am/api/v1/get-approval',
     getActivityBar: 'https://edxchange-activity.aimtech.am/api/v1/activity-totals/', // + 1 / + 1001
@@ -98,8 +101,8 @@ const config = {
     removeSchedule: 'https://edxchange-activity.aimtech.am/api/v1/remove-schedule/', // + id
     removeAttendee: 'https://edxchange-activity.aimtech.am/api/v1/remove-attendy/', // + id,
     addAttendee: 'https://edxchange-activity.aimtech.am/api/v1/add-attendy/', // + id
-    filterActivity: 'https://edxchange-activity.aimtech.am/api/v1/filter-activity/', // 1/1001?search=test&type=1&year=1015
-    
+    filterActivity: 'https://edxchange-activity.aimtech.am/api/v1/filter-budget/', // 1/1001/ if activity : 1 , if material : 2 ?search=test&type=1&year=1015
+    getSubcategories: 'https://edxchange-activity.aimtech.am/api/v1/get-types-subcategories/', // + title id
     
     // Get attendee types
     getAtendeeTypes: 'https://edxchange-activity.aimtech.am/api/v1/get-atendee-types', 

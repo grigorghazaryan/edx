@@ -584,18 +584,6 @@
                                         <span>Family Engagement</span>
                                     </div>
 
-                                    
-                                    
-                                    <!-- <div class='q-ml-md'>
-                                        <q-chip 
-                                            square color="purple" 
-                                            text-color="white" 
-                                        >
-                                            <span>WR</span>
-                                        </q-chip>
-                                        <span>Well Rounded Education</span>
-                                    </div> -->
-
                                     <q-popup-edit v-model="editedItem.type_uni" title="Update type" buttons>
                                         <q-select 
                                             v-model="editedItem.type_uni" 
@@ -605,6 +593,31 @@
 
                                 </div>
                             </div>
+
+                            <div class="col-md-5 q-pr-sm">
+                                <div class="text-subtitle2 q-mb-sm">Allocation Subcategory</div>
+                                <div class="row cursor-pointer h-popup">
+
+                                    <div v-if="editedItem.subcategory_uni">
+                                        <q-chip 
+                                            square color="green" 
+                                            text-color="white" 
+                                        >
+                                            <span>{{editedItem.subcategory_uni.name}}</span>
+                                        </q-chip>
+                                        <span>{{editedItem.subcategory_uni.label}}</span>
+                                    </div>
+                                    
+                                    <q-popup-edit v-model="editedItem.subcategory_uni" title="Update type" buttons>
+                                        <q-select 
+                                            v-model="editedItem.subcategory_uni" 
+                                            :options="optionsSubcategory"
+                                        />
+                                    </q-popup-edit>  
+
+                                </div>
+                            </div>
+
                             <div class="col-md-2">
                                 <div class="q-mb-md">
                                     <div class="text-subtitle2 q-mb-sm">Activity Status</div>
@@ -626,30 +639,30 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="q-mb-md">
-                        <div class="row">
-                            <div class="col-md-5">
-                                <div class="text-subtitle2 q-mb-sm">Category Tracking</div>
-                                <q-select  
-                                    use-input
-                                    outlined
-                                    dense
-                                    input-debounce="0"
-                                    v-model="editedItem.provider" 
-                                    :options="optionsSupplier"
-                                    
-                                >
-                                    <template v-slot:no-option>
-                                        <q-item>
-                                            <q-item-section class="text-grey">
-                                            No results
-                                            </q-item-section>
-                                        </q-item>
-                                    </template>
-                                </q-select>
+                        <!-- <div class="q-mb-md">
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <div class="text-subtitle2 q-mb-sm">Category Tracking</div>
+                                    <q-select  
+                                        use-input
+                                        outlined
+                                        dense
+                                        input-debounce="0"
+                                        v-model="editedItem.provider" 
+                                        :options="optionsSupplier"
+                                        
+                                    >
+                                        <template v-slot:no-option>
+                                            <q-item>
+                                                <q-item-section class="text-grey">
+                                                No results
+                                                </q-item-section>
+                                            </q-item>
+                                        </template>
+                                    </q-select>
+                                </div>
                             </div>
-                        </div>
-                        </div>
+                        </div> -->
                         <div class="q-mb-md">
                             <div class="text-subtitle2 q-mb-sm">Approval Status</div>
 
@@ -668,57 +681,62 @@
                                     <q-icon name="unpublished" color="red" style="font-size: 1.5em"></q-icon>
                                     <span>Declined</span>
                                 </div>
-                                <!-- End of approval status -->
+                                
 
-                                <!-- Approval type -->
-                                <div v-if="editedItem.approval_type_uni.label == 'Needs Assessment'">
-                                    <q-icon name="psychology" color="blue" style="font-size: 1.5em"></q-icon>
-                                    <span>Needs Assessment</span>
-                                </div>
-                                <div v-else-if="editedItem.approval_type_uni.label == 'Catalog'">
-                                    <q-icon name="category" color="blue" style="font-size: 1.5em"></q-icon>
-                                    <span>Catalog</span>
-                                </div>
-                                <div v-else-if="editedItem.approval_type_uni.label == 'Blanket Approval'">
-                                    <q-icon name="touch_app" color="blue" style="font-size: 1.5em"></q-icon>
-                                    <span>Blanket Approval</span>
-                                </div>
-                                <div v-else-if="editedItem.approval_type_uni.label == 'Pre Approval'">
-                                    <q-icon name="how_to_reg" color="blue" style="font-size: 1.5em"></q-icon>
-                                    <span>Pre Approval</span>
-                                </div>
-                                <!-- End of Approval type -->
-
-                                <q-popup-edit v-model="editedItem.approval_status_uni" title="Approvals" buttons >
+                                <q-popup-edit title="Approvals" buttons >
                                     <div style="width: 450px !important;max-width: 450px !important;">
-
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <q-select 
-                                                dense outlined v-model="editedItem.approval_status_uni" 
-                                                :options="approval"/>
+                                                    dense 
+                                                    outlined 
+                                                    v-model="editedItem.approval_status_uni" 
+                                                    :options="approval"
+                                                />
                                             </div>
+
                                             <div class="col-md-7 q-ml-md">
                                                 
                                                 <q-option-group
                                                     :options="optionsApp"
                                                     label="Notifications"
                                                     type="radio"
-                                                    v-model="editedItem.approval_type_uni.label"
+                                                    v-model="editedItem.approval_type_uni.value"
                                                 />
 
                                                 <q-input 
-                                                    :disable="editedItem.approval_type_uni.label !== 'Pre Approval'" 
+                                                    :disable="editedItem.approval_type_uni.value !== 4" 
                                                     class="q-mt-md q-mb-lg" dense outlined v-model="editedItem.approver" 
-                                                    label="Approved Name" 
+                                                    label="Approver Name" 
                                                 />
                                         
                                             </div>
                                         <q-separator />
                                         </div>
-                                    
                                     </div>
                                 </q-popup-edit>
+                                <!-- End of approval status -->
+
+                                <!-- Approval type -->
+                                <div v-if="editedItem.approval_type_uni.value == 1">
+                                    <q-icon name="psychology" color="blue" style="font-size: 1.5em"></q-icon>
+                                    <span>Needs Assessment</span>
+                                </div>
+                                <div v-else-if="editedItem.approval_type_uni.value == 2">
+                                    <q-icon name="category" color="blue" style="font-size: 1.5em"></q-icon>
+                                    <span>Catalog</span>
+                                </div>
+                                <div v-else-if="editedItem.approval_type_uni.value == 3">
+                                    <q-icon name="touch_app" color="blue" style="font-size: 1.5em"></q-icon>
+                                    <span>Blanket Approval</span>
+                                </div>
+                                <div v-else-if="editedItem.approval_type_uni.value == 4">
+                                    <q-icon name="how_to_reg" color="blue" style="font-size: 1.5em"></q-icon>
+                                    <span>Pre Approval</span>
+                                </div>
+                                <!-- End of Approval type -->
+
+                                
 
                             </div>
 
@@ -1479,16 +1497,6 @@ export default {
                     label: "On Site"
                 }
             ],
-            optionsSupplier: [
-                {
-                    id: 1,
-                    label: "Provider"
-                },
-                {
-                    id: 2,
-                    label: "Provider 2"
-                },
-            ],
             status: [{ id: 1, label: "Active" }, { id: 2, label: "Canceled" }],
             approval: [],
             optionsApp: [],
@@ -1497,6 +1505,8 @@ export default {
             // supplier
             optionsSupplier: [],
             optionsSupplierForFilter: [],
+            // subcategory
+            optionsSubcategory: [],
 
             //ATTENDIEs
             paginationAttendee: { rowsPerPage: 100 },
@@ -1571,6 +1581,31 @@ export default {
         }
     },
     methods: {
+        exportTable() {
+            // naive encoding to csv format
+            const content = [this.columns.map(col => wrapCsvValue(col.label))].concat(
+                this.data.map(row => this.columns.map(col => wrapCsvValue(
+                    typeof col.field === 'function'
+                        ? col.field(row)
+                        : row[col.field === void 0 ? col.name : col.field],
+                    col.format
+                )).join(','))
+            ).join('\r\n')
+
+            const status = exportFile(
+                'table-export.csv',
+                content,
+                'text/csv'
+            )
+
+            if (status !== true) {
+                this.$q.notify({
+                    message: 'Browser denied file download...',
+                    color: 'negative',
+                    icon: 'warning'
+                })
+            }
+        },
         // Parsing activity
         activityParsing(data, final) {
 
@@ -1589,38 +1624,38 @@ export default {
                 charge = 0
             }
 
-            if(data[i].type.id == 1) {
-            // PD
-            if(final == 1) {
-                this.totalPDremainder = this.totalPDremainder - charge
+            if(data[i].category.id == 1) {
+                // PD
+                if(final == 1) {
+                    this.totalPDremainder = this.totalPDremainder - charge
+                }else {
+                    this.totalPDremainder = (this.totalPDremainder / 2) - charge
+                }
             }else {
-                this.totalPDremainder = (this.totalPDremainder / 2) - charge
-            }
-            }else {
-            // FE
-            if(final == 1) {
-                this.totalFEremainder = this.totalFEremainder - charge
-            }else {
-                this.totalFEremainder = (this.totalFEremainder / 2) - charge
-            }
+                // FE
+                if(final == 1) {
+                    this.totalFEremainder = this.totalFEremainder - charge
+                }else {
+                    this.totalFEremainder = (this.totalFEremainder / 2) - charge
+                }
             }
 
             // PD = 1 totalPDremainder
             // FE = 2 totalFEremainder
             let isOnline;
             if(data[i].is_online == 1) {
-            isOnline = 'Online'
+                isOnline = 'Online'
             }else {
-            isOnline = 'On Site'
+                isOnline = 'On Site'
             }
 
         
         let activityObj = {
             // remainingBalance: charge,
-            remainingBalance: data[i].type.id == 1 ? this.totalPDremainder : this.totalFEremainder,
+            remainingBalance: data[i].category.id == 1 ? this.totalPDremainder : this.totalFEremainder,
             id: data[i].id,
             online_uni: {
-                id: data[i].is_online,
+                id: data[i].details && data[i].is_online,
                 label: isOnline
             },
             provider: {
@@ -1636,21 +1671,26 @@ export default {
                 label: data[i].approval_status.name
             },
             approval_type_uni: {
-                id: data[i].approval_types.id,
-                label: data[i].approval_types.name
+                label: data[i].approval_types.name,
+                value: data[i].approval_types.id
             },
-            activity: data[i].activity_name,
+            activity: data[i].name,
             activity_date: sd == null ? 'TBD' : fullDate,
             no_attending: data[i].attendySummary.count,
             amount: data[i].cost != null ? data[i].cost : 0,
-            percentage: parseInt(data[i].upcharge_percentage),
+            percentage: parseInt(data[i].markup_percentage),
             type_uni: {
-                id: data[i].type.id,
-                label: data[i].type.name,
-                name: data[i].type.abbreviation
+                id: data[i].category.id,
+                label: data[i].category.name,
+                name: data[i].category.abbreviation
             },
-            note: data[i].activity_note,
-            approver: '',
+            subcategory_uni: {
+                id: data[i].sub_category ? data[i].sub_category.id : 0,
+                label: data[i].sub_category ? data[i].sub_category.name : 'NA',
+                name: data[i].sub_category ? data[i].sub_category.abbreviation : 'NA'
+            },
+            note: data[i].note,
+            approver: data[i].approver,
             charge: data[i].total_cost,
             repeat: data[i].has_recurring != null ? data[i].has_recurring : false,
             multi: data[i].has_multi_schedule != null ? data[i].has_multi_schedule : false,
@@ -1668,7 +1708,7 @@ export default {
             }
         }
 
-            arr.push(activityObj)
+        arr.push(activityObj)
 
         }
 
@@ -1680,7 +1720,7 @@ export default {
 
             const conf = {
                 method: 'GET',
-                url: config.getActivity + type + '/' + id + '?limit=' + limit + '&page=' + page,
+                url: config.getActivity + type + '/' + id + '/' + 1 + '?limit=' + limit + '&page=' + page,
                 headers: {
                 Accept: 'application/json',
                 }
@@ -1688,11 +1728,11 @@ export default {
 
             axios(conf).then(res => {
 
-                let data = res.data.activity
-                this.pages = res.data.pagesCount
+                let data = res.data.items
 
                 let final = res.data.isSchoolAllocationFinal
                 this.final = final
+                this.pages = res.data.pagesCount
 
                 if(res.data.isSchoolAllocationFinal == 1) {
                     this.$emit('final', true)
@@ -1704,6 +1744,8 @@ export default {
                 let finalResult = this.activityParsing(data, final)
 
                 this.data = finalResult
+
+                console.log('asdasdjhkgasdkhgasdkjhasd', finalResult)
 
                 this.loading = false
             });
@@ -1719,7 +1761,7 @@ export default {
                     label: 'Approved'
                 },
                 approval_type_uni: {
-                    id: 1,
+                    value: 1,
                     label: 'Needs Assessment'
                 },
                 type_uni: {
@@ -1738,25 +1780,28 @@ export default {
             this.btnLoading = true;
 
             const editData = {
+
                 supplier_id: this.editedItem.provider && this.editedItem.provider.id,
-                activity_status_id: this.editedItem.status_uni && this.editedItem.status_uni.id,
-                activity_approval_status_id: this.editedItem.approval_status_uni && this.editedItem.approval_status_uni.id,
-                activity_approval_type_id: this.editedItem.approval_status_uni && this.editedItem.approval_status_uni.id,
+                status_id: this.editedItem.status_uni && this.editedItem.status_uni.id,
+                approval_status_id: this.editedItem.approval_status_uni && this.editedItem.approval_status_uni.id,
+                approval_type_id: this.editedItem.approval_type_uni && this.editedItem.approval_type_uni.value,
                 approver: this.editedItem.approver,
-                activity_name: this.editedItem.activity,
-                cost: this.editedItem.amount,
-                allocation_type_categories_id: this.editedItem.type_uni && this.editedItem.type_uni.id,
-                activity_note: this.editedItem.note,
-                upcharge_percentage: this.editedItem.percentage,
+                name: this.editedItem.activity,
+                unit_cost: this.editedItem.amount,
+                category_id: this.editedItem.type_uni && this.editedItem.type_uni.id,
+                subcategory_id: this.editedItem.subcategory_uni && this.editedItem.subcategory_uni.id,
+                note: this.editedItem.note,
+                markup_percentage: this.editedItem.percentage,
                 is_online: this.editedItem.online_uni && this.editedItem.online_uni.id,
+
             }
 
             editData.school_id = this.$route.params.id
-            editData.allocation_id = parseInt(this.tab)
+            editData.allocation_type_id = parseInt(this.tab)
 
             const conf = {
                 method: 'POST',
-                url: config.addActivity,
+                url: config.addActivity + 1,
                 headers: {
                 Accept: 'application/json',
                 },
@@ -1771,10 +1816,11 @@ export default {
                     type: 'positive',
                 })
 
-                if (res.data.activity[0]) {
+                if (res.data.items[0]) {
 
                     this.btnLoading = false;
-                    this.data.unshift(res.data.activity[0])
+                    // this.data.unshift(res.data.items[0])
+                    this.getActivityByType( this.tab, this.$route.params.id, this.count, this.current )
 
                     setTimeout(()=>{
                         this.isShowActivityPopup = false
@@ -1790,17 +1836,20 @@ export default {
             this.btnLoading = true;
 
             const editData = {
+
                 supplier_id: this.editedItem.provider && this.editedItem.provider.id,
-                activity_status_id: this.editedItem.status_uni && this.editedItem.status_uni.id,
-                activity_approval_status_id: this.editedItem.approval_status_uni && this.editedItem.approval_status_uni.id,
-                activity_approval_type_id: this.editedItem.approval_status_uni && this.editedItem.approval_status_uni.id,
+                status_id: this.editedItem.status_uni && this.editedItem.status_uni.id,
+                approval_status_id: this.editedItem.approval_status_uni && this.editedItem.approval_status_uni.id,
+                approval_type_id: this.editedItem.approval_type_uni && this.editedItem.approval_type_uni.value,
                 approver: this.editedItem.approver,
-                activity_name: this.editedItem.activity,
-                cost: this.editedItem.amount,
-                allocation_type_categories_id: this.editedItem.type_uni && this.editedItem.type_uni.id,
-                activity_note: this.editedItem.note,
-                upcharge_percentage: this.editedItem.percentage,
+                name: this.editedItem.activity,
+                unit_cost: this.editedItem.amount,
+                category_id: this.editedItem.type_uni && this.editedItem.type_uni.id,
+                subcategory_id: this.editedItem.subcategory_uni && this.editedItem.subcategory_uni.id,
+                note: this.editedItem.note,
+                markup_percentage: this.editedItem.percentage,
                 is_online: this.editedItem.online_uni && this.editedItem.online_uni.id,
+
             }
 
             const conf = {
@@ -2031,6 +2080,31 @@ export default {
             this.getSchedules(row.id)
             this.getAttdeesById(row.id)
         },
+        // Get subcategories
+        getSubcategories(id) {
+            const conf = {
+                method: 'GET',
+                url: config.getSubcategories + id,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+                console.log('res subcategories', res)
+                const subcategoriesArr = []
+                const subcategories = res.data.typesCategories
+                for(let i=0; i<subcategories.length; i++) {
+                    let obj = {
+                        id: subcategories[i].id,
+                        name: subcategories[i].abbreviation,
+                        label: subcategories[i].name
+                    }
+                    subcategoriesArr.push(obj)
+                }
+                this.optionsSubcategory = subcategoriesArr
+            })
+        },
         // Get additional Info
         getAdditionalInfo(type) {
 
@@ -2058,7 +2132,6 @@ export default {
 
             this.optionsSupplier = supplierArr
             this.optionsSupplierForFilter = supplierArr
-
         })
 
         },
@@ -2094,13 +2167,6 @@ export default {
             }
 
             this.typeArr = typesArray
-            console.log('2222222')
-            console.log('2222222')
-            console.log('2222222')
-            console.log(res.data)
-            console.log('2222222')
-            console.log('2222222')
-            console.log('2222222')
 
         })
         },
@@ -2136,24 +2202,26 @@ export default {
                 let statusArr = [], typesArr = [];
 
                 for(let i=0; i<approvalStatus.length; i++) {
-                let obj = {
-                    id: approvalStatus[i].id,
-                    label: approvalStatus[i].name
-                }
-                statusArr.push(obj)
+                    let obj = {
+                        id: approvalStatus[i].id,
+                        label: approvalStatus[i].name
+                    }
+                    statusArr.push(obj)
                 }
 
                 for(let i=0; i<approvalTypes.length; i++) {
-                let obj = {
-                    id: approvalTypes[i].id,
-                    label: approvalTypes[i].name,
-                    value: approvalTypes[i].name,
+                    let obj = {
+                        value: approvalTypes[i].id,
+                        label: approvalTypes[i].name
+                    }
+                    typesArr.push(obj)
                 }
-                typesArr.push(obj)
-                }
-
+                
                 this.approval = statusArr
                 this.optionsApp = typesArr
+
+                console.log('pppp', this.optionsApp)
+
             })
         },
 
@@ -2580,45 +2648,42 @@ export default {
         },
         filterActivity() {
 
-      // this.loading = true
+            // this.loading = true
 
-      let uri = '';
+            let uri = '';
 
-      if(this.filter != '') {
-        uri += '&search=' + this.filter
-      }
+            if(this.filter != '') {
+                uri += '&search=' + this.filter
+            }
 
-      if(this.schoolYear) {
-        uri += '&year=' + this.schoolYear.id
-      }
+            if(this.schoolYear) {
+                uri += '&year=' + this.schoolYear.id
+            }
 
-      if(this.typeModel != '') {
-        uri += '&type=' + this.typeModel.id
-      }
+            if(this.typeModel != '') {
+                uri += '&type=' + this.typeModel.id
+            }
 
-      console.log('URI', uri)
+            const conf = {
+                method: 'GET',
+                url: config.filterActivity + this.tab + '/' + this.$route.params.id + '/1' + '?' + uri,
+                headers: {
+                Accept: 'application/json',
+                }
+            }
 
-      const conf = {
-        method: 'GET',
-        url: config.filterActivity + this.tab + '/' + this.$route.params.id + '?' + uri,
-        headers: {
-          Accept: 'application/json',
-        }
-      }
+            axios(conf).then(res => {
 
-      axios(conf).then(res => {
+                this.pages = res.data.pagesCount
+                let data = res.data.items
+                
+                let filteredData = this.activityParsing(data, this.final)
 
-        this.pages = res.data.pagesCount
-        let data = res.data.activity
-        
+                this.data = filteredData
+                this.tempDataX = filteredData
 
-        let filteredData = this.activityParsing(data, this.final)
-
-        this.data = filteredData
-        this.tempDataX = filteredData
-
-        this.loading = false
-      });
+                this.loading = false
+            });
         },
         // Filter key events
         keyUpFilter() {
@@ -2687,6 +2752,7 @@ export default {
         this.getApprovals()
         this.getRcurranceTypes()
         this.getSchoolYears()
+        this.getSubcategories(tab)
     }
 
 }
