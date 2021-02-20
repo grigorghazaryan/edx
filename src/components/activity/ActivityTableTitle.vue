@@ -821,7 +821,12 @@
                             </div>
                             <div class="q-pl-md" :class="isDuplicate || !isEdit ? 'col-md-12' : 'col-md-9'">
                                 <div class="text-subtitle2 q-mb-sm">Note</div>
-                                <q-input dense outlined type="textarea" v-model="editedItem.note" />
+                                <q-input 
+                                    dense 
+                                    outlined
+                                    type="textarea"
+                                    v-model="editedItem.note" 
+                                />
                             </div>
                         </div>
                     </div>

@@ -2509,9 +2509,9 @@ export default {
             let categoryArr = []
             for(let i=0; i<res.data.categories.length; i++) {
                 let obj = {
-                    id: res.data.categories[i].id,
-                    label: res.data.categories[i].category_name,
-                    value: res.data.categories[i].id
+                    id: res.data.categories[i].category.id,
+                    label: res.data.categories[i].category.category_name,
+                    value: res.data.categories[i].category.id
                 }
                 categoryArr.push(obj)
             }
