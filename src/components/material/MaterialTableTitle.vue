@@ -870,7 +870,7 @@
                                     <div class="col-md-4 q-pr-sm">
                                         <div class="text-subtitle2 q-mb-sm">Added to Inventory</div>
                                         <div class="h-popup">
-<div class="cursor-pointer"><q-icon name="dangerous" style="font-size: 1.7em; color: red"/>No</div>
+                                            <div class="cursor-pointer"><q-icon name="dangerous" style="font-size: 1.7em; color: red"/>No</div>
                                         </div>
                                     </div>
                                     <div class="col-md-4" v-if="editedItem.billing">
