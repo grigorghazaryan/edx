@@ -64,9 +64,7 @@
 
                 <q-btn 
                     square
-                    class="q-mr-md" 
-                    style="background-color: #546bfa" 
-                    text-color="white" 
+                    class="q-mr-md edx-bg-purple" text-color="white"
                     icon="add" 
                     no-caps
                     @click="openNewActivityPopup"
@@ -77,9 +75,9 @@
                 <q-btn
                     icon-right="archive"
                     label="Export to Excel"
-                    color="teal" 
-                    text-color="white"
+                    class="edx-bg-green" text-color="white"
                     no-caps
+                    @click="exportTable"
                 />
 
                 <q-btn
@@ -205,8 +203,8 @@
                     
                     <q-td key="online" :props="props">
                         <span 
-                            class="material-icons cursor-pointer" 
-                            style="font-size: 1.7em; color: #4daf4f"
+                            class="material-icons cursor-pointer edx-green" 
+                            style="font-size: 1.7em"
                             v-if="props.row.online_uni.id == 1 "
                         >
                             laptop_mac
@@ -219,8 +217,8 @@
                             </q-tooltip>
                         </span> 
                         <span 
-                            class="material-icons cursor-pointer" 
-                            style="font-size: 1.7em; color: #2196f3"
+                            class="material-icons cursor-pointer edx-blue" 
+                            style="font-size: 1.7em"
                             v-else
                         >
                             emoji_transportation
@@ -242,7 +240,7 @@
 
                     <q-td key="status" :props="props">
 
-                        <q-icon v-if="props.row.status_uni.id == 1 " name="done" color="green" style="font-size: 1.5em">
+                        <q-icon v-if="props.row.status_uni.id == 1 " name="done" class="edx-green" style="font-size: 1.5em">
                             <q-tooltip 
                                 anchor="top middle" self="bottom middle" :offset="[10, 10]"
                                 transition-show="flip-right"
@@ -252,7 +250,7 @@
                             </q-tooltip>
                         </q-icon>
 
-                        <q-icon v-else name="cancel" color="red" style="font-size: 2em">
+                        <q-icon v-else name="cancel" class="edx-red" style="font-size: 2em">
                             <q-tooltip 
                                 anchor="top middle" self="bottom middle" :offset="[10, 10]"
                                 transition-show="flip-right"
@@ -267,7 +265,7 @@
                     <q-td key="approvals" :props="props">
 
                         <q-icon v-if="props.row.approval_status_uni.label == 'Approved'" 
-                        name="done" color="green" style="font-size: 1.5em">
+                        name="done" class="edx-green" style="font-size: 1.5em">
                             <q-tooltip 
                                 anchor="top middle" self="bottom middle" :offset="[10, 10]"
                                 transition-show="flip-right"
@@ -278,7 +276,7 @@
                         </q-icon>
 
                         <q-icon v-else-if="props.row.approval_status_uni.label == 'Pending'" 
-                        name="access_time" color="amber-7" style="font-size: 1.5em">
+                        name="access_time" class="edx-orange" style="font-size: 1.5em">
                         <q-tooltip 
                             anchor="top middle" self="bottom middle" :offset="[10, 10]"
                             transition-show="flip-right"
@@ -288,7 +286,7 @@
                         </q-tooltip>
                         </q-icon>
 
-                        <q-icon v-else name="unpublished" color="red" style="font-size: 2em">
+                        <q-icon v-else name="unpublished" class="edx-red" style="font-size: 2em">
                         <q-tooltip 
                             anchor="top middle" self="bottom middle" :offset="[10, 10]"
                             transition-show="flip-right"
@@ -299,7 +297,7 @@
                         </q-icon>
 
                         <q-icon v-if="props.row.approval_type_uni.label == 'Needs Assessment'"
-                        name="psychology" color="blue" style="font-size: 1.5em">
+                        name="psychology" class="edx-blue" style="font-size: 1.5em">
                         <q-tooltip 
                             anchor="top middle" self="bottom middle" :offset="[10, 10]"
                             transition-show="flip-right"
@@ -309,7 +307,7 @@
                         </q-tooltip>
                         </q-icon>
 
-                        <q-icon v-else-if="props.row.approval_type_uni.label == 'Catalog'" name="category" color="blue" style="font-size: 1.5em">
+                        <q-icon v-else-if="props.row.approval_type_uni.label == 'Catalog'" name="category" class="edx-blue" style="font-size: 1.5em">
                         <q-tooltip 
                             anchor="top middle" self="bottom middle" :offset="[10, 10]"
                             transition-show="flip-right"
@@ -319,7 +317,7 @@
                         </q-tooltip>
                         </q-icon>
 
-                        <q-icon v-else-if="props.row.approval_type_uni.label == 'Blanket Approval'" name="touch_app" color="blue" style="font-size: 1.5em">
+                        <q-icon v-else-if="props.row.approval_type_uni.label == 'Blanket Approval'" name="touch_app" class="edx-blue" style="font-size: 1.5em">
                         <q-tooltip 
                             anchor="top middle" self="bottom middle" :offset="[10, 10]"
                             transition-show="flip-right"
@@ -329,7 +327,7 @@
                         </q-tooltip>
                         </q-icon>
 
-                        <q-icon v-else-if="props.row.approval_type_uni.label == 'Pre Approval'" name="how_to_reg" color="blue" style="font-size: 1.5em">
+                        <q-icon v-else-if="props.row.approval_type_uni.label == 'Pre Approval'" name="how_to_reg" class="edx-blue" style="font-size: 1.5em">
                         <q-tooltip 
                             anchor="top middle" self="bottom middle" :offset="[10, 10]"
                             transition-show="flip-right"
@@ -348,7 +346,7 @@
                         <span class="inline-span">{{ props.row.activity }}</span>
                     </q-td>
                     
-                    <!-- <q-td 
+                    <q-td 
                         key="dateOfActivity" :props="props" 
                         :style="{maxWidth: '200px', width: '200px'}"
                     > 
@@ -359,13 +357,13 @@
                         <span class="q-ml-sm">
                             <q-icon 
                                 name="autorenew" 
-                                color="green" 
+                                class="edx-green"
                                 style="font-size: 1.5em" 
                                 v-if="props.row.repeat" 
                             />
                             <q-icon 
                                 name="all_inclusive" 
-                                color="blue" 
+                                class="edx-blue"
                                 style="font-size: 1.5em" 
                                 v-if="props.row.multi" 
                             />
@@ -379,11 +377,11 @@
 
                             {{ props.row.no_attending }}
                             <span class="q-ml-sm">
-                                <q-icon name="people_alt" color="green" style="font-size: 1.5em"/>
+                                <q-icon name="people_alt" class="edx-green" style="font-size: 1.5em"/>
                             </span>
 
                         </div>
-                    </q-td> -->
+                    </q-td>
 
                     <q-td key="amount" :props="props">
                         <div>$ {{ props.row.amount }}</div>
@@ -392,7 +390,7 @@
                     <q-td key="type" :props="props">
 
                         <q-chip 
-                            square color="green" 
+                            square class="edx-bg-green"
                             text-color="white" 
                             v-if="props.row.type_uni.name == 'PD'"
                         >
@@ -406,7 +404,7 @@
                             </q-tooltip>
                         </q-chip>
 
-                        <q-chip v-else square color="purple" text-color="white" >
+                        <q-chip v-else square class="edx-bg-purple" text-color="white" >
                             <span>FE</span>
                             <q-tooltip 
                                 anchor="top middle" self="bottom middle" :offset="[10, 10]"
@@ -503,10 +501,10 @@
         <dialog-draggable 
             :width="1000" 
             :modelDialog="isShowActivityPopup" 
-            :title="'Item Details'" 
+            :title="'Material Details'" 
             @onHide="isShowActivityPopup=false"
-            :icon="'details'"
-            :color="'blue'"
+            :icon="'calendar_today'"
+            :color="'orange'"
         >
             <div class="q-pa-md">
                 <div class="row">
@@ -514,7 +512,7 @@
                     <div class="col-md-4 q-pr-lg">
 
                         <div class="q-mb-md">
-                            <div class="text-subtitle2 q-mb-sm">Item Name</div>
+                            <div class="text-subtitle2 q-mb-sm">Material Name</div>
                             <q-input
                                 outlined
                                 v-model="editedItem.activity" 
@@ -524,10 +522,10 @@
                         </div>
 
                         <div class="q-mb-md">
-                            <div class="text-subtitle2 q-mb-sm">Item Description</div>
+                            <div class="text-subtitle2 q-mb-sm">Material Description</div>
                             <q-input
                                 outlined
-                                v-model="editedItem.activity" 
+                                v-model="editedItem.description" 
                                 dense 
                                 autofocus
                             />
@@ -536,13 +534,11 @@
                         <div class="q-mb-md">
                             <div class="text-subtitle2 q-mb-sm">Campus</div>
                             <q-select  
-                                use-input
                                 outlined
                                 dense
                                 input-debounce="0"
-                                v-model="editedItem.provider" 
-                                :options="optionsSupplier"
-                                
+                                v-model="editedItem.campus" 
+                                :options="optionsCampus"
                             >
                                 <template v-slot:no-option>
                                     <q-item>
@@ -576,11 +572,7 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-md-4 q-pr-sm">
-                                <div class="text-subtitle2 q-mb-sm">Qty</div>
-                                <q-input outlined class="q-mb-md" type="text" v-model="editedItem.amount" dense autofocus />
-                            </div>
-                            <div class="col-md-4 q-pr-sm">
+                            <div class="col-md-3 q-pr-sm">
                                 <div class="text-subtitle2 q-mb-sm">Amount</div>
                                 <q-input prefix="$" class="q-mb-md" outlined type="text" v-model="editedItem.amount" dense autofocus />
                                 <q-popup-edit v-model="editedItem.amount" title="Update amount" buttons>
@@ -589,32 +581,41 @@
                                     :label="editedItem.type_uni && (editedItem.type_uni.label + ' Percentage') " dense autofocus/>
                                 </q-popup-edit>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-4 q-pr-sm">
                                 <div class="text-subtitle2 q-mb-sm">Charge</div>
                                 <q-input prefix="$" standout readonly  class="q-mb-md" type="text" 
                                 v-model="(parseFloat(editedItem.amount) + parseFloat(((editedItem.amount * editedItem.percentage) / 100))).toFixed(2)" dense autofocus />
+                            </div>
+                            <div class="col-md-5">
+                                <div class="text-subtitle2 q-mb-sm">Total with markup</div>
+                                <q-input 
+                                    prefix="$" 
+                                    standout 
+                                    readonly v-model="editedItem.amount"  
+                                    class="q-mb-md" 
+                                    type="number" 
+                                    dense autofocus />
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-md-12">
-                                <div class="text-subtitle2 q-mb-sm">Order Schedule Date</div>
+                                <div class="text-subtitle2 q-mb-sm">Order Schedule date</div>
                             </div>
                             <div class="col-md-4 q-pr-sm">
-                                <q-input class="q-mb-md" outlined type="text" dense autofocus />
+                                <q-input prefix="$" class="q-mb-md" outlined type="text" v-model="editedItem.amount" dense autofocus />
                             </div>
-                            <div class="col-md-4">
-                                <q-input outlined class="q-mb-md" type="text" 
-                               dense autofocus />
+                            <div class="col-md-4 q-pr-sm">
+                                <q-input prefix="$" class="q-mb-md" outlined type="text" v-model="editedItem.amount" dense autofocus />
                             </div>
                         </div>
-
 
                     </div>
 
                     <div class="col-md-8 q-pl-md">
+
                         <div class="row">
-                            <div class="col-md-5 q-pr-sm">
+                            <div class="col-md-5 q-pr-sm q-mb-md">
                                 <div class="text-subtitle2 q-mb-sm">Allocation Category</div>
                                 <div class="row cursor-pointer h-popup">
 
@@ -635,18 +636,6 @@
                                         <span>Family Engagement</span>
                                     </div>
 
-                                    
-                                    
-                                    <!-- <div class='q-ml-md'>
-                                        <q-chip 
-                                            square color="purple" 
-                                            text-color="white" 
-                                        >
-                                            <span>WR</span>
-                                        </q-chip>
-                                        <span>Well Rounded Education</span>
-                                    </div> -->
-
                                     <q-popup-edit v-model="editedItem.type_uni" title="Update type" buttons>
                                         <q-select 
                                             v-model="editedItem.type_uni" 
@@ -656,39 +645,41 @@
 
                                 </div>
                             </div>
-                            <div class="col-md-2">
-                                <div class="q-mb-md">
-                                    <div class="text-subtitle2 q-mb-sm">Item Status</div>
 
-                                    <div 
-                                        @click="changeStatus"
-                                        v-if="editedItem.status_uni && editedItem.status_uni.id == 1 " class="h-popup cursor-pointer">
-                                        <q-icon name="done" color="green" style="font-size: 1.5em"></q-icon>
-                                        <span>Active</span>
+                            <div class="col-md-5 q-pr-sm q-mb-md">
+                                <div class="text-subtitle2 q-mb-sm">Allocation Subcategory</div>
+                                <div class="row cursor-pointer h-popup">
+                                    <div v-if="editedItem.subcategory_uni">
+                                        <q-chip 
+                                            square color="green" 
+                                            text-color="white" 
+                                        >
+                                            <span>{{editedItem.subcategory_uni.name}}</span>
+                                        </q-chip>
+                                        <span>{{editedItem.subcategory_uni.label}}</span>
                                     </div>
-
-                                     <div 
-                                        @click="changeStatus"
-                                        v-else class="h-popup cursor-pointer">
-                                        <q-icon name="cancel" color="red" style="font-size: 1.5em"></q-icon>
-                                        <span>Canceled</span>
-                                    </div>
+                                    
+                                    <q-popup-edit v-model="editedItem.subcategory_uni" title="Update type" buttons>
+                                        <q-select 
+                                            v-model="editedItem.subcategory_uni" 
+                                            :options="optionsSubcategory"
+                                        />
+                                    </q-popup-edit>  
 
                                 </div>
                             </div>
                         </div>
+
                         <div class="q-mb-md">
                             <div class="row">
                                 <div class="col-md-5">
                                     <div class="text-subtitle2 q-mb-sm">Inventory Category</div>
                                     <q-select  
-                                        use-input
                                         outlined
                                         dense
                                         input-debounce="0"
-                                        v-model="editedItem.provider" 
-                                        :options="optionsSupplier"
-                                        
+                                        v-model="editedItem.tracking_category_uni" 
+                                        :options="optionsCategoryTracking"
                                     >
                                         <template v-slot:no-option>
                                             <q-item>
@@ -701,18 +692,17 @@
                                 </div>
                             </div>
                         </div>
+                        
                         <div class="q-mb-md">
                             <div class="row">
                                 <div class="col-md-5">
                                     <div class="text-subtitle2 q-mb-sm">Tracking Category</div>
                                     <q-select  
-                                        use-input
                                         outlined
                                         dense
                                         input-debounce="0"
-                                        v-model="editedItem.provider" 
-                                        :options="optionsSupplier"
-                                        
+                                        v-model="editedItem.tracking_category_uni" 
+                                        :options="optionsCategoryTracking"
                                     >
                                         <template v-slot:no-option>
                                             <q-item>
@@ -725,114 +715,203 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="q-mb-md">
-                            <div class="text-subtitle2 q-mb-sm">Approval Status</div>
-
-                            <div v-if="editedItem.approval_status_uni" class="row h-popup">
-
-                                <!-- Approval status  -->
-                                <div v-if="editedItem.approval_status_uni.label == 'Approved'" class="q-mr-md">
-                                    <q-icon name="done" color="green" style="font-size: 1.5em"></q-icon>
-                                    <span>Approved</span>
-                                </div>
-                                <div v-else-if="editedItem.approval_status_uni.label == 'Pending'" class="q-mr-md">
-                                    <q-icon name="access_time" color="amber-7" style="font-size: 1.5em"></q-icon>
-                                    <span>Pending</span>
-                                </div>
-                                <div v-else class="q-mr-md">
-                                    <q-icon name="unpublished" color="red" style="font-size: 1.5em"></q-icon>
-                                    <span>Declined</span>
-                                </div>
-                                <!-- End of approval status -->
-
-                                <!-- Approval type -->
-                                <div v-if="editedItem.approval_type_uni.label == 'Needs Assessment'">
-                                    <q-icon name="psychology" color="blue" style="font-size: 1.5em"></q-icon>
-                                    <span>Needs Assessment</span>
-                                </div>
-                                <div v-else-if="editedItem.approval_type_uni.label == 'Catalog'">
-                                    <q-icon name="category" color="blue" style="font-size: 1.5em"></q-icon>
-                                    <span>Catalog</span>
-                                </div>
-                                <div v-else-if="editedItem.approval_type_uni.label == 'Blanket Approval'">
-                                    <q-icon name="touch_app" color="blue" style="font-size: 1.5em"></q-icon>
-                                    <span>Blanket Approval</span>
-                                </div>
-                                <div v-else-if="editedItem.approval_type_uni.label == 'Pre Approval'">
-                                    <q-icon name="how_to_reg" color="blue" style="font-size: 1.5em"></q-icon>
-                                    <span>Pre Approval</span>
-                                </div>
-                                <!-- End of Approval type -->
-
-                                <q-popup-edit v-model="editedItem.approval_status_uni" title="Approvals" buttons >
-                                    <div style="width: 450px !important;max-width: 450px !important;">
-
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <q-select 
-                                                dense outlined v-model="editedItem.approval_status_uni" 
-                                                :options="approval"/>
-                                            </div>
-                                            <div class="col-md-7 q-ml-md">
-                                                
-                                                <q-option-group
-                                                    :options="optionsApp"
-                                                    label="Notifications"
-                                                    type="radio"
-                                                    v-model="editedItem.approval_type_uni.label"
-                                                />
-
-                                                <q-input 
-                                                    :disable="editedItem.approval_type_uni.label !== 'Pre Approval'" 
-                                                    class="q-mt-md q-mb-lg" dense outlined v-model="editedItem.approver" 
-                                                    label="Approved Name" 
-                                                />
-                                        
-                                            </div>
-                                        <q-separator />
-                                        </div>
-                                    
-                                    </div>
-                                </q-popup-edit>
-
-                            </div>
-
-                        </div>
-                        <div class="q-md-mb">
                             <div class="row">
-                                <div class="col-md-3">
-                                    <div class="text-subtitle2 q-mb-sm">Order Status</div>
+                                <div class="col-md-5">
+                                    <div class="text-subtitle2 q-mb-sm">Approval Status</div>
+                                    <div v-if="editedItem.approval_status_uni" class="row h-popup">
 
-                                    <div class="h-popup">
-                                        <q-icon name="check_circle" color="green" style="font-size: 1.5em"></q-icon>
-                                        <span>Complete</span>
+                                        <div>
+                                            <!-- Approval status  -->
+                                            <div v-if="editedItem.approval_status_uni.label == 'Approved'" class="q-mr-md">
+                                                <q-icon name="done" color="green" style="font-size: 1.5em"></q-icon>
+                                                <span>Approved</span>
+                                            </div>
+                                            <div v-else-if="editedItem.approval_status_uni.label == 'Pending'" class="q-mr-md">
+                                                <q-icon name="access_time" color="amber-7" style="font-size: 1.5em"></q-icon>
+                                                <span>Pending</span>
+                                            </div>
+                                            <div v-else class="q-mr-md">
+                                                <q-icon name="unpublished" color="red" style="font-size: 1.5em"></q-icon>
+                                                <span>Declined</span>
+                                            </div>
+                                            
+
+                                            <q-popup-edit v-model="editedItem.approval_status_uni" title="Approvals" buttons >
+                                                <div style="width: 450px !important;max-width: 450px !important;">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <q-select 
+                                                                dense 
+                                                                outlined 
+                                                                v-model="editedItem.approval_status_uni" 
+                                                                :options="approval"
+                                                            />
+                                                        </div>
+
+                                                        <div class="col-md-7 q-ml-md">
+                                                            
+                                                            <q-option-group
+                                                                :options="optionsApp"
+                                                                label="Notifications"
+                                                                type="radio"
+                                                                v-model="editedItem.approval_type_uni.value"
+                                                            />
+
+                                                            <q-input 
+                                                                :disable="editedItem.approval_type_uni.value !== 4" 
+                                                                class="q-mt-md q-mb-lg" dense outlined v-model="editedItem.approver" 
+                                                                label="Approver Name" 
+                                                            />
+                                                    
+                                                        </div>
+                                                    <q-separator />
+                                                    </div>
+                                                </div>
+                                            </q-popup-edit>
+                                            <!-- End of approval status -->
+                                        </div>
+
+                                        <!-- Approval type -->
+                                        <div v-if="editedItem.approval_type_uni.value == 1">
+                                            <q-icon name="psychology" color="blue" style="font-size: 1.5em"></q-icon>
+                                            <span>Needs Assessment</span>
+                                        </div>
+                                        <div v-else-if="editedItem.approval_type_uni.value == 2">
+                                            <q-icon name="category" color="blue" style="font-size: 1.5em"></q-icon>
+                                            <span>Catalog</span>
+                                        </div>
+                                        <div v-else-if="editedItem.approval_type_uni.value == 3">
+                                            <q-icon name="touch_app" color="blue" style="font-size: 1.5em"></q-icon>
+                                            <span>Blanket Approval</span>
+                                        </div>
+                                        <div v-else-if="editedItem.approval_type_uni.value == 4">
+                                            <q-icon name="how_to_reg" color="blue" style="font-size: 1.5em"></q-icon>
+                                            <span>Pre Approval</span>
+                                        </div>
+                                        <!-- End of Approval type -->
+
+                                        
+
                                     </div>
-
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="text-subtitle2 q-mb-sm">Purchased on</div>
-
-                                        <q-input  dense outlined v-model="tempDateOfActivity.startdate"/>
-
-                                </div>
-                                <div class="col-md-3 q-pl-md">
-                                    <div class="text-subtitle2 q-mb-sm">Added to Inventory</div>
-
-                                    <div class="h-popup">
-                                        <q-icon name="check_circle" color="green" style="font-size: 1.5em"></q-icon>
-                                        <span>Yes</span>
-                                    </div>
-
                                 </div>
                             </div>
                         </div>
+
+                        <div class="q-mb-md" v-if="editedItem.status_uni">
+                            <div class="text-subtitle2 q-mb-sm">Material Status</div>
+                            <div class="row">
+                                <div class="col-md-4">
+
+                                    <div
+                                        v-if="editedItem.status_uni.id == 1" 
+                                        class="h-popup cursor-pointer">
+                                        <q-icon name="done" color="green" style="font-size: 1.5em"></q-icon>
+                                        <span>Active</span>
+                                    </div>
+
+                                    <div
+                                        v-else class="h-popup cursor-pointer">
+                                        <q-icon name="cancel" color="red" style="font-size: 1.5em"></q-icon>
+                                        <span>Canceled</span>
+                                    </div>
+
+                                    <q-popup-edit v-model="editedItem.status_uni" title="Billing Status" buttons >
+                                        <q-select  
+                                            outlined
+                                            dense
+                                            input-debounce="0"
+                                            v-model="editedItem.status_uni" 
+                                            :options="optionsStatus"
+                                        >
+                                            <template v-slot:no-option>
+                                                <q-item>
+                                                    <q-item-section class="text-grey">
+                                                    No results
+                                                    </q-item-section>
+                                                </q-item>
+                                            </template>
+                                        </q-select>
+                                    </q-popup-edit>
+                                    
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row" v-show="editedItem.status_uni && editedItem.status_uni.id == 1">
+                            <div class="col-md-8">
+                                <div class="row">
+                                    <div class="col-md-4 q-pr-sm">
+                                        <div class="text-subtitle2 q-mb-sm">Completed On</div>
+                                        
+
+
+
+                                        <q-input outlined dense class="q-mb-md" v-model="editedItem.completed_date">
+                                            <template v-slot:append>
+                                                <q-icon name="event" class="cursor-pointer">
+                                                <q-popup-proxy transition-show="scale" transition-hide="scale">
+                                                    <q-date v-model="editedItem.completed_date">
+                                                    <div class="row items-center justify-end">
+                                                        <q-btn v-close-popup label="Close" color="primary" flat />
+                                                    </div>
+                                                    </q-date>
+                                                </q-popup-proxy>
+                                                </q-icon>
+                                            </template>
+                                        </q-input>
+
+
+
+
+
+                                    </div>
+                                    <div class="col-md-4 q-pr-sm">
+                                        <div class="text-subtitle2 q-mb-sm">Added to Inventory</div>
+                                        <div class="h-popup">
+<div class="cursor-pointer"><q-icon name="dangerous" style="font-size: 1.7em; color: red"/>No</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4" v-if="editedItem.billing">
+                                        <div class="text-subtitle2 q-mb-sm">Billing Status</div>
+                                        <div class="h-popup">
+                                            <div class="cursor-pointer"><q-icon name="not_listed_location" style="font-size: 1.7em; color: #4daf4f"/>{{ editedItem.billing.label }}</div>
+                                            <q-popup-edit v-model="editedItem.billing" title="Billing Status" buttons >
+                                                <q-select  
+                                                    outlined
+                                                    dense
+                                                    input-debounce="0"
+                                                    v-model="editedItem.billing" 
+                                                    :options="optionsBilling"
+                                                >
+                                                    <template v-slot:no-option>
+                                                        <q-item>
+                                                            <q-item-section class="text-grey">
+                                                            No results
+                                                            </q-item-section>
+                                                        </q-item>
+                                                    </template>
+                                                </q-select>
+                                            </q-popup-edit>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
 
                     <div class="col-md-12 q-mt-md">
                         <div class="row">
                             <div class="q-pl-md col-md-12">
                                 <div class="text-subtitle2 q-mb-sm">Note</div>
-                                <q-input dense outlined type="textarea" v-model="editedItem.note" />
+                                <q-input 
+                                    dense 
+                                    outlined
+                                    type="textarea"
+                                    v-model="editedItem.note" 
+                                />
                             </div>
                         </div>
                     </div>
@@ -999,337 +1078,6 @@
 
         </dialog-draggable>
 
-        <dialog-draggable 
-            :width="600" 
-            :modelDialog="isShowAddDate" 
-            :title="'Schedule Activity'" 
-            @onHide="isShowAddDate=false"
-            :icon="'calendar_today'"
-            :color="'orange'"
-        >  
-            <q-card-section
-                style="max-height: 60vh"
-                class="scroll q-pt-none q-pb-none q-pr-none q-pl-none"
-            >
-                <div class="row">
-                    <div class="col-12">
-                        <div class="q-mt-sm q-mb-md">
-
-                            <q-separator class="q-mt-md q-mb-md"/>
-
-                            <div class="row q-mt-lg">
-
-                            <div class="col-3 q-pr-md row items-center justify-end">Start date:</div>
-                                <div class="col-3">
-                                <q-input :readonly="tempDateOfActivity.is_full_day" outlined dense v-model="tempDateOfActivity.startdate">
-                                    <template v-slot:append>
-                                    <q-icon name="event" class="cursor-pointer">
-                                        <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                        <q-date 
-                                        :disabled="tempDateOfActivity.is_full_day" 
-                                        :readonly="tempDateOfActivity.is_full_day" 
-                                        v-model="tempDateOfActivity.startdate" 
-                                        >
-                                            <div class="row items-center justify-end">
-                                            <q-btn v-close-popup label="Close" color="primary" flat />
-                                            </div>
-                                        </q-date>
-                                        </q-popup-proxy>
-                                    </q-icon>
-                                    </template>
-                                </q-input>
-                                </div>
-
-                            <div class="col-2 q-pr-md row items-center justify-end">End date:</div>
-                                <div class="col-3">
-                                <q-input :readonly="tempDateOfActivity.is_full_day" outlined dense v-model="tempDateOfActivity.endDate">
-                                    <template v-slot:append>
-                                    <q-icon name="event" class="cursor-pointer">
-                                        <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                        <q-date 
-                                            :disabled="tempDateOfActivity.is_full_day" 
-                                            :readonly="tempDateOfActivity.is_full_day" 
-                                            v-model="tempDateOfActivity.endDate" 
-                                        >
-                                            <div class="row items-center justify-end">
-                                            <q-btn v-close-popup label="Close" color="primary" flat />
-                                            </div>
-                                        </q-date>
-                                        </q-popup-proxy>
-                                    </q-icon>
-                                    </template>
-                                </q-input>
-                                </div>
-
-                            </div>
-
-                            <div class="row q-mt-md q-mt-md">
-
-                            <div class="col-3 q-pr-md row items-center justify-end">Start time:</div>
-                            <div class="col-3">
-                                <q-input :readonly="tempDateOfActivity.is_full_day"  outlined dense v-model="tempDateOfActivity.time1">
-                                <template v-slot:append>
-                                    <q-icon name="access_time" class="cursor-pointer">
-                                    <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                        <q-time :disabled="tempDateOfActivity.is_full_day" :readonly="tempDateOfActivity.is_full_day" v-model="tempDateOfActivity.time1">
-                                        <div class="row items-center justify-end">
-                                            <q-btn v-close-popup label="Close" color="primary" flat />
-                                        </div>
-                                        </q-time>
-                                    </q-popup-proxy>
-                                    </q-icon>
-                                </template>
-                                </q-input>
-                            </div>
-
-                            <div class="col-2 q-pr-md row items-center justify-end">End time:</div>
-                            <div class="col-3">
-                                <q-input :readonly="tempDateOfActivity.is_full_day"  outlined dense v-model="tempDateOfActivity.time2">
-                                <template v-slot:append>
-                                    <q-icon name="access_time" class="cursor-pointer">
-                                    <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                        <q-time :disabled="tempDateOfActivity.is_full_day" :readonly="tempDateOfActivity.is_full_day" v-model="tempDateOfActivity.time2">
-                                        <div class="row items-center justify-end">
-                                            <q-btn v-close-popup label="Close" color="primary" flat />
-                                        </div>
-                                        </q-time>
-                                    </q-popup-proxy>
-                                    </q-icon>
-                                </template>
-                                </q-input>
-                            </div>
-
-                            <div class="col-4 q-pl-lg q-mt-md">
-                                <span class="q-ml-md"><q-checkbox v-model="tempDateOfActivity.is_full_day" label="All day event" /></span>
-                            </div>
-
-                            </div>
-
-                            <q-separator class="q-mt-md q-mb-md"/>
-
-                            <div class="row q-pr-lg q-pl-lg">
-
-                            <div class="col-md-12 q-mb-md">
-                                <div class="text-subtitle2 q-mb-sm">Location: </div>
-                                <q-input outlined v-model="tempDateOfActivity.location" dense/>
-                            </div>
-
-                            <div class="col-md-12">
-                                <div class="text-subtitle2 q-mb-sm">Note: </div>
-                                <q-input outlined type="textarea" dense v-model="tempDateOfActivity.note"/>
-                            </div>
-
-                            </div>
-                        
-                            <q-separator class="q-mt-md q-mb-md"/>
-
-                            <div class="row">
-                            <div class="col-3 text-right q-pr-md">
-                                <q-checkbox v-model="tempDateOfActivity.repeat" label="Repeat" />
-                            </div>
-                            </div>
-
-                            <div v-if="tempDateOfActivity.repeat">
-
-                            <div class="row q-mt-md">
-                                <div class="col-3 q-pr-md row items-center justify-end">
-                                Repeats:
-                                </div>
-                                <div class="col-3">
-                                <q-select dense outlined v-model="tempDateOfActivity.repeats" :options="selectOptionsDayWeekMonth"  />
-                                </div>
-                            </div>
-
-                            <div class="row q-mt-md">
-                                <div class="col-3 q-pr-md row items-center justify-end">Every:</div>
-                                <div class="col-2">
-                                <q-input outlined v-model="tempDateOfActivity.repeatEvery" dense/>
-                                </div>
-                                <div class="col-2 row items-center justify-start q-pl-sm">
-                                <span>{{ tempDateOfActivity.repeats.clean }}(s)</span>
-                                </div>
-                            </div>
-
-                            <div class="row q-mt-md">
-                                <div class="col-3 q-pr-md row items-center justify-end">On:</div>
-                                <div class="col-9">
-                                <q-btn-group push>
-                                    <q-btn 
-                                    v-for="(week, i) in weekDays" :key="i"
-                                    :color=" week.checked ? 'amber' : 'yellow' " 
-                                    glossy
-                                    text-color="black" 
-                                    push 
-                                    :label="week.label.charAt(0)"
-                                    @click="repeatOnWeekDayChild(i)"
-                                    />
-                                </q-btn-group>
-                                </div>
-                            </div>
-
-                            </div>
-
-                            <!-- <q-separator class="q-mt-md"></q-separator>
-
-                            <div class="row q-pr-lg q-pl-lg q-mt-lg">
-
-                                <div class="col-md-12 q-mb-md">
-                                    <q-btn :icon="editedItem.attendies ? 'remove' : 'add'" color="blue" round @click="editedItem.attendies = !editedItem.attendies"/>
-                                </div>
-
-                            </div>
-
-                            <div v-if="editedItem.attendies" class="row q-mt-md q-pr-lg q-pl-lg">
-                                <div class="col-4 q-pr-md row items-center justify-end">
-                                    Number of attendees:
-                                </div>
-                                <div class="col-2">
-                                    <q-input dense outlined v-model="editedItem.noAttendingArr.attendees"/>
-                                </div>
-                            </div>
-
-                            <div v-if="editedItem.attendies" class="q-mt-md q-pr-lg q-pl-lg">
-                                <div>
-
-                                    <q-table
-                                    :data="editedItem.noAttendingArr.attendeesData"
-                                    :columns="attendeesColumn"
-                                    row-key="no"
-                                    hide-bottom
-                                    class="no-scroll"
-                                    :pagination.sync="paginationAttendee"
-                                    >
-                                    
-                                    <template v-slot:body="props">
-
-                                        <q-tr :props="props">
-
-                                        <q-td key="no" :props="props">
-                                            <q-input 
-                                            type="number" 
-                                            dense 
-                                            outlined 
-                                            v-model="props.row.no"
-                                            @input="selfTitleTeacherCount(props.row.no)"
-                                            :readonly="props.row.all"
-                                            />
-                                        </q-td>
-
-                                        <q-td key="type" :props="props" style="width: 200px">
-                                            <q-select 
-                                            dense 
-                                            outlined 
-                                            v-model="props.row.type" 
-                                            :options="teachersTypeArr"  
-                                            @input="changeType(props.row.type)"
-                                            />
-                                        </q-td>
-                                        
-                                        <q-td key="all" :props="props">
-                                            <q-checkbox v-model="props.row.all" />
-                                        </q-td>
-
-                                        <q-td key="attendeeList" style="width: 100px" :props="props" class="row">
-
-                                            <div @click="props.expand = !props.expand" class="cursor-pointer" >
-                                            <q-btn color="blue"  round dense icon="perm_identity"/>
-                                            </div>
-
-                                            <q-btn
-                                                icon="delete_forever"
-                                                color="red" 
-                                                @click="openAttendeDeleteModal(props.row)" 
-                                                round dense
-                                            >
-                                            </q-btn>
-
-                                        </q-td>
-
-                                        </q-tr>
-
-                                        <q-tr v-show="props.expand" :props="props">
-                                        <q-td colspan="100%" class="q-td--no-hover">
-
-                                            <q-input 
-                                                outlined 
-                                                dense 
-                                                v-on:keyup.enter="openAddParticipantPopup"
-                                                v-model="attendingSearch"
-                                                label="Search" 
-                                                class="q-mt-lg q-mb-sm">
-
-                                                <template v-slot:prepend>
-                                                <q-icon name="search" />
-                                                </template>
-
-                                            </q-input>
-
-                                            <q-list bordered separator class="q-mb-lg" style="height: 195px; overflow-y: scroll;">
-
-                                                <q-item
-                                                v-for="(teacher, index) in attendingTeacherList" :key="index">
-                                                <q-item-section>
-
-                                                    <div @click="addAttendee(teacher)" class="w-100 row justify-between items-center">
-                                                    <div class="text-subtitle2">
-                                                        {{ teacher.first_name }}
-                                                        {{ teacher.last_name }}
-                                                        {{ teacher.email }}
-                                                    </div>
-                                                    <q-btn 
-                                                        icon="delete_forever"
-                                                        color="red" 
-                                                        size=sm 
-                                                        no-caps
-                                                        @click="openDeleteTeacherModal(teacher)"
-                                                    ></q-btn>
-                                                    </div>
-
-                                                </q-item-section>
-                                                </q-item>
-
-                                                                            
-                                            
-                                            </q-list>
-
-                                        </q-td>
-                                        </q-tr>
-
-                                    </template>
-
-                                    </q-table>
-
-
-
-                                <q-btn 
-                                v-if="editedItem.noAttendingArr.attendeesData.length < teachersTypeArr.length"
-                                round 
-                                dense 
-                                color="secondary" 
-                                icon="add" 
-                                class="q-mt-md"  
-                                @click="addAttRow"
-                                />
-
-                                </div>
-                            </div> -->
-
-                            <q-separator class="q-mt-md q-mb-lg"></q-separator>
-
-                        </div> 
-                    </div>
-                </div>
-            </q-card-section>
-
-            <q-card-actions class="row justify-end">
-            <div>
-                <q-btn flat label="Cancel" color="primary" v-close-popup></q-btn>
-                <q-btn v-if="!isEditSchedule" flat label="Confirm" color="primary"  @click="confirmNewDate"></q-btn>
-                <q-btn v-else flat label="Save" color="primary"  @click="editSchedule"></q-btn>
-            </div>
-            </q-card-actions>
-
-        </dialog-draggable>
 
     </div>
 </template>
@@ -1340,6 +1088,7 @@ import dialogDraggable from '../../components/DialogDraggable'
 
 import axios from 'axios'
 import config from '../../../config'
+import DialogDraggable from '../DialogDraggable.vue';
 
 let typingTimer
 let doneTypingInterval = 500
@@ -1349,7 +1098,8 @@ export default {
     
     name: 'MaterialTable',
     components: {
-        dialogDraggable
+        dialogDraggable,
+        DialogDraggable
     },
     props: {
         barInfo: {
@@ -1410,24 +1160,24 @@ export default {
                 { 
                     name: "PDActivity", 
                     align: "left",
-                    label: "Material", 
+                    label: "Activity", 
                     sortable: false
                 },
-                // {
-                //     name: "dateOfActivity",
-                //     align: "left",
-                //     label: "Date Of Activity",
-                //     field: "dateOfActivity",
-                //     sortable: true,
-                //     style: 'max-width: 300px',
-                //     headerStyle: 'max-width: 500px',
-                // },
-                // {
-                //     name: "noAttending",
-                //     align: "left",
-                //     label: "Attendee Summary",
-                //     field: "noAttending"
-                // },
+                {
+                    name: "dateOfActivity",
+                    align: "left",
+                    label: "Date Of Activity",
+                    field: "dateOfActivity",
+                    sortable: true,
+                    style: 'max-width: 300px',
+                    headerStyle: 'max-width: 500px',
+                },
+                {
+                    name: "noAttending",
+                    align: "left",
+                    label: "Attendee Summary",
+                    field: "noAttending"
+                },
                 {
                     name: "amount",
                     align: "left",
@@ -1504,17 +1254,8 @@ export default {
                     label: "On Site"
                 }
             ],
-            optionsSupplier: [
-                {
-                    id: 1,
-                    label: "Provider"
-                },
-                {
-                    id: 2,
-                    label: "Provider 2"
-                },
-            ],
-            status: [{ id: 1, label: "Active" }, { id: 2, label: "Canceled" }],
+            optionsStatus: [],
+            optionsCategoryTracking: [],
             approval: [],
             optionsApp: [],
             typeArr: [],
@@ -1522,6 +1263,14 @@ export default {
             // supplier
             optionsSupplier: [],
             optionsSupplierForFilter: [],
+            // subcategory
+
+            // campus
+            optionsCampus: [],
+            //
+            optionsSubcategory: [],
+            //
+            optionsBilling: [],
 
             //ATTENDIEs
             paginationAttendee: { rowsPerPage: 100 },
@@ -1596,6 +1345,31 @@ export default {
         }
     },
     methods: {
+        exportTable() {
+            // naive encoding to csv format
+            const content = [this.columns.map(col => wrapCsvValue(col.label))].concat(
+                this.data.map(row => this.columns.map(col => wrapCsvValue(
+                    typeof col.field === 'function'
+                        ? col.field(row)
+                        : row[col.field === void 0 ? col.name : col.field],
+                    col.format
+                )).join(','))
+            ).join('\r\n')
+
+            const status = exportFile(
+                'table-export.csv',
+                content,
+                'text/csv'
+            )
+
+            if (status !== true) {
+                this.$q.notify({
+                    message: 'Browser denied file download...',
+                    color: 'negative',
+                    icon: 'warning'
+                })
+            }
+        },
         // Parsing activity
         activityParsing(data, final) {
 
@@ -1614,38 +1388,52 @@ export default {
                 charge = 0
             }
 
-            if(data[i].type.id == 1) {
-            // PD
-            if(final == 1) {
-                this.totalPDremainder = this.totalPDremainder - charge
+            if(data[i].category.id == 1) {
+                // PD
+                if(final == 1) {
+                    this.totalPDremainder = this.totalPDremainder - charge
+                }else {
+                    this.totalPDremainder = (this.totalPDremainder / 2) - charge
+                }
             }else {
-                this.totalPDremainder = (this.totalPDremainder / 2) - charge
-            }
-            }else {
-            // FE
-            if(final == 1) {
-                this.totalFEremainder = this.totalFEremainder - charge
-            }else {
-                this.totalFEremainder = (this.totalFEremainder / 2) - charge
-            }
+                // FE
+                if(final == 1) {
+                    this.totalFEremainder = this.totalFEremainder - charge
+                }else {
+                    this.totalFEremainder = (this.totalFEremainder / 2) - charge
+                }
             }
 
             // PD = 1 totalPDremainder
             // FE = 2 totalFEremainder
             let isOnline;
             if(data[i].is_online == 1) {
-            isOnline = 'Online'
+                isOnline = 'Online'
             }else {
-            isOnline = 'On Site'
+                isOnline = 'On Site'
             }
 
         
         let activityObj = {
             // remainingBalance: charge,
-            remainingBalance: data[i].type.id == 1 ? this.totalPDremainder : this.totalFEremainder,
+            remainingBalance: data[i].category.id == 1 ? this.totalPDremainder : this.totalFEremainder,
             id: data[i].id,
+            description: data[i].description,
+            tracking_category_uni: {
+                id: data[i].traking ? data[i].traking.id : 0,
+                label: data[i].traking ? data[i].traking.name : 'N/A',
+            },
+            billing: {
+                id: data[i].billing ? data[i].billing.id : 0,
+                label: data[i].billing ? data[i].billing.name : 'N/A',
+            },
+            completed_date: data[i].completed_date,
+            campus: {
+                id: data[i].campus ? data[i].campus.id : -8 ,
+                label: data[i].campus ? data[i].campus.name : 'N/A'
+            },
             online_uni: {
-                id: data[i].is_online,
+                id: data[i].details && data[i].is_online,
                 label: isOnline
             },
             provider: {
@@ -1661,21 +1449,26 @@ export default {
                 label: data[i].approval_status.name
             },
             approval_type_uni: {
-                id: data[i].approval_types.id,
-                label: data[i].approval_types.name
+                label: data[i].approval_types.name,
+                value: data[i].approval_types.id
             },
-            activity: data[i].activity_name,
+            activity: data[i].name,
             activity_date: sd == null ? 'TBD' : fullDate,
             no_attending: data[i].attendySummary.count,
             amount: data[i].cost != null ? data[i].cost : 0,
-            percentage: parseInt(data[i].upcharge_percentage),
+            percentage: parseInt(data[i].markup_percentage),
             type_uni: {
-                id: data[i].type.id,
-                label: data[i].type.name,
-                name: data[i].type.abbreviation
+                id: data[i].category.id,
+                label: data[i].category.name,
+                name: data[i].category.abbreviation
             },
-            note: data[i].activity_note,
-            approver: '',
+            subcategory_uni: {
+                id: data[i].sub_category ? data[i].sub_category.id : 0,
+                label: data[i].sub_category ? data[i].sub_category.name : 'NA',
+                name: data[i].sub_category ? data[i].sub_category.abbreviation : 'NA'
+            },
+            note: data[i].note,
+            approver: data[i].approver,
             charge: data[i].total_cost,
             repeat: data[i].has_recurring != null ? data[i].has_recurring : false,
             multi: data[i].has_multi_schedule != null ? data[i].has_multi_schedule : false,
@@ -1693,7 +1486,8 @@ export default {
             }
         }
 
-            arr.push(activityObj)
+        console.log('activity = ', activityObj)
+        arr.push(activityObj)
 
         }
 
@@ -1705,7 +1499,7 @@ export default {
 
             const conf = {
                 method: 'GET',
-                url: config.getActivity + type + '/' + id + '?limit=' + limit + '&page=' + page,
+                url: config.getActivity + type + '/' + id + '/' + 2 + '?limit=' + limit + '&page=' + page,
                 headers: {
                 Accept: 'application/json',
                 }
@@ -1713,11 +1507,11 @@ export default {
 
             axios(conf).then(res => {
 
-                let data = res.data.activity
-                this.pages = res.data.pagesCount
+                let data = res.data.items
 
                 let final = res.data.isSchoolAllocationFinal
                 this.final = final
+                this.pages = res.data.pagesCount
 
                 if(res.data.isSchoolAllocationFinal == 1) {
                     this.$emit('final', true)
@@ -1730,6 +1524,8 @@ export default {
 
                 this.data = finalResult
 
+                console.log('asdasdjhkgasdkhgasdkjhasd', finalResult)
+
                 this.loading = false
             });
         },
@@ -1739,12 +1535,13 @@ export default {
             this.isShowActivityPopup = true
             this.editedItem = {
                 status_uni: { id: 1, label: "Active" },
+                subcategory_uni: this.optionsSubcategory[0],
                 approval_status_uni: {
                     id: 1,
                     label: 'Approved'
                 },
                 approval_type_uni: {
-                    id: 1,
+                    value: 1,
                     label: 'Needs Assessment'
                 },
                 type_uni: {
@@ -1755,6 +1552,10 @@ export default {
                 online_uni: {
                     id: 1,
                     label: 'Online'
+                },
+                billing: {
+                    id: 4,
+                    label: "No Billed"
                 }
             }
         },
@@ -1763,25 +1564,35 @@ export default {
             this.btnLoading = true;
 
             const editData = {
+
                 supplier_id: this.editedItem.provider && this.editedItem.provider.id,
-                activity_status_id: this.editedItem.status_uni && this.editedItem.status_uni.id,
-                activity_approval_status_id: this.editedItem.approval_status_uni && this.editedItem.approval_status_uni.id,
-                activity_approval_type_id: this.editedItem.approval_status_uni && this.editedItem.approval_status_uni.id,
+                status_id: this.editedItem.status_uni && this.editedItem.status_uni.id,
+                approval_status_id: this.editedItem.approval_status_uni && this.editedItem.approval_status_uni.id,
+                approval_type_id: this.editedItem.approval_type_uni && this.editedItem.approval_type_uni.value,
                 approver: this.editedItem.approver,
-                activity_name: this.editedItem.activity,
-                cost: this.editedItem.amount,
-                allocation_type_categories_id: this.editedItem.type_uni && this.editedItem.type_uni.id,
-                activity_note: this.editedItem.note,
-                upcharge_percentage: this.editedItem.percentage,
+                name: this.editedItem.activity,
+                unit_cost: this.editedItem.amount,
+                category_id: this.editedItem.type_uni && this.editedItem.type_uni.id,
+                subcategory_id: this.editedItem.subcategory_uni && this.editedItem.subcategory_uni.id,
+                note: this.editedItem.note,
+                markup_percentage: this.editedItem.percentage,
                 is_online: this.editedItem.online_uni && this.editedItem.online_uni.id,
+
+                //
+                description: this.editedItem.description,
+                campus_id: this.editedItem.campus.id,
+                category_tracking_id: this.editedItem.tracking_category_uni.id,
+                completed_date: this.editedItem.completed_date,
+                billing_status_id: this.editedItem.billing.id,
+
             }
 
             editData.school_id = this.$route.params.id
-            editData.allocation_id = parseInt(this.tab)
+            editData.allocation_type_id = parseInt(this.tab)
 
             const conf = {
                 method: 'POST',
-                url: config.addActivity,
+                url: config.addActivity + 2,
                 headers: {
                 Accept: 'application/json',
                 },
@@ -1796,10 +1607,11 @@ export default {
                     type: 'positive',
                 })
 
-                if (res.data.activity[0]) {
+                if (res.data.items[0]) {
 
                     this.btnLoading = false;
-                    this.data.unshift(res.data.activity[0])
+                    // this.data.unshift(res.data.items[0])
+                    this.getActivityByType( this.tab, this.$route.params.id, this.count, this.current )
 
                     setTimeout(()=>{
                         this.isShowActivityPopup = false
@@ -1815,17 +1627,27 @@ export default {
             this.btnLoading = true;
 
             const editData = {
+
                 supplier_id: this.editedItem.provider && this.editedItem.provider.id,
-                activity_status_id: this.editedItem.status_uni && this.editedItem.status_uni.id,
-                activity_approval_status_id: this.editedItem.approval_status_uni && this.editedItem.approval_status_uni.id,
-                activity_approval_type_id: this.editedItem.approval_status_uni && this.editedItem.approval_status_uni.id,
+                status_id: this.editedItem.status_uni && this.editedItem.status_uni.id,
+                approval_status_id: this.editedItem.approval_status_uni && this.editedItem.approval_status_uni.id,
+                approval_type_id: this.editedItem.approval_type_uni && this.editedItem.approval_type_uni.value,
                 approver: this.editedItem.approver,
-                activity_name: this.editedItem.activity,
-                cost: this.editedItem.amount,
-                allocation_type_categories_id: this.editedItem.type_uni && this.editedItem.type_uni.id,
-                activity_note: this.editedItem.note,
-                upcharge_percentage: this.editedItem.percentage,
+                name: this.editedItem.activity,
+                unit_cost: this.editedItem.amount,
+                category_id: this.editedItem.type_uni && this.editedItem.type_uni.id,
+                subcategory_id: this.editedItem.subcategory_uni && this.editedItem.subcategory_uni.id,
+                note: this.editedItem.note,
+                markup_percentage: this.editedItem.percentage,
                 is_online: this.editedItem.online_uni && this.editedItem.online_uni.id,
+
+                //
+                description: this.editedItem.description,
+                campus_id: this.editedItem.campus.id,
+                category_tracking_id: this.editedItem.tracking_category_uni.id,
+                completed_date: this.editedItem.completed_date,
+                billing_status_id: this.editedItem.billing.id,
+
             }
 
             const conf = {
@@ -2056,6 +1878,31 @@ export default {
             this.getSchedules(row.id)
             this.getAttdeesById(row.id)
         },
+        // Get subcategories
+        getSubcategories(id) {
+            const conf = {
+                method: 'GET',
+                url: config.getSubcategories + id,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+                console.log('res subcategories', res)
+                const subcategoriesArr = []
+                const subcategories = res.data.typesCategories
+                for(let i=0; i<subcategories.length; i++) {
+                    let obj = {
+                        id: subcategories[i].id,
+                        name: subcategories[i].abbreviation,
+                        label: subcategories[i].name
+                    }
+                    subcategoriesArr.push(obj)
+                }
+                this.optionsSubcategory = subcategoriesArr
+            })
+        },
         // Get additional Info
         getAdditionalInfo(type) {
 
@@ -2083,7 +1930,6 @@ export default {
 
             this.optionsSupplier = supplierArr
             this.optionsSupplierForFilter = supplierArr
-
         })
 
         },
@@ -2119,28 +1965,8 @@ export default {
             }
 
             this.typeArr = typesArray
-            console.log('2222222')
-            console.log('2222222')
-            console.log('2222222')
-            console.log(res.data)
-            console.log('2222222')
-            console.log('2222222')
-            console.log('2222222')
 
         })
-        },
-        // Change Status
-        changeStatus() {
-
-            if(this.editedItem.status_uni) {
-                if(this.editedItem.status_uni.id == 1) {
-                    this.editedItem.status_uni = { id: 2, label: "Canceled" }
-                }
-                else {
-                    this.editedItem.status_uni = { id: 1, label: "Active" }
-                }
-            }
-            
         },
         // Get Approvals
         getApprovals() {
@@ -2161,24 +1987,26 @@ export default {
                 let statusArr = [], typesArr = [];
 
                 for(let i=0; i<approvalStatus.length; i++) {
-                let obj = {
-                    id: approvalStatus[i].id,
-                    label: approvalStatus[i].name
-                }
-                statusArr.push(obj)
+                    let obj = {
+                        id: approvalStatus[i].id,
+                        label: approvalStatus[i].name
+                    }
+                    statusArr.push(obj)
                 }
 
                 for(let i=0; i<approvalTypes.length; i++) {
-                let obj = {
-                    id: approvalTypes[i].id,
-                    label: approvalTypes[i].name,
-                    value: approvalTypes[i].name,
+                    let obj = {
+                        value: approvalTypes[i].id,
+                        label: approvalTypes[i].name
+                    }
+                    typesArr.push(obj)
                 }
-                typesArr.push(obj)
-                }
-
+                
                 this.approval = statusArr
                 this.optionsApp = typesArr
+
+                console.log('pppp', this.optionsApp)
+
             })
         },
 
@@ -2605,45 +2433,42 @@ export default {
         },
         filterActivity() {
 
-      // this.loading = true
+            // this.loading = true
 
-      let uri = '';
+            let uri = '';
 
-      if(this.filter != '') {
-        uri += '&search=' + this.filter
-      }
+            if(this.filter != '') {
+                uri += '&search=' + this.filter
+            }
 
-      if(this.schoolYear) {
-        uri += '&year=' + this.schoolYear.id
-      }
+            if(this.schoolYear) {
+                uri += '&year=' + this.schoolYear.id
+            }
 
-      if(this.typeModel != '') {
-        uri += '&type=' + this.typeModel.id
-      }
+            if(this.typeModel != '') {
+                uri += '&type=' + this.typeModel.id
+            }
 
-      console.log('URI', uri)
+            const conf = {
+                method: 'GET',
+                url: config.filterActivity + this.tab + '/' + this.$route.params.id + '/2' + '?' + uri,
+                headers: {
+                Accept: 'application/json',
+                }
+            }
 
-      const conf = {
-        method: 'GET',
-        url: config.filterActivity + this.tab + '/' + this.$route.params.id + '?' + uri,
-        headers: {
-          Accept: 'application/json',
-        }
-      }
+            axios(conf).then(res => {
 
-      axios(conf).then(res => {
+                this.pages = res.data.pagesCount
+                let data = res.data.items
+                
+                let filteredData = this.activityParsing(data, this.final)
 
-        this.pages = res.data.pagesCount
-        let data = res.data.activity
-        
+                this.data = filteredData
+                this.tempDataX = filteredData
 
-        let filteredData = this.activityParsing(data, this.final)
-
-        this.data = filteredData
-        this.tempDataX = filteredData
-
-        this.loading = false
-      });
+                this.loading = false
+            });
         },
         // Filter key events
         keyUpFilter() {
@@ -2659,6 +2484,99 @@ export default {
                 this.filterActivity()
             }
         },
+        // Get campuses
+        getCampueses() {
+
+            const conf = {
+                method: 'GET',
+                url: config.getCampuses + this.$route.params.id,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+            axios(conf).then(res => {
+                console.log('get campuses',  res.data[0].campus)
+                
+                const campuses = res.data[0].campus;
+                let campusesArr = [];
+
+                for(let i=0; i<campuses.length; i++) {
+                    campusesArr.push({
+                        id: campuses[i].id,
+                        label: campuses[i].name
+                    })
+                }
+
+                this.optionsCampus = campusesArr
+            });
+
+        },
+        // Get Status
+        getStatus() {
+
+            const conf = {
+                method: 'GET',
+                url: config.getActivityStatus,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+                console.log('get status',  res.data)
+
+                // billingStatus - optionsBilling
+                // itemStatus - optionsStatus
+                
+                const billingStatus = res.data.billingStatus;
+                let billingStatusArr = [];
+
+                for(let i=0; i<billingStatus.length; i++) {
+                    billingStatusArr.push({
+                        id: billingStatus[i].id,
+                        label: billingStatus[i].name
+                    })
+                }
+                this.optionsBilling = billingStatusArr
+
+                // **********************************************
+
+                const itemStatus = res.data.itemStatus;
+                let itemStatusArr = [];
+
+                for(let i=0; i<itemStatus.length; i++) {
+                    itemStatusArr.push({
+                        id: itemStatus[i].id,
+                        label: itemStatus[i].name
+                    })
+                }
+                this.optionsStatus = itemStatusArr
+            });
+
+        },
+        // tracking categories
+        getTrackingCategories() {
+            const conf = {
+                method: 'GET',
+                url: config.getTrackingCategories,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+                const categoryTracking = res.data.categoryTracking
+                let categoryTrackingArr = [];
+
+                for(let i=0; i<categoryTracking.length; i++) {
+                    categoryTrackingArr.push({
+                        id: categoryTracking[i].id,
+                        label: categoryTracking[i].name
+                    })
+                }
+                this.optionsCategoryTracking = categoryTrackingArr
+            })
+        }
     },
     watch: {
         showRemainingBalance(val) {
@@ -2699,9 +2617,16 @@ export default {
             if(!val) {
                 this.isEdit = false
                 this.isDuplicate = false
+            }else {
+                this.getCampueses();
+                this.getStatus();
+                this.getTrackingCategories();
             }
         },
     },
+    // beforeCreate() {
+    //     this.tab = this.title
+    // },
     created() {
         this.tab = this.title.toString()
         let tab = parseInt(this.tab)
@@ -2712,6 +2637,7 @@ export default {
         this.getApprovals()
         this.getRcurranceTypes()
         this.getSchoolYears()
+        this.getSubcategories(tab)
     }
 
 }

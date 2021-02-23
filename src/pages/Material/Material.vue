@@ -131,19 +131,19 @@
           </q-tab-panel>
 
           <q-tab-panel name="2" class="q-p-sm">
-            
+            <MaterialTableTitle :title="2" :barInfo="barInfo" @final="finalResult"/>
           </q-tab-panel>
 
           <q-tab-panel name="3" class="q-p-sm">
-            
+            <MaterialTableTitle :title="3" :barInfo="barInfo" @final="finalResult"/>
           </q-tab-panel>
 
           <q-tab-panel name="4" class="q-p-sm">
-            
+            <MaterialTableTitle :title="4" :barInfo="barInfo" @final="finalResult"/>
           </q-tab-panel>
 
           <q-tab-panel name="5" class="q-p-sm">
-            
+            <MaterialTableTitle :title="5" :barInfo="barInfo" @final="finalResult"/>
           </q-tab-panel>
 
           <q-tab-panel name="6" class="q-p-sm">

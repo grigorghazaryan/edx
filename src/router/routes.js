@@ -31,6 +31,18 @@ const routes = [
       {path: '/Material', component: () => import('pages/Material/MaterialSchools.vue')},
       {path: '/Material/:id', component: () => import('pages/Material/Material.vue')},
       // -------------
+      {path: '/Services', component: () => import('pages/Services/ServicesSchools.vue')},
+      {path: '/Services/:id', component: () => import('pages/Services/Services.vue')},
+      // -------------
+      {path: '/LicenseSubscription', component: () => import('pages/LicenseSubscription/LicenseSubscriptionSchools.vue')},
+      {path: '/LicenseSubscription/:id', component: () => import('pages/LicenseSubscription/LicenseSubscription.vue')},
+      // -------------
+      {path: '/LicenseSubscription', component: () => import('pages/LicenseSubscription/LicenseSubscriptionSchools.vue')},
+      {path: '/LicenseSubscription/:id', component: () => import('pages/LicenseSubscription/LicenseSubscription.vue')},
+      // -------------
+      {path: '/Counseling', component: () => import('pages/Counseling/CounselingSchools.vue')},
+      {path: '/Counseling/:id', component: () => import('pages/Counseling/Counseling.vue')},
+      // -------------
       {path: '/Reimbursement', component: () => import('pages/Reimbursement/Reimbursement.vue')},
       // Schools
       {path: '/Schools', component: () => import('pages/Schools/Schools.vue')},

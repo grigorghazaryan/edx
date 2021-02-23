@@ -498,22 +498,23 @@
             </q-menu>
           </q-item>
 
+          <!-- Activities -->
+
           <q-expansion-item v-if="!miniState"
             icon="account_balance"
-            label="Activities"
+            label="Budget"
           >
             <q-list class="bg-sidebar-opened edx-bg-lighter-dark">
-              <q-item to="/Activity" @click="addDataToLS('Activities', '/Activity')"  
+              <q-item to="/Activity" @click="addDataToLS('Activity', '/Activity')"  
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
                   <q-icon name="account_balance"/>
                 </q-item-section>
                 <q-item-section>
-                  <q-item-label>Activities</q-item-label>
+                  <q-item-label>Activity</q-item-label>
                 </q-item-section>
               </q-item>
             </q-list>
-
             <q-list class="bg-sidebar-opened edx-bg-lighter-dark">
               <q-item to="/ActivityProcesses" @click="addDataToLS('Activity Processes', '/ActivityProcesses')"  
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
@@ -525,6 +526,51 @@
                 </q-item-section>
               </q-item>
             </q-list>
+            <q-list class="bg-sidebar-opened edx-bg-lighter-dark">
+              <q-item to="/Material" @click="addDataToLS('Materials', '/Material')" 
+              active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
+                <q-item-section avatar>
+                  <q-icon name="account_balance"/>
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label>Materials</q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-list>
+            <q-list class="bg-sidebar-opened edx-bg-lighter-dark">
+              <q-item to="/Services" @click="addDataToLS('Services', '/Services')" 
+              active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
+                <q-item-section avatar>
+                  <q-icon name="account_balance"/>
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label>Services</q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-list>
+            <q-list class="bg-sidebar-opened edx-bg-lighter-dark">
+              <q-item to="/LicenseSubscription" @click="addDataToLS('LicenseSubscription', '/Services')" 
+              active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
+                <q-item-section avatar>
+                  <q-icon name="account_balance"/>
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label>License & Subscription</q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-list>
+            <q-list class="bg-sidebar-opened edx-bg-lighter-dark">
+              <q-item to="/Counseling" @click="addDataToLS('Counseling', '/Counseling')" 
+              active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
+                <q-item-section avatar>
+                  <q-icon name="account_balance"/>
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label>Counseling</q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-list>
+
           </q-expansion-item>
 
           <q-item v-else active-class="q-item-no-link-highlighting">
@@ -532,19 +578,19 @@
               <q-icon name="account_balance"/>
             </q-item-section>
             <q-item-section>
-              <q-item-label>Activities</q-item-label>
+              <q-item-label>Budget</q-item-label>
             </q-item-section>
             <q-menu
               anchor="top right"
               self="top left"
             >
               <q-list style="min-width: 100px">
-                <q-item clickable  v-close-popup to="/Activity" @click="addDataToLS('Activities', '/Activity')"  active-class="q-item-no-link-highlighting">
+                <q-item clickable  v-close-popup to="/Activity" @click="addDataToLS('Activity', '/Activity')"  active-class="q-item-no-link-highlighting">
                   <q-item-section avatar>
                     <q-icon name="account_balance"/>
                   </q-item-section>
                   <q-item-section>
-                    <q-item-label>Activities</q-item-label>
+                    <q-item-label>Activity</q-item-label>
                   </q-item-section>
                 </q-item>
                 <q-item clickable  v-close-popup to="/ActivityProcesses" @click="addDataToLS('Activity Processes', '/ActivityProcesses')"  active-class="q-item-no-link-highlighting">
@@ -555,12 +601,44 @@
                     <q-item-label>Activity Processes</q-item-label>
                   </q-item-section>
                 </q-item>
+                <q-item clickable  v-close-popup to="/Material" @click="addDataToLS('Materials', '/Material')"  active-class="q-item-no-link-highlighting">
+                  <q-item-section avatar>
+                    <q-icon name="account_balance"/>
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>Materials</q-item-label>
+                  </q-item-section>
+                </q-item>
+                <q-item clickable  v-close-popup to="/Services" @click="addDataToLS('Services', '/Services')"  active-class="q-item-no-link-highlighting">
+                  <q-item-section avatar>
+                    <q-icon name="account_balance"/>
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>Services</q-item-label>
+                  </q-item-section>
+                </q-item>
+                <q-item clickable  v-close-popup to="/LicenseSubscription" @click="addDataToLS('LicenseSubscription', '/LicenseSubscription')"  active-class="q-item-no-link-highlighting">
+                  <q-item-section avatar>
+                    <q-icon name="account_balance"/>
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>License & Subscription</q-item-label>
+                  </q-item-section>
+                </q-item>
+                <q-item clickable  v-close-popup to="/Counseling" @click="addDataToLS('Counseling', '/Counseling')"  active-class="q-item-no-link-highlighting">
+                  <q-item-section avatar>
+                    <q-icon name="account_balance"/>
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>Counseling</q-item-label>
+                  </q-item-section>
+                </q-item>
               </q-list>
             </q-menu>
           </q-item>
 
-          <!-- ### -->
-          <q-expansion-item v-if="!miniState"
+
+          <!-- <q-expansion-item v-if="!miniState"
             icon="account_balance"
             label="Material purchases"
           >
@@ -599,8 +677,16 @@
                 </q-item>
               </q-list>
             </q-menu>
-          </q-item>
-          <!-- ### -->
+          </q-item> -->
+          
+          
+          
+          <!-- ### ########## -->
+
+          <!-- Materials
+          Services
+          License & Subscription
+          Counseling -->
 
           <q-expansion-item v-if="!miniState"
             icon="attach_money"
@@ -825,14 +911,6 @@
             </q-menu>
           </q-item>
 
-
-
-
-
-
-
-
-
           <q-expansion-item v-if="!miniState"
             icon="school"
             label="Teacher Costs"
@@ -1027,9 +1105,9 @@ export default {
 //   border-radius: 0;
 // }
 
-// .sidebar-dropdown-bottom-menu {
-//   padding-left: 40px;
-// }
+.sidebar-dropdown-bottom-menu {
+  padding-left: 40px;
+}
 
 // a.q-item.q-item-type.row.no-wrap.q-item--clickable.q-link.cursor-pointer.q-focusable.q-hoverable {
 //     background: #1f2d3d;

@@ -103,6 +103,7 @@ const config = {
     addAttendee: 'https://edxchange-activity.aimtech.am/api/v1/add-attendy/', // + id
     filterActivity: 'https://edxchange-activity.aimtech.am/api/v1/filter-budget/', // 1/1001/ if activity : 1 , if material : 2 ?search=test&type=1&year=1015
     getSubcategories: 'https://edxchange-activity.aimtech.am/api/v1/get-types-subcategories/', // + title id
+    getActivityStatus: 'https://edxchange-activity.aimtech.am/api/v1/get-item-status',
     
     // Get attendee types
     getAtendeeTypes: 'https://edxchange-activity.aimtech.am/api/v1/get-atendee-types', 
@@ -113,6 +114,10 @@ const config = {
     searchParticipant: 'https://edxchange-activity.aimtech.am/api/v1/search-attendy-participant/', // 1001?searchParties=test
 
 
+    // GET CAMPUSES
+    getCampuses: 'https://edxchange-school.aimtech.am/api/v1/get-school-campus-list/', // + school id
+    // TRACKING CATEGORY
+    getTrackingCategories: 'https://edxchange-activity.aimtech.am/api/v1/get-item-category-tracking',
 }
 
 export default config
