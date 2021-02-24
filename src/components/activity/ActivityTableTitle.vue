@@ -593,7 +593,7 @@
                     <div class="col-md-8 q-pl-md">
 
                         <div class="row">
-                            <div class="col-md-5 q-pr-sm q-mb-md">
+                            <div class="col-md-10 q-pr-sm q-mb-md">
                                 <div class="text-subtitle2 q-mb-sm">Allocation Category</div>
                                 <div class="row cursor-pointer h-popup">
 
@@ -614,34 +614,27 @@
                                         <span>Family Engagement</span>
                                     </div>
 
-                                    <q-popup-edit v-model="editedItem.type_uni" title="Update type" buttons>
-                                        <q-select 
-                                            v-model="editedItem.type_uni" 
-                                            :options="typeArr"
-                                        />
-                                    </q-popup-edit>  
-
-                                </div>
-                            </div>
-
-                            <div class="col-md-5 q-pr-sm q-mb-md">
-                                <div class="text-subtitle2 q-mb-sm">Allocation Subcategory</div>
-                                <div class="row cursor-pointer h-popup">
-                                    <div v-if="editedItem.subcategory_uni">
-                                        <q-chip 
-                                            square color="green" 
-                                            text-color="white" 
-                                        >
-                                            <span>{{editedItem.subcategory_uni.name}}</span>
-                                        </q-chip>
-                                        <span>{{editedItem.subcategory_uni.label}}</span>
-                                    </div>
-                                    
-                                    <q-popup-edit v-model="editedItem.subcategory_uni" title="Update type" buttons>
-                                        <q-select 
-                                            v-model="editedItem.subcategory_uni" 
-                                            :options="optionsSubcategory"
-                                        />
+                                    <q-popup-edit v-model="editedItem.type_uni" buttons>
+                                        <div class="row q-mb-lg q-mt-lg">
+                                            <div class="col-md-6 q-pr-sm q-mb-md">
+                                                <div class="text-subtitle2 q-mb-sm">Allocation Category</div>
+                                                <div class="row cursor-pointer h-popup">
+                                                    <q-select 
+                                                        v-model="editedItem.type_uni" 
+                                                        :options="typeArr"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 q-pr-sm q-mb-md">
+                                                <div class="text-subtitle2 q-mb-sm">Allocation Subcategory</div>
+                                                <div class="row cursor-pointer h-popup">
+                                                    <q-select 
+                                                        v-model="editedItem.subcategory_uni" 
+                                                        :options="optionsSubcategory"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
                                     </q-popup-edit>  
 
                                 </div>

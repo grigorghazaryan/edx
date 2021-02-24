@@ -501,7 +501,7 @@
         <dialog-draggable 
             :width="1000" 
             :modelDialog="isShowActivityPopup" 
-            :title="'Material Details'" 
+            :title="'Service Details'" 
             @onHide="isShowActivityPopup=false"
             :icon="'calendar_today'"
             :color="'orange'"
@@ -512,7 +512,7 @@
                     <div class="col-md-4 q-pr-lg">
 
                         <div class="q-mb-md">
-                            <div class="text-subtitle2 q-mb-sm">Material Name</div>
+                            <div class="text-subtitle2 q-mb-sm">Service Name</div>
                             <q-input
                                 outlined
                                 v-model="editedItem.activity" 
@@ -522,7 +522,7 @@
                         </div>
 
                         <div class="q-mb-md">
-                            <div class="text-subtitle2 q-mb-sm">Material Description</div>
+                            <div class="text-subtitle2 q-mb-sm">Service Description</div>
                             <q-input
                                 outlined
                                 v-model="editedItem.description" 
@@ -572,8 +572,8 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-md-3 q-pr-sm">
-                                <div class="text-subtitle2 q-mb-sm">Amount</div>
+                            <div class="col-md-6 q-pr-sm">
+                                <div class="text-subtitle2 q-mb-sm">Cost</div>
                                 <q-input prefix="$" class="q-mb-md" outlined type="text" v-model="editedItem.amount" dense autofocus />
                                 <q-popup-edit v-model="editedItem.amount" title="Update amount" buttons>
                                     <q-input prefix="$" class="q-mb-sm" type="text" v-model="editedItem.amount" dense outlined autofocus />
@@ -581,32 +581,10 @@
                                     :label="editedItem.type_uni && (editedItem.type_uni.label + ' Percentage') " dense autofocus/>
                                 </q-popup-edit>
                             </div>
-                            <div class="col-md-4 q-pr-sm">
-                                <div class="text-subtitle2 q-mb-sm">Charge</div>
+                            <div class="col-md-6">
+                                <div class="text-subtitle2 q-mb-sm">Total with markup</div>
                                 <q-input prefix="$" standout readonly  class="q-mb-md" type="text" 
                                 v-model="(parseFloat(editedItem.amount) + parseFloat(((editedItem.amount * editedItem.percentage) / 100))).toFixed(2)" dense autofocus />
-                            </div>
-                            <div class="col-md-5">
-                                <div class="text-subtitle2 q-mb-sm">Total with markup</div>
-                                <q-input 
-                                    prefix="$" 
-                                    standout 
-                                    readonly v-model="editedItem.amount"  
-                                    class="q-mb-md" 
-                                    type="number" 
-                                    dense autofocus />
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="text-subtitle2 q-mb-sm">Order Schedule date</div>
-                            </div>
-                            <div class="col-md-4 q-pr-sm">
-                                <q-input class="q-mb-md" outlined type="text" v-model="editedItem.schedule_start" dense autofocus />
-                            </div>
-                            <div class="col-md-4 q-pr-sm">
-                                <q-input  class="q-mb-md" outlined type="text" v-model="editedItem.schedule_end" dense autofocus />
                             </div>
                         </div>
 
@@ -659,29 +637,6 @@
                                         </div>
                                     </q-popup-edit>  
 
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="q-mb-md">
-                            <div class="row">
-                                <div class="col-md-5">
-                                    <div class="text-subtitle2 q-mb-sm">Inventory Category</div>
-                                    <q-select  
-                                        outlined
-                                        dense
-                                        input-debounce="0"
-                                        v-model="editedItem.tracking_category_uni" 
-                                        :options="optionsCategoryTracking"
-                                    >
-                                        <template v-slot:no-option>
-                                            <q-item>
-                                                <q-item-section class="text-grey">
-                                                No results
-                                                </q-item-section>
-                                            </q-item>
-                                        </template>
-                                    </q-select>
                                 </div>
                             </div>
                         </div>
@@ -793,7 +748,7 @@
                         </div>
 
                         <div class="q-mb-md" v-if="editedItem.status_uni">
-                            <div class="text-subtitle2 q-mb-sm">Material Status</div>
+                            <div class="text-subtitle2 q-mb-sm">Service Status</div>
                             <div class="row">
                                 <div class="col-md-4">
 
@@ -833,9 +788,9 @@
                         </div>
 
                         <div class="row" v-show="editedItem.status_uni && editedItem.status_uni.id == 1">
-                            <div class="col-md-8">
+                            <div class="col-md-6">
                                 <div class="row">
-                                    <div class="col-md-4 q-pr-sm">
+                                    <div class="col-md-6 q-pr-sm">
                                         <div class="text-subtitle2 q-mb-sm">Completed On</div>
                                         
 
@@ -860,13 +815,7 @@
 
 
                                     </div>
-                                    <div class="col-md-4 q-pr-sm">
-                                        <div class="text-subtitle2 q-mb-sm">Added to Inventory</div>
-                                        <div class="h-popup">
-                                            <div class="cursor-pointer"><q-icon name="dangerous" style="font-size: 1.7em; color: red"/>No</div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4" v-if="editedItem.billing">
+                                    <div class="col-md-6" v-if="editedItem.billing">
                                         <div class="text-subtitle2 q-mb-sm">Billing Status</div>
                                         <div class="h-popup">
                                             <div class="cursor-pointer"><q-icon name="not_listed_location" style="font-size: 1.7em; color: #4daf4f"/>{{ editedItem.billing.label }}</div>
@@ -895,9 +844,42 @@
 
                     </div>
 
+                    <div v-show="!isDuplicate && isEdit" class="col-md-12 q-mt-lg">
+                        <DateOfActivityTable
+                            :dateOfActivity="dateOfActivityTableData" 
+                            @openEditPopup="openEditSchedulePopup"
+                            @openDeletePopup="openDeleteDate"
+                        />
+                        <div class="q-ml-md q-mt-md q-mb-md">
+                            <q-btn @click="addDate" icon="add" color="blue" round/>
+                        </div>
+                    </div>
+
                     <div class="col-md-12 q-mt-md">
                         <div class="row">
-                            <div class="col-md-12">
+                            <div v-if="!isDuplicate && isEdit" class="col-md-3">
+
+                                <div class="text-subtitle1 row justify-start items-center">
+                                    <q-icon class="q-mr-sm" name="people_alt"  color="green" style="font-size: 1.5em"/>
+                                    Attendee Summary:
+                                </div>
+                                
+                                <div @click="showAttendingDialog()" v-if="editedItem.noAttendingArr && editedItem.noAttendingArr.attendeesData.length"
+                                    class="cursor-pointer q-mt-md">
+
+                                    <div v-for="(attendee, i) in editedItem.noAttendingArr.attendeesData" :key="i">
+                                    <div>
+                                        <span v-if="attendee.all">All</span>
+                                        <span v-else>{{ attendee.no }}</span>
+                                        <span class="q-ml-sm">{{ attendee.type.label }}</span>
+                                    </div>
+                                    </div>
+                                </div>
+
+                                <div @click="showAttendingDialog()" class="cursor-pointer" v-else>No Attendees found.</div>
+
+                            </div>
+                            <div class="q-pl-md" :class="isDuplicate || !isEdit ? 'col-md-12' : 'col-md-9'">
                                 <div class="text-subtitle2 q-mb-sm">Note</div>
                                 <q-input 
                                     dense 
@@ -1071,6 +1053,337 @@
 
         </dialog-draggable>
 
+        <dialog-draggable 
+            :width="600" 
+            :modelDialog="isShowAddDate" 
+            :title="'Schedule Service'" 
+            @onHide="isShowAddDate=false"
+            :icon="'calendar_today'"
+            :color="'orange'"
+        >  
+            <q-card-section
+                style="max-height: 60vh"
+                class="scroll q-pt-none q-pb-none q-pr-none q-pl-none"
+            >
+                <div class="row">
+                    <div class="col-12">
+                        <div class="q-mt-sm q-mb-md">
+
+                            <q-separator class="q-mt-md q-mb-md"/>
+
+                            <div class="row q-mt-lg">
+
+                            <div class="col-3 q-pr-md row items-center justify-end">Start date:</div>
+                                <div class="col-3">
+                                <q-input :readonly="tempDateOfActivity.is_full_day" outlined dense v-model="tempDateOfActivity.startdate">
+                                    <template v-slot:append>
+                                    <q-icon name="event" class="cursor-pointer">
+                                        <q-popup-proxy transition-show="scale" transition-hide="scale">
+                                        <q-date 
+                                        :disabled="tempDateOfActivity.is_full_day" 
+                                        :readonly="tempDateOfActivity.is_full_day" 
+                                        v-model="tempDateOfActivity.startdate" 
+                                        >
+                                            <div class="row items-center justify-end">
+                                            <q-btn v-close-popup label="Close" color="primary" flat />
+                                            </div>
+                                        </q-date>
+                                        </q-popup-proxy>
+                                    </q-icon>
+                                    </template>
+                                </q-input>
+                                </div>
+
+                            <div class="col-2 q-pr-md row items-center justify-end">End date:</div>
+                                <div class="col-3">
+                                <q-input :readonly="tempDateOfActivity.is_full_day" outlined dense v-model="tempDateOfActivity.endDate">
+                                    <template v-slot:append>
+                                    <q-icon name="event" class="cursor-pointer">
+                                        <q-popup-proxy transition-show="scale" transition-hide="scale">
+                                        <q-date 
+                                            :disabled="tempDateOfActivity.is_full_day" 
+                                            :readonly="tempDateOfActivity.is_full_day" 
+                                            v-model="tempDateOfActivity.endDate" 
+                                        >
+                                            <div class="row items-center justify-end">
+                                            <q-btn v-close-popup label="Close" color="primary" flat />
+                                            </div>
+                                        </q-date>
+                                        </q-popup-proxy>
+                                    </q-icon>
+                                    </template>
+                                </q-input>
+                                </div>
+
+                            </div>
+
+                            <div class="row q-mt-md q-mt-md">
+
+                            <div class="col-3 q-pr-md row items-center justify-end">Start time:</div>
+                            <div class="col-3">
+                                <q-input :readonly="tempDateOfActivity.is_full_day"  outlined dense v-model="tempDateOfActivity.time1">
+                                <template v-slot:append>
+                                    <q-icon name="access_time" class="cursor-pointer">
+                                    <q-popup-proxy transition-show="scale" transition-hide="scale">
+                                        <q-time :disabled="tempDateOfActivity.is_full_day" :readonly="tempDateOfActivity.is_full_day" v-model="tempDateOfActivity.time1">
+                                        <div class="row items-center justify-end">
+                                            <q-btn v-close-popup label="Close" color="primary" flat />
+                                        </div>
+                                        </q-time>
+                                    </q-popup-proxy>
+                                    </q-icon>
+                                </template>
+                                </q-input>
+                            </div>
+
+                            <div class="col-2 q-pr-md row items-center justify-end">End time:</div>
+                            <div class="col-3">
+                                <q-input :readonly="tempDateOfActivity.is_full_day"  outlined dense v-model="tempDateOfActivity.time2">
+                                <template v-slot:append>
+                                    <q-icon name="access_time" class="cursor-pointer">
+                                    <q-popup-proxy transition-show="scale" transition-hide="scale">
+                                        <q-time :disabled="tempDateOfActivity.is_full_day" :readonly="tempDateOfActivity.is_full_day" v-model="tempDateOfActivity.time2">
+                                        <div class="row items-center justify-end">
+                                            <q-btn v-close-popup label="Close" color="primary" flat />
+                                        </div>
+                                        </q-time>
+                                    </q-popup-proxy>
+                                    </q-icon>
+                                </template>
+                                </q-input>
+                            </div>
+
+                            <div class="col-4 q-pl-lg q-mt-md">
+                                <span class="q-ml-md"><q-checkbox v-model="tempDateOfActivity.is_full_day" label="All day event" /></span>
+                            </div>
+
+                            </div>
+
+                            <q-separator class="q-mt-md q-mb-md"/>
+
+                            <div class="row q-pr-lg q-pl-lg">
+
+                            <div class="col-md-12 q-mb-md">
+                                <div class="text-subtitle2 q-mb-sm">Location: </div>
+                                <q-input outlined v-model="tempDateOfActivity.location" dense/>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="text-subtitle2 q-mb-sm">Note: </div>
+                                <q-input outlined type="textarea" dense v-model="tempDateOfActivity.note"/>
+                            </div>
+
+                            </div>
+                        
+                            <q-separator class="q-mt-md q-mb-md"/>
+
+                            <div class="row">
+                            <div class="col-3 text-right q-pr-md">
+                                <q-checkbox v-model="tempDateOfActivity.repeat" label="Repeat" />
+                            </div>
+                            </div>
+
+                            <div v-if="tempDateOfActivity.repeat">
+
+                            <div class="row q-mt-md">
+                                <div class="col-3 q-pr-md row items-center justify-end">
+                                Repeats:
+                                </div>
+                                <div class="col-3">
+                                <q-select dense outlined v-model="tempDateOfActivity.repeats" :options="selectOptionsDayWeekMonth"  />
+                                </div>
+                            </div>
+
+                            <div class="row q-mt-md">
+                                <div class="col-3 q-pr-md row items-center justify-end">Every:</div>
+                                <div class="col-2">
+                                <q-input outlined v-model="tempDateOfActivity.repeatEvery" dense/>
+                                </div>
+                                <div class="col-2 row items-center justify-start q-pl-sm">
+                                <span>{{ tempDateOfActivity.repeats.clean }}(s)</span>
+                                </div>
+                            </div>
+
+                            <div class="row q-mt-md">
+                                <div class="col-3 q-pr-md row items-center justify-end">On:</div>
+                                <div class="col-9">
+                                <q-btn-group push>
+                                    <q-btn 
+                                    v-for="(week, i) in weekDays" :key="i"
+                                    :color=" week.checked ? 'amber' : 'yellow' " 
+                                    glossy
+                                    text-color="black" 
+                                    push 
+                                    :label="week.label.charAt(0)"
+                                    @click="repeatOnWeekDayChild(i)"
+                                    />
+                                </q-btn-group>
+                                </div>
+                            </div>
+
+                            </div>
+
+                            <!-- <q-separator class="q-mt-md"></q-separator>
+
+                            <div class="row q-pr-lg q-pl-lg q-mt-lg">
+
+                                <div class="col-md-12 q-mb-md">
+                                    <q-btn :icon="editedItem.attendies ? 'remove' : 'add'" color="blue" round @click="editedItem.attendies = !editedItem.attendies"/>
+                                </div>
+
+                            </div>
+
+                            <div v-if="editedItem.attendies" class="row q-mt-md q-pr-lg q-pl-lg">
+                                <div class="col-4 q-pr-md row items-center justify-end">
+                                    Number of attendees:
+                                </div>
+                                <div class="col-2">
+                                    <q-input dense outlined v-model="editedItem.noAttendingArr.attendees"/>
+                                </div>
+                            </div>
+
+                            <div v-if="editedItem.attendies" class="q-mt-md q-pr-lg q-pl-lg">
+                                <div>
+
+                                    <q-table
+                                    :data="editedItem.noAttendingArr.attendeesData"
+                                    :columns="attendeesColumn"
+                                    row-key="no"
+                                    hide-bottom
+                                    class="no-scroll"
+                                    :pagination.sync="paginationAttendee"
+                                    >
+                                    
+                                    <template v-slot:body="props">
+
+                                        <q-tr :props="props">
+
+                                        <q-td key="no" :props="props">
+                                            <q-input 
+                                            type="number" 
+                                            dense 
+                                            outlined 
+                                            v-model="props.row.no"
+                                            @input="selfTitleTeacherCount(props.row.no)"
+                                            :readonly="props.row.all"
+                                            />
+                                        </q-td>
+
+                                        <q-td key="type" :props="props" style="width: 200px">
+                                            <q-select 
+                                            dense 
+                                            outlined 
+                                            v-model="props.row.type" 
+                                            :options="teachersTypeArr"  
+                                            @input="changeType(props.row.type)"
+                                            />
+                                        </q-td>
+                                        
+                                        <q-td key="all" :props="props">
+                                            <q-checkbox v-model="props.row.all" />
+                                        </q-td>
+
+                                        <q-td key="attendeeList" style="width: 100px" :props="props" class="row">
+
+                                            <div @click="props.expand = !props.expand" class="cursor-pointer" >
+                                            <q-btn color="blue"  round dense icon="perm_identity"/>
+                                            </div>
+
+                                            <q-btn
+                                                icon="delete_forever"
+                                                color="red" 
+                                                @click="openAttendeDeleteModal(props.row)" 
+                                                round dense
+                                            >
+                                            </q-btn>
+
+                                        </q-td>
+
+                                        </q-tr>
+
+                                        <q-tr v-show="props.expand" :props="props">
+                                        <q-td colspan="100%" class="q-td--no-hover">
+
+                                            <q-input 
+                                                outlined 
+                                                dense 
+                                                v-on:keyup.enter="openAddParticipantPopup"
+                                                v-model="attendingSearch"
+                                                label="Search" 
+                                                class="q-mt-lg q-mb-sm">
+
+                                                <template v-slot:prepend>
+                                                <q-icon name="search" />
+                                                </template>
+
+                                            </q-input>
+
+                                            <q-list bordered separator class="q-mb-lg" style="height: 195px; overflow-y: scroll;">
+
+                                                <q-item
+                                                v-for="(teacher, index) in attendingTeacherList" :key="index">
+                                                <q-item-section>
+
+                                                    <div @click="addAttendee(teacher)" class="w-100 row justify-between items-center">
+                                                    <div class="text-subtitle2">
+                                                        {{ teacher.first_name }}
+                                                        {{ teacher.last_name }}
+                                                        {{ teacher.email }}
+                                                    </div>
+                                                    <q-btn 
+                                                        icon="delete_forever"
+                                                        color="red" 
+                                                        size=sm 
+                                                        no-caps
+                                                        @click="openDeleteTeacherModal(teacher)"
+                                                    ></q-btn>
+                                                    </div>
+
+                                                </q-item-section>
+                                                </q-item>
+
+                                                                            
+                                            
+                                            </q-list>
+
+                                        </q-td>
+                                        </q-tr>
+
+                                    </template>
+
+                                    </q-table>
+
+
+
+                                <q-btn 
+                                v-if="editedItem.noAttendingArr.attendeesData.length < teachersTypeArr.length"
+                                round 
+                                dense 
+                                color="secondary" 
+                                icon="add" 
+                                class="q-mt-md"  
+                                @click="addAttRow"
+                                />
+
+                                </div>
+                            </div> -->
+
+                            <q-separator class="q-mt-md q-mb-lg"></q-separator>
+
+                        </div> 
+                    </div>
+                </div>
+            </q-card-section>
+
+            <q-card-actions class="row justify-end">
+            <div>
+                <q-btn flat label="Cancel" color="primary" v-close-popup></q-btn>
+                <q-btn v-if="!isEditSchedule" flat label="Confirm" color="primary"  @click="confirmNewDate"></q-btn>
+                <q-btn v-else flat label="Save" color="primary"  @click="editSchedule"></q-btn>
+            </div>
+            </q-card-actions>
+
+        </dialog-draggable>
 
     </div>
 </template>
@@ -1078,6 +1391,7 @@
 <script>
 
 import dialogDraggable from '../../components/DialogDraggable'
+import DateOfActivityTable from '../activity/DateOfActivityTable';
 
 import axios from 'axios'
 import config from '../../../config'
@@ -1089,9 +1403,10 @@ let doneTypingInterval = 500
 
 export default {
     
-    name: 'MaterialTable',
+    name: 'ServiceTable',
     components: {
         dialogDraggable,
+        DateOfActivityTable,
         DialogDraggable
     },
     props: {
@@ -1492,7 +1807,7 @@ export default {
 
             const conf = {
                 method: 'GET',
-                url: config.getActivity + type + '/' + id + '/' + 2 + '?limit=' + limit + '&page=' + page,
+                url: config.getActivity + type + '/' + id + '/' + 1 + '?limit=' + limit + '&page=' + page,
                 headers: {
                 Accept: 'application/json',
                 }
@@ -1585,7 +1900,7 @@ export default {
 
             const conf = {
                 method: 'POST',
-                url: config.addActivity + 2,
+                url: config.addActivity + 1,
                 headers: {
                 Accept: 'application/json',
                 },
@@ -2444,7 +2759,7 @@ export default {
 
             const conf = {
                 method: 'GET',
-                url: config.filterActivity + this.tab + '/' + this.$route.params.id + '/2' + '?' + uri,
+                url: config.filterActivity + this.tab + '/' + this.$route.params.id + '/1' + '?' + uri,
                 headers: {
                 Accept: 'application/json',
                 }
@@ -2617,9 +2932,6 @@ export default {
             }
         },
     },
-    // beforeCreate() {
-    //     this.tab = this.title
-    // },
     created() {
         this.tab = this.title.toString()
         let tab = parseInt(this.tab)

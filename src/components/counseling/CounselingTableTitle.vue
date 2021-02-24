@@ -501,7 +501,7 @@
         <dialog-draggable 
             :width="1000" 
             :modelDialog="isShowActivityPopup" 
-            :title="'Material Details'" 
+            :title="'Counseling Details'" 
             @onHide="isShowActivityPopup=false"
             :icon="'calendar_today'"
             :color="'orange'"
@@ -512,7 +512,7 @@
                     <div class="col-md-4 q-pr-lg">
 
                         <div class="q-mb-md">
-                            <div class="text-subtitle2 q-mb-sm">Material Name</div>
+                            <div class="text-subtitle2 q-mb-sm">Counseling Activity Name</div>
                             <q-input
                                 outlined
                                 v-model="editedItem.activity" 
@@ -522,7 +522,7 @@
                         </div>
 
                         <div class="q-mb-md">
-                            <div class="text-subtitle2 q-mb-sm">Material Description</div>
+                            <div class="text-subtitle2 q-mb-sm">Counseling Activity Description</div>
                             <q-input
                                 outlined
                                 v-model="editedItem.description" 
@@ -573,18 +573,13 @@
 
                         <div class="row">
                             <div class="col-md-3 q-pr-sm">
-                                <div class="text-subtitle2 q-mb-sm">Amount</div>
+                                <div class="text-subtitle2 q-mb-sm">Cost</div>
                                 <q-input prefix="$" class="q-mb-md" outlined type="text" v-model="editedItem.amount" dense autofocus />
                                 <q-popup-edit v-model="editedItem.amount" title="Update amount" buttons>
                                     <q-input prefix="$" class="q-mb-sm" type="text" v-model="editedItem.amount" dense outlined autofocus />
                                     <q-input prefix="%" v-model="editedItem.percentage"  type="number" outlined  
                                     :label="editedItem.type_uni && (editedItem.type_uni.label + ' Percentage') " dense autofocus/>
                                 </q-popup-edit>
-                            </div>
-                            <div class="col-md-4 q-pr-sm">
-                                <div class="text-subtitle2 q-mb-sm">Charge</div>
-                                <q-input prefix="$" standout readonly  class="q-mb-md" type="text" 
-                                v-model="(parseFloat(editedItem.amount) + parseFloat(((editedItem.amount * editedItem.percentage) / 100))).toFixed(2)" dense autofocus />
                             </div>
                             <div class="col-md-5">
                                 <div class="text-subtitle2 q-mb-sm">Total with markup</div>
@@ -659,29 +654,6 @@
                                         </div>
                                     </q-popup-edit>  
 
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="q-mb-md">
-                            <div class="row">
-                                <div class="col-md-5">
-                                    <div class="text-subtitle2 q-mb-sm">Inventory Category</div>
-                                    <q-select  
-                                        outlined
-                                        dense
-                                        input-debounce="0"
-                                        v-model="editedItem.tracking_category_uni" 
-                                        :options="optionsCategoryTracking"
-                                    >
-                                        <template v-slot:no-option>
-                                            <q-item>
-                                                <q-item-section class="text-grey">
-                                                No results
-                                                </q-item-section>
-                                            </q-item>
-                                        </template>
-                                    </q-select>
                                 </div>
                             </div>
                         </div>
@@ -789,11 +761,46 @@
 
                                     </div>
                                 </div>
+                                <div class="col-md-4">
+                                    <div class="text-subtitle2 q-mb-sm">Counseling Type</div>
+
+                                    <div v-if="editedItem.online_uni &&  editedItem.online_uni.id == 1 " class="h-popup">
+                                        <span 
+                                            class="material-icons cursor-pointer" 
+                                            style="font-size: 1.7em; color: #4daf4f"
+                                        >
+                                            laptop_mac
+                                        </span> 
+                                        <span>Online</span>
+                                    </div>
+
+                                    <div v-else class="h-popup">
+                                        <span 
+                                            class="material-icons cursor-pointer" 
+                                            style="font-size: 1.7em; color: #2196f3"
+                                            
+                                        >
+                                            emoji_transportation
+                                        </span> 
+                                        <span>On Site</span>
+                                    </div>
+
+                                    <q-popup-edit 
+                                        v-model="editedItem.online_uni" 
+                                        title="Online" buttons>
+                                        <q-select
+                                            dense 
+                                            outlined 
+                                            v-model="editedItem.online_uni" 
+                                            :options="online"
+                                        />
+                                    </q-popup-edit>
+                                </div>
                             </div>
                         </div>
 
                         <div class="q-mb-md" v-if="editedItem.status_uni">
-                            <div class="text-subtitle2 q-mb-sm">Material Status</div>
+                            <div class="text-subtitle2 q-mb-sm">Counseling Status</div>
                             <div class="row">
                                 <div class="col-md-4">
 
@@ -860,12 +867,6 @@
 
 
                                     </div>
-                                    <div class="col-md-4 q-pr-sm">
-                                        <div class="text-subtitle2 q-mb-sm">Added to Inventory</div>
-                                        <div class="h-popup">
-                                            <div class="cursor-pointer"><q-icon name="dangerous" style="font-size: 1.7em; color: red"/>No</div>
-                                        </div>
-                                    </div>
                                     <div class="col-md-4" v-if="editedItem.billing">
                                         <div class="text-subtitle2 q-mb-sm">Billing Status</div>
                                         <div class="h-popup">
@@ -895,9 +896,42 @@
 
                     </div>
 
+                    <div v-show="!isDuplicate && isEdit" class="col-md-12 q-mt-lg">
+                        <DateOfActivityTable
+                            :dateOfActivity="dateOfActivityTableData" 
+                            @openEditPopup="openEditSchedulePopup"
+                            @openDeletePopup="openDeleteDate"
+                        />
+                        <div class="q-ml-md q-mt-md q-mb-md">
+                            <q-btn @click="addDate" icon="add" color="blue" round/>
+                        </div>
+                    </div>
+
                     <div class="col-md-12 q-mt-md">
                         <div class="row">
-                            <div class="col-md-12">
+                            <div v-if="!isDuplicate && isEdit" class="col-md-3">
+
+                                <div class="text-subtitle1 row justify-start items-center">
+                                    <q-icon class="q-mr-sm" name="people_alt"  color="green" style="font-size: 1.5em"/>
+                                    Attendee Summary:
+                                </div>
+                                
+                                <div @click="showAttendingDialog()" v-if="editedItem.noAttendingArr && editedItem.noAttendingArr.attendeesData.length"
+                                    class="cursor-pointer q-mt-md">
+
+                                    <div v-for="(attendee, i) in editedItem.noAttendingArr.attendeesData" :key="i">
+                                    <div>
+                                        <span v-if="attendee.all">All</span>
+                                        <span v-else>{{ attendee.no }}</span>
+                                        <span class="q-ml-sm">{{ attendee.type.label }}</span>
+                                    </div>
+                                    </div>
+                                </div>
+
+                                <div @click="showAttendingDialog()" class="cursor-pointer" v-else>No Attendees found.</div>
+
+                            </div>
+                            <div class="q-pl-md" :class="isDuplicate || !isEdit ? 'col-md-12' : 'col-md-9'">
                                 <div class="text-subtitle2 q-mb-sm">Note</div>
                                 <q-input 
                                     dense 
@@ -1082,6 +1116,7 @@ import dialogDraggable from '../../components/DialogDraggable'
 import axios from 'axios'
 import config from '../../../config'
 import DialogDraggable from '../DialogDraggable.vue';
+import DateOfActivityTable from '../activity/DateOfActivityTable';
 
 let typingTimer
 let doneTypingInterval = 500
@@ -1092,7 +1127,8 @@ export default {
     name: 'MaterialTable',
     components: {
         dialogDraggable,
-        DialogDraggable
+        DialogDraggable,
+        DateOfActivityTable
     },
     props: {
         barInfo: {

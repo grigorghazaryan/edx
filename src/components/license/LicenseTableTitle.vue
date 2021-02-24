@@ -371,17 +371,6 @@
 
                     </q-td>
 
-                    <q-td key="noAttending" :props="props">
-                        
-                        <div>
-
-                            {{ props.row.no_attending }}
-                            <span class="q-ml-sm">
-                                <q-icon name="people_alt" class="edx-green" style="font-size: 1.5em"/>
-                            </span>
-
-                        </div>
-                    </q-td>
 
                     <q-td key="amount" :props="props">
                         <div>$ {{ props.row.amount }}</div>
@@ -501,7 +490,7 @@
         <dialog-draggable 
             :width="1000" 
             :modelDialog="isShowActivityPopup" 
-            :title="'Material Details'" 
+            :title="'License & description Details'" 
             @onHide="isShowActivityPopup=false"
             :icon="'calendar_today'"
             :color="'orange'"
@@ -512,7 +501,7 @@
                     <div class="col-md-4 q-pr-lg">
 
                         <div class="q-mb-md">
-                            <div class="text-subtitle2 q-mb-sm">Material Name</div>
+                            <div class="text-subtitle2 q-mb-sm">License Name</div>
                             <q-input
                                 outlined
                                 v-model="editedItem.activity" 
@@ -522,7 +511,7 @@
                         </div>
 
                         <div class="q-mb-md">
-                            <div class="text-subtitle2 q-mb-sm">Material Description</div>
+                            <div class="text-subtitle2 q-mb-sm">License Description</div>
                             <q-input
                                 outlined
                                 v-model="editedItem.description" 
@@ -573,18 +562,18 @@
 
                         <div class="row">
                             <div class="col-md-3 q-pr-sm">
-                                <div class="text-subtitle2 q-mb-sm">Amount</div>
-                                <q-input prefix="$" class="q-mb-md" outlined type="text" v-model="editedItem.amount" dense autofocus />
-                                <q-popup-edit v-model="editedItem.amount" title="Update amount" buttons>
+                                <div class="text-subtitle2 q-mb-sm">Qty</div>
+                                <q-input class="q-mb-md" outlined type="text" v-model="editedItem.qty" dense autofocus />
+                                <q-popup-edit v-model="editedItem.qty" title="Update qty" buttons>
                                     <q-input prefix="$" class="q-mb-sm" type="text" v-model="editedItem.amount" dense outlined autofocus />
-                                    <q-input prefix="%" v-model="editedItem.percentage"  type="number" outlined  
-                                    :label="editedItem.type_uni && (editedItem.type_uni.label + ' Percentage') " dense autofocus/>
                                 </q-popup-edit>
                             </div>
                             <div class="col-md-4 q-pr-sm">
-                                <div class="text-subtitle2 q-mb-sm">Charge</div>
-                                <q-input prefix="$" standout readonly  class="q-mb-md" type="text" 
-                                v-model="(parseFloat(editedItem.amount) + parseFloat(((editedItem.amount * editedItem.percentage) / 100))).toFixed(2)" dense autofocus />
+                                <div class="text-subtitle2 q-mb-sm">License cost</div>
+                                <q-input class="q-mb-md" outlined type="text" v-model="editedItem.qty" dense autofocus />
+                                <q-popup-edit v-model="editedItem.qty" title="Update qty" buttons>
+                                    <q-input prefix="$" class="q-mb-sm" type="text" v-model="editedItem.amount" dense outlined autofocus />
+                                </q-popup-edit>
                             </div>
                             <div class="col-md-5">
                                 <div class="text-subtitle2 q-mb-sm">Total with markup</div>
@@ -666,7 +655,7 @@
                         <div class="q-mb-md">
                             <div class="row">
                                 <div class="col-md-5">
-                                    <div class="text-subtitle2 q-mb-sm">Inventory Category</div>
+                                    <div class="text-subtitle2 q-mb-sm">License/Subscription</div>
                                     <q-select  
                                         outlined
                                         dense
@@ -793,7 +782,7 @@
                         </div>
 
                         <div class="q-mb-md" v-if="editedItem.status_uni">
-                            <div class="text-subtitle2 q-mb-sm">Material Status</div>
+                            <div class="text-subtitle2 q-mb-sm">Item Status</div>
                             <div class="row">
                                 <div class="col-md-4">
 
@@ -1089,7 +1078,7 @@ let doneTypingInterval = 500
 
 export default {
     
-    name: 'MaterialTable',
+    name: 'ItemTable',
     components: {
         dialogDraggable,
         DialogDraggable
@@ -1166,12 +1155,6 @@ export default {
                     headerStyle: 'max-width: 500px',
                 },
                 {
-                    name: "noAttending",
-                    align: "left",
-                    label: "Attendee Summary",
-                    field: "noAttending"
-                },
-                {
                     name: "amount",
                     align: "left",
                     label: "Amount",
@@ -1210,7 +1193,6 @@ export default {
                 "approvals",
                 "PDActivity", 
                 "dateOfActivity", 
-                "noAttending",
                 "amount",
                 "type",
                 "grossPD",
@@ -2582,7 +2564,6 @@ export default {
                 "approvals",
                 "PDActivity", 
                 "dateOfActivity", 
-                "noAttending",
                 "amount",
                 "type",
                 "grossPD",
@@ -2598,7 +2579,6 @@ export default {
                 "approvals",
                 "PDActivity", 
                 "dateOfActivity", 
-                "noAttending",
                 "amount",
                 "type",
                 "grossPD",

@@ -4,7 +4,8 @@
     <div class="q-pa-md q-gutter-sm">
       <q-breadcrumbs>
         <q-breadcrumbs-el icon="dashboard" label="Dashboard" to="/" />
-        <q-breadcrumbs-el label="Material purchases"/>
+        <q-breadcrumbs-el label="Budget"/>
+        <q-breadcrumbs-el label="Material"/>
         <q-breadcrumbs-el :label="schoolName" />
       </q-breadcrumbs>
     </div>
