@@ -1788,8 +1788,8 @@ export default {
                 label: data[i].supplier && data[i].supplier.short_name
             },
             status_uni: {
-                id: data[i].status.id,
-                label: data[i].status.name
+                id: data[i].status ? data[i].status.id : null,
+                label: data[i].status ? data[i].status.name : null
             },
             approval_status_uni: {
                 id: data[i].approval_status.id,

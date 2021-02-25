@@ -91,7 +91,7 @@ const config = {
     // editActivity: 'https://edxchange-activity.aimtech.am/api/v1/activity/', // + id
     // addActivity: 'https://edxchange-activity.aimtech.am/api/v1/activity',
     addActivity: 'https://edxchange-activity.aimtech.am/api/v1/item/', // + if activity : 1 , if material : 2, ...,
-    deleteActivity: 'https://edxchange-activity.aimtech.am/api/v1/remove-activity/', // + id
+    deleteActivity: 'https://edxchange-activity.aimtech.am/api/v1/remove-item/', // + id
     getApprovals: 'https://edxchange-activity.aimtech.am/api/v1/get-approval',
     getActivityBar: 'https://edxchange-activity.aimtech.am/api/v1/activity-totals/', // + 1 / + 1001
     getRcurranceTypes: 'https://edxchange-activity.aimtech.am/api/v1/get-recurrance-types',
@@ -118,6 +118,8 @@ const config = {
     getCampuses: 'https://edxchange-school.aimtech.am/api/v1/get-school-campus-list/', // + school id
     // TRACKING CATEGORY
     getTrackingCategories: 'https://edxchange-activity.aimtech.am/api/v1/get-item-category-tracking',
+    // INVENTORY CATEGORIES
+    getInventoryCategories: 'https://edxchange-activity.aimtech.am/api/v1/get-inventory-category-type',
 }
 
 export default config

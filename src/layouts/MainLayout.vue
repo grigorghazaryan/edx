@@ -515,7 +515,7 @@
                 </q-item-section>
               </q-item>
             </q-list>
-            <q-list class="bg-sidebar-opened edx-bg-lighter-dark">
+            <!-- <q-list class="bg-sidebar-opened edx-bg-lighter-dark">
               <q-item to="/ActivityProcesses" @click="addDataToLS('Activity Processes', '/ActivityProcesses')"  
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
@@ -525,7 +525,7 @@
                   <q-item-label>Activity Processes</q-item-label>
                 </q-item-section>
               </q-item>
-            </q-list>
+            </q-list> -->
             <q-list class="bg-sidebar-opened edx-bg-lighter-dark">
               <q-item to="/Material" @click="addDataToLS('Materials', '/Material')" 
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
@@ -593,14 +593,14 @@
                     <q-item-label>Activity</q-item-label>
                   </q-item-section>
                 </q-item>
-                <q-item clickable  v-close-popup to="/ActivityProcesses" @click="addDataToLS('Activity Processes', '/ActivityProcesses')"  active-class="q-item-no-link-highlighting">
+                <!-- <q-item clickable  v-close-popup to="/ActivityProcesses" @click="addDataToLS('Activity Processes', '/ActivityProcesses')"  active-class="q-item-no-link-highlighting">
                   <q-item-section avatar>
                     <q-icon name="account_balance"/>
                   </q-item-section>
                   <q-item-section>
                     <q-item-label>Activity Processes</q-item-label>
                   </q-item-section>
-                </q-item>
+                </q-item> -->
                 <q-item clickable  v-close-popup to="/Material" @click="addDataToLS('Materials', '/Material')"  active-class="q-item-no-link-highlighting">
                   <q-item-section avatar>
                     <q-icon name="account_balance"/>

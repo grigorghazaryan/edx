@@ -573,7 +573,14 @@
 
                         <div class="row">
                             <div class="col-md-3 q-pr-sm">
-                                <div class="text-subtitle2 q-mb-sm">Amount</div>
+                                <div class="text-subtitle2 q-mb-sm">Qty</div>
+                                <q-input class="q-mb-md" outlined type="text" v-model="editedItem.quantity" dense autofocus />
+                                <q-popup-edit v-model="editedItem.quantity" title="Update qty" buttons>
+                                    <q-input class="q-mb-sm" type="text" v-model="editedItem.quantity" dense outlined autofocus />
+                                </q-popup-edit>
+                            </div>
+                            <div class="col-md-4 q-pr-sm">
+                                <div class="text-subtitle2 q-mb-sm">Item</div>
                                 <q-input prefix="$" class="q-mb-md" outlined type="text" v-model="editedItem.amount" dense autofocus />
                                 <q-popup-edit v-model="editedItem.amount" title="Update amount" buttons>
                                     <q-input prefix="$" class="q-mb-sm" type="text" v-model="editedItem.amount" dense outlined autofocus />
@@ -581,20 +588,17 @@
                                     :label="editedItem.type_uni && (editedItem.type_uni.label + ' Percentage') " dense autofocus/>
                                 </q-popup-edit>
                             </div>
-                            <div class="col-md-4 q-pr-sm">
-                                <div class="text-subtitle2 q-mb-sm">Charge</div>
-                                <q-input prefix="$" standout readonly  class="q-mb-md" type="text" 
-                                v-model="(parseFloat(editedItem.amount) + parseFloat(((editedItem.amount * editedItem.percentage) / 100))).toFixed(2)" dense autofocus />
-                            </div>
                             <div class="col-md-5">
                                 <div class="text-subtitle2 q-mb-sm">Total with markup</div>
                                 <q-input 
                                     prefix="$" 
                                     standout 
-                                    readonly v-model="editedItem.amount"  
+                                    readonly  
                                     class="q-mb-md" 
-                                    type="number" 
-                                    dense autofocus />
+                                    type="text" 
+                                    v-model="( parseFloat(editedItem.amount) * parseFloat(editedItem.quantity)  + parseFloat(((  (parseFloat(editedItem.amount) * parseFloat(editedItem.quantity))  * editedItem.percentage) / 100))).toFixed(2)" 
+                                    dense autofocus 
+                                />
                             </div>
                         </div>
 
@@ -602,11 +606,37 @@
                             <div class="col-md-12">
                                 <div class="text-subtitle2 q-mb-sm">Order Schedule date</div>
                             </div>
-                            <div class="col-md-4 q-pr-sm">
-                                <q-input class="q-mb-md" outlined type="text" v-model="editedItem.schedule_start" dense autofocus />
+                            <div class="col-md-6 q-pr-sm">
+                                <!-- <q-input class="q-mb-md" outlined type="text" v-model="editedItem.start_date" dense autofocus /> -->
+                                <q-input outlined dense class="q-mb-md" v-model="editedItem.start_date">
+                                    <template v-slot:append>
+                                        <q-icon name="event" class="cursor-pointer">
+                                        <q-popup-proxy transition-show="scale" transition-hide="scale">
+                                            <q-date v-model="editedItem.start_date">
+                                            <div class="row items-center justify-end">
+                                                <q-btn v-close-popup label="Close" color="primary" flat />
+                                            </div>
+                                            </q-date>
+                                        </q-popup-proxy>
+                                        </q-icon>
+                                    </template>
+                                </q-input>
                             </div>
-                            <div class="col-md-4 q-pr-sm">
-                                <q-input  class="q-mb-md" outlined type="text" v-model="editedItem.schedule_end" dense autofocus />
+                            <div class="col-md-6 q-pr-sm">
+                                <!-- <q-input  class="q-mb-md" outlined type="text" v-model="editedItem.end_date" dense autofocus /> -->
+                                <q-input outlined dense class="q-mb-md" v-model="editedItem.end_date">
+                                    <template v-slot:append>
+                                        <q-icon name="event" class="cursor-pointer">
+                                        <q-popup-proxy transition-show="scale" transition-hide="scale">
+                                            <q-date v-model="editedItem.end_date">
+                                            <div class="row items-center justify-end">
+                                                <q-btn v-close-popup label="Close" color="primary" flat />
+                                            </div>
+                                            </q-date>
+                                        </q-popup-proxy>
+                                        </q-icon>
+                                    </template>
+                                </q-input>
                             </div>
                         </div>
 
@@ -671,8 +701,8 @@
                                         outlined
                                         dense
                                         input-debounce="0"
-                                        v-model="editedItem.tracking_category_uni" 
-                                        :options="optionsCategoryTracking"
+                                        v-model="editedItem.invenotry_category_type" 
+                                        :options="optionsInventoryCategory"
                                     >
                                         <template v-slot:no-option>
                                             <q-item>
@@ -793,7 +823,7 @@
                         </div>
 
                         <div class="q-mb-md" v-if="editedItem.status_uni">
-                            <div class="text-subtitle2 q-mb-sm">Material Status</div>
+                            <div class="text-subtitle2 q-mb-sm">Billing Status</div>
                             <div class="row">
                                 <div class="col-md-4">
 
@@ -837,10 +867,6 @@
                                 <div class="row">
                                     <div class="col-md-4 q-pr-sm">
                                         <div class="text-subtitle2 q-mb-sm">Completed On</div>
-                                        
-
-
-
                                         <q-input outlined dense class="q-mb-md" v-model="editedItem.completed_date">
                                             <template v-slot:append>
                                                 <q-icon name="event" class="cursor-pointer">
@@ -854,16 +880,20 @@
                                                 </q-icon>
                                             </template>
                                         </q-input>
-
-
-
-
-
                                     </div>
                                     <div class="col-md-4 q-pr-sm">
                                         <div class="text-subtitle2 q-mb-sm">Added to Inventory</div>
                                         <div class="h-popup">
-                                            <div class="cursor-pointer"><q-icon name="dangerous" style="font-size: 1.7em; color: red"/>No</div>
+                                            <div class="cursor-pointer" @click="toggleIsInInventory">
+                                                <span v-if="editedItem.is_in_inventory == 0">
+                                                    <q-icon name="dangerous" style="font-size: 1.7em; color: red"/>
+                                                    No
+                                                </span>
+                                                <span v-else>
+                                                    <q-icon name="done" style="font-size: 1.7em; color: green"/>
+                                                    Yes
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-md-4" v-if="editedItem.billing">
@@ -1249,6 +1279,7 @@ export default {
             ],
             optionsStatus: [],
             optionsCategoryTracking: [],
+            optionsInventoryCategory: [],
             approval: [],
             optionsApp: [],
             typeArr: [],
@@ -1338,6 +1369,13 @@ export default {
         }
     },
     methods: {
+        toggleIsInInventory() {
+            if(this.editedItem.is_in_inventory == 1) {
+                this.editedItem.is_in_inventory = 0
+            }else {
+                this.editedItem.is_in_inventory = 1
+            }
+        },
         exportTable() {
             // naive encoding to csv format
             const content = [this.columns.map(col => wrapCsvValue(col.label))].concat(
@@ -1413,16 +1451,16 @@ export default {
             id: data[i].id,
             description: data[i].description,
             tracking_category_uni: {
-                id: data[i].traking ? data[i].traking.id : 0,
+                id: data[i].traking ? data[i].traking.id : null,
                 label: data[i].traking ? data[i].traking.name : 'N/A',
             },
             billing: {
-                id: data[i].billing ? data[i].billing.id : 0,
+                id: data[i].billing ? data[i].billing.id : null,
                 label: data[i].billing ? data[i].billing.name : 'N/A',
             },
             completed_date: data[i].completed_date,
             campus: {
-                id: data[i].campus ? data[i].campus.id : -8 ,
+                id: data[i].campus ? data[i].campus.id : null ,
                 label: data[i].campus ? data[i].campus.name : 'N/A'
             },
             online_uni: {
@@ -1434,8 +1472,8 @@ export default {
                 label: data[i].supplier && data[i].supplier.short_name
             },
             status_uni: {
-                id: data[i].status.id,
-                label: data[i].status.name
+                id: data[i].status ? data[i].status.id : null,
+                label: data[i].status  ?data[i].status.name : 'N/A'
             },
             approval_status_uni: {
                 id: data[i].approval_status.id,
@@ -1445,20 +1483,28 @@ export default {
                 label: data[i].approval_types.name,
                 value: data[i].approval_types.id
             },
+            quantity: data[i].quantity ?  data[i].quantity : 0,
             activity: data[i].name,
             activity_date: sd == null ? 'TBD' : fullDate,
             no_attending: data[i].attendySummary.count,
             amount: data[i].cost != null ? data[i].cost : 0,
             percentage: parseInt(data[i].markup_percentage),
+            is_in_inventory: data[i].details.is_in_inventory ? data[i].details.is_in_inventory : 0,
+            start_date: data[i].start_date,
+            end_date: data[i].end_date,
             type_uni: {
                 id: data[i].category.id,
                 label: data[i].category.name,
                 name: data[i].category.abbreviation
             },
             subcategory_uni: {
-                id: data[i].sub_category ? data[i].sub_category.id : 0,
+                id: data[i].sub_category ? data[i].sub_category.id : null,
                 label: data[i].sub_category ? data[i].sub_category.name : 'NA',
                 name: data[i].sub_category ? data[i].sub_category.abbreviation : 'NA'
+            },
+            invenotry_category_type: {
+                id: data[i].invenotry_category_type ? data[i].invenotry_category_type.id : null,
+                label: data[i].invenotry_category_type ? data[i].invenotry_category_type.name : 'N/A',
             },
             note: data[i].note,
             approver: data[i].approver,
@@ -1549,7 +1595,20 @@ export default {
                 billing: {
                     id: 4,
                     label: "No Billed"
-                }
+                },
+                tracking_category_uni: {
+                    id: null,
+                    label: 'N/A'
+                },
+                campus: {
+                    id: null,
+                    label: 'N/A'
+                },
+                provider: {
+                    id: null,
+                    label: 'N/A'
+                },
+                is_in_inventory: 0,
             }
         },
         addActivity() {
@@ -1577,6 +1636,12 @@ export default {
                 category_tracking_id: this.editedItem.tracking_category_uni.id,
                 completed_date: this.editedItem.completed_date,
                 billing_status_id: this.editedItem.billing.id,
+                //
+                is_in_inventory: this.editedItem.is_in_inventory,
+                start_date: this.editedItem.start_date,
+                end_date: this.editedItem.end_date,
+                quantity: this.editedItem.quantity,
+                inventory_category_type_id: this.editedItem.invenotry_category_type.id,
 
             }
 
@@ -1640,6 +1705,12 @@ export default {
                 category_tracking_id: this.editedItem.tracking_category_uni.id,
                 completed_date: this.editedItem.completed_date,
                 billing_status_id: this.editedItem.billing.id,
+                //
+                is_in_inventory: this.editedItem.is_in_inventory,
+                start_date: this.editedItem.start_date,
+                end_date: this.editedItem.end_date,
+                quantity: this.editedItem.quantity,
+                inventory_category_type_id: this.editedItem.invenotry_category_type.id,
 
             }
 
@@ -2569,7 +2640,33 @@ export default {
                 }
                 this.optionsCategoryTracking = categoryTrackingArr
             })
-        }
+        },
+        //
+        // optionsInventoryCategory
+        getInventoryCategories() {
+
+            const conf = {
+                method: 'GET',
+                url: config.getInventoryCategories,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+                console.log(res.data, 'asdasdasdasd')
+                const categoryInventory = res.data.invenotoryCategoryType
+                let categoryInventoryArr = [];
+
+                for(let i=0; i<categoryInventory.length; i++) {
+                    categoryInventoryArr.push({
+                        id: categoryInventory[i].id,
+                        label: categoryInventory[i].name
+                    })
+                }
+                this.optionsInventoryCategory = categoryInventoryArr
+            })
+        },
     },
     watch: {
         showRemainingBalance(val) {
@@ -2631,6 +2728,7 @@ export default {
         this.getRcurranceTypes()
         this.getSchoolYears()
         this.getSubcategories(tab)
+        this.getInventoryCategories();
     }
 
 }
