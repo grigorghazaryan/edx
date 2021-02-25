@@ -2040,8 +2040,9 @@ export default {
                 description: this.editedItem.description,
                 campus_id: this.editedItem.campus.id,
                 category_tracking_id: this.editedItem.tracking_category_uni.id,
-                completed_date: this.editedItem.completed_date,
-                billing_status_id: this.editedItem.billing.id,
+                
+                completed_date: this.editedItem.status_uni.label == 'Completed' ?  this.editedItem.completed_date : null, //
+                billing_status_id: this.editedItem.status_uni.label == 'Completed' ?  this.editedItem.billing.id : null, //
 
             }
 

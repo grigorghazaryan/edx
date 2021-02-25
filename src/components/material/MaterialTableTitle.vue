@@ -823,24 +823,47 @@
                         </div>
 
                         <div class="q-mb-md" v-if="editedItem.status_uni">
-                            <div class="text-subtitle2 q-mb-sm">Billing Status</div>
+                            <div class="text-subtitle2 q-mb-sm">Material Status</div>
                             <div class="row">
                                 <div class="col-md-4">
 
                                     <div
-                                        v-if="editedItem.status_uni.id == 1" 
+                                        v-if="editedItem.status_uni.label == 'In Progress' " 
                                         class="h-popup cursor-pointer">
-                                        <q-icon name="done" color="green" style="font-size: 1.5em"></q-icon>
-                                        <span>Active</span>
+                                        <q-icon name="done" color="orange" style="font-size: 1.5em"></q-icon>
+                                        <span>In Progress</span>
                                     </div>
 
                                     <div
-                                        v-else class="h-popup cursor-pointer">
+                                        v-else-if=" editedItem.status_uni.label == 'Canceled' "
+                                        class="h-popup cursor-pointer">
                                         <q-icon name="cancel" color="red" style="font-size: 1.5em"></q-icon>
                                         <span>Canceled</span>
                                     </div>
 
-                                    <q-popup-edit v-model="editedItem.status_uni" title="Billing Status" buttons >
+                                    <div
+                                        v-else-if=" editedItem.status_uni.label == 'Gathering Documents' "
+                                        class="h-popup cursor-pointer">
+                                        <q-icon name="cancel" color="blue" style="font-size: 1.5em"></q-icon>
+                                        <span>Gathering Documents</span>
+                                    </div>
+
+                                    <div
+                                        v-else-if=" editedItem.status_uni.label == 'Completed' "
+                                        class="h-popup cursor-pointer">
+                                        <q-icon name="done" color="green" style="font-size: 1.5em"></q-icon>
+                                        <span>Completed</span>
+                                    </div>
+
+                                    <div
+                                        v-else
+                                        class="h-popup cursor-pointer">
+                                        <q-icon name="done" color="black" style="font-size: 1.5em"></q-icon>
+                                        <span>N/A</span>
+                                    </div>
+
+                                    <q-popup-edit v-model="editedItem.status_uni" 
+                                    title="Material Status" buttons >
                                         <q-select  
                                             outlined
                                             dense
@@ -862,7 +885,7 @@
                             </div>
                         </div>
 
-                        <div class="row" v-show="editedItem.status_uni && editedItem.status_uni.id == 1">
+                        <div class="row" v-show="editedItem.status_uni && editedItem.status_uni.label == 'Completed' ">
                             <div class="col-md-8">
                                 <div class="row">
                                     <div class="col-md-4 q-pr-sm">
@@ -1573,7 +1596,10 @@ export default {
             this.isEdit = false
             this.isShowActivityPopup = true
             this.editedItem = {
-                status_uni: { id: 1, label: "Active" },
+                status_uni: { 
+                    id: 1, 
+                    label: "In Progress" 
+                },
                 subcategory_uni: this.optionsSubcategory[0],
                 approval_status_uni: {
                     id: 1,
@@ -1634,8 +1660,8 @@ export default {
                 description: this.editedItem.description,
                 campus_id: this.editedItem.campus.id,
                 category_tracking_id: this.editedItem.tracking_category_uni.id,
-                completed_date: this.editedItem.completed_date,
-                billing_status_id: this.editedItem.billing.id,
+                completed_date: this.editedItem.status_uni.label == 'Completed' ?  this.editedItem.completed_date : null, //
+                billing_status_id: this.editedItem.status_uni.label == 'Completed' ?  this.editedItem.billing.id : null, //
                 //
                 is_in_inventory: this.editedItem.is_in_inventory,
                 start_date: this.editedItem.start_date,
@@ -1703,8 +1729,8 @@ export default {
                 description: this.editedItem.description,
                 campus_id: this.editedItem.campus.id,
                 category_tracking_id: this.editedItem.tracking_category_uni.id,
-                completed_date: this.editedItem.completed_date,
-                billing_status_id: this.editedItem.billing.id,
+                completed_date: this.editedItem.status_uni.label == 'Completed' ?  this.editedItem.completed_date : null, //
+                billing_status_id: this.editedItem.status_uni.label == 'Completed' ?  this.editedItem.billing.id : null, //
                 //
                 is_in_inventory: this.editedItem.is_in_inventory,
                 start_date: this.editedItem.start_date,
@@ -1780,6 +1806,8 @@ export default {
         openDuplicatePopup(row) {
             this.isShowActivityPopup = true
             this.isDuplicate = true
+            this.isEdit = false
+
             this.editedItem = row
         },
         duplicateItem() {
