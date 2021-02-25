@@ -570,6 +570,18 @@
                 </q-item-section>
               </q-item>
             </q-list>
+            <q-list class="bg-sidebar-opened edx-bg-lighter-dark">
+              <q-item to="/TeacherCosts/BudgetEstimates"  
+              @click="addDataToLS('Teacher Costs', '/TeacherCosts/BudgetEstimates')" 
+              active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
+                <q-item-section avatar>
+                  <q-icon name="school"/>
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label>Teacher Costs</q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-list>
 
           </q-expansion-item>
 
@@ -631,6 +643,14 @@
                   </q-item-section>
                   <q-item-section>
                     <q-item-label>Counseling</q-item-label>
+                  </q-item-section>
+                </q-item>
+                <q-item clickable  v-close-popup to="/Counseling" @click="addDataToLS('Teacher Costs', '/TeacherCosts/BudgetEstimates')"   active-class="q-item-no-link-highlighting">
+                  <q-item-section avatar>
+                    <q-icon name="account_balance"/>
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>Teacher Costs</q-item-label>
                   </q-item-section>
                 </q-item>
               </q-list>
@@ -910,51 +930,6 @@
 
             </q-menu>
           </q-item>
-
-          <q-expansion-item v-if="!miniState"
-            icon="school"
-            label="Teacher Costs"
-          >
-            <q-list class="bg-sidebar-opened edx-bg-lighter-dark">
-              <q-item to="/TeacherCosts/BudgetEstimates"  
-              @click="addDataToLS('Budget Estimates', '/TeacherCosts/BudgetEstimates')" 
-              active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
-                <q-item-section avatar>
-                  <q-icon name="school"/>
-                </q-item-section>
-                <q-item-section>
-                  <q-item-label>Budget Estimates</q-item-label>
-                </q-item-section>
-              </q-item>
-            </q-list>
-          </q-expansion-item>
-
-          <q-item v-else active-class="q-item-no-link-highlighting">
-            <q-item-section avatar>
-              <q-icon name="school"/>
-            </q-item-section>
-            <q-item-section>
-              <q-item-label>Teacher Costs</q-item-label>
-            </q-item-section>
-            <q-menu
-              anchor="top right"
-              self="top left"
-            >
-              <q-list style="min-width: 100px">
-                <q-item clickable  v-close-popup to="/TeacherCosts/BudgetEstimates"   @click="addDataToLS('Budget Estimates', '/TeacherCosts/BudgetEstimates')"  active-class="q-item-no-link-highlighting">
-                  <q-item-section avatar>
-                    <q-icon name="school"/>
-                  </q-item-section>
-                  <q-item-section>
-                    <q-item-label>Budget Estimates</q-item-label>
-                  </q-item-section>
-                </q-item>
-              </q-list>
-            </q-menu>
-          </q-item>
-
-
-
 
 
 

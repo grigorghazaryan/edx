@@ -1453,8 +1453,8 @@
             :modelDialog="isRemainingPopupOpen" 
             :title="'Remaining balance'" 
             @onHide="isRemainingPopupOpen=false"
-            :icon="'calendar_today'"
-            :color="'orange'"
+            :icon="'attach_money'"
+            :color="'green'"
         >
 
         <q-card-section style="max-height: 60vh" class="scroll q-pt-none q-pb-none q-pr-none q-pl-none">
