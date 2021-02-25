@@ -1448,6 +1448,73 @@
 
         </dialog-draggable>
 
+        <dialog-draggable
+            :width="600" 
+            :modelDialog="isRemainingPopupOpen" 
+            :title="'Remaining balance'" 
+            @onHide="isRemainingPopupOpen=false"
+            :icon="'calendar_today'"
+            :color="'orange'"
+        >
+
+        <q-card-section style="max-height: 60vh" class="scroll q-pt-none q-pb-none q-pr-none q-pl-none">
+            <div class="row q-mr-lg q-ml-lg q-mb-lg q-mt-lg">
+                <div class="col-md-6 q-pr-sm q-mb-md">
+                    <div class="text-subtitle2 q-mb-sm">Allocation Category</div>
+                    <div class="row cursor-pointer h-popup">
+                        <q-select 
+                            class="full-width"
+                            v-model="testCategory" 
+                            :options="typeArr"
+                            outlined
+                            dense
+                        />
+                    </div>
+                </div>
+                <div class="col-md-6 q-pr-sm q-mb-md">
+                    <div class="text-subtitle2 q-mb-sm">Allocation Subcategory</div>
+                    <div class="row cursor-pointer h-popup">
+                        <q-select 
+                            class="full-width"
+                            v-model="testSubcategory" 
+                            :options="optionsSubcategory"
+                            outlined
+                            dense
+                        />
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <q-table
+                        :data="tdata" 
+                        :columns="tcolumns"
+                        hide-bottom
+                    >
+                        <!-- Table Body -->
+                        <template v-slot:body="props">
+                            <q-tr :props="props" class="cursor-pointer">
+                                <q-td key="used" :props="props">
+                                    {{props.row.used}}
+                                </q-td>
+                                <q-td key="remaining" :props="props">
+                                    {{props.row.remaining}}
+                                </q-td>
+                            </q-tr>
+                        </template>
+                    </q-table>
+                </div>
+
+            </div>
+        </q-card-section>
+
+        <q-card-actions class="row justify-end">
+            <div>
+                <q-btn flat label="Cancel" color="primary" v-close-popup></q-btn>
+            </div>
+        </q-card-actions>
+
+        </dialog-draggable>
+
     </div>
 </template>
 
@@ -1482,6 +1549,30 @@ export default {
     },
     data() {
         return {
+            testCategory: '',
+            testSubcategory: '',
+            tdata: [
+                { used: 10000, remaining: 9000 },
+                { used: 10000, remaining: 9000 },
+                { used: 10000, remaining: 9000 },
+            ],
+            tcolumns: [
+                {
+                    name: "used",
+                    align: "left",
+                    label: "Used PD",
+                    field: "used",
+                    sortable: true
+                },
+                {
+                    name: "remaining",
+                    align: "left",
+                    label: "Remaining PD",
+                    field: "remaining",
+                    sortable: true
+                },
+            ],
+            //
             mode: 'list',
             tab: '1',
             pages: 1,
@@ -1601,6 +1692,7 @@ export default {
             //
             loading: false,
             btnLoading: false,
+            isRemainingPopupOpen: false,
             isEdit: true,
             isDuplicate: false,
             isShowActivityPopup: false,
@@ -2995,7 +3087,9 @@ export default {
                 "RemainingBalance",
                 "actions"
                 ]
+                this.isRemainingPopupOpen = true
             }else {
+                this.isRemainingPopupOpen = false
                 this.visibleColumns = [
                 "toggle",
                 "online",
@@ -3010,6 +3104,13 @@ export default {
                 "grossPD",
                 "actions"
                 ]
+            }
+        },
+        isRemainingPopupOpen(val) {
+            if(val) {
+                this.showRemainingBalance = true
+            }else {
+                this.showRemainingBalance = false
             }
         },
         isShowActivityPopup(val) {
@@ -3050,3 +3151,4 @@ export default {
 
 
 </style>
+

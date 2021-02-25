@@ -904,6 +904,7 @@
                                             </template>
                                         </q-input>
                                     </div>
+                                    
                                     <div class="col-md-4 q-pr-sm">
                                         <div class="text-subtitle2 q-mb-sm">Added to Inventory</div>
                                         <div class="h-popup">
@@ -919,6 +920,7 @@
                                             </div>
                                         </div>
                                     </div>
+
                                     <div class="col-md-4" v-if="editedItem.billing">
                                         <div class="text-subtitle2 q-mb-sm">Billing Status</div>
                                         <div class="h-popup">

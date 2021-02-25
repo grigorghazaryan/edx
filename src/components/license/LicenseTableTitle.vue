@@ -563,16 +563,18 @@
                         <div class="row">
                             <div class="col-md-3 q-pr-sm">
                                 <div class="text-subtitle2 q-mb-sm">Qty</div>
-                                <q-input class="q-mb-md" outlined type="text" v-model="editedItem.qty" dense autofocus />
-                                <q-popup-edit v-model="editedItem.qty" title="Update qty" buttons>
-                                    <q-input prefix="$" class="q-mb-sm" type="text" v-model="editedItem.amount" dense outlined autofocus />
+                                <q-input class="q-mb-md" outlined type="text" v-model="editedItem.quantity" dense autofocus />
+                                <q-popup-edit v-model="editedItem.quantity" title="Update qty" buttons>
+                                    <q-input class="q-mb-sm" type="text" v-model="editedItem.quantity" dense outlined autofocus />
                                 </q-popup-edit>
                             </div>
                             <div class="col-md-4 q-pr-sm">
-                                <div class="text-subtitle2 q-mb-sm">License cost</div>
-                                <q-input class="q-mb-md" outlined type="text" v-model="editedItem.qty" dense autofocus />
-                                <q-popup-edit v-model="editedItem.qty" title="Update qty" buttons>
+                                <div class="text-subtitle2 q-mb-sm">Item</div>
+                                <q-input prefix="$" class="q-mb-md" outlined type="text" v-model="editedItem.amount" dense autofocus />
+                                <q-popup-edit v-model="editedItem.amount" title="Update amount" buttons>
                                     <q-input prefix="$" class="q-mb-sm" type="text" v-model="editedItem.amount" dense outlined autofocus />
+                                    <q-input prefix="%" v-model="editedItem.percentage"  type="number" outlined  
+                                    :label="editedItem.type_uni && (editedItem.type_uni.label + ' Percentage') " dense autofocus/>
                                 </q-popup-edit>
                             </div>
                             <div class="col-md-5">
@@ -580,10 +582,12 @@
                                 <q-input 
                                     prefix="$" 
                                     standout 
-                                    readonly v-model="editedItem.amount"  
+                                    readonly  
                                     class="q-mb-md" 
-                                    type="number" 
-                                    dense autofocus />
+                                    type="text" 
+                                    v-model="( parseFloat(editedItem.amount) * parseFloat(editedItem.quantity)  + parseFloat(((  (parseFloat(editedItem.amount) * parseFloat(editedItem.quantity))  * editedItem.percentage) / 100))).toFixed(2)" 
+                                    dense autofocus 
+                                />
                             </div>
                         </div>
 
@@ -591,11 +595,37 @@
                             <div class="col-md-12">
                                 <div class="text-subtitle2 q-mb-sm">Order Schedule date</div>
                             </div>
-                            <div class="col-md-4 q-pr-sm">
-                                <q-input class="q-mb-md" outlined type="text" v-model="editedItem.schedule_start" dense autofocus />
+                            <div class="col-md-6 q-pr-sm">
+                                <!-- <q-input class="q-mb-md" outlined type="text" v-model="editedItem.start_date" dense autofocus /> -->
+                                <q-input outlined dense class="q-mb-md" v-model="editedItem.start_date">
+                                    <template v-slot:append>
+                                        <q-icon name="event" class="cursor-pointer">
+                                        <q-popup-proxy transition-show="scale" transition-hide="scale">
+                                            <q-date v-model="editedItem.start_date">
+                                            <div class="row items-center justify-end">
+                                                <q-btn v-close-popup label="Close" color="primary" flat />
+                                            </div>
+                                            </q-date>
+                                        </q-popup-proxy>
+                                        </q-icon>
+                                    </template>
+                                </q-input>
                             </div>
-                            <div class="col-md-4 q-pr-sm">
-                                <q-input  class="q-mb-md" outlined type="text" v-model="editedItem.schedule_end" dense autofocus />
+                            <div class="col-md-6 q-pr-sm">
+                                <!-- <q-input  class="q-mb-md" outlined type="text" v-model="editedItem.end_date" dense autofocus /> -->
+                                <q-input outlined dense class="q-mb-md" v-model="editedItem.end_date">
+                                    <template v-slot:append>
+                                        <q-icon name="event" class="cursor-pointer">
+                                        <q-popup-proxy transition-show="scale" transition-hide="scale">
+                                            <q-date v-model="editedItem.end_date">
+                                            <div class="row items-center justify-end">
+                                                <q-btn v-close-popup label="Close" color="primary" flat />
+                                            </div>
+                                            </q-date>
+                                        </q-popup-proxy>
+                                        </q-icon>
+                                    </template>
+                                </q-input>
                             </div>
                         </div>
 
@@ -660,8 +690,8 @@
                                         outlined
                                         dense
                                         input-debounce="0"
-                                        v-model="editedItem.tracking_category_uni" 
-                                        :options="optionsCategoryTracking"
+                                        v-model="editedItem.is_subscription" 
+                                        :options="optionLicSub"
                                     >
                                         <template v-slot:no-option>
                                             <q-item>
@@ -786,20 +816,43 @@
                             <div class="row">
                                 <div class="col-md-4">
 
-                                    <div
-                                        v-if="editedItem.status_uni.id == 1" 
+<div
+                                        v-if="editedItem.status_uni.label == 'In Progress' " 
                                         class="h-popup cursor-pointer">
-                                        <q-icon name="done" color="green" style="font-size: 1.5em"></q-icon>
-                                        <span>Active</span>
+                                        <q-icon name="done" color="orange" style="font-size: 1.5em"></q-icon>
+                                        <span>In Progress</span>
                                     </div>
 
                                     <div
-                                        v-else class="h-popup cursor-pointer">
+                                        v-else-if=" editedItem.status_uni.label == 'Canceled' "
+                                        class="h-popup cursor-pointer">
                                         <q-icon name="cancel" color="red" style="font-size: 1.5em"></q-icon>
                                         <span>Canceled</span>
                                     </div>
 
-                                    <q-popup-edit v-model="editedItem.status_uni" title="Billing Status" buttons >
+                                    <div
+                                        v-else-if=" editedItem.status_uni.label == 'Gathering Documents' "
+                                        class="h-popup cursor-pointer">
+                                        <q-icon name="cancel" color="blue" style="font-size: 1.5em"></q-icon>
+                                        <span>Gathering Documents</span>
+                                    </div>
+
+                                    <div
+                                        v-else-if=" editedItem.status_uni.label == 'Completed' "
+                                        class="h-popup cursor-pointer">
+                                        <q-icon name="done" color="green" style="font-size: 1.5em"></q-icon>
+                                        <span>Completed</span>
+                                    </div>
+
+                                    <div
+                                        v-else
+                                        class="h-popup cursor-pointer">
+                                        <q-icon name="done" color="black" style="font-size: 1.5em"></q-icon>
+                                        <span>N/A</span>
+                                    </div>
+
+                                    <q-popup-edit v-model="editedItem.status_uni" 
+                                    title="Material Status" buttons >
                                         <q-select  
                                             outlined
                                             dense
@@ -821,7 +874,7 @@
                             </div>
                         </div>
 
-                        <div class="row" v-show="editedItem.status_uni && editedItem.status_uni.id == 1">
+                        <div class="row" v-show="editedItem.status_uni && editedItem.status_uni.label == 'Completed' ">
                             <div class="col-md-8">
                                 <div class="row">
                                     <div class="col-md-4 q-pr-sm">
@@ -843,18 +896,24 @@
                                                 </q-icon>
                                             </template>
                                         </q-input>
-
-
-
-
-
                                     </div>
+
                                     <div class="col-md-4 q-pr-sm">
                                         <div class="text-subtitle2 q-mb-sm">Added to Inventory</div>
                                         <div class="h-popup">
-                                            <div class="cursor-pointer"><q-icon name="dangerous" style="font-size: 1.7em; color: red"/>No</div>
+                                            <div class="cursor-pointer" @click="toggleIsInInventory">
+                                                <span v-if="editedItem.is_in_inventory == 0">
+                                                    <q-icon name="dangerous" style="font-size: 1.7em; color: red"/>
+                                                    No
+                                                </span>
+                                                <span v-else>
+                                                    <q-icon name="done" style="font-size: 1.7em; color: green"/>
+                                                    Yes
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
+
                                     <div class="col-md-4" v-if="editedItem.billing">
                                         <div class="text-subtitle2 q-mb-sm">Billing Status</div>
                                         <div class="h-popup">
@@ -1234,6 +1293,10 @@ export default {
             approval: [],
             optionsApp: [],
             typeArr: [],
+            optionLicSub: [
+                { id: 0, label: 'Subscription' },
+                { id: 1, label: 'License' }
+            ],
             teachersTypeArr: [],
             // supplier
             optionsSupplier: [],
@@ -1320,6 +1383,15 @@ export default {
         }
     },
     methods: {
+        toggleIsInInventory() {
+
+            if(this.editedItem.is_in_inventory == 1) {
+                this.editedItem.is_in_inventory = 0
+            }else {
+                this.editedItem.is_in_inventory = 1
+            }
+
+        },
         exportTable() {
             // naive encoding to csv format
             const content = [this.columns.map(col => wrapCsvValue(col.label))].concat(
@@ -1388,23 +1460,36 @@ export default {
                 isOnline = 'On Site'
             }
 
+            let isSubscribtion;
+            if(data[i].isSubscribtion == 1) {
+                isSubscribtion = {
+                    id: 1,
+                    label: 'License'
+                }
+            }else {
+                isSubscribtion = {
+                    id: 0,
+                    label: 'Subscription'
+                }
+            }
         
         let activityObj = {
             // remainingBalance: charge,
+            is_subscription: isSubscribtion,
             remainingBalance: data[i].category.id == 1 ? this.totalPDremainder : this.totalFEremainder,
             id: data[i].id,
             description: data[i].description,
             tracking_category_uni: {
-                id: data[i].traking ? data[i].traking.id : 0,
+                id: data[i].traking ? data[i].traking.id : null,
                 label: data[i].traking ? data[i].traking.name : 'N/A',
             },
             billing: {
-                id: data[i].billing ? data[i].billing.id : 0,
+                id: data[i].billing ? data[i].billing.id : null,
                 label: data[i].billing ? data[i].billing.name : 'N/A',
             },
             completed_date: data[i].completed_date,
             campus: {
-                id: data[i].campus ? data[i].campus.id : -8 ,
+                id: data[i].campus ? data[i].campus.id : null ,
                 label: data[i].campus ? data[i].campus.name : 'N/A'
             },
             online_uni: {
@@ -1416,8 +1501,8 @@ export default {
                 label: data[i].supplier && data[i].supplier.short_name
             },
             status_uni: {
-                id: data[i].status.id,
-                label: data[i].status.name
+                id: data[i].status ? data[i].status.id : null,
+                label: data[i].status  ?data[i].status.name : 'N/A'
             },
             approval_status_uni: {
                 id: data[i].approval_status.id,
@@ -1427,20 +1512,28 @@ export default {
                 label: data[i].approval_types.name,
                 value: data[i].approval_types.id
             },
+            quantity: data[i].quantity ?  data[i].quantity : 0,
             activity: data[i].name,
             activity_date: sd == null ? 'TBD' : fullDate,
             no_attending: data[i].attendySummary.count,
             amount: data[i].cost != null ? data[i].cost : 0,
             percentage: parseInt(data[i].markup_percentage),
+            is_in_inventory: data[i].details.is_in_inventory ? data[i].details.is_in_inventory : 0,
+            start_date: data[i].start_date,
+            end_date: data[i].end_date,
             type_uni: {
                 id: data[i].category.id,
                 label: data[i].category.name,
                 name: data[i].category.abbreviation
             },
             subcategory_uni: {
-                id: data[i].sub_category ? data[i].sub_category.id : 0,
+                id: data[i].sub_category ? data[i].sub_category.id : null,
                 label: data[i].sub_category ? data[i].sub_category.name : 'NA',
                 name: data[i].sub_category ? data[i].sub_category.abbreviation : 'NA'
+            },
+            invenotry_category_type: {
+                id: data[i].invenotry_category_type ? data[i].invenotry_category_type.id : null,
+                label: data[i].invenotry_category_type ? data[i].invenotry_category_type.name : 'N/A',
             },
             note: data[i].note,
             approver: data[i].approver,
@@ -1474,7 +1567,7 @@ export default {
 
             const conf = {
                 method: 'GET',
-                url: config.getActivity + type + '/' + id + '/' + 2 + '?limit=' + limit + '&page=' + page,
+                url: config.getActivity + type + '/' + id + '/' + 4 + '?limit=' + limit + '&page=' + page,
                 headers: {
                 Accept: 'application/json',
                 }
@@ -1509,7 +1602,10 @@ export default {
             this.isEdit = false
             this.isShowActivityPopup = true
             this.editedItem = {
-                status_uni: { id: 1, label: "Active" },
+                status_uni: { 
+                    id: 1, 
+                    label: "In Progress" 
+                },
                 subcategory_uni: this.optionsSubcategory[0],
                 approval_status_uni: {
                     id: 1,
@@ -1531,7 +1627,20 @@ export default {
                 billing: {
                     id: 4,
                     label: "No Billed"
-                }
+                },
+                tracking_category_uni: {
+                    id: null,
+                    label: 'N/A'
+                },
+                campus: {
+                    id: null,
+                    label: 'N/A'
+                },
+                provider: {
+                    id: null,
+                    label: 'N/A'
+                },
+                is_in_inventory: 0,
             }
         },
         addActivity() {
@@ -1557,8 +1666,10 @@ export default {
                 description: this.editedItem.description,
                 campus_id: this.editedItem.campus.id,
                 category_tracking_id: this.editedItem.tracking_category_uni.id,
-                completed_date: this.editedItem.completed_date,
-                billing_status_id: this.editedItem.billing.id,
+
+                completed_date: this.editedItem.status_uni.label == 'Completed' ?  this.editedItem.completed_date : null, //
+                billing_status_id: this.editedItem.status_uni.label == 'Completed' ?  this.editedItem.billing.id : null, //
+                is_subscription: this.editedItem.isSubscribtion,
 
             }
 
@@ -1567,7 +1678,7 @@ export default {
 
             const conf = {
                 method: 'POST',
-                url: config.addActivity + 2,
+                url: config.addActivity + 4,
                 headers: {
                 Accept: 'application/json',
                 },
@@ -1620,9 +1731,11 @@ export default {
                 description: this.editedItem.description,
                 campus_id: this.editedItem.campus.id,
                 category_tracking_id: this.editedItem.tracking_category_uni.id,
-                completed_date: this.editedItem.completed_date,
-                billing_status_id: this.editedItem.billing.id,
 
+                completed_date: this.editedItem.status_uni.label == 'Completed' ?  this.editedItem.completed_date : null, //
+                billing_status_id: this.editedItem.status_uni.label == 'Completed' ?  this.editedItem.billing.id : null, //
+                is_subscription: this.editedItem.isSubscribtion,
+                
             }
 
             const conf = {
@@ -1691,6 +1804,8 @@ export default {
         openDuplicatePopup(row) {
             this.isShowActivityPopup = true
             this.isDuplicate = true
+            this.isEdit = false
+
             this.editedItem = row
         },
         duplicateItem() {
@@ -2426,7 +2541,7 @@ export default {
 
             const conf = {
                 method: 'GET',
-                url: config.filterActivity + this.tab + '/' + this.$route.params.id + '/2' + '?' + uri,
+                url: config.filterActivity + this.tab + '/' + this.$route.params.id + '/4' + '?' + uri,
                 headers: {
                 Accept: 'application/json',
                 }
