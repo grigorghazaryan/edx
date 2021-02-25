@@ -813,10 +813,17 @@
                                     </div>
 
                                     <div
-                                        v-else
+                                        v-else-if=" editedItem.status_uni.label == 'Completed' "
                                         class="h-popup cursor-pointer">
                                         <q-icon name="done" color="green" style="font-size: 1.5em"></q-icon>
                                         <span>Completed</span>
+                                    </div>
+
+                                    <div
+                                        v-else
+                                        class="h-popup cursor-pointer">
+                                        <q-icon name="done" color="black" style="font-size: 1.5em"></q-icon>
+                                        <span>N/A</span>
                                     </div>
 
 
@@ -1806,7 +1813,7 @@ export default {
             },
             status_uni: {
                 id: data[i].status ? data[i].status.id : null,
-                label: data[i].status ? data[i].status.name : null
+                label: data[i].status ? data[i].status.name : 'N/A'
             },
             approval_status_uni: {
                 id: data[i].approval_status.id,
@@ -1898,7 +1905,10 @@ export default {
             this.isEdit = false
             this.isShowActivityPopup = true
             this.editedItem = {
-                status_uni: { id: 1, label: "Active" },
+                status_uni: { 
+                    id: 1, 
+                    label: "In Progress" 
+                },
                 subcategory_uni: this.optionsSubcategory[0],
                 approval_status_uni: {
                     id: 1,
@@ -1958,8 +1968,9 @@ export default {
                 description: this.editedItem.description,
                 campus_id: this.editedItem.campus.id,
                 category_tracking_id: this.editedItem.tracking_category_uni.id,
-                completed_date: this.status_id == 2 ? null : this.editedItem.completed_date, //
-                billing_status_id: this.status_id == 2 ? null : this.editedItem.billing.id, //
+
+                completed_date: this.editedItem.status_uni.label == 'Completed' ?  this.editedItem.completed_date : null, //
+                billing_status_id: this.editedItem.status_uni.label == 'Completed' ?  this.editedItem.billing.id : null, //
 
             }
 
