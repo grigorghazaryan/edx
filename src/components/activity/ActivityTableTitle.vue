@@ -622,6 +622,8 @@
                                                     <q-select 
                                                         v-model="editedItem.type_uni" 
                                                         :options="typeArr"
+                                                        outlined
+                                                        dense
                                                     />
                                                 </div>
                                             </div>
@@ -631,6 +633,8 @@
                                                     <q-select 
                                                         v-model="editedItem.subcategory_uni" 
                                                         :options="optionsSubcategory"
+                                                        outlined
+                                                        dense
                                                     />
                                                 </div>
                                             </div>
@@ -934,7 +938,7 @@
                 <q-btn flat label="Cancel" color="primary" v-close-popup/>
                 <q-btn v-if="isEdit && !isDuplicate" :loading="btnLoading" @click="editActivity" flat label="Save" color="primary" />
                 <q-btn v-if="!isEdit && !isDuplicate" :loading="btnLoading" @click="addActivity" flat label="Add" color="primary" />
-                <q-btn v-if="isDuplicate && !isEdit" :loading="btnLoading" @click="duplicateItem" flat label="DUplicate" color="primary" />
+                <q-btn v-if="isDuplicate && !isEdit" :loading="btnLoading" @click="duplicateItem" flat label="Duplicate" color="primary" />
             </q-card-actions>
             
         </dialog-draggable>
@@ -1763,16 +1767,16 @@ export default {
             id: data[i].id,
             description: data[i].description,
             tracking_category_uni: {
-                id: data[i].traking ? data[i].traking.id : 0,
+                id: data[i].traking ? data[i].traking.id : null,
                 label: data[i].traking ? data[i].traking.name : 'N/A',
             },
             billing: {
-                id: data[i].billing ? data[i].billing.id : 0,
+                id: data[i].billing ? data[i].billing.id : null,
                 label: data[i].billing ? data[i].billing.name : 'N/A',
             },
             completed_date: data[i].completed_date,
             campus: {
-                id: data[i].campus ? data[i].campus.id : -8 ,
+                id: data[i].campus ? data[i].campus.id : null,
                 label: data[i].campus ? data[i].campus.name : 'N/A'
             },
             online_uni: {
@@ -1806,7 +1810,7 @@ export default {
                 name: data[i].category.abbreviation
             },
             subcategory_uni: {
-                id: data[i].sub_category ? data[i].sub_category.id : 0,
+                id: data[i].sub_category ? data[i].sub_category.id : null,
                 label: data[i].sub_category ? data[i].sub_category.name : 'NA',
                 name: data[i].sub_category ? data[i].sub_category.abbreviation : 'NA'
             },
@@ -1899,6 +1903,18 @@ export default {
                 billing: {
                     id: 4,
                     label: "No Billed"
+                },
+                tracking_category_uni: {
+                    id: null,
+                    label: 'N/A'
+                },
+                campus: {
+                    id: null,
+                    label: 'N/A'
+                },
+                provider: {
+                    id: null,
+                    label: 'N/A'
                 }
             }
         },
@@ -1925,8 +1941,8 @@ export default {
                 description: this.editedItem.description,
                 campus_id: this.editedItem.campus.id,
                 category_tracking_id: this.editedItem.tracking_category_uni.id,
-                completed_date: this.editedItem.completed_date,
-                billing_status_id: this.editedItem.billing.id,
+                completed_date: this.status_id == 2 ? null : this.editedItem.completed_date, //
+                billing_status_id: this.status_id == 2 ? null : this.editedItem.billing.id, //
 
             }
 
@@ -1945,22 +1961,30 @@ export default {
             axios(conf)
                 .then(res => {
 
-                this.$q.notify({
-                    message: 'Activity Added successfully!',
-                    type: 'positive',
-                })
+                    if(res.data.success) {
 
-                if (res.data.items[0]) {
+                        this.$q.notify({
+                            message: 'Activity Added successfully!',
+                            type: 'positive',
+                        })
 
-                    this.btnLoading = false;
-                    // this.data.unshift(res.data.items[0])
-                    this.getActivityByType( this.tab, this.$route.params.id, this.count, this.current )
+                        if (res.data.items[0]) {
 
-                    setTimeout(()=>{
-                        this.isShowActivityPopup = false
-                    }, 500)
+                            this.btnLoading = false;
+                            // this.data.unshift(res.data.items[0])
+                            this.getActivityByType( this.tab, this.$route.params.id, this.count, this.current )
 
-                }
+                            setTimeout(()=>{
+                                this.isShowActivityPopup = false
+                            }, 500)
+
+                        }
+
+                    }else {
+                        this.btnLoading = false;
+                    }
+
+                
 
             })
         },
@@ -2057,8 +2081,11 @@ export default {
         },
         // Duplicate
         openDuplicatePopup(row) {
+
             this.isShowActivityPopup = true
             this.isDuplicate = true
+            this.isEdit = false
+
             this.editedItem = row
         },
         duplicateItem() {
