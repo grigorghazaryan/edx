@@ -182,9 +182,9 @@
               <q-td key="creation_date" :props="props">
                 
                 <div class="cursor-pointer">
-                  {{ props.row.creation_date }}
+                  {{ props.row.allocation.creation_date }}
                   <q-popup-proxy transition-show="scale" transition-hide="scale">
-                    <q-date v-model="props.row.creation_date" mask="YYYY-MM-DD" @input="detectChange(props.rowIndex)">
+                    <q-date v-model="props.row.allocation.creation_date" mask="YYYY-MM-DD" @input="detectChange(props.rowIndex)">
                       <div class="row items-center justify-end q-gutter-sm">
                         <q-btn label="Cancel" color="primary" flat v-close-popup />
                         <q-btn label="OK" color="primary" flat v-close-popup />
@@ -198,6 +198,7 @@
               <q-td key="school" :props="props">
 
                 <div v-if="!props.row.add || props.row.add == false" class="text-pre-wrap cursor-pointer">{{ props.row.school.name }}</div>
+                
                 <q-select
                   v-else
                   outlined
@@ -210,37 +211,35 @@
 
               </q-td>
 
-              <q-td key="instruction" :props="props">
-                $ {{ (props.row.total_instruction - ( props.row.total_instruction * props.row.professional_development_percentage / 100 )).toFixed(2) }}
-              </q-td>
+              <!-- ########## -->
 
-              <q-td key="profDev" :props="props">
-                <div class="cursor-pointer">$ {{ ( props.row.total_instruction * props.row.professional_development_percentage / 100 ).toFixed(2) }}</div>
-
+              <q-td v-if="showCols.pd" key="profDev" :props="props">
+                <div class="cursor-pointer">
+                  $ {{ ( props.row.allocation.total_allocation * props.row.percentage / 100 ).toFixed(2) }}
+                </div>
+                <q-popup-edit  v-model="props.row.amount" title="Proffessional Development" buttons>
+                  <q-input  readonly class="q-mb-sm" @input="detectChange(props.rowIndex)" type="number" 
+                  v-model="(props.row.allocation.total_allocation * props.row.percentage / 100).toFixed(2)" 
+                  dense outlined autofocus/>
+                  <q-input v-model="props.row.percentage" type="number" dense autofocus outlined/>
+                </q-popup-edit>
               </q-td>
               
-              <q-td key="totalInstruction" :props="props">
-
-                <div class="cursor-pointer">$ {{ parseFloat(props.row.total_instruction).toFixed(2) }} </div>
-                
-                <q-popup-edit v-model="props.row.total_instruction" title="Total Instruction" buttons>
-                  <q-input  @input="detectChange(props.rowIndex)" type="number" v-model="props.row.total_instruction" dense autofocus/>
-                  <q-input  @input="detectChange(props.rowIndex)" type="number" v-model="props.row.professional_development_percentage" label="PD Percentage" dense autofocus/>
+              <q-td v-if="showCols.fe" key="familyEngagemenet" :props="props">
+                <div class="cursor-pointer">$  {{ props.row.amount }} </div>
+                <q-popup-edit  v-model="props.row.amount" title="Family Engagemenet" buttons>
+                  <q-input  @input="detectChange(props.rowIndex)" type="number" v-model="props.row.amount" outlined dense autofocus/>
                 </q-popup-edit>
+              </q-td>
 
+              <q-td v-if="showCols.i" key="instruction" :props="props">
+                $ {{ (props.row.allocation.total_allocation - ( props.row.allocation.total_allocation * props.row.percentage / 100 )).toFixed(2) }}
               </q-td>
               
-              <q-td key="familyEngagemenet" :props="props">
-                <div class="cursor-pointer">$  {{ props.row.family_engagement }} </div>
-               
-                <q-popup-edit  v-model="props.row.family_engagement" title="Family Engagemenet" buttons>
-                  <q-input  @input="detectChange(props.rowIndex)" type="number" v-model="props.row.family_engagement" dense autofocus/>
-                </q-popup-edit>
-                
-              </q-td>
+              <!-- ########## -->
 
               <q-td key="total" :props="props">
-                  $ {{ ( parseFloat(props.row.total_instruction) + parseFloat(props.row.family_engagement) ).toFixed(2) }}
+                  $ {{ ( parseFloat(props.row.allocation.total_allocation)).toFixed(2) }}
               </q-td>
               
               <q-td key="status" :props="props">
@@ -355,7 +354,6 @@
 
         <!-- Pagination -->
 
-
         <template v-slot:bottom class="justify-end">
           <div class="q-pa-md flex flex-center">
             <q-pagination
@@ -426,6 +424,13 @@
       components: { Tabs },
       data() {
         return {
+          titleId: 1,
+          showCols: {
+            i: false,
+            pd: false,
+            fe: false
+          },
+          //
           confirm: false,
           loading: true,
           item: '',
@@ -496,34 +501,32 @@
               format: val => `${val}`,
               sortable: true
             },
-            { 
-              name: "instruction", 
-              align: "left",
-              label: "Instruction", 
-              field: "instruction",
-              sortable: true
-            },
+            // ----------------
             { 
               name: "profDev", 
               align: "left",
               label: "Professional Development", 
               field: "profDev",
-              sortable: true
-            },
-            { 
-              name: "totalInstruction", 
-              align: "left",
-              label: "Total Instruction", 
-              field: "totalInstruction",
-              sortable: true
+              sortable: true,
+              headerClasses: 'hidden'
             },
             {
               name: "familyEngagemenet",
               align: "left",
-              label: "Family Engagemenet",
+              label: "Family Engagement",
               field: "familyEngagemenet",
-              sortable: true
+              sortable: true,
+              headerClasses: 'hidden'
             },
+            { 
+              name: "instruction", 
+              align: "left",
+              label: "Instruction", 
+              field: "instruction",
+              sortable: true,
+              headerClasses: 'hidden'
+            },
+            // -------------------
             {
               name: 'total',
               align: "left",
@@ -844,11 +847,11 @@
                 data[i].changed = false
                 data[i].showEditButton = true
 
-                if(data[i].is_final) {
+                if(data[i].isFinal) {
                   data[i].status_string = 'Final'
                 }
                 else {
-                data[i].status_string = 'Preliminary'
+                  data[i].status_string = 'Preliminary'
                 }
 
               }
@@ -1056,6 +1059,54 @@
           axios(conf).then(res => {
             this.barInfo = res.data
           })
+        },
+
+        getTemplate() {
+
+          const conf = {
+            method: 'GET',
+            url: config.getTemplates + this.titleId,
+            headers: {
+              Accept: 'application/json',
+            }
+          }
+
+          axios(conf).then(res => {
+            const categories = res.data.category;
+            
+            for(let i=0; i<categories.length; i++) {
+
+              if(categories[i].name == 'Professional Development') {
+                this.showCols.pd = true
+                for(let j=0; j<this.columns.length; j++) {
+                  if(this.columns[j].label == categories[i].name) {
+                    this.columns[j].headerClasses = 'visible'
+                  }
+                }
+              }
+              
+              if(categories[i].name == 'Family Engagement') {
+                this.showCols.fe = true
+                for(let j=0; j<this.columns.length; j++) {
+                  if(this.columns[j].label == categories[i].name) {
+                    this.columns[j].headerClasses = 'visible'
+                  }
+                }
+              }
+
+              if(categories[i].name == 'Instruction') {
+                this.showCols.i = true
+                for(let j=0; j<this.columns.length; j++) {
+                  if(this.columns[j].label == categories[i].name) {
+                    this.columns[j].headerClasses = 'visible'
+                  }
+                }
+              }
+
+            }
+
+          })
+
         }
         
       },
@@ -1066,6 +1117,7 @@
         this.getAllocationBar(1)
         this.getAllocationByType(1, this.count, this.current)
         this.getSchoolYears()
+        this.getTemplate()
 
       },
       computed: {
@@ -1081,12 +1133,16 @@
     }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 
 .q-pr-sm {
   @media (max-width: 599px) {
     padding-right: 0
   }
+}
+
+.hidden {
+  display: none !important
 }
 
 </style>

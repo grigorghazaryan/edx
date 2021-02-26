@@ -1446,14 +1446,14 @@ export default {
                 {
                     name: "approvals",
                     align: "left",
-                    label: "Service",
+                    label: "Approval",
                     field: "approvals",
                     sortable: true
                 },
                 { 
                     name: "PDActivity", 
                     align: "left",
-                    label: "Activity", 
+                    label: "Service", 
                     sortable: false
                 },
                 {
@@ -2229,7 +2229,7 @@ status_uni: {
 
             const conf = {
                 method: 'GET',
-                url: config.getCategoryTypes + id,
+                url: config.getCategoryTypes + id + '/3',
                 headers: {
                 Accept: 'application/json',
                 }

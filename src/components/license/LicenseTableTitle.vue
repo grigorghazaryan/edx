@@ -850,8 +850,6 @@
                                 <div class="row">
                                     <div class="col-md-4 q-pr-sm">
                                         <div class="text-subtitle2 q-mb-sm">Completed On</div>
-                                        
-
 
 
                                         <q-input outlined dense class="q-mb-md" v-model="editedItem.completed_date">
@@ -1972,7 +1970,7 @@ export default {
 
             const conf = {
                 method: 'GET',
-                url: config.getCategoryTypes + id,
+                url: config.getCategoryTypes + id + '/3',
                 headers: {
                 Accept: 'application/json',
                 }

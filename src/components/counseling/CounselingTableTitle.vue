@@ -1998,7 +1998,7 @@ export default {
 
             const conf = {
                 method: 'GET',
-                url: config.getCategoryTypes + id,
+                url: config.getCategoryTypes + id + '/4',
                 headers: {
                 Accept: 'application/json',
                 }

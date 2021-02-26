@@ -856,10 +856,12 @@
                         </div>
 
                         <div class="row" v-show="editedItem.status_uni && editedItem.status_uni.label == 'Completed' ">
-                            <div class="col-md-8">
+                            <div class="col-md-12">
                                 <div class="row">
                                     <div class="col-md-4 q-pr-sm">
                                         <div class="text-subtitle2 q-mb-sm">Completed On</div>
+
+
                                         <q-input outlined dense class="q-mb-md" v-model="editedItem.completed_date">
                                             <template v-slot:append>
                                                 <q-icon name="event" class="cursor-pointer">
@@ -874,7 +876,7 @@
                                             </template>
                                         </q-input>
                                     </div>
-                                    
+
                                     <div class="col-md-4 q-pr-sm">
                                         <div class="text-subtitle2 q-mb-sm">Added to Inventory</div>
                                         <div class="h-popup">
@@ -914,6 +916,7 @@
                                             </q-popup-edit>
                                         </div>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
@@ -1975,7 +1978,7 @@ export default {
 
             const conf = {
                 method: 'GET',
-                url: config.getCategoryTypes + id,
+                url: config.getCategoryTypes + id + '/2',
                 headers: {
                 Accept: 'application/json',
                 }

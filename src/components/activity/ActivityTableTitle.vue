@@ -1,6 +1,7 @@
 <template>
-    <div>
+    <div class="hahahahahahahahahah">
         <q-table
+            class="overflow-auto"
             :data="data" 
             :columns="columns"
             :visible-columns="visibleColumns"
@@ -338,12 +339,14 @@
                         </q-icon>
 
                     </q-td>
-
+<!-- style="white-space: initial;width: 350px; max-width: 350px;" -->
                     <q-td 
-                        style="white-space: initial;width: 350px; max-width: 350px;"
+                        
                         key="PDActivity" :props="props"
                     >
-                        <span class="inline-span">{{ props.row.activity }}</span>
+                        <span class="inline-span table-text">{{ props.row.activity }}
+
+                        </span>
                     </q-td>
                     
                     <q-td 
@@ -506,7 +509,7 @@
             :icon="'calendar_today'"
             :color="'orange'"
         >
-            <div class="q-pa-md">
+            <div class="q-pa-md scroll" style="max-height: 70vh">
                 <div class="row">
 
                     <div class="col-md-5 q-pr-lg">
@@ -1460,7 +1463,7 @@
         <q-card-section style="max-height: 60vh" class="scroll q-pt-none q-pb-none q-pr-none q-pl-none">
             <div class="row q-mr-lg q-ml-lg q-mb-lg q-mt-lg">
                 <div class="col-md-6 q-pr-sm q-mb-md">
-                    <div class="text-subtitle2 q-mb-sm">Allocation Founds</div>
+                    <div class="text-subtitle2 q-mb-sm">Allocation Funds</div>
                     <div class="row cursor-pointer h-popup">
                         <q-select 
                             class="full-width"
@@ -1682,7 +1685,8 @@ export default {
                     name: "PDActivity", 
                     align: "left",
                     label: "Activity", 
-                    sortable: false
+                    sortable: false,
+                    style: 'width: 300px; min-width: 300px; max-width: 300px'
                 },
                 {
                     name: "dateOfActivity",
@@ -2494,7 +2498,7 @@ export default {
 
             const conf = {
                 method: 'GET',
-                url: config.getCategoryTypes + id,
+                url: config.getCategoryTypes + id + '/1',
                 headers: {
                 Accept: 'application/json',
                 }
@@ -3205,6 +3209,10 @@ export default {
     height: 40px;
     align-items: center;
     display: flex;
+}
+
+.q-table--no-wrap th, .q-table--no-wrap td {
+    white-space: initial;
 }
 
 
