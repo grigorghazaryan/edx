@@ -499,7 +499,7 @@
         </q-table>
 
         <dialog-draggable 
-            :width="1000" 
+            :width="850" 
             :modelDialog="isShowActivityPopup" 
             :title="'Activity Details'" 
             @onHide="isShowActivityPopup=false"
@@ -509,7 +509,7 @@
             <div class="q-pa-md">
                 <div class="row">
 
-                    <div class="col-md-4 q-pr-lg">
+                    <div class="col-md-5 q-pr-lg">
 
                         <div class="q-mb-md">
                             <div class="text-subtitle2 q-mb-sm">Activity Name</div>
@@ -590,7 +590,7 @@
 
                     </div>
 
-                    <div class="col-md-8 q-pl-md">
+                    <div class="col-md-7 q-pl-md">
 
                         <div class="row">
                             <div class="col-md-10 q-pr-sm q-mb-md">
@@ -670,7 +670,7 @@
 
                         <div class="q-mb-md">
                             <div class="row">
-                                <div class="col-md-5">
+                                <div class="col-md-7">
                                     <div class="text-subtitle2 q-mb-sm">Approval Status</div>
                                     <div v-if="editedItem.approval_status_uni" class="row h-popup">
 
@@ -851,9 +851,9 @@
                         </div>
 
                         <div class="row" v-show="editedItem.status_uni && editedItem.status_uni.label == 'Completed' ">
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <div class="row">
-                                    <div class="col-md-6 q-pr-sm">
+                                    <div class="col-md-4 q-pr-sm">
                                         <div class="text-subtitle2 q-mb-sm">Completed On</div>
                                         
 
@@ -878,7 +878,7 @@
 
 
                                     </div>
-                                    <div class="col-md-6" v-if="editedItem.billing">
+                                    <div class="col-md-4" v-if="editedItem.billing">
                                         <div class="text-subtitle2 q-mb-sm">Billing Status</div>
                                         <div class="h-popup">
                                             <div class="cursor-pointer"><q-icon name="not_listed_location" style="font-size: 1.7em; color: #4daf4f"/>{{ editedItem.billing.label }}</div>
@@ -1449,9 +1449,9 @@
         </dialog-draggable>
 
         <dialog-draggable
-            :width="600" 
+            :width="750" 
             :modelDialog="isRemainingPopupOpen" 
-            :title="'Remaining balance'" 
+            :title="'Budgeted Spending'" 
             @onHide="isRemainingPopupOpen=false"
             :icon="'attach_money'"
             :color="'green'"
@@ -1460,7 +1460,7 @@
         <q-card-section style="max-height: 60vh" class="scroll q-pt-none q-pb-none q-pr-none q-pl-none">
             <div class="row q-mr-lg q-ml-lg q-mb-lg q-mt-lg">
                 <div class="col-md-6 q-pr-sm q-mb-md">
-                    <div class="text-subtitle2 q-mb-sm">Allocation Category</div>
+                    <div class="text-subtitle2 q-mb-sm">Allocation Founds</div>
                     <div class="row cursor-pointer h-popup">
                         <q-select 
                             class="full-width"
@@ -1472,19 +1472,17 @@
                     </div>
                 </div>
                 <div class="col-md-6 q-pr-sm q-mb-md">
-                    <div class="text-subtitle2 q-mb-sm">Allocation Subcategory</div>
-                    <div class="row cursor-pointer h-popup">
-                        <q-select 
-                            class="full-width"
-                            v-model="testSubcategory" 
-                            :options="optionsSubcategory"
-                            outlined
-                            dense
-                        />
+                    <div class="row q-mt-lg">
+                        <div class="col-md-9 q-pr-md text-right">Priliminary:</div>
+                        <div class="col-md-3"> <b>$ 49701</b> </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-9 q-pr-md text-right">Available to spend:</div>
+                        <div class="col-md-3"> <b>$ 24850</b> </div>
                     </div>
                 </div>
 
-                <div class="col-md-12">
+                <div class="col-md-12 q-mt-md">
                     <q-table
                         :data="tdata" 
                         :columns="tcolumns"
@@ -1493,11 +1491,33 @@
                         <!-- Table Body -->
                         <template v-slot:body="props">
                             <q-tr :props="props" class="cursor-pointer">
-                                <q-td key="used" :props="props">
-                                    {{props.row.used}}
+                                <q-td key="transaction" :props="props">
+                                    <q-icon name="calendar_today" color="orange" style="font-size: 1.5em" />
+                                    {{props.row.transaction}}
                                 </q-td>
-                                <q-td key="remaining" :props="props">
-                                    {{props.row.remaining}}
+                                <q-td key="date" :props="props">
+                                    {{props.row.date}}
+                                </q-td>
+                                <q-td key="type" :props="props">
+                                    <q-chip 
+                                        square class="edx-bg-green"
+                                        text-color="white"
+                                    >
+                                        <span>{{props.row.type}}</span>
+                                        <q-tooltip 
+                                            anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                                            transition-show="flip-right"
+                                            transition-hide="flip-left"
+                                        >
+                                            <strong>{{ props.row.type }}</strong>
+                                        </q-tooltip>
+                                    </q-chip>
+                                </q-td>
+                                <q-td key="amount" :props="props">
+                                    $ {{props.row.amount}}
+                                </q-td>
+                                <q-td key="balance" :props="props">
+                                    $ {{props.row.balance}}
                                 </q-td>
                             </q-tr>
                         </template>
@@ -1552,23 +1572,62 @@ export default {
             testCategory: '',
             testSubcategory: '',
             tdata: [
-                { used: 10000, remaining: 9000 },
-                { used: 10000, remaining: 9000 },
-                { used: 10000, remaining: 9000 },
+                { 
+                    transaction: 'Episode IV - A New Hope', 
+                    date: '10/09/20 - 10/22/20',
+                    type: 'PD',
+                    amount: 42000,
+                    balance: 20650
+                },
+                { 
+                    transaction: 'Episode V – The Empire Strikes Back', 
+                    date: '10/09/20 - 10/22/20',
+                    type: 'L',
+                    amount: 1480,
+                    balance: 19170
+                },
+                { 
+                    transaction: 'Episode VI – Return of the Jedi', 
+                    date: '10/09/20 - 10/22/20',
+                    type: 'PD',
+                    amount: 3675,
+                    balance: 15495
+                },
             ],
             tcolumns: [
                 {
-                    name: "used",
+                    name: "transaction",
                     align: "left",
-                    label: "Used PD",
-                    field: "used",
+                    label: "Transaction",
+                    field: "transaction",
                     sortable: true
                 },
                 {
-                    name: "remaining",
+                    name: "date",
                     align: "left",
-                    label: "Remaining PD",
-                    field: "remaining",
+                    label: "Date",
+                    field: "date",
+                    sortable: true
+                },
+                {
+                    name: "type",
+                    align: "left",
+                    label: "Type",
+                    field: "type",
+                    sortable: true
+                },
+                {
+                    name: "amount",
+                    align: "left",
+                    label: "Amount",
+                    field: "amount",
+                    sortable: true
+                },
+                {
+                    name: "balance",
+                    align: "left",
+                    label: "Balance",
+                    field: "balance",
                     sortable: true
                 },
             ],
@@ -3072,38 +3131,38 @@ export default {
     watch: {
         showRemainingBalance(val) {
             if(val) {
-                this.visibleColumns = [
-                "toggle",
-                "online",
-                "provider", 
-                "status", 
-                "approvals",
-                "PDActivity", 
-                "dateOfActivity", 
-                "noAttending",
-                "amount",
-                "type",
-                "grossPD",
-                "RemainingBalance",
-                "actions"
-                ]
+                // this.visibleColumns = [
+                // "toggle",
+                // "online",
+                // "provider", 
+                // "status", 
+                // "approvals",
+                // "PDActivity", 
+                // "dateOfActivity", 
+                // "noAttending",
+                // "amount",
+                // "type",
+                // "grossPD",
+                // "RemainingBalance",
+                // "actions"
+                // ]
                 this.isRemainingPopupOpen = true
             }else {
                 this.isRemainingPopupOpen = false
-                this.visibleColumns = [
-                "toggle",
-                "online",
-                "provider", 
-                "status", 
-                "approvals",
-                "PDActivity", 
-                "dateOfActivity", 
-                "noAttending",
-                "amount",
-                "type",
-                "grossPD",
-                "actions"
-                ]
+                // this.visibleColumns = [
+                // "toggle",
+                // "online",
+                // "provider", 
+                // "status", 
+                // "approvals",
+                // "PDActivity", 
+                // "dateOfActivity", 
+                // "noAttending",
+                // "amount",
+                // "type",
+                // "grossPD",
+                // "actions"
+                // ]
             }
         },
         isRemainingPopupOpen(val) {

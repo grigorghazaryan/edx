@@ -201,36 +201,6 @@
             
                 <q-tr :props="props" class="cursor-pointer" @click="openActivityPopup(props.row, props.rowIndex)">
                     
-                    <q-td key="online" :props="props">
-                        <span 
-                            class="material-icons cursor-pointer edx-green" 
-                            style="font-size: 1.7em"
-                            v-if="props.row.online_uni.id == 1 "
-                        >
-                            laptop_mac
-                            <q-tooltip 
-                                anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                                transition-show="flip-right"
-                                transition-hide="flip-left"
-                            >
-                                <strong>Online</strong>
-                            </q-tooltip>
-                        </span> 
-                        <span 
-                            class="material-icons cursor-pointer edx-blue" 
-                            style="font-size: 1.7em"
-                            v-else
-                        >
-                            emoji_transportation
-                                <q-tooltip 
-                                    anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                                    transition-show="flip-right"
-                                    transition-hide="flip-left"
-                                >
-                                    <strong>On Site</strong>
-                                </q-tooltip>
-                        </span>
-                    </q-td>
 
                     <q-td key="provider" :props="props">
                         <div v-if="props.row.provider">
@@ -499,7 +469,7 @@
         </q-table>
 
         <dialog-draggable 
-            :width="1000" 
+            :width="850" 
             :modelDialog="isShowActivityPopup" 
             :title="'Material Details'" 
             @onHide="isShowActivityPopup=false"
@@ -509,7 +479,7 @@
             <div class="q-pa-md">
                 <div class="row">
 
-                    <div class="col-md-4 q-pr-lg">
+                    <div class="col-md-6 q-pr-lg">
 
                         <div class="q-mb-md">
                             <div class="text-subtitle2 q-mb-sm">Material Name</div>
@@ -642,7 +612,7 @@
 
                     </div>
 
-                    <div class="col-md-8 q-pl-md">
+                    <div class="col-md-6 q-pl-md">
 
                         <div class="row">
                             <div class="col-md-10 q-pr-sm q-mb-md">
@@ -695,7 +665,7 @@
 
                         <div class="q-mb-md">
                             <div class="row">
-                                <div class="col-md-5">
+                                <div class="col-md-12">
                                     <div class="text-subtitle2 q-mb-sm">Inventory Category</div>
                                     <q-select  
                                         outlined
@@ -718,7 +688,7 @@
                         
                         <div class="q-mb-md">
                             <div class="row">
-                                <div class="col-md-5">
+                                <div class="col-md-12">
                                     <div class="text-subtitle2 q-mb-sm">Tracking Category</div>
                                     <q-select  
                                         outlined
@@ -741,7 +711,7 @@
 
                         <div class="q-mb-md">
                             <div class="row">
-                                <div class="col-md-5">
+                                <div class="col-md-12">
                                     <div class="text-subtitle2 q-mb-sm">Approval Status</div>
                                     <div v-if="editedItem.approval_status_uni" class="row h-popup">
 
@@ -1178,13 +1148,6 @@ export default {
             data: [],
             columns: [
                 {
-                    name: "online",
-                    align: "left",
-                    label: "",
-                    field: "online",
-                    sortable: true
-                },
-                {
                     name: "provider",
                     align: "left",
                     label: "Provider",
@@ -1208,7 +1171,7 @@ export default {
                 { 
                     name: "PDActivity", 
                     align: "left",
-                    label: "Activity", 
+                    label: "Item", 
                     sortable: false
                 },
                 {
@@ -1259,7 +1222,6 @@ export default {
             ],
             visibleColumns: [
                 "toggle",
-                "online",
                 "provider", 
                 "status", 
                 "approvals",
@@ -1292,16 +1254,6 @@ export default {
             //
             index: null,
             //
-            online: [
-                {
-                    id: 1,
-                    label: "Online"
-                }, 
-                {
-                    id: 2,
-                    label: "On Site"
-                }
-            ],
             optionsStatus: [],
             optionsCategoryTracking: [],
             optionsInventoryCategory: [],
@@ -1462,12 +1414,7 @@ export default {
 
             // PD = 1 totalPDremainder
             // FE = 2 totalFEremainder
-            let isOnline;
-            if(data[i].is_online == 1) {
-                isOnline = 'Online'
-            }else {
-                isOnline = 'On Site'
-            }
+
 
         
         let activityObj = {
@@ -1487,10 +1434,6 @@ export default {
             campus: {
                 id: data[i].campus ? data[i].campus.id : null ,
                 label: data[i].campus ? data[i].campus.name : 'N/A'
-            },
-            online_uni: {
-                id: data[i].details && data[i].is_online,
-                label: isOnline
             },
             provider: {
                 id: data[i].supplier && data[i].supplier.id,
@@ -1616,10 +1559,6 @@ export default {
                     label: 'PD',
                     name: 'PD',
                 },
-                online_uni: {
-                    id: 1,
-                    label: 'Online'
-                },
                 billing: {
                     id: 4,
                     label: "No Billed"
@@ -1656,7 +1595,6 @@ export default {
                 subcategory_id: this.editedItem.subcategory_uni && this.editedItem.subcategory_uni.id,
                 note: this.editedItem.note,
                 markup_percentage: this.editedItem.percentage,
-                is_online: this.editedItem.online_uni && this.editedItem.online_uni.id,
 
                 //
                 description: this.editedItem.description,
@@ -1725,7 +1663,6 @@ export default {
                 subcategory_id: this.editedItem.subcategory_uni && this.editedItem.subcategory_uni.id,
                 note: this.editedItem.note,
                 markup_percentage: this.editedItem.percentage,
-                is_online: this.editedItem.online_uni && this.editedItem.online_uni.id,
 
                 //
                 description: this.editedItem.description,
@@ -2703,7 +2640,6 @@ export default {
             if(val) {
                 this.visibleColumns = [
                 "toggle",
-                "online",
                 "provider", 
                 "status", 
                 "approvals",
@@ -2719,7 +2655,6 @@ export default {
             }else {
                 this.visibleColumns = [
                 "toggle",
-                "online",
                 "provider", 
                 "status", 
                 "approvals",

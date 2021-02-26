@@ -499,7 +499,7 @@
         </q-table>
 
         <dialog-draggable 
-            :width="1000" 
+            :width="850" 
             :modelDialog="isShowActivityPopup" 
             :title="'Counseling Details'" 
             @onHide="isShowActivityPopup=false"
@@ -509,7 +509,7 @@
             <div class="q-pa-md">
                 <div class="row">
 
-                    <div class="col-md-4 q-pr-lg">
+                    <div class="col-md-5 q-pr-lg">
 
                         <div class="q-mb-md">
                             <div class="text-subtitle2 q-mb-sm">Counseling Activity Name</div>
@@ -590,7 +590,7 @@
 
                     </div>
 
-                    <div class="col-md-8 q-pl-md">
+                    <div class="col-md-7 q-pl-md">
 
                         <div class="row">
                             <div class="col-md-10 q-pr-sm q-mb-md">
@@ -666,7 +666,7 @@
 
                         <div class="q-mb-md">
                             <div class="row">
-                                <div class="col-md-5">
+                                <div class="col-md-7">
                                     <div class="text-subtitle2 q-mb-sm">Approval Status</div>
                                     <div v-if="editedItem.approval_status_uni" class="row h-popup">
 
@@ -847,7 +847,7 @@
                         </div>
 
                         <div class="row" v-show="editedItem.status_uni && editedItem.status_uni.label == 'Completed' ">
-                            <div class="col-md-8">
+                            <div class="col-md-12">
                                 <div class="row">
                                     <div class="col-md-4 q-pr-sm">
                                         <div class="text-subtitle2 q-mb-sm">Completed On</div>
@@ -1196,7 +1196,7 @@ export default {
                 { 
                     name: "PDActivity", 
                     align: "left",
-                    label: "Activity", 
+                    label: "Counseling", 
                     sortable: false
                 },
                 {

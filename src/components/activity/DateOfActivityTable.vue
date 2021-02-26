@@ -34,15 +34,17 @@
                 <q-td key="location" 
                 style="white-space: initial;width: 230px; max-width: 230px;"
                 :props="props">
-                    {{ props.row.location }}
+                    <span v-if="props.rowIndex != 0">{{ props.row.location }}</span>
                 </q-td>
                 
                 <q-td key="reccurance" :props="props">
-                    {{ props.row.repeats.label }}
-                    {{ props.row.repeatEvery }}
-                    <span v-for="weekday in props.row.repeatOn" :key="weekday.label">
-                        <span v-if="weekday.checked" class="q-mr-sm">{{ weekday.label }}</span>
-                    </span>
+                    <div v-if="props.rowIndex != 0">
+                        {{ props.row.repeats.label }}
+                        {{ props.row.repeatEvery }}
+                        <span v-for="weekday in props.row.repeatOn" :key="weekday.label">
+                            <span v-if="weekday.checked" class="q-mr-sm">{{ weekday.label }}</span>
+                        </span>
+                    </div>
                 </q-td>
 
                 <q-td key="note" :props="props">
@@ -103,7 +105,7 @@ export default {
     data() {
         return {
             expand: false,
-            paginationDate: { rowsPerPage: 100 },
+            paginationDate: { rowsPerPage: 1000 },
             tableColumns: [
                 {
                     name: "toggle",
