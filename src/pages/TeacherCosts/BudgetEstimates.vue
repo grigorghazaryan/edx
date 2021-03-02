@@ -4,8 +4,8 @@
     <div class="q-pa-md q-gutter-sm">
       <q-breadcrumbs>
         <q-breadcrumbs-el icon="dashboard" label="Dashboard" to="/" />
-        <q-breadcrumbs-el label="Teacher Cost"/>
-        <q-breadcrumbs-el label="Budget Estimates"/>
+        <q-breadcrumbs-el label="Budget"/>
+        <q-breadcrumbs-el label="Teacher Costs"/>
       </q-breadcrumbs>
     </div>
 
@@ -76,288 +76,7 @@
         <q-tab-panels v-model="tab" animated>
 
           <q-tab-panel name="Salaried" class="q-p-sm">
-
-            <q-table
-              :data="data" 
-              :columns="columns"
-              :loading="loading"
-              class="no-shadow"
-              row-key="teacher"
-            >
-
-              <!-- Loading -->
-              <template v-slot:loading>
-                <q-inner-loading showing color="primary" />
-              </template>
-
-              <!-- Table Header -->
-              <template v-slot:top-right="props">
-
-                <q-select class="q-mr-md" style="min-width: 200px; max-width: 200px" dense outlines clearable v-model="schoolYear" :options="schoolYears" label="School year"/>
-
-                <q-btn square class="q-mr-md" style="background-color: #546bfa" text-color="white" icon="add" @click="show_dialog = true" no-caps>Assign Teacher</q-btn>
-                <q-btn
-                  icon-right="archive"
-                  label="Export to Excel"
-                  color="teal" 
-                  text-color="white"
-                  no-caps
-                  @click="exportTable"
-                />
-
-                <q-btn
-                  flat
-                  round
-                  dense
-                  :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-                  @click="props.toggleFullscreen"
-                  v-if="mode === 'list'" class="q-px-sm"
-                >
-                  <q-tooltip
-                    :disable="$q.platform.is.mobile"
-                    v-close-popup
-                  >{{props.inFullscreen ? 'Exit Fullscreen' : 'Toggle Fullscreen'}}
-                  </q-tooltip>
-                </q-btn>
-
-                <div class="q-pa-sm q-gutter-sm">
-                  
-                  <q-dialog v-model="show_dialog" >
-                    <q-card>
-                      <q-card-section>
-                        <div class="text-h6">Add Teacher</div>
-                      </q-card-section>
-
-                      <q-card-section>
-                        <div class="row">
-
-                          <div class="col-md-6 q-pr-sm q-pb-md">
-                            <q-input outlined v-model="editedItem.employee" label="Employee" />
-                          </div>
-
-                          <div class="col-md-6 q-pb-md">
-                            <q-input outlined v-model="editedItem.date">
-                              
-                              <template v-slot:prepend>
-                                <q-icon name="event" class="cursor-pointer">
-                                  <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                    <q-date v-model="editedItem.date" mask="YYYY-MM-DD">
-                                      <div class="row items-center justify-end">
-                                        <q-btn v-close-popup label="Close" color="primary" flat />
-                                      </div>
-                                    </q-date>
-                                  </q-popup-proxy>
-                                </q-icon>
-                              </template>
-
-                            </q-input>
-                          </div>
-
-                          <div class="col-md-6 q-pr-sm q-pb-md">
-                            <q-input outlined v-model="editedItem.firstName" label="First Name" />
-                          </div>
-
-                          <div class="col-md-6 q-pr-sm q-pb-md">
-                            <q-input outlined v-model="editedItem.lastName" label="Last Name" />
-                          </div>
-
-                          <div class="col-md-12">
-                            <q-input type="textarea" v-model="editedItem.notes" outlined label="Notes" />
-                          </div>
-                        
-                        </div>
-                      </q-card-section>
-                    
-                      <q-card-actions align="right">
-                        <q-btn flat label="Confirm" color="primary" v-close-popup @click="addRow"></q-btn>
-                      </q-card-actions>
-
-                    </q-card>
-                  </q-dialog>
-                  
-                  <q-dialog v-model="confirm" persistent>
-                    <q-card>
-                      <q-card-section class="row items-center">
-                        <span class="q-ml-sm">Are you sure to delete this item?</span>
-                      </q-card-section>
-
-                      <q-card-actions align="right">
-                        <q-btn flat label="No, thanks" color="primary" v-close-popup />
-                        <q-btn label="Yes" color="red" v-close-popup @click="deleteItem" />
-                      </q-card-actions>
-                    </q-card>
-                  </q-dialog>
-
-                </div>
-          
-              </template>
-
-              <!-- Table Body -->
-              <template v-slot:body="props">
-                
-                  <q-tr :props="props">
-
-                    <q-td auto-width>
-                      <q-btn size="sm" flat
-                        color="black"
-                        @click="props.expand = !props.expand" 
-                        :icon="props.expand ? 'keyboard_arrow_down' : 'keyboard_arrow_right'">
-                      </q-btn>
-                    </q-td>
-
-                    <q-td key="teacher" :props="props">
-                      {{ props.row.teacher }}
-                    </q-td>
-
-                    <q-td key="benefits" :props="props">
-                      <q-toggle v-model="props.row.benefits" color="blue" />
-                    </q-td>
-                    
-                    <q-td key="workMonth" :props="props">
-                      <div>{{ props.row.workMonth }}</div>
-
-                      <q-popup-edit v-model="props.row.workMonth" title="Update Work Month" buttons>
-                        <q-input type="number" v-model="props.row.workMonth" dense autofocus />
-                      </q-popup-edit>
-
-                    </q-td>
-
-                    <q-td key="allocation" :props="props">
-                      <div>{{ props.row.allocation }} %</div>
-                      <q-popup-edit v-model="props.row.allocation" title="Update allocation" buttons>
-                        <q-input type="number" v-model="props.row.allocation" dense autofocus />
-                      </q-popup-edit>
-                    </q-td>
-
-                    <q-td key="increase" :props="props">
-                      <div>{{ props.row.increase }} %</div>
-                      <q-popup-edit v-model="props.row.increase" title="Update increase" buttons>
-                        <q-input type="number" v-model="props.row.increase" dense autofocus />
-                      </q-popup-edit>
-                    </q-td>
-
-                    <q-td key="currentSalary" :props="props">
-                      <div>$ {{ props.row.currentSalary }}</div>
-                      <q-popup-edit v-model="props.row.currentSalary" title="Update Current Salary" buttons>
-                        <q-input type="number" v-model="props.row.currentSalary" dense autofocus />
-                      </q-popup-edit>
-                    </q-td>
-
-                    <q-td key="fringe" :props="props">
-                      <div>$ {{ props.row.fringe }}</div>
-                      <q-popup-edit v-model="props.row.fringe" title="Update Fringe" buttons>
-                        <q-input type="number" v-model="props.row.fringe" dense autofocus />
-                      </q-popup-edit>
-                    </q-td>
-
-                    <q-td key="semiMonthly" :props="props">
-                      <div>$ {{ props.row.semiMonthly }}</div>
-                    </q-td>
-
-                    <q-td key="annualCharge" :props="props">
-                      <div>$ {{ props.row.annualCharge }}</div>
-                    </q-td>
-                    
-                    <q-td key="actions" :props="props">
-                      <q-btn 
-                        icon="delete_forever"
-                        color="red" 
-                        @click="openDeleteModal(props.row)" 
-                        size=sm 
-                        no-caps
-                      >
-                      </q-btn>
-                    </q-td>
-
-                  </q-tr>
-
-                  <q-tr v-show="props.expand" :props="props">
-                    <q-td colspan="100%" class="q-td--no-hover">
-                      <div class="q-mt-md">
-                        <div class="row">
-
-                          <div class="col-9">
-                            <div class="text-subtitle2">Monthly Breakdown</div>
-                            <q-table
-                              class="q-mt-md q-mb-md no-shadow border"
-                              :data="teacherSubData"
-                              :columns="teacherSubColumns"
-                              row-key="id"
-                              hide-bottom
-                            >
-                              <template v-slot:body="props">
-                                <q-tr :props="props">
-                                  <q-td key="workMonths" :props="props">
-                                    {{ props.row.workMonths }}
-                                  </q-td>
-                                  <q-td key="payPeriod" :props="props">
-                                    {{ props.row.payPeriod }}
-                                  </q-td>
-                                  <q-td key="charge" :props="props">
-                                    {{ props.row.charge }}
-                                  </q-td>
-                                  <q-td key="gross" :props="props">
-                                    {{ props.row.gross }}
-                                  </q-td>
-                                  <q-td key="totalAdmin" :props="props">
-                                    {{ props.row.totalAdmin }}
-                                  </q-td>
-                                  <q-td key="hourlyRate" :props="props">
-                                    {{ props.row.hourlyRate }}
-                                  </q-td>
-                                  <q-td key="notes" :props="props">
-                                    {{ props.row.notes }}
-                                    <q-popup-edit v-model="props.row.notes" title="Notes" buttons>
-                                      <q-input type="textarea" v-model="props.row.notes" dense autofocus />
-                                    </q-popup-edit>
-                                  </q-td>
-                                </q-tr>
-                              </template>
-
-                            </q-table>
-                          </div>
-
-                          <div class="col-4">
-                            <q-expansion-item
-                              expand-separator
-                              label="Salary History"
-                              class="text-subtitle2"
-                            >
-                                <q-table
-                                  class="q-mt-md q-mb-md no-shadow border" 
-                                  hide-bottom
-                                  :data="salaryHistoryData"
-                                  :columns="salaryHistoryColumns"
-                                  row-key="year"
-                                  separator="cell"
-                                />
-                            </q-expansion-item>
-                          </div>
-
-                        </div>
-
-                      </div> 
-                    </q-td>
-                  </q-tr>
-
-              </template>
-
-              <!-- Pagination -->
-              <template v-slot:bottom class="justify-end">
-                <div class="q-pa-md flex flex-center">
-                  <q-pagination
-                    v-model="pagination.page"
-                    :max="pages"
-                    :max-pages="6"
-                    ellipsess
-                    :direction-links="true"
-                  >
-                  </q-pagination>
-                </div>
-              </template>
-
-            </q-table>
-            
+            <SalariedTable />
           </q-tab-panel>
 
           <q-tab-panel name="Hourly" class="q-p-sm">
@@ -1212,6 +931,7 @@
 <script>
     import {exportFile} from 'quasar'
     import router from 'src/router'
+    import SalariedTable from '../../components/teacher/SalariedTable';
 
     function wrapCsvValue(val, formatFn) {
         let formatted = formatFn !== void 0
@@ -1234,6 +954,9 @@
     }
 
     export default {
+        components: {
+          SalariedTable,
+        },
         data() {
           return {
             tab: 'Salaried',

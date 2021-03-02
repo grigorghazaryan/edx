@@ -432,7 +432,7 @@
           },
           //
           confirm: false,
-          loading: true,
+          loading: false,
           item: '',
           pages: 1,
           pagination: {
@@ -502,30 +502,30 @@
               sortable: true
             },
             // ----------------
-            { 
-              name: "profDev", 
-              align: "left",
-              label: "Professional Development", 
-              field: "profDev",
-              sortable: true,
-              headerClasses: 'hidden'
-            },
-            {
-              name: "familyEngagemenet",
-              align: "left",
-              label: "Family Engagement",
-              field: "familyEngagemenet",
-              sortable: true,
-              headerClasses: 'hidden'
-            },
-            { 
-              name: "instruction", 
-              align: "left",
-              label: "Instruction", 
-              field: "instruction",
-              sortable: true,
-              headerClasses: 'hidden'
-            },
+            // { 
+            //   name: "profDev", 
+            //   align: "left",
+            //   label: "Professional Development", 
+            //   field: "profDev",
+            //   sortable: true,
+            //   headerClasses: 'hidden'
+            // },
+            // {
+            //   name: "familyEngagemenet",
+            //   align: "left",
+            //   label: "Family Engagement",
+            //   field: "familyEngagemenet",
+            //   sortable: true,
+            //   headerClasses: 'hidden'
+            // },
+            // { 
+            //   name: "instruction", 
+            //   align: "left",
+            //   label: "Instruction", 
+            //   field: "instruction",
+            //   sortable: true,
+            //   headerClasses: 'hidden'
+            // },
             // -------------------
             {
               name: 'total',
@@ -816,10 +816,10 @@
 
             }
 
-            this.data = data
-            this.tempData = data
+            // this.data = data
+            // this.tempData = data
             
-            console.log('Filter result: ', res.data)
+            // console.log('Filter result: ', res.data)
           })
 
           },
@@ -856,8 +856,8 @@
 
               }
 
-              this.data = data
-              this.tempData = data
+              // this.data = data
+              // this.tempData = data
 
               this.loading = false
           })
@@ -1065,45 +1065,64 @@
 
           const conf = {
             method: 'GET',
-            url: config.getTemplates + this.titleId,
+            url: config.getBreakdownLogic + this.titleId,
             headers: {
               Accept: 'application/json',
             }
           }
 
           axios(conf).then(res => {
-            const categories = res.data.category;
-            
-            for(let i=0; i<categories.length; i++) {
+            console.log(' logic =  ', res.data.breakdownLogic)
+            const logic = res.data.breakdownLogic.reverse()
 
-              if(categories[i].name == 'Professional Development') {
-                this.showCols.pd = true
-                for(let j=0; j<this.columns.length; j++) {
-                  if(this.columns[j].label == categories[i].name) {
-                    this.columns[j].headerClasses = 'visible'
-                  }
-                }
-              }
-              
-              if(categories[i].name == 'Family Engagement') {
-                this.showCols.fe = true
-                for(let j=0; j<this.columns.length; j++) {
-                  if(this.columns[j].label == categories[i].name) {
-                    this.columns[j].headerClasses = 'visible'
-                  }
-                }
+            for(let i=0; i<logic.length; i++) {
+
+              let startNumber = 3;
+              let name = logic[i].label.replace(/\s/g, '')
+
+              let obj = { 
+                name: name, 
+                align: "left",
+                label: logic[i].label, 
+                field: name,
+                sortable: true
               }
 
-              if(categories[i].name == 'Instruction') {
-                this.showCols.i = true
-                for(let j=0; j<this.columns.length; j++) {
-                  if(this.columns[j].label == categories[i].name) {
-                    this.columns[j].headerClasses = 'visible'
-                  }
-                }
-              }
-
+              this.columns.splice(startNumber, 0, obj);
+              startNumber++
             }
+            // const categories = res.data.category;
+            
+            // for(let i=0; i<categories.length; i++) {
+
+            //   if(categories[i].name == 'Professional Development') {
+            //     this.showCols.pd = true
+            //     for(let j=0; j<this.columns.length; j++) {
+            //       if(this.columns[j].label == categories[i].name) {
+            //         this.columns[j].headerClasses = 'visible'
+            //       }
+            //     }
+            //   }
+              
+            //   if(categories[i].name == 'Family Engagement') {
+            //     this.showCols.fe = true
+            //     for(let j=0; j<this.columns.length; j++) {
+            //       if(this.columns[j].label == categories[i].name) {
+            //         this.columns[j].headerClasses = 'visible'
+            //       }
+            //     }
+            //   }
+
+            //   if(categories[i].name == 'Instruction') {
+            //     this.showCols.i = true
+            //     for(let j=0; j<this.columns.length; j++) {
+            //       if(this.columns[j].label == categories[i].name) {
+            //         this.columns[j].headerClasses = 'visible'
+            //       }
+            //     }
+            //   }
+
+            // }
 
           })
 
@@ -1114,7 +1133,7 @@
 
         // Get schools for showing
         this.getSchools()
-        this.getAllocationBar(1)
+        // this.getAllocationBar(1)
         this.getAllocationByType(1, this.count, this.current)
         this.getSchoolYears()
         this.getTemplate()

@@ -9,7 +9,8 @@ const config = {
     // Allocations
     getAllocationByTitle: 'https://edxchange-allocation.aimtech.am/api/v1/allocations/', // + allocation 
     addAllocation: 'https://edxchange-allocation.aimtech.am/api/v1/allocations',
-    getTemplates: 'https://edxchange-allocation.aimtech.am/api/v1/get-template/', // + title id
+    // getTemplates: 'https://edxchange-allocation.aimtech.am/api/v1/get-template/', // + title id
+    getBreakdownLogic: 'https://edxchange-allocation.aimtech.am/api/v1/get-breakdown-logic/',
 
     getSchools: 'https://edxchange-school.aimtech.am/api/v1/school',
 
@@ -121,6 +122,11 @@ const config = {
     getTrackingCategories: 'https://edxchange-activity.aimtech.am/api/v1/get-item-category-tracking',
     // INVENTORY CATEGORIES
     getInventoryCategories: 'https://edxchange-activity.aimtech.am/api/v1/get-inventory-category-type',
+
+
+    // TEACHERS
+    getTeachersData: 'https://edxchange-teacher.aimtech.am/api/v1/teacher?pagination=1',
+    getTeachers: 'https://edxchange-teacher.aimtech.am/api/v1/teacher?pagination=0',
 }
 
 export default config
