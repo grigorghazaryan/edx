@@ -200,7 +200,8 @@
             <!-- Table Body -->
             <template v-slot:body="props">
             
-                <q-tr :props="props" class="cursor-pointer" @click="openActivityPopup(props.row, props.rowIndex)">
+                <q-tr :props="props" class="cursor-pointer" 
+                @click="openActivityPopup(props.row, props.rowIndex)">
                     
                     <q-td key="online" :props="props">
                         <span 
