@@ -1,5 +1,5 @@
 <template>
-    <div class="hahahahahahahahahah">
+    <div>
         <q-table
             class="overflow-auto"
             :data="data" 

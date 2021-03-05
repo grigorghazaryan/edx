@@ -228,11 +228,14 @@
                         <div class="row">
                             <div class="col-md-4 q-pr-sm">
                                 <div class="text-subtitle2 q-mb-sm">Work Month</div>
-                                <q-input prefix="$" class="q-mb-md" outlined type="text" v-model="editedItem.teacher" dense autofocus />
+                                <q-input readonly class="q-mb-md" outlined type="text" v-model="editedItem.workMonth" dense autofocus />
                             </div>
                             <div class="col-md-4">
+                                <!-- Fringe = Fringe * allocation percentage -->
                                 <div class="text-subtitle2 q-mb-sm">Fringe</div>
-                                <q-input prefix="$" standout readonly  class="q-mb-md" type="text" v-model="editedItem.teacher" dense autofocus />
+                                <q-input  readonly prefix="$" outlined  class="q-mb-md" type="text" 
+                                    v-model="editedItem.fringe"
+                                    dense autofocus />
                             </div>
                             <div class="col-md-4 h-popup-checkbox">
                                <q-checkbox v-model="editedItem.benefits" label="Has benefits" />
@@ -242,11 +245,16 @@
                         <div class="row">
                             <div class="col-md-4 q-pr-sm">
                                 <div class="text-subtitle2 q-mb-sm">Salary</div>
-                                <q-input prefix="$" class="q-mb-md" outlined type="text" v-model="editedItem.teacher" dense autofocus />
+                                <q-input prefix="$" readonly class="q-mb-md" outlined type="text" v-model="editedItem.currentSalary" dense autofocus />
                             </div>
                             <div class="col-md-4">
+                                <!-- ((Current Salary / number of working month)/2 )* work allocation percentage -->
                                 <div class="text-subtitle2 q-mb-sm">Semi-Monthly</div>
-                                <q-input prefix="$" standout readonly  class="q-mb-md" type="text" v-model="editedItem.teacher" dense autofocus />
+                                <q-input prefix="$" outlined readonly  class="q-mb-md" type="text" 
+                                    v-model="editedItem.semiMonthly"
+                                    dense autofocus />
+                                 <!-- :value="((( ( editedItem.currentSalary / (editedItem.workMonth - 0.5) ) / 2 ) * editedItem.allocation) / 100).toFixed(2)" -->
+                                
                             </div>
                         </div>
 
@@ -336,65 +344,82 @@
                             </div>
                             <div class="col-md-3 q-pr-sm">
                                 <div class="text-subtitle2 q-mb-sm">Start Date</div>
-                                <q-input standout   class="q-mb-md" type="text" v-model="editedItem.teacher" dense autofocus />
+                                <q-input outlined   class="q-mb-md" type="text" v-model="editedItem.startDate" dense autofocus />
                             </div>
                             <div class="col-md-3 q-pr-sm">
                                 <div class="text-subtitle2 q-mb-sm">End Date</div>
-                                <q-input standout   class="q-mb-md" type="text" v-model="editedItem.teacher" dense autofocus />
+                                <q-input outlined   class="q-mb-md" type="text" v-model="editedItem.endDate" dense autofocus />
                             </div>
                             <div class="col-md-3 q-pr-sm">
                                 <div class="text-subtitle2 q-mb-sm">Allocation %</div>
-                                <q-input standout   class="q-mb-md" type="text" v-model="editedItem.teacher" dense autofocus />
+                                <q-input outlined   class="q-mb-md" type="text" v-model="editedItem.allocation" dense autofocus />
                             </div>
                             <div class="col-md-3">
                                 <div class="text-subtitle2 q-mb-sm">Monthly Fringe</div>
-                                <q-input standout   class="q-mb-md" type="text" v-model="editedItem.teacher" dense autofocus />
+                                <q-input  
+                                    prefix="$" outlined  class="q-mb-md" type="text" 
+                                    :value="editedItem.mFrienge == null ? ((editedItem.fringe * editedItem.allocation) / 100) : editedItem.mFrienge "
+                                    dense autofocus />
+                                    <q-popup-edit v-model="editedItem.mFrienge" title="Update Monthly Fringe" buttons>
+                                        <q-input v-model="editedItem.mFrienge" dense autofocus counter />
+                                    </q-popup-edit>
                             </div>
                         </div>
 
                     </div>
 
-                    <div class="col-md-12 q-mt-lg q-mb-lg">
+                    <div class="col-md-12 q-mt-lg q-mb-lg" v-if="editedItem.monthlyDetails">
                         <div class="text-subtitle2 q-mb-sm">
                             Calculated Monthly Details and Pay Rate
                         </div>
                         <q-table
                             class="q-mt-md q-mb-md border"
-                            :data="teacherSubData"
+                            :data="editedItem.monthlyDetails"
                             :columns="teacherSubColumns"
                             hide-bottom
                         >
                             <template v-slot:body="props">
                                 <q-tr :props="props">
+                                    <!-- Work month – 0.5 -->
                                     <q-td key="payMonth" :props="props">
-                                    {{ props.row.payMonth }}
+                                    {{ editedItem.workMonth - 0.5 }}
                                     </q-td>
                                     <q-td key="payPeriod" :props="props">
-                                    {{ props.row.payPeriod }}
+                                        <span v-if="(editedItem.workMonth - 0.5) % 1 == 0">
+                                            {{editedItem.workMonth - 0.5}}
+                                        </span>
+                                        <span v-else>
+                                            {{(editedItem.workMonth - 0.5) * 2}}
+                                        </span>
                                     </q-td>
+                                    <!-- Charge = (teacher pay for (monthly, week, bi week, semi-month) * Markup fee) 
+                                    * allocation percentage -->
                                     <q-td key="charge" :props="props">
-                                    {{ props.row.charge }}
+                                        {{ ((( (editedItem.semiMonthly * 2) * editedItem.markupFee ) * editedItem.allocation) / 100).toFixed(2) }}
                                     </q-td>
+                                    <!-- Gross = (calculated Charge amount * allocation percentage) + Fringe -->
                                     <q-td key="gross" :props="props">
-                                    {{ props.row.gross }}
+                                        {{ (((( (editedItem.semiMonthly * 2) * editedItem.markupFee ) * editedItem.allocation) / 100 ) + (editedItem.fringe * editedItem.allocation) / 100).toFixed(2) }}
                                     </q-td>
+                                    <!-- Total w/Admin = Gross * admin markup -->
                                     <q-td key="totalAdmin" :props="props">
-                                    {{ props.row.totalAdmin }}
+                                    {{ ((((( (editedItem.semiMonthly * 2) * editedItem.markupFee ) * editedItem.allocation) / 100 ) + ((editedItem.fringe * editedItem.allocation) / 100) ) * editedItem.adminMarkupFee).toFixed(2)}}
                                     </q-td>
+                                    <!-- Hourly rate = total w/admin / work hours in a month -->
                                     <q-td key="hourlyRate" :props="props">
-                                    {{ props.row.hourlyRate }}
+                                    {{ (((((( (editedItem.semiMonthly * 2) * editedItem.markupFee ) * editedItem.allocation) / 100 ) + ((editedItem.fringe * editedItem.allocation) / 100) ) * editedItem.adminMarkupFee) / editedItem.hourInMonth).toFixed(2) }}
                                     </q-td>
-                                    <q-td key="weeklyRate" :props="props">
+                                    <!-- <q-td key="weeklyRate" :props="props">
                                     {{ props.row.weeklyRate }}
                                     </q-td>
                                     <q-td key="biWeekly" :props="props">
                                     {{ props.row.biWeekly }}
-                                    </q-td>
+                                    </q-td> -->
                                     <q-td key="semiMonthly" :props="props">
-                                    {{ props.row.semiMonthly }}
+                                    {{ (((((( (editedItem.semiMonthly * 2) * editedItem.markupFee ) * editedItem.allocation) / 100 ) + ((editedItem.fringe * editedItem.allocation) / 100) ) * editedItem.adminMarkupFee) / 2).toFixed(2) }}
                                     </q-td>
                                     <q-td key="anual" :props="props">
-                                    {{ props.row.anual }}
+                                    {{ (((((( (editedItem.semiMonthly * 2) * editedItem.markupFee ) * editedItem.allocation) / 100 ) + ((editedItem.fringe * editedItem.allocation) / 100) ) * editedItem.adminMarkupFee) * (editedItem.workMonth - 0.5)).toFixed(2) }}
                                     </q-td>
                                 </q-tr>
                             </template>
@@ -409,18 +434,19 @@
                             </div>
                             <div class="col-md-4 q-pr-sm">
                                 <div class="text-subtitle2 q-mb-sm">Hourly</div>
-                                <q-input standout   class="q-mb-md" type="text" v-model="editedItem.teacher" dense autofocus />
+                                <q-input outlined   class="q-mb-md" type="text" v-model="editedItem.hourlyRate" dense autofocus />
                             </div>
                             <div class="col-md-4 q-pr-sm">
                                 <div class="text-subtitle2 q-mb-sm">Semi-Monthly</div>
-                                <q-input standout   class="q-mb-md" type="text" v-model="editedItem.teacher" dense autofocus />
+                                <q-input outlined class="q-mb-md" type="text" :value="(((((( (editedItem.semiMonthly * 2) * editedItem.markupFee ) * editedItem.allocation) / 100 ) + ((editedItem.fringe * editedItem.allocation) / 100) ) * editedItem.adminMarkupFee) / 2).toFixed(2)" dense autofocus />
                             </div>
                             <div class="col-md-4">
                                 <div class="text-subtitle2 q-mb-sm">Anual</div>
-                                <q-input standout   class="q-mb-md" type="text" v-model="editedItem.teacher" dense autofocus />
+                                <q-input outlined class="q-mb-md" type="text" :value="(((((( (editedItem.semiMonthly * 2) * editedItem.markupFee ) * editedItem.allocation) / 100 ) + ((editedItem.fringe * editedItem.allocation) / 100) ) * editedItem.adminMarkupFee) * (editedItem.workMonth - 0.5)).toFixed(2)" dense autofocus />
                             </div>
                         </div>
                     </div>
+
                     <div class="col-md-6 q-pl-md">
                         <div class="text-subtitle2 q-mb-sm">Note</div>
                         <q-input 
@@ -441,6 +467,7 @@
             </q-card-actions>
             
         </dialog-draggable>
+        
 </div>
 </template>
 
@@ -564,18 +591,18 @@ export default {
                 label: "Hourly", 
                 field: "hourlyRate"
               },
-              { 
-                name: "weeklyRate", 
-                align: "left",
-                label: "Weekly", 
-                field: "weeklyRate"
-              },
-              { 
-                name: "biWeekly", 
-                align: "left",
-                label: "bi-Weekly", 
-                field: "biWeekly"
-              },
+            //   { 
+            //     name: "weeklyRate", 
+            //     align: "left",
+            //     label: "Weekly", 
+            //     field: "weeklyRate"
+            //   },
+            //   { 
+            //     name: "biWeekly", 
+            //     align: "left",
+            //     label: "bi-Weekly", 
+            //     field: "biWeekly"
+            //   },
               { 
                 name: "semiMonthly", 
                 align: "left",
@@ -607,37 +634,49 @@ export default {
     methods: {
         getTeachers() {
             
-            const conf = {
-                method: 'GET',
-                url: config.getTeachersData,
-                headers: {
-                Accept: 'application/json',
-                }
-            }
-
-            axios(conf).then(res => {
-                console.log('getTeachers',  res.data)
-            })
-
-
             let teacherArr = [], teacherSubData = [];
 
             for(let i=0; i<10; i++) {
+
                 let obj = {
-                    teacher: 'Name Surname ' + i,
+                    teacher: 'Obi Wan Kenobi ' + i,
                     benefits: true,
-                    workMonth: 'workMonth',
-                    allocation: 'allocation',
+                    workMonth: 6,
+                    allocation: 10,
                     increase: 'increase',
-                    currentSalary: 'currentSalary',
-                    fringe: 'fringe',
-                    semiMonthly: '45',
-                    annualCharge: '4555'
+                    currentSalary: 100000,
+                    fringe: 300,
+                    mFrienge: null,
+                    // ((Current Salary / number of working month)/2 )* work allocation percentage
+                    semiMonthly: 1200,
+                    annualCharge: '4555',
+                    startDate: '14/06/20',
+                    endDate: '14/06/21',
+                    markupFee: 1.67,
+                    adminMarkupFee: 1.12,
+                    //
+                    hourlyRate: 25,
+                    hourInMonth: 16,
+
+                    monthlyDetails: [{
+                        payMonth: 'Text 1',
+                        payPeriod: 'Text 2',
+                        charge: 'Text 3',
+                        gross: 'Text 4',
+                        totalAdmin: 'Text 5',
+                        hourlyRate: 'Text 6',
+                        weeklyRate: 'Text 7',
+                        biWeekly: 'Text 8',
+                        semiMonthly: 'Text 9',
+                        anual: 'Text 10'
+                    }]
+
+
                 }
                 teacherArr.push(obj)
+
             }
 
-            
                 let obj = {
                     payMonth: 'Text',
                     payPeriod: 'Text',
@@ -670,6 +709,7 @@ export default {
         editTeacher() {
 
         },
+
     },
     created() {
         this.getTeachers()

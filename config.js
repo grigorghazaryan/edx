@@ -8,9 +8,9 @@ const config = {
 
     // Allocations
     getAllocationByTitle: 'https://edxchange-allocation.aimtech.am/api/v1/allocations/', // + allocation 
-    addAllocation: 'https://edxchange-allocation.aimtech.am/api/v1/allocations',
-    // getTemplates: 'https://edxchange-allocation.aimtech.am/api/v1/get-template/', // + title id
-    getBreakdownLogic: 'https://edxchange-allocation.aimtech.am/api/v1/get-breakdown-logic/',
+    addAllocation: 'https://edxchange-allocation.aimtech.am/api/v1/allocations/',
+    getTemplates: 'https://edxchange-allocation.aimtech.am/api/v1/get-template/', // + title id
+    // getBreakdownLogic: 'https://edxchange-allocation.aimtech.am/api/v1/get-breakdown-logic/',
 
     getSchools: 'https://edxchange-school.aimtech.am/api/v1/school',
 

@@ -182,9 +182,9 @@
               <q-td key="creation_date" :props="props">
                 
                 <div class="cursor-pointer">
-                  {{ props.row.allocation.creation_date }}
+                  {{ props.row[0].creation_date }}
                   <q-popup-proxy transition-show="scale" transition-hide="scale">
-                    <q-date v-model="props.row.allocation.creation_date" mask="YYYY-MM-DD" @input="detectChange(props.rowIndex)">
+                    <q-date v-model="props.row[0].creation_date" mask="YYYY-MM-DD" @input="detectChange(props.rowIndex)">
                       <div class="row items-center justify-end q-gutter-sm">
                         <q-btn label="Cancel" color="primary" flat v-close-popup />
                         <q-btn label="OK" color="primary" flat v-close-popup />
@@ -197,7 +197,9 @@
               
               <q-td key="school" :props="props">
 
-                <div v-if="!props.row.add || props.row.add == false" class="text-pre-wrap cursor-pointer">{{ props.row.school.name }}</div>
+                <div v-if="!props.row.add || props.row.add == false" class="text-pre-wrap cursor-pointer">
+                  {{ props.row[0].schoolName }}
+                </div>
                 
                 <q-select
                   v-else
@@ -213,7 +215,29 @@
 
               <!-- ########## -->
 
-              <q-td v-if="showCols.pd" key="profDev" :props="props">
+              <q-td v-for="i in props.row" :key="i.edxName" :props="props">
+                <!-- {{ i.edxName }} -->
+                <div v-if="i.percentage == null">
+                  <div>{{ allocationCalculation(i.rule_input, props.rowIndex, i.edxName) }}</div>
+                </div>
+                <div v-else>
+                  <div>{{ (i.amount * i.percentage) / 100 }}</div>
+                  <q-popup-edit  v-model="i.amount" :title="i.rule_name" buttons>
+                    <q-input  
+                        readonly 
+                        class="q-mb-sm" 
+                        type="number" 
+                        dense
+                        outlined
+                        autofocus
+                        :value="(i.amount * i.percentage) / 100"
+                    />
+                    <q-input v-model="i.percentage" type="number" dense autofocus outlined/>
+                  </q-popup-edit>
+                </div>
+              </q-td>
+
+              <!-- <q-td v-if="showCols.pd" key="profDev" :props="props">
                 <div class="cursor-pointer">
                   $ {{ ( props.row.allocation.total_allocation * props.row.percentage / 100 ).toFixed(2) }}
                 </div>
@@ -223,9 +247,9 @@
                   dense outlined autofocus/>
                   <q-input v-model="props.row.percentage" type="number" dense autofocus outlined/>
                 </q-popup-edit>
-              </q-td>
+              </q-td> -->
               
-              <q-td v-if="showCols.fe" key="familyEngagemenet" :props="props">
+              <!-- <q-td v-if="showCols.fe" key="familyEngagemenet" :props="props">
                 <div class="cursor-pointer">$  {{ props.row.amount }} </div>
                 <q-popup-edit  v-model="props.row.amount" title="Family Engagemenet" buttons>
                   <q-input  @input="detectChange(props.rowIndex)" type="number" v-model="props.row.amount" outlined dense autofocus/>
@@ -234,17 +258,13 @@
 
               <q-td v-if="showCols.i" key="instruction" :props="props">
                 $ {{ (props.row.allocation.total_allocation - ( props.row.allocation.total_allocation * props.row.percentage / 100 )).toFixed(2) }}
-              </q-td>
+              </q-td> -->
               
               <!-- ########## -->
-
-              <q-td key="total" :props="props">
-                  $ {{ ( parseFloat(props.row.allocation.total_allocation)).toFixed(2) }}
-              </q-td>
               
               <q-td key="status" :props="props">
 
-                <q-chip square class="cursor-pointer edx-bg-purple" text-color="white" v-if="props.row.status_string == 'Final'">
+                <q-chip square class="cursor-pointer edx-bg-purple" text-color="white" v-if="props.row[0].final == '1'">
                   FN
                   <q-tooltip 
                       anchor="top middle" self="bottom middle" :offset="[10, 10]"
@@ -266,9 +286,9 @@
                   </q-tooltip>
                 </q-chip>
 
-                <q-popup-edit v-model="props.row.status_string" title="Allocation" buttons>
+                <!-- <q-popup-edit v-model="props.row.status_string" title="Allocation" buttons>
                   <q-select  @input="detectChange(props.rowIndex)" v-model="props.row.status_string" :options="options"/>
-                </q-popup-edit>  
+                </q-popup-edit>   -->
 
               </q-td>
               
@@ -336,7 +356,7 @@
 
             </q-tr>
 
-            <q-tr v-show="props.expand" :props="props"  @click="copyRowData(props.rowIndex)" :class="{ 'bg-red-2' : props.row.changed }">
+            <!-- <q-tr v-show="props.expand" :props="props"  @click="copyRowData(props.rowIndex)" :class="{ 'bg-red-2' : props.row.changed }">
               <q-td colspan="100%" class="q-td--no-hover">
                 <div class="row">
                   <div class="col-md-4 q-mt-lg q-mb-lg">
@@ -348,7 +368,7 @@
                   </div>
                 </div>
               </q-td>
-            </q-tr>
+            </q-tr> -->
 
         </template>
 
@@ -443,7 +463,14 @@
           
           model: '',
           options: [
-            'Preliminary', 'Final'
+              {
+                id: 0,
+                label: 'Preliminary'
+              },
+              {
+                id: 1,
+                label: 'Final'
+              },
           ],
           schools: [],
           selectedSchool: null,
@@ -527,13 +554,6 @@
             //   headerClasses: 'hidden'
             // },
             // -------------------
-            {
-              name: 'total',
-              align: "left",
-              label: "Grand Total",
-              field: "total",
-              sortable: true
-            },
             {
               name: "status",
               align: "left",
@@ -841,25 +861,62 @@
 
               let data = res.data.allocations
               this.pages = res.data.pagesCount
+              let fArr= []
 
               for(let i=0; i<data.length; i++) {
+
+                  let parentObj = {},
+                    startNumber = 3;
+
+                for(let j=0; j<data[i].length; j++) {
+                  
+                  const edxName = data[i][j].rule_name.replace(/\s/g, '')
+                  data[i][j].edxName = edxName
+                  console.log('///', data[i][j].edxName)
+
+                  parentObj[j] = data[i][j]
+
+                  if(i == 0) {
+                    let obj = { 
+                      name: edxName, 
+                      align: "left",
+                      label: data[i][j].rule_name, 
+                      field: edxName,
+                      sortable: true
+                    }
+
+                    this.columns.splice(startNumber, 0, obj);
+                    startNumber++
+                  }
+                }
+
+                console.log(parentObj)
                 
-                data[i].changed = false
-                data[i].showEditButton = true
+                // for(let j=0; j=data[i].length; j++) {
+                //   console.log( data[i] , j)
+                // }
+                
+                parentObj.changed = false
+                parentObj.add = false
+                parentObj.showEditButton = true
 
-                if(data[i].isFinal) {
-                  data[i].status_string = 'Final'
+                // if(data[i].isFinal) {
+                //   data[i].status_string = 'Final'
+                // }
+                // else {
+                //   data[i].status_string = 'Preliminary'
+                // }
+
+                fArr.push(parentObj)
                 }
-                else {
-                  data[i].status_string = 'Preliminary'
-                }
 
-              }
+            
 
-              // this.data = data
-              // this.tempData = data
+              this.data = fArr
+              this.tempData = fArr
 
               this.loading = false
+              console.log('fArr', fArr)
           })
         },
         getSchools() {
@@ -904,7 +961,6 @@
               schoolsArr.push(obj)
             }
             this.schoolYears = schoolsArr
-            console.log(this.schoolYears)
           })
         },
         // filterAllocation() {
@@ -1065,31 +1121,37 @@
 
           const conf = {
             method: 'GET',
-            url: config.getBreakdownLogic + this.titleId,
+            url: config.getTemplates + this.titleId,
             headers: {
               Accept: 'application/json',
             }
           }
 
           axios(conf).then(res => {
-            console.log(' logic =  ', res.data.breakdownLogic)
-            const logic = res.data.breakdownLogic.reverse()
+            const logic = res.data.category.reverse()
 
             for(let i=0; i<logic.length; i++) {
 
-              let startNumber = 3;
-              let name = logic[i].label.replace(/\s/g, '')
+              console.log('@@@@')
+              console.log(logic[i])
+              console.log('@@@@')
 
-              let obj = { 
-                name: name, 
-                align: "left",
-                label: logic[i].label, 
-                field: name,
-                sortable: true
-              }
+              // let startNumber = 3;
+              // let name = logic[i].name.replace(/\s/g, '')
 
-              this.columns.splice(startNumber, 0, obj);
-              startNumber++
+              // let obj = { 
+              //   name: name, 
+              //   align: "left",
+              //   label: logic[i].name, 
+              //   field: name,
+              //   sortable: true
+              // }
+
+              // console.log(']]]]]]]]]]]', name)
+
+              // this.columns.splice(startNumber, 0, obj);
+              // startNumber++
+
             }
             // const categories = res.data.category;
             
@@ -1126,17 +1188,72 @@
 
           })
 
-        }
+        },
+
+        allocationCalculation(ids, index, name) {
+
+          if(ids != undefined) {
+
+            let idArr = ids.split(',');
+            let data = this.data[index];
+            let count = 0;
+
+            console.log(name, data)
+
+            for (const i in data) {
+
+              
+
+              if(idArr.includes(data[i]['allocationFundTemplateId'])) {
+                console.log(data[i]['allocationFundTemplateId'])
+                count += parseFloat(data[i]['amount'])
+              }
+              // if(data[i]['allocationFundTemplateId']) {
+              //   console.log(data[i]['edxName'], data[i]['allocationFundTemplateId'])
+              // } 
+
+              
+            //   // for ( const j in data[i]) {
+
+            //   //   if(idArr.includes(data[i]['allocationFundTemplateId'])) {
+            //   //     console.log('INCLUDES = ', data[i]['allocationFundTemplateId'])
+            //   //     // count += parseFloat(data[i]['amount'])
+            //   //   }
+
+            //   // }
+
+            //   // console.log('idArr', idArr)
+            //   // console.log('i', i)
+            //   // console.log('allocationFundTemplateId = ', data['allocationFundTemplateId'])
+            //   // if(i == 'allocationFundTemplateId') {
+            //   //   console.log('GGG', data[i])
+            //   // }
+              
+              
+
+            }
+
+            // for(let i=0; i<data.length; i++) {
+            //   console.log('<----', data[i])
+            //   // if(idArr.includes(data[i].allocationFundTemplateId)) {
+            //   //   count += parseFloat(data[i].amount)
+            //   //   console.log(parseFloat(data[i].amount))
+            //   // }
+            // }
+
+            return count.toFixed(2)
+            
+          }
+        } 
         
       },
       created() {
-
         // Get schools for showing
         this.getSchools()
         // this.getAllocationBar(1)
         this.getAllocationByType(1, this.count, this.current)
         this.getSchoolYears()
-        this.getTemplate()
+        // this.getTemplate()
 
       },
       computed: {
@@ -1147,7 +1264,7 @@
             ? title = this.schoolYears[0] && this.schoolYears[0].value
             : title = this.schoolYear.value
           return 'Title I - ' + title
-        }
+        },
       }
     }
 </script>
