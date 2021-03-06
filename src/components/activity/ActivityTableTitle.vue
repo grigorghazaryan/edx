@@ -1443,11 +1443,11 @@
             </q-card-section>
 
             <q-card-actions class="row justify-end">
-            <div>
-                <q-btn flat label="Cancel" color="primary" v-close-popup></q-btn>
-                <q-btn v-if="!isEditSchedule" flat label="Confirm" color="primary"  @click="confirmNewDate"></q-btn>
-                <q-btn v-else flat label="Save" color="primary"  @click="editSchedule"></q-btn>
-            </div>
+                <div>
+                    <q-btn flat label="Cancel" color="primary" v-close-popup></q-btn>
+                    <q-btn v-if="!isEditSchedule" flat label="Confirm" color="primary"  @click="confirmNewDate"></q-btn>
+                    <q-btn v-else flat label="Save" color="primary"  @click="editSchedule"></q-btn>
+                </div>
             </q-card-actions>
 
         </dialog-draggable>
