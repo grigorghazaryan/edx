@@ -9,6 +9,7 @@
       </q-breadcrumbs>
     </div>
 
+
     <AllocationBar :title="5" />
     <AllocationTable :title="5" />
 

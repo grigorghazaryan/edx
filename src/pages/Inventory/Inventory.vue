@@ -1138,6 +1138,17 @@ export default {
 
     // this.getInventoryByType( parseInt(this.tab), this.$route.params.id, this.count, this.current )
     // this.getAdditionalInfo(1)
+  },
+  computed: {
+    routeTab() {
+      if(this.$route.query.name) {
+        return `${this.$route.query.name}`
+      }else {
+        let name = this.$route.path.substring(1);
+        return name
+      }
+      
+    }
   }
 }
 

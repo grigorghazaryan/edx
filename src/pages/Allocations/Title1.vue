@@ -9,8 +9,6 @@
       </q-breadcrumbs>
     </div>
 
-    <!-- <Tabs /> -->
-
     <AllocationBar :title="1" />
     <AllocationTable :title="1" />
 

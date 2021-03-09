@@ -9,8 +9,9 @@
       </q-breadcrumbs>
     </div>
 
+
     <AllocationBar :title="4" />
-<AllocationTable :title="4" />
+    <AllocationTable :title="4" />
 
   </q-page>
 </template>

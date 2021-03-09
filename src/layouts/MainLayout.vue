@@ -515,17 +515,6 @@
                 </q-item-section>
               </q-item>
             </q-list>
-            <!-- <q-list class="bg-sidebar-opened edx-bg-lighter-dark">
-              <q-item to="/ActivityProcesses" @click="addDataToLS('Activity Processes', '/ActivityProcesses')"  
-              active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
-                <q-item-section avatar>
-                  <q-icon name="account_balance"/>
-                </q-item-section>
-                <q-item-section>
-                  <q-item-label>Activity Processes</q-item-label>
-                </q-item-section>
-              </q-item>
-            </q-list> -->
             <q-list class="bg-sidebar-opened edx-bg-lighter-dark">
               <q-item to="/Material" @click="addDataToLS('Materials', '/Material')" 
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
@@ -571,8 +560,8 @@
               </q-item>
             </q-list>
             <q-list class="bg-sidebar-opened edx-bg-lighter-dark">
-              <q-item to="/TeacherCosts/BudgetEstimates"  
-              @click="addDataToLS('Teacher Costs', '/TeacherCosts/BudgetEstimates')" 
+              <q-item to="/Teachers"  
+              @click="addDataToLS('Teacher Costs', '/Teachers')" 
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
                   <q-icon name="school"/>
@@ -645,7 +634,7 @@
                     <q-item-label>Counseling</q-item-label>
                   </q-item-section>
                 </q-item>
-                <q-item clickable  v-close-popup to="/Counseling" @click="addDataToLS('Teacher Costs', '/TeacherCosts/BudgetEstimates')"   active-class="q-item-no-link-highlighting">
+                <q-item clickable  v-close-popup to="/Counseling" @click="addDataToLS('Teacher Costs', '/Teachers')"   active-class="q-item-no-link-highlighting">
                   <q-item-section avatar>
                     <q-icon name="account_balance"/>
                   </q-item-section>
@@ -969,7 +958,8 @@
       </q-drawer>
 
     <q-page-container class="edx-bg-gray-02">
-      <router-view/>
+      <!-- <router-view/> -->
+          <router-tab :max-alive="10" :tabs="tabs" restore />
     </q-page-container>
 
     </q-layout>
@@ -981,11 +971,12 @@
     import EssentialLink from 'components/EssentialLink'
     import Messages from "./Messages";
 
-    import config from '../../config';
-    import axios from 'axios';
-    import lodash from 'lodash'
+    // import config from '../../config';
+    // import axios from 'axios';
+    // import lodash from 'lodash'
 
 export default {
+
   name: 'MainLayout',
   components: {
     Messages,
@@ -994,7 +985,14 @@ export default {
   data () {
     return {
       drawer: true,
-      miniState: true
+      miniState: true,
+      tabs: [
+          {
+            to: '/',
+            title: 'Dashboard',
+            closable: false
+          },
+      ]
     }
   },
 

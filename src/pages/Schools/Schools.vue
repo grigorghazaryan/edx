@@ -8,8 +8,6 @@
         </q-breadcrumbs>
       </div>
 
-      <Tabs />
-
       <div class="q-pa-sm q-mt-sm q-gutter-sm">
 
         <div class="edx-header-parent">
@@ -323,6 +321,17 @@ export default {
   },
   created() {
     this.getSchools(this.count, this.current)
+  },
+  computed: {
+    routeTab() {
+      if(this.$route.query.name) {
+        return `${this.$route.query.name}`
+      }else {
+        let name = this.$route.path.substring(1);
+        return name
+      }
+      
+    }
   }
 
 }

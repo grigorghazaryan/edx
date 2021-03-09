@@ -1,12 +1,11 @@
-
 <template>
     <div class="q-pa-sm">
 
     <div class="q-pa-md q-gutter-sm">
       <q-breadcrumbs>
         <q-breadcrumbs-el icon="dashboard" label="Dashboard" to="/" />
-        <q-breadcrumbs-el label="Inventory" />
-        <q-breadcrumbs-el label="License" />
+        <q-breadcrumbs-el label="Budget" />
+        <q-breadcrumbs-el label="Teachers" />
       </q-breadcrumbs>
     </div>
 
@@ -28,7 +27,6 @@
         <template v-slot:loading>
           <q-inner-loading showing color="primary" />
         </template>
-
 
         <!-- Table Header -->
         <template v-slot:top-right="props">
@@ -64,8 +62,6 @@
           </q-btn>
           
         </template>
-
-        
 
         <!-- Table Body -->
         <template v-slot:body="props">
@@ -115,6 +111,7 @@ import axios from 'axios'
 import config from '../../../config'
 
 export default {
+
   data () {
     return {
       loading: true,
@@ -139,6 +136,7 @@ export default {
   },
   methods: {
     getSchools(limit, page) {
+
       const conf = {
         method: 'GET',
         url: config.getSchools + '?limit=' + limit + '&page=' + page,
@@ -146,6 +144,7 @@ export default {
           Accept: 'application/json',
         }
       }
+
       axios(conf).then(res => {
         this.pages = res.data.pagesCount
         let schoolsArr = []
@@ -162,7 +161,7 @@ export default {
     },
     changeRoute(id, name) {
       this.$router.push({
-        path: '/License/' + id,
+        path: '/Teachers/' + id,
         query: { name }
       })
     },
@@ -177,19 +176,8 @@ export default {
     },
   },
   created() {
-    console.log('jojo', this.$route.path)
     this.getSchools(this.count, this.current)
-  },
-  computed: {
-    routeTab() {
-      if(this.$route.query.name) {
-        return `${this.$route.query.name}`
-      }else {
-        let name = this.$route.path.substring(1);
-        return name
-      }
-      
-    }
   }
+
 }
 </script>
