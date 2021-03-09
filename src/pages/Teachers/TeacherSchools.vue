@@ -5,7 +5,7 @@
       <q-breadcrumbs>
         <q-breadcrumbs-el icon="dashboard" label="Dashboard" to="/" />
         <q-breadcrumbs-el label="Budget" />
-        <q-breadcrumbs-el label="Teachers" />
+        <q-breadcrumbs-el label="Teacher Costs" />
       </q-breadcrumbs>
     </div>
 

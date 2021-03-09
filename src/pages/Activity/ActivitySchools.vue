@@ -181,7 +181,7 @@ export default {
   created() {
     this.getSchools(this.count, this.current)
   },
-    computed: {
+  computed: {
     routeTab() {
       if(this.$route.query.name) {
         return `${this.$route.query.name}`
