@@ -60,10 +60,8 @@ const config = {
 
     // Search by School Name
     getAllocationsBySchoolName: '',
-
     getAllocationBar: 'https://edxchange-allocation.aimtech.am/api/v1/allocations-totals/',
     
-
     // Filter Allocation
     filterAllocation: 'https://edxchange-allocation.aimtech.am/api/v1/filter-allocation/', // 1?search=St&status=fn&year=21
 
@@ -106,7 +104,7 @@ const config = {
     addAttendee: 'https://edxchange-activity.aimtech.am/api/v1/add-attendy/', // + id
     filterActivity: 'https://edxchange-activity.aimtech.am/api/v1/filter-budget/', // 1/1001/ if activity : 1 , if material : 2 ?search=test&type=1&year=1015
     getSubcategories: 'https://edxchange-activity.aimtech.am/api/v1/get-types-subcategories/', // + title id
-    getActivityStatus: 'https://edxchange-activity.aimtech.am/api/v1/get-item-status',
+    getActivityStatus: 'https://edxchange-activity.aimtech.am/api/v1/get-item-status/',
     
     // Get attendee types
     getAtendeeTypes: 'https://edxchange-activity.aimtech.am/api/v1/get-atendee-types', 
@@ -126,10 +124,13 @@ const config = {
 
 
     // TEACHERS
-    getTeachersData: 'https://edxchange-teacher.aimtech.am/api/v1/teacher?pagination=1',
+    getTeachersData: 'https://edxchange-teacher.aimtech.am/api/v1/teacher',
     getTeachers: 'https://edxchange-teacher.aimtech.am/api/v1/teacher?pagination=0',
     getTeacherBudget: 'https://edxchange-activity.aimtech.am/api/v1/get-teacher-budget-list/', // title id + school id
-    getTeacherBudgetById: 'https://edxchange-activity.aimtech.am/api/v1/get-teacher-assignment-details/', // + budget id
+    // getTeacherBudgetById: 'https://edxchange-activity.aimtech.am/api/v1/get-teacher-assignment-details/', // + budget id
+    getTeacherBudgetById: 'https://edxchange-teacher.aimtech.am/api/v1/get-teacher-compensation/', // + budget id
+    getRoleTypes: 'https://edxchange-teacher.aimtech.am/api/v1/get-teacher-role-type',
+    getEmployementTypes: 'https://edxchange-teacher.aimtech.am/api/v1/get-teacher-employement-type',
 }
 
 export default config

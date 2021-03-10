@@ -143,7 +143,7 @@
         </q-table>
 
 
-        <TeacherPopup :show="showTeacherModal" :id="id" />
+        <TeacherPopup :show="showTeacherModal" :id="id" :title="title" />
  
         
 
@@ -261,6 +261,7 @@ export default {
                         name: data[i].category.abbreviation
                     },
                     percentage: parseFloat(data[i].allocation_percentage),
+                    teacher_id: data[i].teacher_id,
                     //
                 }
                 arr.push(teacherObject)
@@ -289,8 +290,10 @@ export default {
             })
         },
         openTeacherPopup(data, index) {
+            console.log('clicked', this.showTeacherModal)
             this.showTeacherModal = true
-            this.id = data.id
+            console.log('asdasd', data)
+            this.id = data.teacher_id
         },
     },
     created() {

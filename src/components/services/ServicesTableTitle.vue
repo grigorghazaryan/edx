@@ -723,39 +723,9 @@
                             <div class="row">
                                 <div class="col-md-4">
 
-                                    <div
-                                        v-if="editedItem.status_uni.label == 'In Progress' " 
-                                        class="h-popup cursor-pointer">
-                                        <q-icon name="done" color="orange" style="font-size: 1.5em"></q-icon>
-                                        <span>In Progress</span>
-                                    </div>
-
-                                    <div
-                                        v-else-if=" editedItem.status_uni.label == 'Canceled' "
-                                        class="h-popup cursor-pointer">
-                                        <q-icon name="cancel" color="red" style="font-size: 1.5em"></q-icon>
-                                        <span>Canceled</span>
-                                    </div>
-
-                                    <div
-                                        v-else-if=" editedItem.status_uni.label == 'Gathering Documents' "
-                                        class="h-popup cursor-pointer">
-                                        <q-icon name="cancel" color="blue" style="font-size: 1.5em"></q-icon>
-                                        <span>Gathering Documents</span>
-                                    </div>
-
-                                    <div
-                                        v-else-if=" editedItem.status_uni.label == 'Completed' "
-                                        class="h-popup cursor-pointer">
-                                        <q-icon name="done" color="green" style="font-size: 1.5em"></q-icon>
-                                        <span>Completed</span>
-                                    </div>
-
-                                    <div
-                                        v-else
-                                        class="h-popup cursor-pointer">
-                                        <q-icon name="done" color="black" style="font-size: 1.5em"></q-icon>
-                                        <span>N/A</span>
+                                    <div class="h-popup cursor-pointer">
+                                        <!-- <q-icon name="done" color="orange" style="font-size: 1.5em"></q-icon> -->
+                                        <span>{{ editedItem.status_uni.label }}</span>
                                     </div>
 
                                     <q-popup-edit v-model="editedItem.status_uni" title="Billing Status" buttons >
@@ -2797,11 +2767,11 @@ status_uni: {
 
         },
         // Get Status
-        getStatus() {
+        getStatus(id) {
 
             const conf = {
                 method: 'GET',
-                url: config.getActivityStatus,
+                url: config.getActivityStatus + id,
                 headers: {
                     Accept: 'application/json',
                 }
@@ -2902,7 +2872,7 @@ status_uni: {
                 this.isDuplicate = false
             }else {
                 this.getCampueses();
-                this.getStatus();
+                this.getStatus(parseInt(this.tab));
                 this.getTrackingCategories();
             }
         },
