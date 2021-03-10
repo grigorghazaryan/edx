@@ -37,7 +37,7 @@
 
 
                     <q-td key="teacherName" :props="props">
-                        <span class="inline-span table-text">{{ props.row.teacherName }}</span>
+                        <span>{{ props.row.teacherName }}</span>
                     </q-td>
                     
                     <q-td key="dateOfActivity" :props="props" > 
@@ -244,15 +244,15 @@ export default {
                 let teacherObject = {
                     id: data[i].id,
                     provider: {
-                        id: data[i].teacher_supplier && data[i].teacher_supplier.id,
-                        label: data[i].teacher_supplier && data[i].teacher_supplier.short_name
+                        id: data[i].supplier && data[i].supplier.id,
+                        label: data[i].supplier && data[i].supplier.short_name
                     },
                     status_uni: {
                         id: data[i].status ? data[i].status.id : null,
                         label: data[i].status  ?data[i].status.name : 'N/A',
                         description: data[i].status.description
                     },
-                    teacherName: data[i].name,
+                    teacherName: data[i].teacher.first_name + ' ' + data[i].teacher.last_name,
                     activity_date: data[i].start_date + '-' + data[i].end_date,
                     cost: data[i].cost,
                     type_uni: {
