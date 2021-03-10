@@ -129,6 +129,7 @@ const config = {
     getTeachersData: 'https://edxchange-teacher.aimtech.am/api/v1/teacher?pagination=1',
     getTeachers: 'https://edxchange-teacher.aimtech.am/api/v1/teacher?pagination=0',
     getTeacherBudget: 'https://edxchange-activity.aimtech.am/api/v1/get-teacher-budget-list/', // title id + school id
+    getTeacherBudgetById: 'https://edxchange-activity.aimtech.am/api/v1/get-teacher-assignment-details/', // + budget id
 }
 
 export default config
