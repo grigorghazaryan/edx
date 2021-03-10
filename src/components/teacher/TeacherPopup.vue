@@ -1,6 +1,6 @@
 <template>
     <dialog-draggable 
-        :width="900" 
+        :width="1000" 
         :modelDialog="show" 
         :title="'Teacher Assignment Details'" 
         @onHide="show=false"
@@ -10,27 +10,21 @@
         <div class="q-pa-md scroll" style="max-height: 70vh">
             <div class="row">
 
-                <div class="col-md-6 q-pr-md">
+                <div class="col-md-5 q-pr-md">
 
                     <div class="row">
                         <div class='col-md-7'>
                             <div class="q-mb-md">
                                 <div class="text-subtitle2 q-mb-sm">Employee</div>
-                                <q-select  
+                                <q-select
                                     outlined
                                     dense
+                                    v-model="editedItem.teacher"
+                                    use-input
                                     input-debounce="0"
-                                    v-model="editedItem.teacher" 
                                     :options="optionsTeachers"
-                                >
-                                    <template v-slot:no-option>
-                                        <q-item>
-                                            <q-item-section class="text-grey">
-                                            No results
-                                            </q-item-section>
-                                        </q-item>
-                                    </template>
-                                </q-select>
+                                    @filter="filterTeachers"
+                                />
                             </div>
                         </div>
                         <div class='col-md-5 q-pl-md'>
@@ -39,8 +33,8 @@
                                     outlined
                                     dense
                                     input-debounce="0"
-                                    v-model="editedItem.teacher" 
-                                    :options="optionsTeachers"
+                                    v-model="editedItem.role" 
+                                    :options="optionsRoleTypes"
                                 >
                                     <template v-slot:no-option>
                                         <q-item>
@@ -79,7 +73,7 @@
                                 <b>Hourly</b>
                             </div>
                             <div class="col-md-6 right-col">
-                                $ <span>23.46</span>
+                                $ <span>{{ editedItem.hourly }}</span>
                             </div>
                         </div>
                         <div class="row">
@@ -87,7 +81,7 @@
                                 <b>Fringe</b>
                             </div>
                             <div class="col-md-6 right-col">
-                                $ <span>23.46</span>
+                                $ <span>{{ editedItem.fringe }}</span>
                             </div>
                         </div>
                         <div class="row">
@@ -95,7 +89,7 @@
                                 <b>Work Month</b>
                             </div>
                             <div class="col-md-6 right-col">
-                                10
+                                <span>{{ editedItem.workMonth }}</span>
                             </div>
                         </div>
                         <div class="row">
@@ -108,51 +102,61 @@
                         </div>
                     </div>
 
-
-
                     <div class="row q-mb-md">
                         <div class="col-md-4 q-pr-sm">
                             <div class="text-subtitle2 q-mb-sm">Assignment type</div>
-                            <div> <q-icon color="green" name="watch" class="q-mr-md" style="font-size: 1.5em"/> Part time</div>
+                            <div> 
+                                <div v-if="editedItem.assignmentType" class="cursor-pointer">{{ editedItem.assignmentType.label }}</div>
+                                <q-popup-edit buttons v-model="editedItem.assignmentType">
+                                    <q-select 
+                                        v-model="editedItem.assignmentType" 
+                                        :options="optionsEmployementTypes"
+                                        outlined
+                                        dense
+                                    />
+                                </q-popup-edit>
+                                <!-- optionsEmployementTypes -->
+                            </div>
                         </div>
                     </div>
 
-                    
-
                 </div>
 
-                <div class="col-md-6 q-pl-md">
+                <div class="col-md-7 q-pl-md">
 
                     <div class="row">
                         <div class="col-md-10 q-pr-sm q-mb-md">
                             <div class="text-subtitle2 q-mb-sm">Allocation Category</div>
                             <div class="row cursor-pointer h-popup">
 
-                                <div v-if="editedItem.type_uni && editedItem.type_uni.name == 'PD'">
+                                <div v-if="editedItem.category">
                                     <q-chip 
                                         square color="green" 
                                         text-color="white" 
                                     >
-                                        <span>PD</span>
+                                        <span>{{ editedItem.category.name }}</span>
                                     </q-chip>
-                                    <span>Professional Development</span>
+                                    <span>{{ editedItem.category.label  }}</span>
                                 </div>
 
-                                <div v-else>
-                                    <q-chip square color="purple" text-color="white" >
-                                        <span>FE</span>
+                                <div v-if="editedItem.subcategory">
+                                     <q-chip 
+                                        square color="purple" 
+                                        text-color="white" 
+                                    >
+                                        <span>{{ editedItem.subcategory.name }}</span>
                                     </q-chip>
-                                    <span>Family Engagement</span>
+                                    <span>{{ editedItem.subcategory.label  }}</span>
                                 </div>
 
-                                <q-popup-edit v-model="editedItem.type_uni" buttons>
+                                <q-popup-edit v-model="editedItem.category" buttons>
                                     <div class="row q-mb-lg q-mt-lg">
                                         <div class="col-md-6 q-pr-sm q-mb-md">
                                             <div class="text-subtitle2 q-mb-sm">Allocation Category</div>
                                             <div class="row cursor-pointer h-popup">
                                                 <q-select 
-                                                    v-model="editedItem.type_uni" 
-                                                    :options="optionsCategory"
+                                                    v-model="editedItem.category" 
+                                                    :options="typeArr"
                                                     outlined
                                                     dense
                                                 />
@@ -162,7 +166,7 @@
                                             <div class="text-subtitle2 q-mb-sm">Allocation Subcategory</div>
                                             <div class="row cursor-pointer h-popup">
                                                 <q-select 
-                                                    v-model="editedItem.subcategory_uni" 
+                                                    v-model="editedItem.subcategory" 
                                                     :options="optionsSubcategory"
                                                     outlined
                                                     dense
@@ -184,7 +188,7 @@
                                     outlined
                                     dense
                                     input-debounce="0"
-                                    v-model="editedItem.tracking_category_uni" 
+                                    v-model="editedItem.trackingCategory" 
                                     :options="optionsCategoryTracking"
                                 >
                                     <template v-slot:no-option>
@@ -205,15 +209,39 @@
                         </div>
                         <div class="col-md-3 q-pr-sm">
                             <div class="text-subtitle2 q-mb-sm">Start Date</div>
-                            <q-input outlined   class="q-mb-md" type="text" v-model="editedItem.startDate" dense autofocus />
+                            <q-input outlined dense v-model="editedItem.startDate">
+                                <template v-slot:append>
+                                <q-icon name="event" class="cursor-pointer">
+                                    <q-popup-proxy transition-show="scale" transition-hide="scale">
+                                    <q-date v-model="editedItem.startDate">
+                                        <div class="row items-center justify-end">
+                                        <q-btn v-close-popup label="Close" color="primary" flat />
+                                        </div>
+                                    </q-date>
+                                    </q-popup-proxy>
+                                </q-icon>
+                                </template>
+                            </q-input>
                         </div>
                         <div class="col-md-3 q-pr-sm">
                             <div class="text-subtitle2 q-mb-sm">End Date</div>
-                            <q-input outlined   class="q-mb-md" type="text" v-model="editedItem.endDate" dense autofocus />
+                            <q-input outlined dense v-model="editedItem.endDate">
+                                <template v-slot:append>
+                                <q-icon name="event" class="cursor-pointer">
+                                    <q-popup-proxy transition-show="scale" transition-hide="scale">
+                                    <q-date v-model="editedItem.endDate">
+                                        <div class="row items-center justify-end">
+                                        <q-btn v-close-popup label="Close" color="primary" flat />
+                                        </div>
+                                    </q-date>
+                                    </q-popup-proxy>
+                                </q-icon>
+                                </template>
+                            </q-input>
                         </div>
                         <div class="col-md-3 q-pr-sm">
                             <div class="text-subtitle2 q-mb-sm">Hours/Week</div>
-                            <q-input outlined class="q-mb-md" type="text" v-model="editedItem.allocation" dense autofocus />
+                            <q-input outlined class="q-mb-md" type="text" v-model="editedItem.hoursWeek" dense autofocus />
                         </div>
                         <div class="col-md-3">
                             <div class="text-subtitle2 q-mb-sm">Fringe</div>
@@ -227,17 +255,62 @@
                         </div>
                     </div>
 
-                    <div class="row q-mb-md">
-                        <div class="col-md-4 q-pr-sm">
-                            <div class="text-subtitle2 q-mb-sm">Assignment status</div>
-                            <div> <q-icon color="green" name="watch" class="q-mr-md" style="font-size: 1.5em"/> Active</div>
+                    <div class="q-mb-md">
+                            <div class="text-subtitle2 q-mb-sm">Assignment Status</div>
+                            <div class="row">
+                                <div class="col-md-4">
+
+                                    <div v-if="editedItem.assignmentStatus" class="h-popup cursor-pointer">
+                                        <span>{{ editedItem.assignmentStatus.label }}</span>
+                                    </div>
+
+                                    <q-popup-edit v-model="editedItem.assignmentStatus" title="Assignment Status" buttons >
+                                        <q-select  
+                                            outlined
+                                            dense
+                                            input-debounce="0"
+                                            v-model="editedItem.assignmentStatus" 
+                                            :options="optionsStatus"
+                                        >
+                                            <template v-slot:no-option>
+                                                <q-item>
+                                                    <q-item-section class="text-grey">
+                                                    No results
+                                                    </q-item-section>
+                                                </q-item>
+                                            </template>
+                                        </q-select>
+                                    </q-popup-edit>
+                                    
+                                </div>
+                            </div>
                         </div>
-                    </div>
 
                     <div class="row q-mb-md">
                         <div class="col-md-4 q-pr-sm">
-                            <div class="text-subtitle2 q-mb-sm">Billing status</div>
-                            <div> <q-icon color="green" name="watch" class="q-mr-md" style="font-size: 1.5em"/> None</div>
+                           <div class="text-subtitle2 q-mb-sm">Billing Status</div>
+                            <div class="h-popup">
+                                <div v-if="editedItem.billingStatus" class="cursor-pointer">
+                                    {{ editedItem.billingStatus.label }}
+                                    </div>
+                                <q-popup-edit v-model="editedItem.billingStatus" title="Billing Status" buttons >
+                                    <q-select  
+                                        outlined
+                                        dense
+                                        input-debounce="0"
+                                        v-model="editedItem.billingStatus" 
+                                        :options="optionsBilling"
+                                    >
+                                        <template v-slot:no-option>
+                                            <q-item>
+                                                <q-item-section class="text-grey">
+                                                No results
+                                                </q-item-section>
+                                            </q-item>
+                                        </template>
+                                    </q-select>
+                                </q-popup-edit>
+                            </div>
                         </div>
                     </div>
 
@@ -255,80 +328,66 @@
                     >
                         <template v-slot:body="props">
                             <q-tr :props="props">
+
                                 <!-- Work month – 0.5 -->
                                 <q-td key="payMonth" :props="props">
-                                {{ editedItem.workMonth - 0.5 }}
+                                    {{ editedItem.workMonth - 0.5 }}
                                 </q-td>
+
+
                                 <q-td key="payPeriod" :props="props">
                                     <span v-if="(editedItem.workMonth - 0.5) % 1 == 0">
                                         {{editedItem.workMonth - 0.5}}
                                     </span>
                                     <span v-else>
-                                        {{(editedItem.workMonth - 0.5) * 2}}
+                                        {{(editedItem.workMonth - 0.5) * 2 }}
                                     </span>
                                 </q-td>
+
                                 <!-- Charge = (teacher pay for (monthly, week, bi week, semi-month) * Markup fee) 
                                 * allocation percentage -->
                                 <q-td key="charge" :props="props">
                                     {{ ((( (editedItem.semiMonthly * 2) * editedItem.markupFee ) * editedItem.allocation) / 100).toFixed(2) }}
                                 </q-td>
+
                                 <!-- Gross = (calculated Charge amount * allocation percentage) + Fringe -->
                                 <q-td key="gross" :props="props">
                                     {{ (((( (editedItem.semiMonthly * 2) * editedItem.markupFee ) * editedItem.allocation) / 100 ) + (editedItem.fringe * editedItem.allocation) / 100).toFixed(2) }}
                                 </q-td>
+
                                 <!-- Total w/Admin = Gross * admin markup -->
                                 <q-td key="totalAdmin" :props="props">
                                 {{ ((((( (editedItem.semiMonthly * 2) * editedItem.markupFee ) * editedItem.allocation) / 100 ) + ((editedItem.fringe * editedItem.allocation) / 100) ) * editedItem.adminMarkupFee).toFixed(2)}}
                                 </q-td>
+
                                 <!-- Hourly rate = total w/admin / work hours in a month -->
                                 <q-td key="hourlyRate" :props="props">
                                 {{ (((((( (editedItem.semiMonthly * 2) * editedItem.markupFee ) * editedItem.allocation) / 100 ) + ((editedItem.fringe * editedItem.allocation) / 100) ) * editedItem.adminMarkupFee) / editedItem.hourInMonth).toFixed(2) }}
                                 </q-td>
-                                <!-- <q-td key="weeklyRate" :props="props">
-                                {{ props.row.weeklyRate }}
-                                </q-td>
-                                <q-td key="biWeekly" :props="props">
-                                {{ props.row.biWeekly }}
-                                </q-td> -->
+
                                 <q-td key="semiMonthly" :props="props">
-                                {{ (((((( (editedItem.semiMonthly * 2) * editedItem.markupFee ) * editedItem.allocation) / 100 ) + ((editedItem.fringe * editedItem.allocation) / 100) ) * editedItem.adminMarkupFee) / 2).toFixed(2) }}
+                                    {{ (((((( (editedItem.semiMonthly * 2) * editedItem.markupFee ) * editedItem.allocation) / 100 ) + ((editedItem.fringe * editedItem.allocation) / 100) ) * editedItem.adminMarkupFee) / 2).toFixed(2) }}
                                 </q-td>
+
                                 <q-td key="anual" :props="props">
-                                {{ (((((( (editedItem.semiMonthly * 2) * editedItem.markupFee ) * editedItem.allocation) / 100 ) + ((editedItem.fringe * editedItem.allocation) / 100) ) * editedItem.adminMarkupFee) * (editedItem.workMonth - 0.5)).toFixed(2) }}
+                                    {{ (((((( (editedItem.semiMonthly * 2) * editedItem.markupFee ) * editedItem.allocation) / 100 ) + ((editedItem.fringe * editedItem.allocation) / 100) ) * editedItem.adminMarkupFee) * (editedItem.workMonth - 0.5)).toFixed(2) }}
                                 </q-td>
+
                                 <q-td key="override" :props="props">
                                     <div>
                                         <q-checkbox v-model="props.row.override" />
                                     </div>
                                 </q-td>
+
                                 <q-td key="hourlyRateI" :props="props">
                                     <q-input outlined dense v-model="props.row.hourlyRate"/>
                                 </q-td>
+
                             </q-tr>
                         </template>
 
                     </q-table>
                 </div>
-
-                <!-- <div class="col-md-6 q-pr-md">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="text-subtitle2 q-mb-sm">Rate override</div>
-                        </div>
-                        <div class="col-md-4 q-pr-sm">
-                            <div class="text-subtitle2 q-mb-sm">Hourly</div>
-                            <q-input outlined   class="q-mb-md" type="text" v-model="editedItem.hourlyRate" dense autofocus />
-                        </div>
-                        <div class="col-md-4 q-pr-sm">
-                            <div class="text-subtitle2 q-mb-sm">Semi-Monthly</div>
-                            <q-input outlined class="q-mb-md" type="text" :value="(((((( (editedItem.semiMonthly * 2) * editedItem.markupFee ) * editedItem.allocation) / 100 ) + ((editedItem.fringe * editedItem.allocation) / 100) ) * editedItem.adminMarkupFee) / 2).toFixed(2)" dense autofocus />
-                        </div>
-                        <div class="col-md-4">
-                            <div class="text-subtitle2 q-mb-sm">Anual</div>
-                            <q-input outlined class="q-mb-md" type="text" :value="(((((( (editedItem.semiMonthly * 2) * editedItem.markupFee ) * editedItem.allocation) / 100 ) + ((editedItem.fringe * editedItem.allocation) / 100) ) * editedItem.adminMarkupFee) * (editedItem.workMonth - 0.5)).toFixed(2)" dense autofocus />
-                        </div>
-                    </div>
-                </div> -->
 
                 <q-separator class="q-mt-lg q-mb-lg" />
 
@@ -337,13 +396,14 @@
                             View pay schedule
                     </q-btn>
                 </div>
+
                 <div class="col-md-9 q-pl-md">
                     <div class="text-subtitle2 q-mb-sm">Note</div>
                     <q-input 
                         dense 
                         outlined
                         type="textarea"
-                        v-model="editedItem.teacher" 
+                        v-model="editedItem.note" 
                     />
                 </div>
 
@@ -351,7 +411,7 @@
         </div>
 
         <q-card-actions align="right">
-            <q-btn flat label="Cancel" color="primary" v-close-popup/>
+            <q-btn flat label="Cancel" color="primary" @click="show=false" />
             <q-btn v-if="isEdit" :loading="btnLoading" @click="editTeacher" flat label="Save" color="primary" />
             <q-btn v-else :loading="btnLoading" @click="addTeacher" flat label="Add" color="primary" />
         </q-card-actions>
@@ -371,13 +431,15 @@ export default {
         DialogDraggable
     },
     props: {
-        show : {
+        show: {
             required: true,
-            default: false,
         },
         id: {
             required: true
-        }
+        },
+        title: {
+            required: true
+        },
     },
     data() {
         return {
@@ -473,10 +535,15 @@ export default {
             }],
             editedItem: {},
             optionsTeachers: [],
+            optionsTeachersForFilter: [],
             optionsCategoryTracking: [],
             optionsCampus: [],
-            optionsCategory: [],
             optionsSubcategory: [],
+            typeArr: [],
+            optionsRoleTypes: [],
+            optionsEmployementTypes: [],
+            optionsStatus: [],
+            optionsBilling: [],
         }
     },
     methods: {
@@ -492,8 +559,61 @@ export default {
 
             axios(conf).then(res => {
 
-                console.log('getTeacherBudgetById', res.data)
+                
+                let teacherInfo = res.data.teachersCompensation[0]
+                console.log('getTeacherBudgetById ==== 90909090909090 ===== ', teacherInfo )
 
+                this.editedItem = {
+                    teacher: {
+                        id: teacherInfo.teacher.id,
+                        label: teacherInfo.teacher.first_name + ' ' + teacherInfo.teacher.last_name,
+                    },
+                    role: {
+                        id: teacherInfo.teacher.role_type.id,
+                        label: teacherInfo.teacher.role_type.name
+                    },
+                    hourly: teacherInfo.hourly_pay,
+                    fringe: teacherInfo.fringe,
+                    workMonth: teacherInfo.work_month,
+                    benefits: teacherInfo.has_benefits == '0' ? false : true,
+                    assignmentType: {
+                        id: teacherInfo.employement_type.id,
+                        label: teacherInfo.employement_type.name,
+                    },
+                    category: {
+                        id: teacherInfo.teacher.assignment_compensation.category.id,
+                        label: teacherInfo.teacher.assignment_compensation.category.name,
+                        name: teacherInfo.teacher.assignment_compensation.category.abbreviation
+                    },
+                    subcategory: {
+                        id: teacherInfo.teacher.assignment_compensation.sub_category.id,
+                        label: teacherInfo.teacher.assignment_compensation.sub_category.name,
+                        name: teacherInfo.teacher.assignment_compensation.sub_category.abbreviation
+                    },
+                    trackingCategory: {
+                        id: teacherInfo.teacher.assignment_compensation.category_tracking.id,
+                        label: teacherInfo.teacher.assignment_compensation.category_tracking.name
+                    },
+
+                    startDate: teacherInfo.teacher.assignment_compensation.start_date,
+                    endDate: teacherInfo.teacher.assignment_compensation.end_date,
+                    hoursWeek: teacherInfo.teacher.assignment_compensation.hours_per_week,
+                    mFrienge: teacherInfo.teacher.assignment_compensation.fringe,
+                    assignmentStatus: {
+                        id: teacherInfo.teacher.assignment_compensation.status.id,
+                        label: teacherInfo.teacher.assignment_compensation.status.name,
+                    },
+                    billingStatus: {
+                        id: teacherInfo.teacher.assignment_compensation.billing_status.id,
+                        label: teacherInfo.teacher.assignment_compensation.billing_status.name,
+                    },
+                    note: teacherInfo.teacher.assignment_compensation.note,
+                    
+
+                }
+
+                this.monthlyDetails.override = teacherInfo.teacher.assignment_compensation.is_override == '0' ? false : true
+                this.monthlyDetails.hourlyRate = teacherInfo.teacher.assignment_compensation.hourly_rate
                 // this.pages = res.data.pagesCount
                 // let data = res.data.items
 
@@ -503,6 +623,227 @@ export default {
 
             })
 
+        },
+        getEmployees() {
+
+            const conf = {
+              method: 'GET',
+              url: config.getTeachersData + '?pagination=0',
+              headers: {
+                Accept: 'application/json',
+              }
+            }
+
+            axios(conf).then(res => {
+
+                let data = res.data.teachers, arr = [];
+
+                for(let i=0; i<data.length; i++) {
+                    arr.push({
+                        id: data[i].teacherId,
+                        value: data[i].teacherId,
+                        label: data[i].teacherName
+                    })
+                } 
+
+                this.optionsTeachers = arr;
+                this.optionsTeachersForFilter = arr;
+
+            })
+        },
+        getCampueses() {
+
+            const conf = {
+                method: 'GET',
+                url: config.getCampuses + this.$route.params.id,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+            axios(conf).then(res => {
+                console.log('get campuses',  res.data[0].campus)
+                
+                const campuses = res.data[0].campus;
+                let campusesArr = [];
+
+                for(let i=0; i<campuses.length; i++) {
+                    campusesArr.push({
+                        id: campuses[i].id,
+                        label: campuses[i].name
+                    })
+                }
+
+                this.optionsCampus = campusesArr
+            });
+
+        },
+        getCategoryTypes(id) {
+
+            const conf = {
+                method: 'GET',
+                url: config.getCategoryTypes + id + '/6', // 6 is teacher id in budget list
+                headers: {
+                Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+
+            let types = res.data.typesCategories;
+            let typesArray = []
+
+            for(let i=0; i<types.length; i++) {
+            let obj = {
+                id: types[i].id,
+                label: types[i].name,
+                name: types[i].abbreviation
+            }
+            typesArray.push(obj)
+            }
+
+            this.typeArr = typesArray
+
+        })
+        },
+        getSubcategories(id) {
+            const conf = {
+                method: 'GET',
+                url: config.getSubcategories + id,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+                console.log('res subcategories', res)
+                const subcategoriesArr = []
+                const subcategories = res.data.typesCategories
+                for(let i=0; i<subcategories.length; i++) {
+                    let obj = {
+                        id: subcategories[i].id,
+                        name: subcategories[i].abbreviation,
+                        label: subcategories[i].name
+                    }
+                    subcategoriesArr.push(obj)
+                }
+                this.optionsSubcategory = subcategoriesArr
+            })
+        },
+        getTrackingCategories() {
+            const conf = {
+                method: 'GET',
+                url: config.getTrackingCategories,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+                const categoryTracking = res.data.categoryTracking
+                let categoryTrackingArr = [];
+
+                for(let i=0; i<categoryTracking.length; i++) {
+                    categoryTrackingArr.push({
+                        id: categoryTracking[i].id,
+                        label: categoryTracking[i].name
+                    })
+                }
+                this.optionsCategoryTracking = categoryTrackingArr
+            })
+        },
+        getRoletypes() {
+
+            const conf = {
+                method: 'GET',
+                url: config.getRoleTypes,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+                const teacherRoleTypes = res.data.teacherRoleTypes
+                let teacherRoleTypesArr = [];
+
+                for(let i=0; i<teacherRoleTypes.length; i++) {
+                    teacherRoleTypesArr.push({
+                        id: teacherRoleTypes[i].id,
+                        label: teacherRoleTypes[i].name
+                    })
+                }
+                this.optionsRoleTypes = teacherRoleTypesArr
+            })
+        },
+        getEmployementTypes() {
+
+            const conf = {
+                method: 'GET',
+                url: config.getEmployementTypes,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+                const teacherEmpTypes = res.data.teacherEmpTypes
+                let teacherEmpTypesArr = [];
+
+                for(let i=0; i<teacherEmpTypes.length; i++) {
+                    teacherEmpTypesArr.push({
+                        id: teacherEmpTypes[i].id,
+                        label: teacherEmpTypes[i].name
+                    })
+                }
+                this.optionsEmployementTypes = teacherEmpTypesArr
+            })
+        },
+        getStatus(id) {
+
+            const conf = {
+                method: 'GET',
+                url: config.getActivityStatus + id,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+                console.log('get status',  res.data)
+
+                // billingStatus - optionsBilling
+                // itemStatus - optionsStatus
+                
+                const billingStatus = res.data.billingStatus;
+                let billingStatusArr = [];
+
+                for(let i=0; i<billingStatus.length; i++) {
+                    billingStatusArr.push({
+                        id: billingStatus[i].id,
+                        label: billingStatus[i].name
+                    })
+                }
+                this.optionsBilling = billingStatusArr
+
+                // **********************************************
+
+                const itemStatus = res.data.itemStatus;
+                let itemStatusArr = [];
+
+                for(let i=0; i<itemStatus.length; i++) {
+                    itemStatusArr.push({
+                        id: itemStatus[i].id,
+                        label: itemStatus[i].name
+                    })
+                }
+                this.optionsStatus = itemStatusArr
+            });
+
+        },
+        filterTeachers (val, update, abort) {
+            update(() => {
+                const needle = val.toLowerCase()
+                this.optionsTeachers = this.optionsTeachersForFilter.filter(v => v.label.toLowerCase().indexOf(needle) > -1)
+            })
         },
         addTeacher() {
 
@@ -517,6 +858,18 @@ export default {
                 this.getTeacherBudgetById()
             }
         }
+    },
+    created() {
+
+        this.getEmployees()
+        this.getCampueses()
+        this.getCategoryTypes(this.title)
+        this.getSubcategories(this.title)
+        this.getTrackingCategories()
+        this.getRoletypes()
+        this.getEmployementTypes()
+        this.getStatus(this.title)
+
     }
 }
 </script>
