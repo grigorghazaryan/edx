@@ -260,7 +260,7 @@ export default {
                         label: data[i].category.name,
                         name: data[i].category.abbreviation
                     },
-                    percentage: data[i].markup_percentage,
+                    percentage: parseFloat(data[i].allocation_percentage),
                     //
                 }
                 arr.push(teacherObject)
