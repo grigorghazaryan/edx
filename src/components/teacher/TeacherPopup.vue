@@ -125,7 +125,7 @@
                 <div class="col-md-7 q-pl-md">
 
                     <div class="row">
-                        <div class="col-md-10 q-pr-sm q-mb-md">
+                        <div class="col-4 q-pr-sm q-mb-md">
                             <div class="text-subtitle2 q-mb-sm">Allocation Category</div>
                             <div class="row cursor-pointer h-popup">
 
@@ -139,6 +139,27 @@
                                     <span>{{ editedItem.category.label  }}</span>
                                 </div>
 
+
+                                <q-popup-edit v-model="editedItem.category" buttons>
+                                    <div class="q-mb-lg q-mt-lg">
+                                            <div class="text-subtitle2 q-mb-sm">Allocation Category</div>
+                                            <div class="cursor-pointer h-popup">
+                                                <q-select 
+                                                    v-model="editedItem.category" 
+                                                    :options="typeArr"
+                                                    outlined
+                                                    dense
+                                                />
+                                            </div>
+                                    </div>
+                                </q-popup-edit>  
+
+                            </div>
+                        </div>
+                        <div class="col-4 q-pr-sm q-mb-md">
+                            <div class="text-subtitle2 q-mb-sm">Allocation Subcategory</div>
+                            <div class="row cursor-pointer h-popup">
+
                                 <div v-if="editedItem.subcategory">
                                      <q-chip 
                                         square color="purple" 
@@ -150,8 +171,37 @@
                                 </div>
 
                                 <q-popup-edit v-model="editedItem.category" buttons>
-                                    <div class="row q-mb-lg q-mt-lg">
-                                        <div class="col-md-6 q-pr-sm q-mb-md">
+                                    <div class="q-mb-lg q-mt-lg">
+                                            <div class="text-subtitle2 q-mb-sm">Allocation Subcategory</div>
+                                            <div class="row cursor-pointer h-popup">
+                                                <q-select 
+                                                    v-model="editedItem.subcategory" 
+                                                    :options="optionsSubcategory"
+                                                    outlined
+                                                    dense
+                                                />
+                                        </div>
+                                    </div>
+                                </q-popup-edit>  
+
+                            </div>
+                        </div>
+                        <div class="col-4 q-pr-sm q-mb-md">
+                            <div class="text-subtitle2 q-mb-sm">Founding Source</div>
+                            <div class="row cursor-pointer h-popup">
+
+                                <div v-if="editedItem.category">
+                                    <q-chip 
+                                        square color="green" 
+                                        text-color="white" 
+                                    >
+                                        <span>{{ editedItem.category.name }}</span>
+                                    </q-chip>
+                                    <span>{{ editedItem.category.label  }}</span>
+                                </div>
+
+                                <q-popup-edit v-model="editedItem.category" buttons>
+                                    <div class="q-mb-lg q-mt-lg">
                                             <div class="text-subtitle2 q-mb-sm">Allocation Category</div>
                                             <div class="row cursor-pointer h-popup">
                                                 <q-select 
@@ -161,18 +211,6 @@
                                                     dense
                                                 />
                                             </div>
-                                        </div>
-                                        <div class="col-md-6 q-pr-sm q-mb-md">
-                                            <div class="text-subtitle2 q-mb-sm">Allocation Subcategory</div>
-                                            <div class="row cursor-pointer h-popup">
-                                                <q-select 
-                                                    v-model="editedItem.subcategory" 
-                                                    :options="optionsSubcategory"
-                                                    outlined
-                                                    dense
-                                                />
-                                            </div>
-                                        </div>
                                     </div>
                                 </q-popup-edit>  
 
@@ -209,7 +247,8 @@
                         </div>
                         <div class="col-md-3 q-pr-sm">
                             <div class="text-subtitle2 q-mb-sm">Start Date</div>
-                            <q-input outlined dense v-model="editedItem.startDate">
+                            <q-input outlined dense v-model="editedItem.startDate" 
+                            >
                                 <template v-slot:append>
                                 <q-icon name="event" class="cursor-pointer">
                                     <q-popup-proxy transition-show="scale" transition-hide="scale">
@@ -329,25 +368,27 @@
                         <template v-slot:body="props">
                             <q-tr :props="props">
 
+                                
+                                <q-td key="workDays" :props="props">
+                                    {{ props.row.payMonth }}
+                                </q-td>
+
                                 <!-- Work month – 0.5 -->
                                 <q-td key="payMonth" :props="props">
-                                    {{ editedItem.workMonth - 0.5 }}
+                                    {{ props.row.payMonth }}
                                 </q-td>
 
 
                                 <q-td key="payPeriod" :props="props">
-                                    <span v-if="(editedItem.workMonth - 0.5) % 1 == 0">
-                                        {{editedItem.workMonth - 0.5}}
-                                    </span>
-                                    <span v-else>
-                                        {{(editedItem.workMonth - 0.5) * 2 }}
+                                    <span>
+                                        {{ props.row.payMonth }}
                                     </span>
                                 </q-td>
 
                                 <!-- Charge = (teacher pay for (monthly, week, bi week, semi-month) * Markup fee) 
                                 * allocation percentage -->
                                 <q-td key="charge" :props="props">
-                                    {{ ((( (editedItem.semiMonthly * 2) * editedItem.markupFee ) * editedItem.allocation) / 100).toFixed(2) }}
+                                    {{ semiMonthly() }}
                                 </q-td>
 
                                 <!-- Gross = (calculated Charge amount * allocation percentage) + Fringe -->
@@ -424,6 +465,8 @@
 import axios from 'axios'
 import config from '../../../config'
 import DialogDraggable from '../DialogDraggable'
+var moment = require('moment-business-days');
+
 
 export default {
     name: 'TeacherPopup',
@@ -447,6 +490,12 @@ export default {
             btnLoading: false,
             teacherSubColumns: [
               { 
+                name: "workDays", 
+                align: "left",
+                label: "Work Days", 
+                field: "workDays"
+              },
+               { 
                 name: "payMonth", 
                 align: "left",
                 label: "Pay Month", 
@@ -482,18 +531,6 @@ export default {
                 label: "Hourly", 
                 field: "hourlyRateI"
               },
-            //   { 
-            //     name: "weeklyRate", 
-            //     align: "left",
-            //     label: "Weekly", 
-            //     field: "weeklyRate"
-            //   },
-            //   { 
-            //     name: "biWeekly", 
-            //     align: "left",
-            //     label: "bi-Weekly", 
-            //     field: "biWeekly"
-            //   },
               { 
                 name: "semiMonthly", 
                 align: "left",
@@ -520,7 +557,7 @@ export default {
               },
             ],
             monthlyDetails: [{
-                payMonth: 'Text 1',
+                payMonth: null,
                 payPeriod: 'Text 2',
                 charge: 'Text 3',
                 gross: 'Text 4',
@@ -608,7 +645,11 @@ export default {
                         label: teacherInfo.teacher.assignment_compensation.billing_status.name,
                     },
                     note: teacherInfo.teacher.assignment_compensation.note,
-                    
+                    salary_pay: teacherInfo.salary_pay,
+
+                    adminMarkupFee: res.data.admin_markup_fee,
+                    allocationPercentage: parseFloat(teacherInfo.teacher.assignment_compensation.allocation_percentage),
+                    markupFee: res.data.markup_fee,
 
                 }
 
@@ -845,11 +886,23 @@ export default {
                 this.optionsTeachers = this.optionsTeachersForFilter.filter(v => v.label.toLowerCase().indexOf(needle) > -1)
             })
         },
+        calculateBusinessDays() {
+
+            const start = this.editedItem.startDate.substring(0, 10);
+            const end = this.editedItem.endDate.substring(0, 10);
+            
+            let diff = moment(start, 'YYYY-MM-DD').businessDiff(moment(end,'YYYY-MM-DD'));
+            this.monthlyDetails[0].payMonth = (parseFloat(diff) + 1)
+        
+        },
         addTeacher() {
 
         },
         editTeacher() {
 
+        },
+        semiMonthly() {
+          return this.editedItem.salary_pay
         },
     },
     watch: {
@@ -857,7 +910,16 @@ export default {
             if(val) {
                 this.getTeacherBudgetById()
             }
-        }
+        },
+        'editedItem.startDate'(){
+            //to work with changes in "myArray"
+            this.calculateBusinessDays()
+        },
+        'editedItem.endDate'(){
+            //to work with changes in "myArray"
+            this.calculateBusinessDays()
+        },
+        
     },
     created() {
 
@@ -869,6 +931,10 @@ export default {
         this.getRoletypes()
         this.getEmployementTypes()
         this.getStatus(this.title)
+
+        // ----
+
+
 
     }
 }
