@@ -504,17 +504,34 @@
             icon="account_balance"
             label="Budget"
           >
-            <q-list class="bg-sidebar-opened edx-bg-lighter-dark">
-              <q-item to="/Activity" @click="addDataToLS('Activity', '/Activity')"  
-              active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
-                <q-item-section avatar>
-                  <q-icon name="account_balance"/>
-                </q-item-section>
-                <q-item-section>
-                  <q-item-label>Activity</q-item-label>
-                </q-item-section>
-              </q-item>
-            </q-list>
+            
+            
+
+              <q-list class="bg-sidebar-opened edx-bg-lighter-dark">
+                  <q-item to="/Activity" @click="addDataToLS('Activity', '/Activity')"  
+                  active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
+                    <q-item-section avatar>
+                      <q-icon name="account_balance"/>
+                    </q-item-section>
+                    <q-item-section>
+                      <q-item-label>Professional Development</q-item-label>
+                    </q-item-section>
+                  </q-item>
+              </q-list>
+
+              <q-list class="bg-sidebar-opened edx-bg-lighter-dark">
+                  <q-item to="/Activityi" @click="addDataToLS('Activity', '/Activity')"  
+                  active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
+                    <q-item-section avatar>
+                      <q-icon name="account_balance"/>
+                    </q-item-section>
+                    <q-item-section>
+                      <q-item-label>Family Engagement</q-item-label>
+                    </q-item-section>
+                  </q-item>
+              </q-list>
+
+
             <q-list class="bg-sidebar-opened edx-bg-lighter-dark">
               <q-item to="/Material" @click="addDataToLS('Materials', '/Material')" 
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
@@ -522,10 +539,11 @@
                   <q-icon name="account_balance"/>
                 </q-item-section>
                 <q-item-section>
-                  <q-item-label>Materials</q-item-label>
+                  <q-item-label>Material Purchases</q-item-label>
                 </q-item-section>
               </q-item>
             </q-list>
+
             <q-list class="bg-sidebar-opened edx-bg-lighter-dark">
               <q-item to="/Services" @click="addDataToLS('Services', '/Services')" 
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
@@ -533,11 +551,11 @@
                   <q-icon name="account_balance"/>
                 </q-item-section>
                 <q-item-section>
-                  <q-item-label>Services</q-item-label>
+                  <q-item-label>Instructional Services</q-item-label>
                 </q-item-section>
               </q-item>
             </q-list>
-            <q-list class="bg-sidebar-opened edx-bg-lighter-dark">
+            <!-- <q-list class="bg-sidebar-opened edx-bg-lighter-dark">
               <q-item to="/LicenseSubscription" @click="addDataToLS('LicenseSubscription', '/Services')" 
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
@@ -558,16 +576,15 @@
                   <q-item-label>Counseling</q-item-label>
                 </q-item-section>
               </q-item>
-            </q-list>
+            </q-list> -->
             <q-list class="bg-sidebar-opened edx-bg-lighter-dark">
-              <q-item to="/Teachers"  
-              @click="addDataToLS('Teacher Costs', '/Teachers')" 
+              <q-item to="/Teachers" 
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
                   <q-icon name="school"/>
                 </q-item-section>
                 <q-item-section>
-                  <q-item-label>Teacher Costs</q-item-label>
+                  <q-item-label>Teacher Assignments</q-item-label>
                 </q-item-section>
               </q-item>
             </q-list>
@@ -607,7 +624,7 @@
                     <q-icon name="account_balance"/>
                   </q-item-section>
                   <q-item-section>
-                    <q-item-label>Materials</q-item-label>
+                    <q-item-label>Material Purchases</q-item-label>
                   </q-item-section>
                 </q-item>
                 <q-item clickable  v-close-popup to="/Services" @click="addDataToLS('Services', '/Services')"  active-class="q-item-no-link-highlighting">
@@ -615,10 +632,10 @@
                     <q-icon name="account_balance"/>
                   </q-item-section>
                   <q-item-section>
-                    <q-item-label>Services</q-item-label>
+                    <q-item-label>Instructional Services</q-item-label>
                   </q-item-section>
                 </q-item>
-                <q-item clickable  v-close-popup to="/LicenseSubscription" @click="addDataToLS('LicenseSubscription', '/LicenseSubscription')"  active-class="q-item-no-link-highlighting">
+                <!-- <q-item clickable  v-close-popup to="/LicenseSubscription" @click="addDataToLS('LicenseSubscription', '/LicenseSubscription')"  active-class="q-item-no-link-highlighting">
                   <q-item-section avatar>
                     <q-icon name="account_balance"/>
                   </q-item-section>
@@ -633,7 +650,7 @@
                   <q-item-section>
                     <q-item-label>Counseling</q-item-label>
                   </q-item-section>
-                </q-item>
+                </q-item> -->
                 <q-item clickable  v-close-popup to="/Counseling" @click="addDataToLS('Teacher Costs', '/Teachers')"   active-class="q-item-no-link-highlighting">
                   <q-item-section avatar>
                     <q-icon name="account_balance"/>
@@ -1086,5 +1103,9 @@ export default {
 //     background: #1f2d3d;
 //     color: #fff;
 // }
+
+.nested-item .q-item.q-item-type.row.no-wrap.q-item--clickable.q-link.cursor-pointer.q-focusable.q-hoverable {
+    padding-left: 40px;
+}
 
 </style>

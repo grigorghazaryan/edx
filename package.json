@@ -17,6 +17,7 @@
     "axios": "^0.18.1",
     "echarts": "^4.6.0",
     "lodash": "^4.17.20",
+    "moment-business-days": "^1.2.0",
     "quasar": "^1.0.0",
     "v-tooltip": "^2.1.2",
     "vue-apexcharts": "^1.5.2",
