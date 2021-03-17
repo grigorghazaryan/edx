@@ -131,6 +131,7 @@ const config = {
     getTeacherBudgetById: 'https://edxchange-teacher.aimtech.am/api/v1/get-teacher-compensation/', // + budget id
     getRoleTypes: 'https://edxchange-teacher.aimtech.am/api/v1/get-teacher-role-type',
     getEmployementTypes: 'https://edxchange-teacher.aimtech.am/api/v1/get-teacher-employement-type',
+    fringeTypes: 'https://edxchange-teacher.aimtech.am/api/v1/get-fring'
 }
 
 export default config

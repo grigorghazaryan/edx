@@ -283,6 +283,8 @@ export default {
                 this.pages = res.data.pagesCount
                 let data = res.data.items
 
+                console.log(' kkkkk pppp ', data);
+
                 let finalResult = this.teachersParsing(data)
                 console.log('Final result : ', finalResult)
                 this.data = finalResult

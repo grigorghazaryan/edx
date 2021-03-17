@@ -67,55 +67,55 @@
                     </div>
 
                     <div class="q-mb-md">
-                        <div class="text-subtitle2 q-mb-sm">Compensation Detail</div>
-                        <div class="row">
-                            <div class="col-md-4 left-col">
-                                <b>Hourly</b>
+                        <div class="text-subtitle2 q-mb-sm">Employee Detail</div>
+                        <div class="bordered-box">
+                            <div class="row">
+                                <div class="col-md-4 left-col">
+                                    <b>Employment:</b>
+                                </div>
+                                <div class="col-md-6 right-col">
+                                    <span> {{editedItem.employement}} </span>
+                                </div>
                             </div>
-                            <div class="col-md-6 right-col">
-                                $ <span>{{ editedItem.hourly }}</span>
+                            <div class="row">
+                                <div class="col-md-4 left-col">
+                                    <b>Compensation:</b>
+                                </div>
+                                <div class="col-md-6 right-col">
+                                    <span>{{editedItem.compensation}}</span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4 left-col">
-                                <b>Fringe</b>
+                            <div class="row">
+                                <div class="col-md-4 left-col">
+                                    <b>Pay Frequency:</b>
+                                </div>
+                                <div class="col-md-6 right-col">
+                                   <span>{{editedItem.payFrequesncy}}</span>
+                                </div>
                             </div>
-                            <div class="col-md-6 right-col">
-                                $ <span>{{ editedItem.fringe }}</span>
+                            <div class="row">
+                                <div class="col-md-4 left-col">
+                                    <b>Pay:</b>
+                                </div>
+                                <div class="col-md-6 right-col">
+                                <span>$ <span>{{editedItem.pay}}</span></span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4 left-col">
-                                <b>Work Month</b>
+                            <div class="row">
+                                <div class="col-md-4 left-col">
+                                    <b>Work Month:</b>
+                                </div>
+                                <div class="col-md-6 right-col">
+                                <span>{{editedItem.workMonth}}</span>
+                                </div>
                             </div>
-                            <div class="col-md-6 right-col">
-                                <span>{{ editedItem.workMonth }}</span>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4 left-col">
-                                <b>Benefits</b>
-                            </div>
-                            <div class="col-md-6 right-col">
-                                <q-checkbox v-model="editedItem.benefits" />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row q-mb-md">
-                        <div class="col-md-4 q-pr-sm">
-                            <div class="text-subtitle2 q-mb-sm">Assignment type</div>
-                            <div> 
-                                <div v-if="editedItem.assignmentType" class="cursor-pointer">{{ editedItem.assignmentType.label }}</div>
-                                <q-popup-edit buttons v-model="editedItem.assignmentType">
-                                    <q-select 
-                                        v-model="editedItem.assignmentType" 
-                                        :options="optionsEmployementTypes"
-                                        outlined
-                                        dense
-                                    />
-                                </q-popup-edit>
-                                <!-- optionsEmployementTypes -->
+                            <div class="row">
+                                <div class="col-md-4 left-col">
+                                    <b>Benefits:</b>
+                                </div>
+                                <div class="col-md-6 right-col">
+                                <span>{{editedItem.benefits}}</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -186,41 +186,11 @@
 
                             </div>
                         </div>
-                        <div class="col-4 q-pr-sm q-mb-md">
-                            <div class="text-subtitle2 q-mb-sm">Founding Source</div>
-                            <div class="row cursor-pointer h-popup">
-
-                                <div v-if="editedItem.category">
-                                    <q-chip 
-                                        square color="green" 
-                                        text-color="white" 
-                                    >
-                                        <span>{{ editedItem.category.name }}</span>
-                                    </q-chip>
-                                    <span>{{ editedItem.category.label  }}</span>
-                                </div>
-
-                                <q-popup-edit v-model="editedItem.category" buttons>
-                                    <div class="q-mb-lg q-mt-lg">
-                                            <div class="text-subtitle2 q-mb-sm">Allocation Category</div>
-                                            <div class="row cursor-pointer h-popup">
-                                                <q-select 
-                                                    v-model="editedItem.category" 
-                                                    :options="typeArr"
-                                                    outlined
-                                                    dense
-                                                />
-                                            </div>
-                                    </div>
-                                </q-popup-edit>  
-
-                            </div>
-                        </div>
                     </div>
 
                     <div class="q-mb-md">
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <div class="text-subtitle2 q-mb-sm">Tracking Category</div>
                                 <q-select  
                                     outlined
@@ -278,19 +248,135 @@
                                 </template>
                             </q-input>
                         </div>
-                        <div class="col-md-3 q-pr-sm">
-                            <div class="text-subtitle2 q-mb-sm">Hours/Week</div>
-                            <q-input outlined class="q-mb-md" type="text" v-model="editedItem.hoursWeek" dense autofocus />
+                        <div class="col-md-2 q-pr-sm">
+                            <div class="text-subtitle2 q-mb-sm">Base Rate</div>
+                            <q-input prefix="$" outlined class="q-mb-md" type="text" v-model="editedItem.hoursWeek" dense autofocus />
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2 q-pr-sm">
+                            <div class="text-subtitle2 q-mb-sm" v-if="editedItem.isHoursWeek">
+                                {{editedItem.isHoursWeek.label}}
+                            </div>
+                            <div class="cursor-pointer">
+
+                                <q-input v-if="editedItem.isHoursWeek && editedItem.isHoursWeek.id == 1" readonly outlined class="q-mb-md" type="text" v-model="totalHours" dense autofocus />
+                                <q-input v-else readonly outlined class="q-mb-md" type="text" v-model="editedItem.hoursWM" dense autofocus />
+
+                            </div>
+                            
+                            <q-popup-edit v-model="editedItem.isHoursWeek" buttons >
+                                <div class="row w-400" >
+                                    <div class="col-md-9 q-pr-md">
+                                        <div class="text-subtitle2 q-mb-sm">Schedule</div>
+                                        <q-select dense outlined 
+                                        :options="hoursOption" 
+                                        v-model="editedItem.isHoursWeek" />
+                                    </div>
+
+                                    <div class="col-md-3" v-if="editedItem.isHoursWeek && editedItem.isHoursWeek.id == 1">
+                                        <div class="text-subtitle2 q-mb-sm">Total Hours</div>
+                                        <q-input readonly v-model="totalHours" dense outlined />
+                                    </div>
+                                    <div class="col-md-3" v-else>
+                                        <div class="text-subtitle2 q-mb-sm">Total Hours</div>
+                                        <q-input v-model="editedItem.hoursWM" dense outlined />
+                                    </div>
+
+                                    <div class="col-md-12 q-mt-md" v-if="editedItem.isHoursWeek && editedItem.isHoursWeek.id == 1">
+                                        <div class="row justify-between items-center">                        
+                                            <div class="text-subtitle2">Work Days and Hours</div>
+                                            <q-checkbox label="Full Time" v-model="editedItem.fullTime" />
+                                        </div>
+                                    </div>
+                                    <div class="row w-100 q-mt-md q-mb-md" v-if="editedItem.isHoursWeek && editedItem.isHoursWeek.id == 1">
+                                        <div 
+                                            v-for="i in scheduleWeekDays" :key="i.id"
+                                            class="col q-pr-sm text-center"
+                                        >
+                                            <q-btn 
+                                                round 
+                                                :color="i.checked ? 'secondary' : 'grey-1' " 
+                                                :text-color="i.checked ? 'white' : 'black'"
+                                                :label="i.name" 
+                                                @click="i.checked = !i.checked; i.checked ? '' : i.hours = null" 
+                                                :disable="editedItem.fullTime"
+                                            />
+                                            <q-input v-model="i.hours" :disable="!i.checked || editedItem.fullTime" class="q-mt-sm" outlined dense />
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </q-popup-edit>
+                        </div>
+                        <div class="col-md-2">
                             <div class="text-subtitle2 q-mb-sm">Fringe</div>
                             <q-input  
-                                prefix="$" outlined  class="q-mb-md" type="text" 
-                                :value="editedItem.mFrienge == null ? ((editedItem.fringe * editedItem.allocation) / 100) : editedItem.mFrienge "
-                                dense autofocus />
-                                <q-popup-edit v-model="editedItem.mFrienge" title="Update Monthly Fringe" buttons>
-                                    <q-input v-model="editedItem.mFrienge" dense autofocus counter />
+                                readonly
+                                prefix="$" 
+                                outlined  
+                                class="q-mb-md"
+                                dense 
+                                autofocus 
+                            />
+                                <q-popup-edit v-model="editedItem.frienge" buttons>
+                                    <div class="row w-300" >
+                                        <div class="col-md-8 q-pr-md">
+                                            <div class="text-subtitle2 q-mb-sm">Fringe Cost</div>
+                                            <q-select dense outlined 
+                                                :options="optionsFringe" 
+                                                v-model="editedItem.frienge" 
+                                            />
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <div class="text-subtitle2 q-mb-sm">Total Amount</div>
+                                            <q-input v-model="editedItem.totalAmount" dense outlined />
+                                        </div>
+
+                                        <div class="col-md-12">
+                                            <p class="q-mt-md">Estimated Hourly Fringe : $ <span>{{ calculateHouryFringe }}</span>/h</p>
+                                        </div>
+
+                                    </div>
                                 </q-popup-edit>
+                        </div>
+                    </div>
+
+                    <div class="row q-mb-md">
+                        <div class="col-md-4 q-pr-sm">
+                            <!-- doc -->
+                            <div class="text-subtitle2 q-mb-sm">Assignment type</div>
+                            <div> 
+                                <!-- editedItem.isHoursWeek && editedItem.isHoursWeek.id == 1 WEEK hoursWM -->
+                                <!-- editedItem.isHoursWeek && editedItem.isHoursWeek.id == 0 MONTH totalHours-->
+                                <div v-if="editedItem.isHoursWeek && editedItem.isHoursWeek.id == 1">
+
+                                    <div 
+                                        v-if="totalHours >= 40">
+                                        <q-icon style="font-size: 1.8em; color: green" name="circle"/>
+                                        Full Time
+                                    </div>
+                                    <div v-else>
+                                        <q-icon style="font-size: 1.8em; color: orange" name="timelapse"/>
+                                        Part Time
+                                    </div>
+
+                                </div>
+
+                                <div v-else>
+
+                                    <div 
+                                        v-if="editedItem.hoursWM >= 8">
+                                        <q-icon style="font-size: 1.8em; color: green" name="circle"/>
+                                        Full Time
+                                    </div>
+                                    <div v-else>
+                                        <q-icon style="font-size: 1.8em; color: orange" name="timelapse"/>
+                                        Part Time
+                                    </div>
+
+                                </div>
+
+                            </div>
                         </div>
                     </div>
 
@@ -323,9 +409,9 @@
                                     
                                 </div>
                             </div>
-                        </div>
+                    </div>
 
-                    <div class="row q-mb-md">
+                    <!-- <div class="row q-mb-md">
                         <div class="col-md-4 q-pr-sm">
                            <div class="text-subtitle2 q-mb-sm">Billing Status</div>
                             <div class="h-popup">
@@ -351,13 +437,13 @@
                                 </q-popup-edit>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
 
                 </div>
 
                 <div class="col-md-12 q-mt-lg q-mb-lg" v-if="monthlyDetails">
                     <div class="text-subtitle2 q-mb-sm">
-                        Calculated Monthly Details and Pay Rate
+                        Calculated Assignment Details
                     </div>
                     <q-table
                         class="q-mt-md q-mb-md border"
@@ -369,64 +455,44 @@
                             <q-tr :props="props">
 
                                 
+                                <q-td key="chargeRate" :props="props">
+                                    {{ props.row.chargeRate }}
+                                </q-td>
+
                                 <q-td key="workDays" :props="props">
-                                    {{ props.row.payMonth }}
-                                </q-td>
-
-                                <!-- Work month – 0.5 -->
-                                <q-td key="payMonth" :props="props">
-                                    {{ props.row.payMonth }}
+                                    {{ props.row.workDays }}
                                 </q-td>
 
 
-                                <q-td key="payPeriod" :props="props">
+                                <q-td key="workHours" :props="props">
                                     <span>
-                                        {{ props.row.payMonth }}
+                                        {{ props.row.workHours }}
                                     </span>
                                 </q-td>
 
-                                <!-- Charge = (teacher pay for (monthly, week, bi week, semi-month) * Markup fee) 
-                                * allocation percentage -->
-                                <q-td key="charge" :props="props">
-                                    {{ semiMonthly() }}
+                                <q-td key="billingCycles" :props="props">
+                                    {{ props.row.billingCycles }}
                                 </q-td>
 
-                                <!-- Gross = (calculated Charge amount * allocation percentage) + Fringe -->
-                                <q-td key="gross" :props="props">
-                                    {{ (((( (editedItem.semiMonthly * 2) * editedItem.markupFee ) * editedItem.allocation) / 100 ) + (editedItem.fringe * editedItem.allocation) / 100).toFixed(2) }}
+                                
+                                <q-td key="assignmentTotal" :props="props">
+                                    {{ props.row.assignmentTotal }}
                                 </q-td>
 
-                                <!-- Total w/Admin = Gross * admin markup -->
-                                <q-td key="totalAdmin" :props="props">
-                                {{ ((((( (editedItem.semiMonthly * 2) * editedItem.markupFee ) * editedItem.allocation) / 100 ) + ((editedItem.fringe * editedItem.allocation) / 100) ) * editedItem.adminMarkupFee).toFixed(2)}}
-                                </q-td>
-
-                                <!-- Hourly rate = total w/admin / work hours in a month -->
-                                <q-td key="hourlyRate" :props="props">
-                                {{ (((((( (editedItem.semiMonthly * 2) * editedItem.markupFee ) * editedItem.allocation) / 100 ) + ((editedItem.fringe * editedItem.allocation) / 100) ) * editedItem.adminMarkupFee) / editedItem.hourInMonth).toFixed(2) }}
-                                </q-td>
-
-                                <q-td key="semiMonthly" :props="props">
-                                    {{ (((((( (editedItem.semiMonthly * 2) * editedItem.markupFee ) * editedItem.allocation) / 100 ) + ((editedItem.fringe * editedItem.allocation) / 100) ) * editedItem.adminMarkupFee) / 2).toFixed(2) }}
-                                </q-td>
-
-                                <q-td key="anual" :props="props">
-                                    {{ (((((( (editedItem.semiMonthly * 2) * editedItem.markupFee ) * editedItem.allocation) / 100 ) + ((editedItem.fringe * editedItem.allocation) / 100) ) * editedItem.adminMarkupFee) * (editedItem.workMonth - 0.5)).toFixed(2) }}
-                                </q-td>
-
-                                <q-td key="override" :props="props">
-                                    <div>
-                                        <q-checkbox v-model="props.row.override" />
+                                
+                                <q-td key="hourlyOverride" :props="props">
+                                    <div class="row justify-end">
+                                        <q-checkbox v-model="props.row.isHourlyOverride" />
+                                        <q-input
+                                        :disable="!props.row.isHourlyOverride" 
+                                        :filled="!props.row.isHourlyOverride" 
+                                        outlined
+                                        class="w-80px" prefix="$"  dense v-model="props.row.hourlyOverride"/>
                                     </div>
-                                </q-td>
-
-                                <q-td key="hourlyRateI" :props="props">
-                                    <q-input outlined dense v-model="props.row.hourlyRate"/>
                                 </q-td>
 
                             </q-tr>
                         </template>
-
                     </q-table>
                 </div>
 
@@ -434,7 +500,7 @@
 
                 <div class="col-md-3 q-pl-md">
                     <q-btn color="primary q-mt-lg">
-                            View pay schedule
+                        View pay schedule
                     </q-btn>
                 </div>
 
@@ -490,85 +556,50 @@ export default {
             btnLoading: false,
             teacherSubColumns: [
               { 
+                name: "chargeRate", 
+                align: "left",
+                label: "Charge Rate", 
+                field: "chargeRate"
+              },
+               { 
                 name: "workDays", 
                 align: "left",
                 label: "Work Days", 
                 field: "workDays"
               },
-               { 
-                name: "payMonth", 
+              { 
+                name: "workHours", 
                 align: "left",
-                label: "Pay Month", 
-                field: "payMonth"
+                label: "Work Hours", 
+                field: "workHours"
               },
               { 
-                name: "payPeriod", 
+                name: "billingCycles", 
                 align: "left",
-                label: "Pay Period", 
-                field: "payPeriod"
+                label: "Billing Cycles", 
+                field: "billingCycles"
               },
               { 
-                name: "charge", 
+                name: "assignmentTotal", 
                 align: "left",
-                label: "Charge", 
-                field: "charge"
+                label: "Assignment Total", 
+                field: "assignmentTotal"
               },
               { 
-                name: "gross", 
-                align: "left",
-                label: "Gross Pay", 
-                field: "gross"
-              },
-              { 
-                name: "totalAdmin", 
-                align: "left",
-                label: "w/Admin", 
-                field: "totalAdmin"
-              },
-              { 
-                name: "hourlyRateI", 
-                align: "left",
-                label: "Hourly", 
-                field: "hourlyRateI"
-              },
-              { 
-                name: "semiMonthly", 
-                align: "left",
-                label: "Monthly", 
-                field: "semiMonthly"
-              },
-              { 
-                name: "anual", 
-                align: "left",
-                label: "Anual", 
-                field: "anual"
-              },
-              { 
-                name: "override", 
-                align: "left",
-                label: "Override", 
-                field: "override"
-              },
-              { 
-                name: "hourlyRate", 
-                align: "left",
-                label: "Hourly Rate", 
-                field: "hourlyRate"
+                name: "hourlyOverride", 
+                align: "right",
+                label: "Hourly Override", 
+                field: "hourlyOverride"
               },
             ],
             monthlyDetails: [{
-                payMonth: null,
-                payPeriod: 'Text 2',
-                charge: 'Text 3',
-                gross: 'Text 4',
-                totalAdmin: 'Text 5',
-                hourlyRate: 'Text 6',
-                weeklyRate: 'Text 7',
-                biWeekly: 'Text 8',
-                semiMonthly: 'Text 9',
-                anual: 'Text 10',
-                override: true,
-                hourlyRate: '',
+                chargeRate: 90,
+                workDays: 12,
+                workHours: 34,
+                billingCycles: 3,
+                assignmentTotal: 900,
+                isHourlyOverride: true,
+                hourlyOverride: 60,
             }],
             editedItem: {},
             optionsTeachers: [],
@@ -581,6 +612,20 @@ export default {
             optionsEmployementTypes: [],
             optionsStatus: [],
             optionsBilling: [],
+            optionsFringe: [],
+            hoursOption: [
+                { id: 0, label: 'Hours/Day'},
+                { id: 1, label: 'Hours/Week'}
+            ],
+            scheduleWeekDays: [
+                { id: 1, name: 'M', hours: null, checked: false },
+                { id: 2, name: 'T', hours: null, checked: false },
+                { id: 3, name: 'W', hours: null, checked: false },
+                { id: 4, name: 'T', hours: null, checked: false },
+                { id: 5, name: 'F', hours: null, checked: false },
+                { id: 6, name: 'S', hours: null, checked: false },
+                { id: 7, name: 'S', hours: null, checked: false }
+            ]
         }
     },
     methods: {
@@ -598,7 +643,7 @@ export default {
 
                 
                 let teacherInfo = res.data.teachersCompensation[0]
-                console.log('getTeacherBudgetById ==== 90909090909090 ===== ', teacherInfo )
+                console.log('Techer info', teacherInfo)
 
                 this.editedItem = {
                     teacher: {
@@ -609,13 +654,15 @@ export default {
                         id: teacherInfo.teacher.role_type.id,
                         label: teacherInfo.teacher.role_type.name
                     },
-                    hourly: teacherInfo.hourly_pay,
-                    fringe: teacherInfo.fringe,
-                    workMonth: teacherInfo.work_month,
-                    benefits: teacherInfo.has_benefits == '0' ? false : true,
+
+                    // hourly: teacherInfo.hourly_pay,
+                    // fringe: teacherInfo.fringe,
+                    // workMonth: teacherInfo.work_month,
+                    // benefits: teacherInfo.has_benefits == '0' ? false : true,
+                    
                     assignmentType: {
-                        id: teacherInfo.employement_type.id,
-                        label: teacherInfo.employement_type.name,
+                        id: teacherInfo.compensation_type.id,
+                        label: teacherInfo.compensation_type.name,
                     },
                     category: {
                         id: teacherInfo.teacher.assignment_compensation.category.id,
@@ -623,33 +670,50 @@ export default {
                         name: teacherInfo.teacher.assignment_compensation.category.abbreviation
                     },
                     subcategory: {
-                        id: teacherInfo.teacher.assignment_compensation.sub_category.id,
-                        label: teacherInfo.teacher.assignment_compensation.sub_category.name,
-                        name: teacherInfo.teacher.assignment_compensation.sub_category.abbreviation
+                        id: teacherInfo.teacher.assignment_compensation.sub_category ? teacherInfo.teacher.assignment_compensation.sub_category.id : 0,
+                        label: teacherInfo.teacher.assignment_compensation.sub_category ? teacherInfo.teacher.assignment_compensation.sub_category.name : '',
+                        name: teacherInfo.teacher.assignment_compensation.sub_category ? teacherInfo.teacher.assignment_compensation.sub_category.abbreviation : ''
                     },
                     trackingCategory: {
-                        id: teacherInfo.teacher.assignment_compensation.category_tracking.id,
-                        label: teacherInfo.teacher.assignment_compensation.category_tracking.name
+                        id: teacherInfo.teacher.assignment_compensation.category_tracking ? teacherInfo.teacher.assignment_compensation.category_tracking.id : 0,
+                        label: teacherInfo.teacher.assignment_compensation.category_tracking ? teacherInfo.teacher.assignment_compensation.category_tracking.name : 0
                     },
+
+                    employement: teacherInfo.compensation_type.name,
+                    compensation: teacherInfo.compensation_type.name,
+                    payFrequesncy: teacherInfo.pay_frequency.name,
+                    pay: teacherInfo.salary_pay,
+                    workMonth: teacherInfo.work_month,
+                    benefits: teacherInfo.has_benefits == '1' ? 'Y' : 'N',
 
                     startDate: teacherInfo.teacher.assignment_compensation.start_date,
                     endDate: teacherInfo.teacher.assignment_compensation.end_date,
-                    hoursWeek: teacherInfo.teacher.assignment_compensation.hours_per_week,
-                    mFrienge: teacherInfo.teacher.assignment_compensation.fringe,
+                    // hoursWeek: teacherInfo.teacher.assignment_compensation.hours_per_week,
+                    isHoursWeek: { id: 1, label: 'Hours/Week'},
+                    hoursWM: 0,
+                    frienge: { id: 5, label: "Monthly" },
+                    hourlyFrienge: 100,
+                    totalAmount: 0,
                     assignmentStatus: {
                         id: teacherInfo.teacher.assignment_compensation.status.id,
                         label: teacherInfo.teacher.assignment_compensation.status.name,
                     },
-                    billingStatus: {
-                        id: teacherInfo.teacher.assignment_compensation.billing_status.id,
-                        label: teacherInfo.teacher.assignment_compensation.billing_status.name,
+                    assignmentType: {
+                        id: teacherInfo.teacher.assignment_compensation.status.id,
+                        label: teacherInfo.teacher.assignment_compensation.status.name,
                     },
+                    // billingStatus: {
+                    //     id: teacherInfo.teacher.assignment_compensation.billing_status.id,
+                    //     label: teacherInfo.teacher.assignment_compensation.billing_status.name,
+                    // },
                     note: teacherInfo.teacher.assignment_compensation.note,
                     salary_pay: teacherInfo.salary_pay,
 
                     adminMarkupFee: res.data.admin_markup_fee,
                     allocationPercentage: parseFloat(teacherInfo.teacher.assignment_compensation.allocation_percentage),
                     markupFee: res.data.markup_fee,
+                    //
+                    fullTime: false,
 
                 }
 
@@ -693,6 +757,34 @@ export default {
             })
         },
         getCampueses() {
+
+            const conf = {
+                method: 'GET',
+                url: config.fringeTypes,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+            axios(conf).then(res => {
+
+                console.log('fringe 99999', res)
+
+                
+                const fringe = res.data.fringType;
+                let fringeArr = [];
+
+                for(let i=0; i<fringe.length; i++) {
+                    fringeArr.push({
+                        id: fringe[i].id,
+                        label: fringe[i].name
+                    })
+                }
+
+                this.optionsFringe = fringeArr
+            });
+
+        },
+        getFringeTypes() {
 
             const conf = {
                 method: 'GET',
@@ -900,10 +992,7 @@ export default {
         },
         editTeacher() {
 
-        },
-        semiMonthly() {
-          return this.editedItem.salary_pay
-        },
+        }
     },
     watch: {
         show(val) {
@@ -919,6 +1008,29 @@ export default {
             //to work with changes in "myArray"
             this.calculateBusinessDays()
         },
+        'editedItem.fullTime'(val) {
+            if(val) {
+                this.scheduleWeekDays = [
+                    { id: 1, name: 'M', hours: 8, checked: true },
+                    { id: 2, name: 'T', hours: 8, checked: true },
+                    { id: 3, name: 'W', hours: 8, checked: true },
+                    { id: 4, name: 'T', hours: 8, checked: true },
+                    { id: 5, name: 'F', hours: 8, checked: true },
+                    { id: 6, name: 'S', hours: null, checked: false },
+                    { id: 7, name: 'S', hours: null, checked: false }
+                ]
+            }else {
+                this.scheduleWeekDays = [
+                    { id: 1, name: 'M', hours: null, checked: false },
+                    { id: 2, name: 'T', hours: null, checked: false },
+                    { id: 3, name: 'W', hours: null, checked: false },
+                    { id: 4, name: 'T', hours: null, checked: false },
+                    { id: 5, name: 'F', hours: null, checked: false },
+                    { id: 6, name: 'S', hours: null, checked: false },
+                    { id: 7, name: 'S', hours: null, checked: false }
+                ]
+            }
+        }
         
     },
     created() {
@@ -931,11 +1043,80 @@ export default {
         this.getRoletypes()
         this.getEmployementTypes()
         this.getStatus(this.title)
+        this.getFringeTypes()
 
         // ----
 
 
 
+    },
+    computed: {
+        totalHours() {
+            const days = this.scheduleWeekDays;
+            let count = 0;
+            for(let i=0; i<days.length; i++) {
+                if(days[i].hours != null && days[i].hours != '') {
+                    count += parseFloat(days[i].hours)
+                }
+            }
+            return count
+        },
+        calculateHouryFringe() {
+            let fringe = this.editedItem.frienge
+            if(fringe) {
+                if(fringe.id == 1) {
+                    // Hourly
+                    return this.editedItem.totalAmount
+                }else if(fringe.id == 2) { 
+                    // Weekly
+                    return this.editedItem.totalAmount / 40
+                }else if(fringe.id == 3) { 
+                    // Bi Weekly
+                    return this.editedItem.totalAmount / 80
+                }else if(fringe.id == 4) { 
+                    // Semi Monthly
+                    return this.editedItem.totalAmount / 80
+                }else {
+                    // Monthly
+                    return this.editedItem.totalAmount / 160
+                }
+            }
+
+
+            // {"id":1,"name":"Hourly","descripion":"Hourly Fringe"},
+            // {"id":2,"name":"Weekly","descripion":"Weekly Fringe"},
+            // {"id":3,"name":"Bi Weekly","descripion":"Bi Weekly Fringe"},
+            // {"id":4,"name":"Semi Monthly","descripion":"Semi Monthly Fringe"},
+            // {"id":5,"name":"Monthly","descripion":"Monthly Fringe"}]
+        }
     }
 }
 </script>
+
+<style lang="scss" scoped>
+
+.left-col {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    height: 30px;
+}
+.right-col {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    height: 30px;
+}
+
+.w-80px {
+    width: 80px;
+}
+
+.w-400 {
+    width: 400px !important;
+}
+.w-300 {
+    width: 300px !important;
+}
+
+</style>

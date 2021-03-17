@@ -130,6 +130,7 @@ span.edx-header-text {
 .bordered-box {
   border: 1px solid #bcbcbc;
   padding: 1rem;
+  border-radius: .3rem;
 }
 
 
@@ -151,4 +152,8 @@ span.edx-header-text {
   max-height: 40px;
   height: 40px;
 
+}
+
+.w-100 {
+  width: 100%;
 }
