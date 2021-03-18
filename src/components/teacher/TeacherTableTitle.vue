@@ -143,7 +143,7 @@
         </q-table>
 
 
-        <TeacherPopup :show="showTeacherModal" :id="id" :title="title" />
+        <TeacherPopup @hidePopup="closeTeacherPopup" :show="showTeacherModal" :id="id" :title="title" />
  
         
 
@@ -292,10 +292,11 @@ export default {
             })
         },
         openTeacherPopup(data, index) {
-            console.log('clicked', this.showTeacherModal)
             this.showTeacherModal = true
-            console.log('asdasd', data)
             this.id = data.teacher_id
+        },
+        closeTeacherPopup() {
+            this.showTeacherModal = false
         },
     },
     created() {
