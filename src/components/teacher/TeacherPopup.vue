@@ -1,9 +1,9 @@
 <template>
     <dialog-draggable 
         :width="1000" 
-        :modelDialog="show" 
+        :modelDialog="showPopup" 
         :title="'Teacher Assignment Details'" 
-        @onHide="show=false"
+        @onHide="hidePopup"
         :icon="'group'"
         :color="'green'"
     >
@@ -13,7 +13,7 @@
                 <div class="col-md-5 q-pr-md">
 
                     <div class="row">
-                        <div class='col-md-7'>
+                        <div class='col-md-6'>
                             <div class="q-mb-md">
                                 <div class="text-subtitle2 q-mb-sm">Employee</div>
                                 <q-select
@@ -27,7 +27,7 @@
                                 />
                             </div>
                         </div>
-                        <div class='col-md-5 q-pl-md'>
+                        <div class='col-md-6 q-pl-md'>
                                 <div class="text-subtitle2 q-mb-sm">Role</div>
                                 <q-select  
                                     outlined
@@ -81,16 +81,16 @@
                                 <div class="col-md-4 left-col">
                                     <b>Compensation:</b>
                                 </div>
-                                <div class="col-md-6 right-col">
-                                    <span>{{editedItem.compensation}}</span>
+                                <div v-if="editedItem.compensation" class="col-md-6 right-col">
+                                    <span>{{editedItem.compensation.name}}</span>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-4 left-col">
                                     <b>Pay Frequency:</b>
                                 </div>
-                                <div class="col-md-6 right-col">
-                                   <span>{{editedItem.payFrequesncy}}</span>
+                                <div v-if="editedItem.payFrequesncy" class="col-md-6 right-col">
+                                   <span>{{editedItem.payFrequesncy.name}}</span>
                                 </div>
                             </div>
                             <div class="row">
@@ -125,7 +125,7 @@
                 <div class="col-md-7 q-pl-md">
 
                     <div class="row">
-                        <div class="col-4 q-pr-sm q-mb-md">
+                        <div class="col-6 q-pr-sm q-mb-md">
                             <div class="text-subtitle2 q-mb-sm">Allocation Category</div>
                             <div class="row cursor-pointer h-popup">
 
@@ -156,7 +156,7 @@
 
                             </div>
                         </div>
-                        <div class="col-4 q-pr-sm q-mb-md">
+                        <div class="col-6 q-pr-sm q-mb-md">
                             <div class="text-subtitle2 q-mb-sm">Allocation Subcategory</div>
                             <div class="row cursor-pointer h-popup">
 
@@ -170,11 +170,12 @@
                                     <span>{{ editedItem.subcategory.label  }}</span>
                                 </div>
 
-                                <q-popup-edit v-model="editedItem.category" buttons>
+                                <q-popup-edit v-model="editedItem.subcategory" buttons>
                                     <div class="q-mb-lg q-mt-lg">
                                             <div class="text-subtitle2 q-mb-sm">Allocation Subcategory</div>
                                             <div class="row cursor-pointer h-popup">
                                                 <q-select 
+                                                    class="w-100"
                                                     v-model="editedItem.subcategory" 
                                                     :options="optionsSubcategory"
                                                     outlined
@@ -215,6 +216,7 @@
                         <div class="col-md-12">
                             <div class="text-subtitle2 q-mb-sm">Assignment Information</div>
                         </div>
+
                         <div class="col-md-3 q-pr-sm">
                             <div class="text-subtitle2 q-mb-sm">Start Date</div>
                             <q-input outlined dense v-model="editedItem.startDate" 
@@ -232,6 +234,7 @@
                                 </template>
                             </q-input>
                         </div>
+
                         <div class="col-md-3 q-pr-sm">
                             <div class="text-subtitle2 q-mb-sm">End Date</div>
                             <q-input outlined dense v-model="editedItem.endDate">
@@ -248,10 +251,12 @@
                                 </template>
                             </q-input>
                         </div>
+
                         <div class="col-md-2 q-pr-sm">
                             <div class="text-subtitle2 q-mb-sm">Base Rate</div>
-                            <q-input prefix="$" outlined class="q-mb-md" type="text" v-model="editedItem.hoursWeek" dense autofocus />
+                            <q-input prefix="$" v-model="baseRate" disable outlined class="q-mb-md" type="number"  dense autofocus />
                         </div>
+
                         <div class="col-md-2 q-pr-sm">
                             <div class="text-subtitle2 q-mb-sm" v-if="editedItem.isHoursWeek">
                                 {{editedItem.isHoursWeek.label}}
@@ -265,6 +270,7 @@
                             
                             <q-popup-edit v-model="editedItem.isHoursWeek" buttons >
                                 <div class="row w-400" >
+
                                     <div class="col-md-9 q-pr-md">
                                         <div class="text-subtitle2 q-mb-sm">Schedule</div>
                                         <q-select dense outlined 
@@ -307,8 +313,13 @@
                                 </div>
                             </q-popup-edit>
                         </div>
+
                         <div class="col-md-2">
-                            <div class="text-subtitle2 q-mb-sm">Fringe</div>
+                            <div class="text-subtitle2 q-mb-sm">
+                                Fringe
+                                <span v-if="editedItem.frienge">/{{ editedItem.frienge.label }}</span>
+                            </div>
+
                             <q-input  
                                 readonly
                                 prefix="$" 
@@ -316,28 +327,29 @@
                                 class="q-mb-md"
                                 dense 
                                 autofocus 
+                                v-model="editedItem.totalAmount"
                             />
-                                <q-popup-edit v-model="editedItem.frienge" buttons>
-                                    <div class="row w-300" >
-                                        <div class="col-md-8 q-pr-md">
-                                            <div class="text-subtitle2 q-mb-sm">Fringe Cost</div>
-                                            <q-select dense outlined 
-                                                :options="optionsFringe" 
-                                                v-model="editedItem.frienge" 
-                                            />
-                                        </div>
-
-                                        <div class="col-md-4">
-                                            <div class="text-subtitle2 q-mb-sm">Total Amount</div>
-                                            <q-input v-model="editedItem.totalAmount" dense outlined />
-                                        </div>
-
-                                        <div class="col-md-12">
-                                            <p class="q-mt-md">Estimated Hourly Fringe : $ <span>{{ calculateHouryFringe }}</span>/h</p>
-                                        </div>
-
+                            <q-popup-edit v-model="editedItem.frienge" buttons>
+                                <div class="row w-300" >
+                                    <div class="col-md-8 q-pr-md">
+                                        <div class="text-subtitle2 q-mb-sm">Fringe Cost</div>
+                                        <q-select dense outlined 
+                                            :options="optionsFringe" 
+                                            v-model="editedItem.frienge" 
+                                        />
                                     </div>
-                                </q-popup-edit>
+
+                                    <div class="col-md-4">
+                                        <div class="text-subtitle2 q-mb-sm">Total Amount</div>
+                                        <q-input type="number" v-model="editedItem.totalAmount" dense outlined />
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <p class="q-mt-md">Estimated Hourly Fringe : $ <span>{{ calculateHouryFringe }}</span>/h</p>
+                                    </div>
+
+                                </div>
+                            </q-popup-edit>
                         </div>
                     </div>
 
@@ -455,28 +467,32 @@
                             <q-tr :props="props">
 
                                 
+                                <q-td key="hourlyFringe" :props="props">
+                                    {{calculateHouryFringe}}
+                                </q-td>
+
                                 <q-td key="chargeRate" :props="props">
-                                    {{ props.row.chargeRate }}
+                                    {{chargeRate}}
                                 </q-td>
 
                                 <q-td key="workDays" :props="props">
-                                    {{ props.row.workDays }}
+                                    {{ workDays }}
                                 </q-td>
 
 
                                 <q-td key="workHours" :props="props">
                                     <span>
-                                        {{ props.row.workHours }}
+                                        {{ workHours }}
                                     </span>
                                 </q-td>
 
                                 <q-td key="billingCycles" :props="props">
-                                    {{ props.row.billingCycles }}
+                                    {{ billingCycles }}
                                 </q-td>
 
                                 
                                 <q-td key="assignmentTotal" :props="props">
-                                    {{ props.row.assignmentTotal }}
+                                    {{ assTotal }}
                                 </q-td>
 
                                 
@@ -518,7 +534,7 @@
         </div>
 
         <q-card-actions align="right">
-            <q-btn flat label="Cancel" color="primary" @click="show=false" />
+            <q-btn flat label="Cancel" color="primary" @click="hidePopup" />
             <q-btn v-if="isEdit" :loading="btnLoading" @click="editTeacher" flat label="Save" color="primary" />
             <q-btn v-else :loading="btnLoading" @click="addTeacher" flat label="Add" color="primary" />
         </q-card-actions>
@@ -555,6 +571,12 @@ export default {
             isEdit: false,
             btnLoading: false,
             teacherSubColumns: [
+              { 
+                name: "hourlyFringe", 
+                align: "left",
+                label: "Hourly Fringe", 
+                field: "hourlyFringe"
+              },
               { 
                 name: "chargeRate", 
                 align: "left",
@@ -593,6 +615,7 @@ export default {
               },
             ],
             monthlyDetails: [{
+                hourlyFringe: 0,
                 chargeRate: 90,
                 workDays: 12,
                 workHours: 34,
@@ -625,10 +648,20 @@ export default {
                 { id: 5, name: 'F', hours: null, checked: false },
                 { id: 6, name: 'S', hours: null, checked: false },
                 { id: 7, name: 'S', hours: null, checked: false }
-            ]
+            ],
+            workDays: 0,
+            workHours: 0,
+            totalH: 0,
+            bRate: 0,
+            hFringe: 0,
+            billingCycles: 0,
+            chRate: 0,
         }
     },
     methods: {
+        hidePopup() {
+            this.$emit('hidePopup', true);
+        },
         getTeacherBudgetById() {
 
             const conf = {
@@ -679,10 +712,10 @@ export default {
                         label: teacherInfo.teacher.assignment_compensation.category_tracking ? teacherInfo.teacher.assignment_compensation.category_tracking.name : 0
                     },
 
-                    employement: teacherInfo.compensation_type.name,
-                    compensation: teacherInfo.compensation_type.name,
-                    payFrequesncy: teacherInfo.pay_frequency.name,
-                    pay: teacherInfo.salary_pay,
+                    employement: teacherInfo.teacher.teacher_type.name,
+                    compensation: teacherInfo.compensation_type,
+                    payFrequesncy: teacherInfo.pay_frequency,
+                    pay: teacherInfo.payInfo,
                     workMonth: teacherInfo.work_month,
                     benefits: teacherInfo.has_benefits == '1' ? 'Y' : 'N',
 
@@ -978,21 +1011,71 @@ export default {
                 this.optionsTeachers = this.optionsTeachersForFilter.filter(v => v.label.toLowerCase().indexOf(needle) > -1)
             })
         },
+
+        // MONTH CALCULATION METHODS
+        monthDiff(start, end) {
+            
+
+            let startArr = start.split('/')
+            let endArr = end.split('/')
+
+            if(parseInt(startArr[0]) == parseInt(endArr[0])) {
+
+                let count = (parseInt(endArr[1]) - parseInt(startArr[1])) + 1
+                if (isNaN(count)) {
+                    count = 0
+                }
+                this.billingCycles = count
+
+
+            }else {
+
+                let years = parseInt(endArr[0]) - parseInt(startArr[0])
+                if(years >= 2) {
+                    this.editedItem.endDate = this.editedItem.startDate
+                    alert('You can choose maximum 1 year.')
+                }else {
+
+                    let count = (parseInt(endArr[1]) - parseInt(startArr[1])) + 13
+                    if (isNaN(count)) {
+                        count = 0
+                    }
+                    console.log('count end = ', count)
+                    this.billingCycles = count
+                }
+            }
+
+
+        },
         calculateBusinessDays() {
 
             const start = this.editedItem.startDate.substring(0, 10);
             const end = this.editedItem.endDate.substring(0, 10);
+
+            let isWorkingDay = moment(end, 'YYYY-MM-DD').isBusinessDay()
+            console.log('isWorkingDay', isWorkingDay)
+
+            this.monthDiff(start, end)
             
             let diff = moment(start, 'YYYY-MM-DD').businessDiff(moment(end,'YYYY-MM-DD'));
-            this.monthlyDetails[0].payMonth = (parseFloat(diff) + 1)
+            
+
+            if(isWorkingDay) {
+                diff = diff + 1
+            }
+
+            this.workDays = diff
+            this.workHours = diff * 8
+
         
         },
+        // =========================
         addTeacher() {
 
         },
         editTeacher() {
 
-        }
+        },
     },
     watch: {
         show(val) {
@@ -1051,7 +1134,11 @@ export default {
 
     },
     computed: {
+        showPopup() {
+            return this.show
+        },
         totalHours() {
+            
             const days = this.scheduleWeekDays;
             let count = 0;
             for(let i=0; i<days.length; i++) {
@@ -1059,28 +1146,82 @@ export default {
                     count += parseFloat(days[i].hours)
                 }
             }
+            this.totalH = count
             return count
         },
         calculateHouryFringe() {
-            let fringe = this.editedItem.frienge
-            if(fringe) {
-                if(fringe.id == 1) {
-                    // Hourly
-                    return this.editedItem.totalAmount
-                }else if(fringe.id == 2) { 
-                    // Weekly
-                    return this.editedItem.totalAmount / 40
-                }else if(fringe.id == 3) { 
-                    // Bi Weekly
-                    return this.editedItem.totalAmount / 80
-                }else if(fringe.id == 4) { 
-                    // Semi Monthly
-                    return this.editedItem.totalAmount / 80
-                }else {
-                    // Monthly
-                    return this.editedItem.totalAmount / 160
+
+            let fringe = this.editedItem.frienge,
+            calculateHouryFringe = 0;
+
+            // WEEKLY
+            if(this.editedItem.isHoursWeek && this.editedItem.isHoursWeek.id == 1) {
+                if(fringe) {
+                    if(fringe.id == 1) {
+                        // Hourly
+                        calculateHouryFringe = this.editedItem.totalAmount
+                    }else if(fringe.id == 2) { 
+                        // Weekly
+                        if(this.editedItem.fullTime) {
+                            calculateHouryFringe = this.editedItem.totalAmount / 40
+                        }else {
+                            calculateHouryFringe = this.editedItem.totalAmount / this.totalH
+                        }
+                    }else if(fringe.id == 3) { 
+                        // Bi Weekly
+                        if(this.editedItem.fullTime) {
+                            calculateHouryFringe = this.editedItem.totalAmount / 80
+                        }else {
+                            calculateHouryFringe = this.editedItem.totalAmount / (this.totalH * 2)
+                        }
+                    }else if(fringe.id == 4) { 
+                        // Semi Monthly
+                        if(this.editedItem.fullTime) {
+                            calculateHouryFringe = this.editedItem.totalAmount / 80
+                        }else {
+                            calculateHouryFringe = this.editedItem.totalAmount / (this.totalH * 2)
+                        }
+                    }else {
+                        // Monthly
+                        if(this.editedItem.fullTime) {
+                            calculateHouryFringe = this.editedItem.totalAmount / 160
+                        }else {
+                            calculateHouryFringe = this.editedItem.totalAmount / (this.totalH * 4)
+                        }
+                    }
+                }
+            }else {
+                if(fringe) {
+                    if(fringe.id == 1) {
+                        // Hourly
+                        calculateHouryFringe = this.editedItem.totalAmount
+                    }else if(fringe.id == 2) { 
+                        // Weekly
+                        calculateHouryFringe = this.editedItem.totalAmount / 40
+                    }else if(fringe.id == 3) { 
+                        // Bi Weekly
+                        calculateHouryFringe = this.editedItem.totalAmount / 80
+                    }else if(fringe.id == 4) { 
+                        // Semi Monthly
+                        calculateHouryFringe = this.editedItem.totalAmount / 80
+                    }else {
+                        // Monthly
+                        calculateHouryFringe = this.editedItem.totalAmount / 160
+                    }
                 }
             }
+
+            // if(typeof calculateHouryFringe != Number ) {
+            //     calculateHouryFringe = 0
+            // }
+
+            if (isNaN(calculateHouryFringe)) {
+                calculateHouryFringe = 0
+            }
+
+            console.log('calculateHouryFringe', calculateHouryFringe)
+            this.hFringe = calculateHouryFringe
+            return calculateHouryFringe.toFixed(2)
 
 
             // {"id":1,"name":"Hourly","descripion":"Hourly Fringe"},
@@ -1088,6 +1229,79 @@ export default {
             // {"id":3,"name":"Bi Weekly","descripion":"Bi Weekly Fringe"},
             // {"id":4,"name":"Semi Monthly","descripion":"Semi Monthly Fringe"},
             // {"id":5,"name":"Monthly","descripion":"Monthly Fringe"}]
+
+        },
+        baseRate() {
+
+            let baseR = 0;
+
+            // 1 - weekly
+            // 2 - bi weekly
+            // 3 - semi monthly
+            // 4 - monthly
+
+            // Hours Week
+            if(this.editedItem.compensation && this.editedItem.compensation.id == 2) {
+                    // salary
+                    baseR = this.editedItem.pay
+            }else {
+                if(this.editedItem.payFrequesncy){
+                    if(this.editedItem.payFrequesncy.id == 1) {
+                        baseR = this.editedItem.pay / 40
+                    }else if(this.editedItem.payFrequesncy.id == 2) {
+                        baseR = this.editedItem.pay / 80
+                    }else if(this.editedItem.payFrequesncy.id == 3) {
+                        baseR = this.editedItem.pay / 80
+                    } else {
+                        baseR = this.editedItem.pay / 160 // x 170
+                    }
+                }
+            }
+
+
+
+            if (isNaN(baseR)) {
+                baseR = 0
+            }
+
+            console.log('Base rate = ', baseR)
+            this.bRate= baseR
+            return baseR.toFixed(2)
+
+        },
+        chargeRate() {
+            // ((Base rate x markup fee) + hourly fringe) x admin fee   
+            
+
+            let markupFee = 1 + this.editedItem.markupFee / 100
+            let adminMarkupFee = 1 + this.editedItem.adminMarkupFee / 100
+            let rate = (( this.bRate  *  markupFee ) + this.hFringe )  *  adminMarkupFee 
+            
+            if (isNaN(rate)) {
+                rate = 0
+            }
+
+            this.chRate = rate.toFixed(2)
+            return rate.toFixed(2)
+        },
+        assTotal() {
+            if(this.monthlyDetails[0].isHourlyOverride) {
+
+                let total = (this.monthlyDetails[0].hourlyOverride * this.workHours)
+                if (isNaN(total)) {
+                    total = 0
+                }
+                return total.toFixed(2)
+                
+            }else {
+                
+                let total = (parseFloat(this.chRate) * this.workHours)
+                if (isNaN(total)) {
+                    total = 0
+                }
+               return total.toFixed(2)
+                
+            }
         }
     }
 }
