@@ -4,7 +4,7 @@
       <q-bar class="q-pa-lg cursor-move" :class="bgcolor">
         <div class="text-subtitle1 row justify-start items-center">
             <q-icon class="q-mr-sm" :name="icon"  :color="color" style="font-size: 1.5em"/>
-            <span>{{title}}</span>
+            <span :class="textColor">{{title}}</span>
         </div>
       </q-bar>
         <slot></slot>
@@ -23,6 +23,7 @@ export default {
     icon: { type: String, default: "contact_page" },
     color: { type: String, default: "green" },
     bgcolor: { type: String, default: "bg-blue-grey-2" },
+    textColor: { type: String, default: '#000' },
   },
   data() {
     return {

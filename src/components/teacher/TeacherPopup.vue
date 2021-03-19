@@ -1,413 +1,444 @@
 <template>
-    <dialog-draggable 
-        :width="1000" 
-        :modelDialog="showPopup" 
-        :title="'Teacher Assignment Details'" 
-        @onHide="hidePopup"
-        :icon="'group'"
-        :color="'green'"
-    >
-        <div class="q-pa-md scroll" style="max-height: 70vh">
-            <div class="row">
+    <div>
 
-                <div class="col-md-5 q-pr-md">
+        <dialog-draggable 
+            :width="1000" 
+            :modelDialog="showPopup" 
+            :title="'Teacher Assignment Details'" 
+            @onHide="hidePopup"
+            :icon="'group'"
+            :color="'green'"
+        >
+            <div class="q-pa-md scroll" style="max-height: 70vh">
+                <div class="row">
 
-                    <div class="row">
-                        <div class='col-md-6'>
-                            <div class="q-mb-md">
-                                <div class="text-subtitle2 q-mb-sm">Employee</div>
-                                <q-select
-                                    outlined
-                                    dense
-                                    v-model="editedItem.teacher"
-                                    use-input
-                                    input-debounce="0"
-                                    :options="optionsTeachers"
-                                    @filter="filterTeachers"
-                                />
-                            </div>
-                        </div>
-                        <div class='col-md-6 q-pl-md'>
-                                <div class="text-subtitle2 q-mb-sm">Role</div>
-                                <q-select  
-                                    outlined
-                                    dense
-                                    input-debounce="0"
-                                    v-model="editedItem.role" 
-                                    :options="optionsRoleTypes"
-                                >
-                                    <template v-slot:no-option>
-                                        <q-item>
-                                            <q-item-section class="text-grey">
-                                            No results
-                                            </q-item-section>
-                                        </q-item>
-                                    </template>
-                                </q-select> 
-                        </div>
-                    </div>
+                    <div class="col-md-5 q-pr-md">
 
-                    <div class="q-mb-md">
-                        <div class="text-subtitle2 q-mb-sm">Campus</div>
-                        <q-select  
-                            outlined
-                            dense
-                            input-debounce="0"
-                            v-model="editedItem.campus" 
-                            :options="optionsCampus"
-                        >
-                            <template v-slot:no-option>
-                                <q-item>
-                                    <q-item-section class="text-grey">
-                                    No results
-                                    </q-item-section>
-                                </q-item>
-                            </template>
-                        </q-select>
-                    </div>
-
-                    <div class="q-mb-md">
-                        <div class="text-subtitle2 q-mb-sm">Employee Detail</div>
-                        <div class="bordered-box">
-                            <div class="row">
-                                <div class="col-md-4 left-col">
-                                    <b>Employment:</b>
-                                </div>
-                                <div class="col-md-6 right-col">
-                                    <span> {{editedItem.employement}} </span>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-4 left-col">
-                                    <b>Compensation:</b>
-                                </div>
-                                <div v-if="editedItem.compensation" class="col-md-6 right-col">
-                                    <span>{{editedItem.compensation.name}}</span>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-4 left-col">
-                                    <b>Pay Frequency:</b>
-                                </div>
-                                <div v-if="editedItem.payFrequesncy" class="col-md-6 right-col">
-                                   <span>{{editedItem.payFrequesncy.name}}</span>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-4 left-col">
-                                    <b>Pay:</b>
-                                </div>
-                                <div class="col-md-6 right-col">
-                                <span>$ <span>{{editedItem.pay}}</span></span>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-4 left-col">
-                                    <b>Work Month:</b>
-                                </div>
-                                <div class="col-md-6 right-col">
-                                <span>{{editedItem.workMonth}}</span>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-4 left-col">
-                                    <b>Benefits:</b>
-                                </div>
-                                <div class="col-md-6 right-col">
-                                <span>{{editedItem.benefits}}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="col-md-7 q-pl-md">
-
-                    <div class="row">
-                        <div class="col-6 q-pr-sm q-mb-md">
-                            <div class="text-subtitle2 q-mb-sm">Allocation Category</div>
-                            <div class="row cursor-pointer h-popup">
-
-                                <div v-if="editedItem.category">
-                                    <q-chip 
-                                        square color="green" 
-                                        text-color="white" 
-                                    >
-                                        <span>{{ editedItem.category.name }}</span>
-                                    </q-chip>
-                                    <span>{{ editedItem.category.label  }}</span>
-                                </div>
-
-
-                                <q-popup-edit v-model="editedItem.category" buttons>
-                                    <div class="q-mb-lg q-mt-lg">
-                                            <div class="text-subtitle2 q-mb-sm">Allocation Category</div>
-                                            <div class="cursor-pointer h-popup">
-                                                <q-select 
-                                                    v-model="editedItem.category" 
-                                                    :options="typeArr"
-                                                    outlined
-                                                    dense
-                                                />
-                                            </div>
-                                    </div>
-                                </q-popup-edit>  
-
-                            </div>
-                        </div>
-                        <div class="col-6 q-pr-sm q-mb-md">
-                            <div class="text-subtitle2 q-mb-sm">Allocation Subcategory</div>
-                            <div class="row cursor-pointer h-popup">
-
-                                <div v-if="editedItem.subcategory">
-                                     <q-chip 
-                                        square color="purple" 
-                                        text-color="white" 
-                                    >
-                                        <span>{{ editedItem.subcategory.name }}</span>
-                                    </q-chip>
-                                    <span>{{ editedItem.subcategory.label  }}</span>
-                                </div>
-
-                                <q-popup-edit v-model="editedItem.subcategory" buttons>
-                                    <div class="q-mb-lg q-mt-lg">
-                                            <div class="text-subtitle2 q-mb-sm">Allocation Subcategory</div>
-                                            <div class="row cursor-pointer h-popup">
-                                                <q-select 
-                                                    class="w-100"
-                                                    v-model="editedItem.subcategory" 
-                                                    :options="optionsSubcategory"
-                                                    outlined
-                                                    dense
-                                                />
-                                        </div>
-                                    </div>
-                                </q-popup-edit>  
-
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="q-mb-md">
                         <div class="row">
-                            <div class="col-md-6">
-                                <div class="text-subtitle2 q-mb-sm">Tracking Category</div>
-                                <q-select  
-                                    outlined
-                                    dense
-                                    input-debounce="0"
-                                    v-model="editedItem.trackingCategory" 
-                                    :options="optionsCategoryTracking"
-                                >
-                                    <template v-slot:no-option>
-                                        <q-item>
-                                            <q-item-section class="text-grey">
-                                            No results
-                                            </q-item-section>
-                                        </q-item>
-                                    </template>
-                                </q-select>
+                            <div class='col-md-6'>
+                                <div class="q-mb-md">
+                                    <div class="text-subtitle2 q-mb-sm">Employee</div>
+                                    <q-select
+                                        outlined
+                                        dense
+                                        v-model="editedItem.teacher"
+                                        use-input
+                                        input-debounce="0"
+                                        :options="optionsTeachers"
+                                        @filter="filterTeachers"
+                                    />
+                                </div>
+                            </div>
+                            <div class='col-md-6 q-pl-md'>
+                                    <div class="text-subtitle2 q-mb-sm">Role</div>
+                                    <q-select  
+                                        outlined
+                                        dense
+                                        input-debounce="0"
+                                        v-model="editedItem.role" 
+                                        :options="optionsRoleTypes"
+                                    >
+                                        <template v-slot:no-option>
+                                            <q-item>
+                                                <q-item-section class="text-grey">
+                                                No results
+                                                </q-item-section>
+                                            </q-item>
+                                        </template>
+                                    </q-select> 
                             </div>
                         </div>
-                    </div>
 
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="text-subtitle2 q-mb-sm">Assignment Information</div>
-                        </div>
-
-                        <div class="col-md-3 q-pr-sm">
-                            <div class="text-subtitle2 q-mb-sm">Start Date</div>
-                            <q-input outlined dense v-model="editedItem.startDate" 
+                        <div class="q-mb-md">
+                            <div class="text-subtitle2 q-mb-sm">Campus</div>
+                            <q-select  
+                                outlined
+                                dense
+                                input-debounce="0"
+                                v-model="editedItem.campus" 
+                                :options="optionsCampus"
                             >
-                                <template v-slot:append>
-                                <q-icon name="event" class="cursor-pointer">
-                                    <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                    <q-date v-model="editedItem.startDate">
-                                        <div class="row items-center justify-end">
-                                        <q-btn v-close-popup label="Close" color="primary" flat />
-                                        </div>
-                                    </q-date>
-                                    </q-popup-proxy>
-                                </q-icon>
+                                <template v-slot:no-option>
+                                    <q-item>
+                                        <q-item-section class="text-grey">
+                                        No results
+                                        </q-item-section>
+                                    </q-item>
                                 </template>
-                            </q-input>
+                            </q-select>
                         </div>
 
-                        <div class="col-md-3 q-pr-sm">
-                            <div class="text-subtitle2 q-mb-sm">End Date</div>
-                            <q-input outlined dense v-model="editedItem.endDate">
-                                <template v-slot:append>
-                                <q-icon name="event" class="cursor-pointer">
-                                    <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                    <q-date v-model="editedItem.endDate">
-                                        <div class="row items-center justify-end">
-                                        <q-btn v-close-popup label="Close" color="primary" flat />
-                                        </div>
-                                    </q-date>
-                                    </q-popup-proxy>
-                                </q-icon>
-                                </template>
-                            </q-input>
-                        </div>
-
-                        <div class="col-md-2 q-pr-sm">
-                            <div class="text-subtitle2 q-mb-sm">Base Rate</div>
-                            <q-input prefix="$" v-model="baseRate" disable outlined class="q-mb-md" type="number"  dense autofocus />
-                        </div>
-
-                        <div class="col-md-2 q-pr-sm">
-                            <div class="text-subtitle2 q-mb-sm" v-if="editedItem.isHoursWeek">
-                                {{editedItem.isHoursWeek.label}}
+                        <div class="q-mb-md">
+                            <div class="text-subtitle2 q-mb-sm">Employee Detail</div>
+                            <div class="bordered-box">
+                                <div class="row">
+                                    <div class="col-md-4 left-col">
+                                        <b>Employment:</b>
+                                    </div>
+                                    <div class="col-md-6 right-col">
+                                        <span> {{editedItem.employement}} </span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 left-col">
+                                        <b>Compensation:</b>
+                                    </div>
+                                    <div v-if="editedItem.compensation" class="col-md-6 right-col">
+                                        <span>{{editedItem.compensation.name}}</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 left-col">
+                                        <b>Pay Frequency:</b>
+                                    </div>
+                                    <div v-if="editedItem.payFrequesncy" class="col-md-6 right-col">
+                                    <span>{{editedItem.payFrequesncy.name}}</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 left-col">
+                                        <b>Pay:</b>
+                                    </div>
+                                    <div class="col-md-6 right-col">
+                                    <span>$ <span>{{editedItem.pay}}</span></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 left-col">
+                                        <b>Work Month:</b>
+                                    </div>
+                                    <div class="col-md-6 right-col">
+                                    <span>{{editedItem.workMonth}}</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 left-col">
+                                        <b>Benefits:</b>
+                                    </div>
+                                    <div class="col-md-6 right-col">
+                                    <span>{{editedItem.benefits}}</span>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="cursor-pointer">
+                        </div>
 
-                                <q-input v-if="editedItem.isHoursWeek && editedItem.isHoursWeek.id == 1" readonly outlined class="q-mb-md" type="text" v-model="totalHours" dense autofocus />
-                                <q-input v-else readonly outlined class="q-mb-md" type="text" v-model="editedItem.hoursWM" dense autofocus />
+                    </div>
 
-                            </div>
-                            
-                            <q-popup-edit v-model="editedItem.isHoursWeek" buttons >
-                                <div class="row w-400" >
+                    <div class="col-md-7 q-pl-md">
 
-                                    <div class="col-md-9 q-pr-md">
-                                        <div class="text-subtitle2 q-mb-sm">Schedule</div>
-                                        <q-select dense outlined 
-                                        :options="hoursOption" 
-                                        v-model="editedItem.isHoursWeek" />
-                                    </div>
+                        <div class="row">
+                            <div class="col-6 q-pr-sm q-mb-md">
+                                <div class="text-subtitle2 q-mb-sm">Allocation Category</div>
+                                <div class="row cursor-pointer h-popup">
 
-                                    <div class="col-md-3" v-if="editedItem.isHoursWeek && editedItem.isHoursWeek.id == 1">
-                                        <div class="text-subtitle2 q-mb-sm">Total Hours</div>
-                                        <q-input readonly v-model="totalHours" dense outlined />
-                                    </div>
-                                    <div class="col-md-3" v-else>
-                                        <div class="text-subtitle2 q-mb-sm">Total Hours</div>
-                                        <q-input v-model="editedItem.hoursWM" dense outlined />
-                                    </div>
-
-                                    <div class="col-md-12 q-mt-md" v-if="editedItem.isHoursWeek && editedItem.isHoursWeek.id == 1">
-                                        <div class="row justify-between items-center">                        
-                                            <div class="text-subtitle2">Work Days and Hours</div>
-                                            <q-checkbox label="Full Time" v-model="editedItem.fullTime" />
-                                        </div>
-                                    </div>
-                                    <div class="row w-100 q-mt-md q-mb-md" v-if="editedItem.isHoursWeek && editedItem.isHoursWeek.id == 1">
-                                        <div 
-                                            v-for="i in scheduleWeekDays" :key="i.id"
-                                            class="col q-pr-sm text-center"
+                                    <div v-if="editedItem.category">
+                                        <q-chip 
+                                            square color="green" 
+                                            text-color="white" 
                                         >
-                                            <q-btn 
-                                                round 
-                                                :color="i.checked ? 'secondary' : 'grey-1' " 
-                                                :text-color="i.checked ? 'white' : 'black'"
-                                                :label="i.name" 
-                                                @click="i.checked = !i.checked; i.checked ? '' : i.hours = null" 
-                                                :disable="editedItem.fullTime"
-                                            />
-                                            <q-input v-model="i.hours" :disable="!i.checked || editedItem.fullTime" class="q-mt-sm" outlined dense />
+                                            <span>{{ editedItem.category.name }}</span>
+                                        </q-chip>
+                                        <span>{{ editedItem.category.label  }}</span>
+                                    </div>
+
+
+                                    <q-popup-edit v-model="editedItem.category" buttons>
+                                        <div class="q-mb-lg q-mt-lg">
+                                                <div class="text-subtitle2 q-mb-sm">Allocation Category</div>
+                                                <div class="cursor-pointer h-popup">
+                                                    <q-select 
+                                                        v-model="editedItem.category" 
+                                                        :options="typeArr"
+                                                        outlined
+                                                        dense
+                                                    />
+                                                </div>
                                         </div>
-                                    </div>
+                                    </q-popup-edit>  
 
                                 </div>
-                            </q-popup-edit>
-                        </div>
-
-                        <div class="col-md-2">
-                            <div class="text-subtitle2 q-mb-sm">
-                                Fringe
-                                <span v-if="editedItem.frienge">/{{ editedItem.frienge.label }}</span>
                             </div>
+                            <div class="col-6 q-pr-sm q-mb-md">
+                                <div class="text-subtitle2 q-mb-sm">Allocation Subcategory</div>
+                                <div class="row cursor-pointer h-popup">
 
-                            <q-input  
-                                readonly
-                                prefix="$" 
-                                outlined  
-                                class="q-mb-md"
-                                dense 
-                                autofocus 
-                                v-model="editedItem.totalAmount"
-                            />
-                            <q-popup-edit v-model="editedItem.frienge" buttons>
-                                <div class="row w-300" >
-                                    <div class="col-md-8 q-pr-md">
-                                        <div class="text-subtitle2 q-mb-sm">Fringe Cost</div>
-                                        <q-select dense outlined 
-                                            :options="optionsFringe" 
-                                            v-model="editedItem.frienge" 
-                                        />
+                                    <div v-if="editedItem.subcategory">
+                                        <q-chip 
+                                            square color="purple" 
+                                            text-color="white" 
+                                        >
+                                            <span>{{ editedItem.subcategory.name }}</span>
+                                        </q-chip>
+                                        <span>{{ editedItem.subcategory.label  }}</span>
                                     </div>
 
-                                    <div class="col-md-4">
-                                        <div class="text-subtitle2 q-mb-sm">Total Amount</div>
-                                        <q-input type="number" v-model="editedItem.totalAmount" dense outlined />
-                                    </div>
-
-                                    <div class="col-md-12">
-                                        <p class="q-mt-md">Estimated Hourly Fringe : $ <span>{{ calculateHouryFringe }}</span>/h</p>
-                                    </div>
+                                    <q-popup-edit v-model="editedItem.subcategory" buttons>
+                                        <div class="q-mb-lg q-mt-lg">
+                                                <div class="text-subtitle2 q-mb-sm">Allocation Subcategory</div>
+                                                <div class="row cursor-pointer h-popup">
+                                                    <q-select 
+                                                        class="w-100"
+                                                        v-model="editedItem.subcategory" 
+                                                        :options="optionsSubcategory"
+                                                        outlined
+                                                        dense
+                                                    />
+                                            </div>
+                                        </div>
+                                    </q-popup-edit>  
 
                                 </div>
-                            </q-popup-edit>
-                        </div>
-                    </div>
-
-                    <div class="row q-mb-md">
-                        <div class="col-md-4 q-pr-sm">
-                            <!-- doc -->
-                            <div class="text-subtitle2 q-mb-sm">Assignment type</div>
-                            <div> 
-                                <!-- editedItem.isHoursWeek && editedItem.isHoursWeek.id == 1 WEEK hoursWM -->
-                                <!-- editedItem.isHoursWeek && editedItem.isHoursWeek.id == 0 MONTH totalHours-->
-                                <div v-if="editedItem.isHoursWeek && editedItem.isHoursWeek.id == 1">
-
-                                    <div 
-                                        v-if="totalHours >= 40">
-                                        <q-icon style="font-size: 1.8em; color: green" name="circle"/>
-                                        Full Time
-                                    </div>
-                                    <div v-else>
-                                        <q-icon style="font-size: 1.8em; color: orange" name="timelapse"/>
-                                        Part Time
-                                    </div>
-
-                                </div>
-
-                                <div v-else>
-
-                                    <div 
-                                        v-if="editedItem.hoursWM >= 8">
-                                        <q-icon style="font-size: 1.8em; color: green" name="circle"/>
-                                        Full Time
-                                    </div>
-                                    <div v-else>
-                                        <q-icon style="font-size: 1.8em; color: orange" name="timelapse"/>
-                                        Part Time
-                                    </div>
-
-                                </div>
-
                             </div>
                         </div>
-                    </div>
 
-                    <div class="q-mb-md">
-                            <div class="text-subtitle2 q-mb-sm">Assignment Status</div>
+                        <div class="q-mb-md">
                             <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-md-6">
+                                    <div class="text-subtitle2 q-mb-sm">Tracking Category</div>
+                                    <q-select  
+                                        outlined
+                                        dense
+                                        input-debounce="0"
+                                        v-model="editedItem.trackingCategory" 
+                                        :options="optionsCategoryTracking"
+                                    >
+                                        <template v-slot:no-option>
+                                            <q-item>
+                                                <q-item-section class="text-grey">
+                                                No results
+                                                </q-item-section>
+                                            </q-item>
+                                        </template>
+                                    </q-select>
+                                </div>
+                            </div>
+                        </div>
 
-                                    <div v-if="editedItem.assignmentStatus" class="h-popup cursor-pointer">
-                                        <span>{{ editedItem.assignmentStatus.label }}</span>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="text-subtitle2 q-mb-sm">Assignment Information</div>
+                            </div>
+
+                            <div class="col-md-3 q-pr-sm">
+                                <div class="text-subtitle2 q-mb-sm">Start Date</div>
+                                <q-input outlined dense v-model="editedItem.startDate" 
+                                >
+                                    <template v-slot:append>
+                                    <q-icon name="event" class="cursor-pointer">
+                                        <q-popup-proxy transition-show="scale" transition-hide="scale">
+                                        <q-date v-model="editedItem.startDate">
+                                            <div class="row items-center justify-end">
+                                            <q-btn v-close-popup label="Close" color="primary" flat />
+                                            </div>
+                                        </q-date>
+                                        </q-popup-proxy>
+                                    </q-icon>
+                                    </template>
+                                </q-input>
+                            </div>
+
+                            <div class="col-md-3 q-pr-sm">
+                                <div class="text-subtitle2 q-mb-sm">End Date</div>
+                                <q-input outlined dense v-model="editedItem.endDate">
+                                    <template v-slot:append>
+                                    <q-icon name="event" class="cursor-pointer">
+                                        <q-popup-proxy transition-show="scale" transition-hide="scale">
+                                        <q-date v-model="editedItem.endDate">
+                                            <div class="row items-center justify-end">
+                                            <q-btn v-close-popup label="Close" color="primary" flat />
+                                            </div>
+                                        </q-date>
+                                        </q-popup-proxy>
+                                    </q-icon>
+                                    </template>
+                                </q-input>
+                            </div>
+
+                            <div class="col-md-2 q-pr-sm">
+                                <div class="text-subtitle2 q-mb-sm">Base Rate</div>
+                                <q-input prefix="$" v-model="baseRate" disable outlined class="q-mb-md" type="number"  dense autofocus />
+                            </div>
+
+                            <div class="col-md-2 q-pr-sm">
+                                <div class="text-subtitle2 q-mb-sm" v-if="editedItem.isHoursWeek">
+                                    {{editedItem.isHoursWeek.label}}
+                                </div>
+                                <div class="cursor-pointer">
+
+                                    <q-input v-if="editedItem.isHoursWeek && editedItem.isHoursWeek.id == 1" readonly outlined class="q-mb-md" type="text" v-model="totalHours" dense autofocus />
+                                    <q-input v-else readonly outlined class="q-mb-md" type="text" v-model="editedItem.hoursWM" dense autofocus />
+
+                                </div>
+                                
+                                <q-popup-edit v-model="editedItem.isHoursWeek" buttons >
+                                    <div class="row w-400" >
+
+                                        <div class="col-md-9 q-pr-md">
+                                            <div class="text-subtitle2 q-mb-sm">Schedule</div>
+                                            <q-select dense outlined 
+                                            :options="hoursOption" 
+                                            v-model="editedItem.isHoursWeek" />
+                                        </div>
+
+                                        <div class="col-md-3" v-if="editedItem.isHoursWeek && editedItem.isHoursWeek.id == 1">
+                                            <div class="text-subtitle2 q-mb-sm">Total Hours</div>
+                                            <q-input readonly v-model="totalHours" dense outlined />
+                                        </div>
+                                        <div class="col-md-3" v-else>
+                                            <div class="text-subtitle2 q-mb-sm">Total Hours</div>
+                                            <q-input v-model="editedItem.hoursWM" dense outlined />
+                                        </div>
+
+                                        <div class="col-md-12 q-mt-md" v-if="editedItem.isHoursWeek && editedItem.isHoursWeek.id == 1">
+                                            <div class="row justify-between items-center">                        
+                                                <div class="text-subtitle2">Work Days and Hours</div>
+                                                <q-checkbox label="Full Time" v-model="editedItem.fullTime" />
+                                            </div>
+                                        </div>
+                                        <div class="row w-100 q-mt-md q-mb-md" v-if="editedItem.isHoursWeek && editedItem.isHoursWeek.id == 1">
+                                            <div 
+                                                v-for="i in scheduleWeekDays" :key="i.id"
+                                                class="col q-pr-sm text-center"
+                                            >
+                                                <q-btn 
+                                                    round 
+                                                    :color="i.checked ? 'secondary' : 'grey-1' " 
+                                                    :text-color="i.checked ? 'white' : 'black'"
+                                                    :label="i.name" 
+                                                    @click="i.checked = !i.checked; i.checked ? '' : i.hours = null" 
+                                                    :disable="editedItem.fullTime"
+                                                />
+                                                <q-input v-model="i.hours" :disable="!i.checked || editedItem.fullTime" class="q-mt-sm" outlined dense />
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </q-popup-edit>
+                            </div>
+
+                            <div class="col-md-2">
+                                <div class="text-subtitle2 q-mb-sm">
+                                    Fringe
+                                    <span v-if="editedItem.frienge">/{{ editedItem.frienge.label }}</span>
+                                </div>
+
+                                <q-input  
+                                    readonly
+                                    prefix="$" 
+                                    outlined  
+                                    class="q-mb-md"
+                                    dense 
+                                    autofocus 
+                                    v-model="editedItem.totalAmount"
+                                />
+                                <q-popup-edit v-model="editedItem.frienge" buttons>
+                                    <div class="row w-300" >
+                                        <div class="col-md-8 q-pr-md">
+                                            <div class="text-subtitle2 q-mb-sm">Fringe Cost</div>
+                                            <q-select dense outlined 
+                                                :options="optionsFringe" 
+                                                v-model="editedItem.frienge" 
+                                            />
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <div class="text-subtitle2 q-mb-sm">Total Amount</div>
+                                            <q-input type="number" v-model="editedItem.totalAmount" dense outlined />
+                                        </div>
+
+                                        <div class="col-md-12">
+                                            <p class="q-mt-md">Estimated Hourly Fringe : $ <span>{{ calculateHouryFringe }}</span>/h</p>
+                                        </div>
+
+                                    </div>
+                                </q-popup-edit>
+                            </div>
+                        </div>
+
+                        <div class="row q-mb-md">
+                            <div class="col-md-4 q-pr-sm">
+                                <!-- doc -->
+                                <div class="text-subtitle2 q-mb-sm">Assignment type</div>
+                                <div> 
+                                    <!-- editedItem.isHoursWeek && editedItem.isHoursWeek.id == 1 WEEK hoursWM -->
+                                    <!-- editedItem.isHoursWeek && editedItem.isHoursWeek.id == 0 MONTH totalHours-->
+                                    <div v-if="editedItem.isHoursWeek && editedItem.isHoursWeek.id == 1">
+
+                                        <div 
+                                            v-if="totalHours >= 40">
+                                            <q-icon style="font-size: 1.8em; color: green" name="circle"/>
+                                            Full Time
+                                        </div>
+                                        <div v-else>
+                                            <q-icon style="font-size: 1.8em; color: orange" name="timelapse"/>
+                                            Part Time
+                                        </div>
+
                                     </div>
 
-                                    <q-popup-edit v-model="editedItem.assignmentStatus" title="Assignment Status" buttons >
+                                    <div v-else>
+
+                                        <div 
+                                            v-if="editedItem.hoursWM >= 8">
+                                            <q-icon style="font-size: 1.8em; color: green" name="circle"/>
+                                            Full Time
+                                        </div>
+                                        <div v-else>
+                                            <q-icon style="font-size: 1.8em; color: orange" name="timelapse"/>
+                                            Part Time
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="q-mb-md">
+                                <div class="text-subtitle2 q-mb-sm">Assignment Status</div>
+                                <div class="row">
+                                    <div class="col-md-4">
+
+                                        <div v-if="editedItem.assignmentStatus" class="h-popup cursor-pointer">
+                                            <span>{{ editedItem.assignmentStatus.label }}</span>
+                                        </div>
+
+                                        <q-popup-edit v-model="editedItem.assignmentStatus" title="Assignment Status" buttons >
+                                            <q-select  
+                                                outlined
+                                                dense
+                                                input-debounce="0"
+                                                v-model="editedItem.assignmentStatus" 
+                                                :options="optionsStatus"
+                                            >
+                                                <template v-slot:no-option>
+                                                    <q-item>
+                                                        <q-item-section class="text-grey">
+                                                        No results
+                                                        </q-item-section>
+                                                    </q-item>
+                                                </template>
+                                            </q-select>
+                                        </q-popup-edit>
+                                        
+                                    </div>
+                                </div>
+                        </div>
+
+                        <!-- <div class="row q-mb-md">
+                            <div class="col-md-4 q-pr-sm">
+                            <div class="text-subtitle2 q-mb-sm">Billing Status</div>
+                                <div class="h-popup">
+                                    <div v-if="editedItem.billingStatus" class="cursor-pointer">
+                                        {{ editedItem.billingStatus.label }}
+                                        </div>
+                                    <q-popup-edit v-model="editedItem.billingStatus" title="Billing Status" buttons >
                                         <q-select  
                                             outlined
                                             dense
                                             input-debounce="0"
-                                            v-model="editedItem.assignmentStatus" 
-                                            :options="optionsStatus"
+                                            v-model="editedItem.billingStatus" 
+                                            :options="optionsBilling"
                                         >
                                             <template v-slot:no-option>
                                                 <q-item>
@@ -418,128 +449,107 @@
                                             </template>
                                         </q-select>
                                     </q-popup-edit>
-                                    
                                 </div>
                             </div>
+                        </div> -->
+
                     </div>
 
-                    <!-- <div class="row q-mb-md">
-                        <div class="col-md-4 q-pr-sm">
-                           <div class="text-subtitle2 q-mb-sm">Billing Status</div>
-                            <div class="h-popup">
-                                <div v-if="editedItem.billingStatus" class="cursor-pointer">
-                                    {{ editedItem.billingStatus.label }}
-                                    </div>
-                                <q-popup-edit v-model="editedItem.billingStatus" title="Billing Status" buttons >
-                                    <q-select  
-                                        outlined
-                                        dense
-                                        input-debounce="0"
-                                        v-model="editedItem.billingStatus" 
-                                        :options="optionsBilling"
-                                    >
-                                        <template v-slot:no-option>
-                                            <q-item>
-                                                <q-item-section class="text-grey">
-                                                No results
-                                                </q-item-section>
-                                            </q-item>
-                                        </template>
-                                    </q-select>
-                                </q-popup-edit>
-                            </div>
+                    <div class="col-md-12 q-mt-lg q-mb-lg" v-if="monthlyDetails">
+                        <div class="text-subtitle2 q-mb-sm">
+                            Calculated Assignment Details
                         </div>
-                    </div> -->
+                        <q-table
+                            class="q-mt-md q-mb-md border"
+                            :data="monthlyDetails"
+                            :columns="teacherSubColumns"
+                            hide-bottom
+                        >
+                            <template v-slot:body="props">
+                                <q-tr :props="props">
 
-                </div>
+                                    
+                                    <q-td key="hourlyFringe" :props="props">
+                                        {{calculateHouryFringe}}
+                                    </q-td>
 
-                <div class="col-md-12 q-mt-lg q-mb-lg" v-if="monthlyDetails">
-                    <div class="text-subtitle2 q-mb-sm">
-                        Calculated Assignment Details
+                                    <q-td key="chargeRate" :props="props">
+                                        {{chargeRate}}
+                                    </q-td>
+
+                                    <q-td key="workDays" :props="props">
+                                        {{ workDays }}
+                                    </q-td>
+
+
+                                    <q-td key="workHours" :props="props">
+                                        <span>
+                                            {{ workHours }}
+                                        </span>
+                                    </q-td>
+
+                                    <q-td key="billingCycles" :props="props">
+                                        {{ billingCycles }}
+                                    </q-td>
+
+                                    
+                                    <q-td key="assignmentTotal" :props="props">
+                                        {{ assTotal }}
+                                    </q-td>
+
+                                    
+                                    <q-td key="hourlyOverride" :props="props">
+                                        <div class="row justify-end">
+                                            <q-checkbox v-model="props.row.isHourlyOverride" />
+                                            <q-input
+                                            :disable="!props.row.isHourlyOverride" 
+                                            :filled="!props.row.isHourlyOverride" 
+                                            outlined
+                                            class="w-80px" prefix="$"  dense v-model="props.row.hourlyOverride"/>
+                                        </div>
+                                    </q-td>
+
+                                </q-tr>
+                            </template>
+                        </q-table>
                     </div>
-                    <q-table
-                        class="q-mt-md q-mb-md border"
-                        :data="monthlyDetails"
-                        :columns="teacherSubColumns"
-                        hide-bottom
-                    >
-                        <template v-slot:body="props">
-                            <q-tr :props="props">
 
-                                
-                                <q-td key="hourlyFringe" :props="props">
-                                    {{calculateHouryFringe}}
-                                </q-td>
+                    <q-separator class="q-mt-lg q-mb-lg" />
 
-                                <q-td key="chargeRate" :props="props">
-                                    {{chargeRate}}
-                                </q-td>
+                    <div class="col-md-3 q-pl-md">
+                        <q-btn @click="showPaySchedule = true" color="primary q-mt-lg">
+                            View pay schedule
+                        </q-btn>
+                    </div>
 
-                                <q-td key="workDays" :props="props">
-                                    {{ workDays }}
-                                </q-td>
+                    <div class="col-md-9 q-pl-md">
+                        <div class="text-subtitle2 q-mb-sm">Note</div>
+                        <q-input 
+                            dense 
+                            outlined
+                            type="textarea"
+                            v-model="editedItem.note" 
+                        />
+                    </div>
 
-
-                                <q-td key="workHours" :props="props">
-                                    <span>
-                                        {{ workHours }}
-                                    </span>
-                                </q-td>
-
-                                <q-td key="billingCycles" :props="props">
-                                    {{ billingCycles }}
-                                </q-td>
-
-                                
-                                <q-td key="assignmentTotal" :props="props">
-                                    {{ assTotal }}
-                                </q-td>
-
-                                
-                                <q-td key="hourlyOverride" :props="props">
-                                    <div class="row justify-end">
-                                        <q-checkbox v-model="props.row.isHourlyOverride" />
-                                        <q-input
-                                        :disable="!props.row.isHourlyOverride" 
-                                        :filled="!props.row.isHourlyOverride" 
-                                        outlined
-                                        class="w-80px" prefix="$"  dense v-model="props.row.hourlyOverride"/>
-                                    </div>
-                                </q-td>
-
-                            </q-tr>
-                        </template>
-                    </q-table>
                 </div>
-
-                <q-separator class="q-mt-lg q-mb-lg" />
-
-                <div class="col-md-3 q-pl-md">
-                    <q-btn color="primary q-mt-lg">
-                        View pay schedule
-                    </q-btn>
-                </div>
-
-                <div class="col-md-9 q-pl-md">
-                    <div class="text-subtitle2 q-mb-sm">Note</div>
-                    <q-input 
-                        dense 
-                        outlined
-                        type="textarea"
-                        v-model="editedItem.note" 
-                    />
-                </div>
-
             </div>
-        </div>
 
-        <q-card-actions align="right">
-            <q-btn flat label="Cancel" color="primary" @click="hidePopup" />
-            <q-btn v-if="isEdit" :loading="btnLoading" @click="editTeacher" flat label="Save" color="primary" />
-            <q-btn v-else :loading="btnLoading" @click="addTeacher" flat label="Add" color="primary" />
-        </q-card-actions>
-        
-    </dialog-draggable>
+            <q-card-actions align="right">
+                <q-btn flat label="Cancel" color="primary" @click="hidePopup" />
+                <q-btn v-if="isEdit" :loading="btnLoading" @click="editTeacher" flat label="Save" color="primary" />
+                <q-btn v-else :loading="btnLoading" @click="addTeacher" flat label="Add" color="primary" />
+            </q-card-actions>
+            
+        </dialog-draggable>
+
+        <PaySchedule 
+            @hidePaySchedulePopup="closePaySchedulePopup" 
+            :show="showPaySchedule" 
+            :icon="'attach_money'"
+        />
+
+    </div>
 </template>
 
 <script>
@@ -547,13 +557,15 @@
 import axios from 'axios'
 import config from '../../../config'
 import DialogDraggable from '../DialogDraggable'
+import PaySchedule from './PaySchedule'
 var moment = require('moment-business-days');
 
 
 export default {
     name: 'TeacherPopup',
     components: {
-        DialogDraggable
+        DialogDraggable,
+        PaySchedule
     },
     props: {
         show: {
@@ -568,6 +580,7 @@ export default {
     },
     data() {
         return {
+            showPaySchedule: false,
             isEdit: false,
             btnLoading: false,
             teacherSubColumns: [
@@ -659,6 +672,9 @@ export default {
         }
     },
     methods: {
+        closePaySchedulePopup() {
+            this.showPaySchedule = false
+        },
         hidePopup() {
             this.$emit('hidePopup', true);
         },

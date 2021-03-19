@@ -936,16 +936,7 @@
 
             </q-menu>
           </q-item>
-
-
-
-
-
-
-
-
-
-
+          
         <hr>
 
           <q-expansion-item v-if="!miniState"
@@ -999,6 +990,7 @@ export default {
     Messages,
     EssentialLink
   },
+
   data () {
     return {
       drawer: true,
@@ -1059,7 +1051,7 @@ export default {
       //   // intended for switching drawer to "normal" mode only
       //   // e.stopPropagation()
       // }
-    }
+    },
   }
 }
 </script>
