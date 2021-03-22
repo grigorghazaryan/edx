@@ -578,8 +578,8 @@ export default {
         this.close()
         },
         openDeleteModal(item) {
-        this.confirm = true
-        this.item = item
+          this.confirm = true
+          this.item = item
         },
         editItem(item) {
             this.editedIndex = this.data.indexOf(item);
@@ -796,37 +796,36 @@ export default {
             for(let j=0; j<data[i].length; j++) {
                 
                 // Spliced Name
-                const edxName = data[i][j].rule_name.replace(/\s/g, '')
+                const edxName = data[i][j].templateName.replace(/\s/g, '')
                 data[i][j].edxName = edxName
 
                 // If another allocation percenatage count needed
-                const ruleInput = data[i][j].rule_input.split(',')
+                if(data[i][j].rule_input) {
+                  const ruleInput = data[i][j].rule_input.split(',')
 
-                if(ruleInput.length == 1 && data[i][j].percentage != null) {
-                data[i][j].anotherPercentage = true
+                  if(ruleInput.length == 1 && data[i][j].percentage != null) {
+                    
+                    data[i][j].anotherPercentage = true
 
-                // console.log('parsing time', data[i][j])
-                // console.log('percentage = ', data[i][j].percentage)
-                // console.log('id which percentage I will ', ruleInput[0])
-                // console.log('my id', data[i][j].allocationFundTemplateId)
-
-                for (const t in data[i]) {
-                    if(ruleInput[0] == data[i][t]['allocationFundTemplateId']) {
-                    data[i][j].amount = (data[i][t]['amount'] * data[i][j].percentage) / 100
+                    for (const t in data[i]) {
+                        if(ruleInput[0] == data[i][t]['allocationFundTemplateId']) {
+                        data[i][j].amount = (data[i][t]['amount'] * data[i][j].percentage) / 100
+                        }
                     }
-                }
-                
+
+                  }
+
+                  if(ruleInput.length > 1 && data[i][j].percentage == null) {
+                    let c = 0;
+                    for (const t in data[i]) {
+                        if(ruleInput.includes(data[i][t]['allocationFundTemplateId'])) {
+                        c += parseFloat(data[i][t]['amount'])
+                        }
+                    }
+                    data[i][j].amount = c.toFixed(2)
+                  }
                 }
 
-                if(ruleInput.length > 1 && data[i][j].percentage == null) {
-                let c = 0;
-                for (const t in data[i]) {
-                    if(ruleInput.includes(data[i][t]['allocationFundTemplateId'])) {
-                    c += parseFloat(data[i][t]['amount'])
-                    }
-                }
-                data[i][j].amount = c.toFixed(2)
-                }
 
                 parentObj[j] = data[i][j]
 
@@ -1133,14 +1132,13 @@ export default {
     }
     },
     created() {
-    this.titleId = this.title
-    // Get schools for showing
-    this.getSchools()
-    // this.getAllocationBar(1)
-    this.getAllocationByType(this.titleId, this.count, this.current)
-    this.getSchoolYears()
-    // this.getTemplate()
-
+      this.titleId = this.title
+      // Get schools for showing
+      this.getSchools()
+      // this.getAllocationBar(1)
+      this.getAllocationByType(this.titleId, this.count, this.current)
+      this.getSchoolYears()
+      // this.getTemplate()
     },
     computed: {
     titleHeader() {

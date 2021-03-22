@@ -14,7 +14,7 @@
             <!-- Table Body -->
             <template v-slot:body="props">
             
-                <q-tr :props="props" class="cursor-pointer" @click="openTeacherPopup(props.row, props.rowIndex)" >
+                <q-tr :props="props" class="cursor-pointer" @click="isEdit=true, openTeacherPopup(props.row, props.rowIndex)" >
                     
                     <q-td key="provider" :props="props">
                         <div v-if="props.row.provider">
@@ -143,7 +143,12 @@
         </q-table>
 
 
-        <TeacherPopup @hidePopup="closeTeacherPopup" :show="showTeacherModal" :id="id" :title="title" />
+        <TeacherPopup 
+        
+            @hidePopup="closeTeacherPopup" 
+            :show="showTeacherModal" :id="id" :title="title" 
+            :isEdit="isEdit"
+        />
  
         
 
@@ -235,6 +240,7 @@ export default {
             // #########
             id: null,
             showTeacherModal: false,
+            isEdit: true,
         }
     },
     methods: {
@@ -292,6 +298,7 @@ export default {
             })
         },
         openTeacherPopup(data, index) {
+            this.isEdit = true
             this.showTeacherModal = true
             this.id = data.teacher_id
         },

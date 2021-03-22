@@ -114,7 +114,8 @@ const config = {
     addNewParticipant: 'https://edxchange-activity.aimtech.am/api/v1/add-participant-and-assign-to-activity/', // + 1001/318,
     searchParticipant: 'https://edxchange-activity.aimtech.am/api/v1/search-attendy-participant/', // 1001?searchParties=test
 
-
+    getFunds: 'https://edxchange-activity.aimtech.am/api/v1/get-fund-source/',
+    
     // GET CAMPUSES
     getCampuses: 'https://edxchange-school.aimtech.am/api/v1/get-school-campus-list/', // + school id
     // TRACKING CATEGORY
@@ -131,7 +132,8 @@ const config = {
     getTeacherBudgetById: 'https://edxchange-teacher.aimtech.am/api/v1/get-teacher-compensation/', // + budget id
     getRoleTypes: 'https://edxchange-teacher.aimtech.am/api/v1/get-teacher-role-type',
     getEmployementTypes: 'https://edxchange-teacher.aimtech.am/api/v1/get-teacher-employement-type',
-    fringeTypes: 'https://edxchange-teacher.aimtech.am/api/v1/get-fring'
+    fringeTypes: 'https://edxchange-teacher.aimtech.am/api/v1/get-fring',
+    paySchedule: 'https://edxchange-teacher.aimtech.am/api/v1/count-shceduled-pay/', // startDate / endDate / chargeRate / employeeType / weekHourse / billingCicle === 1 
 }
 
 export default config

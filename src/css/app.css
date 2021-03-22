@@ -1,5 +1,6 @@
 @import url('https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/5.8.55/css/materialdesignicons.min.css');
 @import url('./edxchangeClass.css');
+@import url('./edx-quasar-reset.css');
 
 :root {
   --blue: #01b3ed;

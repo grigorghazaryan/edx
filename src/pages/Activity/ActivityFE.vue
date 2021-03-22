@@ -5,7 +5,7 @@
       <q-breadcrumbs>
         <q-breadcrumbs-el icon="dashboard" label="Dashboard" to="/" />
         <q-breadcrumbs-el label="Budget"/>
-        <q-breadcrumbs-el label="Professional Development"/>
+        <q-breadcrumbs-el label="Family Engagement"/>
         <q-breadcrumbs-el :label="schoolName" />
       </q-breadcrumbs>
     </div>
@@ -165,7 +165,7 @@
     import axios from 'axios'
     import config from '../../../config'
 
-    import ActivityTableTitle from '../../components/activity/ActivityTableTitle'
+    import ActivityTableTitle from '../../components/activityFE/ActivityTableTitle'
     
     export default {
         components: {

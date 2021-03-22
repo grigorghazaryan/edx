@@ -19,6 +19,7 @@
                                 <div class="q-mb-md">
                                     <div class="text-subtitle2 q-mb-sm">Employee</div>
                                     <q-select
+                                        :disable="isEdit"
                                         outlined
                                         dense
                                         v-model="editedItem.teacher"
@@ -544,10 +545,39 @@
         </dialog-draggable>
 
         <PaySchedule 
+
             @hidePaySchedulePopup="closePaySchedulePopup" 
             :show="showPaySchedule" 
             :icon="'attach_money'"
+
+            
+            :startDate="editedItem.startDate" 
+            :endDate="editedItem.endDate"
+            :chargeRate="chargeRate"
+            :employeeType="totalHours >= 40 ? 1 : 0"
+            :weekHours="totalHours"
+            :billingCicle="1"
+
+            :category="editedItem.category"
+            :employee="editedItem.teacher"
         />
+
+        <!-- :startDate="1" 
+            :endDate="2"
+            :chargeRate="3"
+            :employeeType="4"
+            :weekHours="5"
+            :billingCicle="1" -->
+
+         <!-- 
+            :startDate="editedItem.startDate" 
+            :endDate="editedItem.endDate"
+            :chargeRate="chargeRate"
+            :employeeType="totalHours >= 40 ? 1 : 0"
+            :weekHours="totalHours"
+            :billingCicle="1"
+            
+             -->
 
     </div>
 </template>
@@ -577,11 +607,13 @@ export default {
         title: {
             required: true
         },
+        isEdit: {
+            required: true
+        }
     },
     data() {
         return {
             showPaySchedule: false,
-            isEdit: false,
             btnLoading: false,
             teacherSubColumns: [
               { 
@@ -977,6 +1009,7 @@ export default {
                     })
                 }
                 this.optionsEmployementTypes = teacherEmpTypesArr
+                console.log('optionsEmployementTypes', res)
             })
         },
         getStatus(id) {
@@ -1069,20 +1102,26 @@ export default {
             const end = this.editedItem.endDate.substring(0, 10);
 
             let isWorkingDay = moment(end, 'YYYY-MM-DD').isBusinessDay()
-            console.log('isWorkingDay', isWorkingDay)
 
             this.monthDiff(start, end)
             
             let diff = moment(start, 'YYYY-MM-DD').businessDiff(moment(end,'YYYY-MM-DD'));
             
-
             if(isWorkingDay) {
                 diff = diff + 1
             }
 
             this.workDays = diff
-            this.workHours = diff * 8
 
+            console.log('this.totalHours', this.totalH)
+
+            if(this.editedItem.isHoursWeek && this.editedItem.isHoursWeek.id == 1) {
+                console.log('if', diff * this.totalH)
+                this.workHours = diff * this.totalH
+            }else {
+                console.log('else', diff * this.editedItem.hoursWM)
+                this.workHours = diff * this.editedItem.hoursWM
+            }
         
         },
         // =========================
@@ -1094,6 +1133,9 @@ export default {
         },
     },
     watch: {
+        editedItem(val) {
+            console.log('edited item', val)
+        },
         show(val) {
             if(val) {
                 this.getTeacherBudgetById()

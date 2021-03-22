@@ -18,20 +18,22 @@
                                 class="full-width"
                                 outlined
                                 dense
+                                :options="options"
+                                v-model="selectedOption"
                             />
                         </div>
                     </div>
-                    <q-checkbox label="Schedule Transactions for billing" />
+                    <!-- <q-checkbox :v-model="schedule" label="Schedule Transactions for billing" /> -->
                 </div>
                 <div class="col-md-6 q-pr-sm q-mb-md">
-                    <div class="row q-mt-lg">
+                    <!-- <div class="row q-mt-lg">
                         <div class="col-md-9 q-pr-md text-right">Per Pay period:</div>
                         <div class="col-md-3"> <b>$ 49701</b> </div>
                     </div>
                     <div class="row">
                         <div class="col-md-9 q-pr-md text-right">Total Charge:</div>
                         <div class="col-md-3"> <b>$ 24850</b> </div>
-                    </div>
+                    </div> -->
                 </div>
 
                 <div class="col-md-12 q-mt-md">
@@ -76,10 +78,7 @@
                 </div>
 
             </div>
-        </q-card-section>
-
-
-       
+        </q-card-section>    
 
         <q-card-actions class="row justify-end">
             <div>
@@ -91,7 +90,8 @@
 </template>
 
 <script>
-
+import axios from 'axios'
+import config from '../../../config'
 import DialogDraggable from '../DialogDraggable.vue';
 
 export default {
@@ -100,7 +100,18 @@ export default {
         show : {
             required : true,
             default: false
-        }
+        },
+
+        startDate : { required : false, default: '01/01/2020' },
+        endDate : { required : false, default: '01/01/2020' },
+        chargeRate : { required : false, default: 0 },
+        employeeType : { required : false, default: 1 },
+        weekHours : { required : false, default: 0 },
+        billingCicle : { required : false, default: 0 },
+
+        category: { required : false, default: null},
+        employee: { required : false, default: null}
+
     },
     components: {
         DialogDraggable
@@ -150,12 +161,59 @@ export default {
                     field: "amount",
                     sortable: true
                 },
-            ]
+            ],
+            schedule: false,
+            options: [{ id: 1, label: 'Monthly' }],
+            selectedOption: { id: 1, label: 'Monthly' },
+        }
+    },
+    created() {
+        
+    },
+    watch: {
+        show(val) {
+            if(val) {
+                this.getPayScheduleInfo()
+            }
         }
     },
     methods: {
         hidePopup() {
             this.$emit('hidePaySchedulePopup', false);
+        },
+        getPayScheduleInfo() {
+
+            let uri = config.paySchedule + 
+                this.startDate.replaceAll('/', '-') + 
+                '/' + this.endDate.replaceAll('/', '-') + 
+                '/' + this.chargeRate + '/' + this.employeeType + 
+                '/' + this.weekHours + '/' + this.billingCicle;
+
+            // startDate / endDate / chargeRate / employeeType / weekHourse / billingCicle === 1 
+            const conf = {
+                method: 'GET',
+                url: uri,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+                
+                console.log('res', res.data.payShedule)
+                let arr = []
+                let schedule = res.data.payShedule
+                for(let i=0; i<schedule.length; i++) {
+                    arr.push({ 
+                        transaction: this.employee.label, 
+                        date: schedule[i].currentDate,
+                        category: this.category.name,
+                        amount: schedule[i].pay
+                    })
+                }
+                this.data = arr
+                console.log('arr', arr)
+            })
         }
     },
     computed: {

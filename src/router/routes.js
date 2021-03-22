@@ -33,6 +33,9 @@ const routes = [
       {path: '/Activity/:id', name: 'Activity', meta: { title: 'Activity' }, component: () => import('pages/Activity/Activity.vue')},
       {path: '/ActivityProcesses', name: 'ActivityProcesses', meta: { title: 'ActivityProcesses' }, component: () => import('pages/Activity/ActivityProcesses.vue')},
       // -------------
+      {path: '/ActivityFE', name: 'Activity FE', meta: { title: 'Activity FE' }, component: () => import('pages/Activity/ActivitySchoolsFE.vue')},
+      {path: '/ActivityFE/:id', name: 'Activity FE', meta: { title: 'Activity FE' }, component: () => import('pages/Activity/ActivityFE.vue')},
+      // -------------
       {path: '/Material', name: 'Material', meta: { title: 'Material' }, component: () => import('pages/Material/MaterialSchools.vue')},
       {path: '/Material/:id', name: 'Material', meta: { title: 'Material' }, component: () => import('pages/Material/Material.vue')},
       // -------------

@@ -520,7 +520,7 @@
               </q-list>
 
               <q-list class="bg-sidebar-opened edx-bg-lighter-dark">
-                  <q-item to="/Activityi" @click="addDataToLS('Activity', '/Activity')"  
+                  <q-item to="/ActivityFE" 
                   active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                     <q-item-section avatar>
                       <q-icon name="account_balance"/>

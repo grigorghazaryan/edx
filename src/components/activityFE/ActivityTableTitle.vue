@@ -597,8 +597,8 @@
                     <div class="col-md-7 q-pl-md">
 
                         <div class="row">
-                            <div class="col-md-2 q-pr-sm q-mb-md">
-                                <div class="text-subtitle2 q-mb-sm">Category</div>
+                            <div class="col-md-6 q-pr-sm q-mb-md">
+                                <div class="text-subtitle2 q-mb-sm">Allocation Category</div>
                                 <div class="row cursor-pointer h-popup">
 
                                     <div>
@@ -608,7 +608,7 @@
                                         >
                                             <span>PD</span>
                                         </q-chip>
-                                        <!-- <span>Professional Development</span> -->
+                                        <span>Professional Development</span>
                                     </div>
 
                                     <q-popup-edit v-if="optionsSubcategory.length" v-model="editedItem.type_uni" buttons>
@@ -631,7 +631,7 @@
                                 </div>
                             </div>
                             
-                            <div v-if="optionsFundSource.length" class="col-md-3 q-pr-sm q-mb-md">
+                            <div v-if="optionsFundSource.length" class="col-md-6 q-pr-sm q-mb-md">
                                 <div class="text-subtitle2 q-mb-sm">Fund Source</div>
                                 <div class="row cursor-pointer h-popup">
 
@@ -642,7 +642,7 @@
                                         >
                                             <span>{{ editedItem.fund_source.abbr }}</span>
                                         </q-chip>
-                                        <!-- <span>{{ editedItem.fund_source.label }}</span> -->
+                                        <span>{{ editedItem.fund_source.label }}</span>
                                     </div>
 
                                     <q-popup-edit  v-model="editedItem.fund_source" buttons>
@@ -2014,7 +2014,7 @@ export default {
 
             const conf = {
                 method: 'GET',
-                url: config.getActivity + type + '/' + id + '/' + 1 + '?limit=' + limit + '&page=' + page + '&category=1',
+                url: config.getActivity + type + '/' + id + '/' + 1 + '?limit=' + limit + '&page=' + page + '&category=2',
                 headers: {
                 Accept: 'application/json',
                 }

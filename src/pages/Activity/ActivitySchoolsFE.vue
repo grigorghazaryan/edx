@@ -5,7 +5,7 @@
       <q-breadcrumbs>
         <q-breadcrumbs-el icon="dashboard" label="Dashboard" to="/" />
         <q-breadcrumbs-el label="Budget" />
-        <q-breadcrumbs-el label="Professional Development" />
+        <q-breadcrumbs-el label="Family Engagement" />
       </q-breadcrumbs>
     </div>
 
@@ -164,7 +164,7 @@ export default {
     },
     changeRoute(id, name) {
       this.$router.push({
-        path: '/Activity/' + id,
+        path: '/ActivityFE/' + id,
         query: { name }
       })
     },
