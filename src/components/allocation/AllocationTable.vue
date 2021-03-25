@@ -1,6 +1,6 @@
 <template>
     <div class="q-pa-sm q-mt-sm q-gutter-sm">
-      
+
       <div class="edx-header-parent">
         <span class="edx-header-text">{{ titleHeader }}</span>
       </div>
@@ -8,7 +8,7 @@
       <q-table
         :data="data"
         :columns="columns"
-        row-key="id" 
+        row-key="id"
         :loading="loading"
         binary-state-sort
         :pagination.sync="pagination"
@@ -22,11 +22,11 @@
         <!-- Table Header -->
         <template v-slot:top-right="props">
 
-          <q-select class="q-mr-md" style="min-width: 200px; max-width: 200px" 
-            dense outlines 
-            v-model="schoolYear" 
-            :options="schoolYears" 
-            label="School year" 
+          <q-select class="q-mr-md" style="min-width: 200px; max-width: 200px"
+            dense outlines
+            v-model="schoolYear"
+            :options="schoolYears"
+            label="School year"
             @input="filterAllocation"
           >
             <template v-if="schoolYear" v-slot:append>
@@ -35,15 +35,15 @@
 
           </q-select>
 
-          <q-input label="Search" class="q-mr-md" outlines dense 
+          <q-input label="Search" class="q-mr-md" outlines dense
           v-model="filter" @keyup="keyUpFilter" @keydown="keyDownFilter">
             <template v-slot:prepend>
               <q-icon name="search" />
             </template>
           </q-input>
 
-          <q-select class="q-mr-md" style="min-width: 200px; max-width: 200px" 
-            dense outlines v-model="model" :options="options" label="Status" 
+          <q-select class="q-mr-md" style="min-width: 200px; max-width: 200px"
+            dense outlines v-model="model" :options="options" label="Status"
             @input="filterAllocation"
           >
             <template v-if="model" v-slot:append>
@@ -52,9 +52,9 @@
 
           </q-select>
 
-          <q-btn square class="q-mr-md edx-bg-purple" text-color="white" icon="add" 
+          <q-btn square class="q-mr-md edx-bg-purple" text-color="white" icon="add"
           @click="openAllocationModal(data[0], 0)" no-caps>Add</q-btn>
-          
+
           <q-btn
             icon-right="archive"
             label="Export to Excel"
@@ -94,7 +94,7 @@
             </q-dialog>
 
           </div>
-      
+
         </template>
 
         <!-- Table Body -->
@@ -103,19 +103,19 @@
             <q-tr @click="isEditAllocation=true, openAllocationModal(props.row, props.rowIndex)" :props="props" class="cursor-pointer">
 
               <q-td key="creation_date" :props="props">
-                
+
                 <div class="cursor-pointer">
                   {{ props.row[0].creation_date }}
                 </div>
 
               </q-td>
-              
+
               <q-td key="school" :props="props">
 
                 <div class="text-pre-wrap cursor-pointer">
                   {{ props.row.school.label }}
                 </div>
-                
+
               </q-td>
 
               <!-- ########## -->
@@ -140,12 +140,12 @@
               </q-td>
 
               <!-- ########## -->
-              
+
               <q-td key="status" :props="props">
 
                 <q-chip square class="cursor-pointer edx-bg-purple" text-color="white">
                   {{props.row.final.shortName}}
-                  <q-tooltip 
+                  <q-tooltip
                       anchor="top middle" self="bottom middle" :offset="[10, 10]"
                       transition-show="flip-right"
                       transition-hide="flip-left"
@@ -155,20 +155,20 @@
                 </q-chip>
 
               </q-td>
-              
+
               <q-td key="actions" :props="props" style="min-width: 132px">
 
                   <div v-if="props.row.changed">
                     <q-btn
                       @click="cancellChange(props.rowIndex)"
                       icon="cancel"
-                      text-color="white" 
+                      text-color="white"
                       class="q-mr-sm edx-bg-orange"
-                      size=sm 
+                      size=sm
                       no-caps
-                      round 
+                      round
                     >
-                      <q-tooltip 
+                      <q-tooltip
                           anchor="top middle" self="bottom middle" :offset="[10, 10]"
                           transition-show="flip-right"
                           transition-hide="flip-left"
@@ -176,17 +176,17 @@
                         <strong>Cancel</strong>
                       </q-tooltip>
                     </q-btn>
-                    
+
                     <q-btn
                       @click="editAllocation(props.rowIndex)"
-                      text-color="white" 
+                      text-color="white"
                       class="q-mr-sm edx-bg-green"
                       icon="save"
-                      size=sm 
+                      size=sm
                       no-caps
-                      round 
+                      round
                     >
-                      <q-tooltip 
+                      <q-tooltip
                           anchor="top middle" self="bottom middle" :offset="[10, 10]"
                           transition-show="flip-right"
                           transition-hide="flip-left"
@@ -197,16 +197,16 @@
                   </div>
 
                   <div v-if="props.row.showEditButton && !props.row.changed">
-                    <q-btn 
+                    <q-btn
                       icon="delete_forever"
-                      text-color="white" 
+                      text-color="white"
                       class="q-mr-sm edx-bg-red"
-                      @click="openDeleteModal(props.row)" 
-                      size=sm 
+                      @click="openDeleteModal(props.row)"
+                      size=sm
                       no-caps
-                      round 
+                      round
                     >
-                      <q-tooltip 
+                      <q-tooltip
                           anchor="top middle" self="bottom middle" :offset="[10, 10]"
                           transition-show="flip-right"
                           transition-hide="flip-left"
@@ -234,26 +234,26 @@
 
             <div class="row justify-center items-center">
               <span class="q-mr-md">Rows Per page</span>
-              <q-select dense outlined 
+              <q-select dense outlined
                 @input="changeRowsPerPage"
-                v-model="pagination.rowsPerPage" 
-                :options="rowsPerPageArr" 
+                v-model="pagination.rowsPerPage"
+                :options="rowsPerPageArr"
               />
             </div>
-            
+
           </div>
         </template>
 
       </q-table>
 
-        <dialog-draggable 
-            :width="800" 
-            :modelDialog="showAllocationModal" 
-            :title="'Allocation'" 
+        <dialog-draggable
+            :width="800"
+            :modelDialog="showAllocationModal"
+            :title="'Allocation'"
             @onHide="showAllocationModal=false"
             :icon="'text_format'"
             :color="'green'"
-        >  
+        >
             <q-card-section
                 style="max-height: 70vh"
                 class="scroll"
@@ -287,7 +287,7 @@
                         />
                       </div>
 
-                      
+
 
                     </div>
 
@@ -296,34 +296,34 @@
                         <div class="text-subtitle2 q-mb-sm">{{ i.rule_name }}</div>
 
                         <div v-if="i.percentage == null">
-                          <q-input 
-                            readonly 
+                          <q-input
+                            readonly
                             prefix="$"
-                            :value="allocationCalculation(i.rule_input, index, true)" 
-                            outlined 
+                            :value="allocationCalculation(i.rule_input, index, true)"
+                            outlined
                             dense
                           />
                         </div>
 
                         <div v-else-if="i.anotherPercentage">
-                          <q-input 
-                            prefix="$" 
-                            class="q-mb-sm" 
-                            readonly 
-                            :value="allocationAnotherPercentageCalculation(i.rule_input, i.percentage, index, true)" 
-                            outlined 
+                          <q-input
+                            prefix="$"
+                            class="q-mb-sm"
+                            readonly
+                            :value="allocationAnotherPercentageCalculation(i.rule_input, i.percentage, index, true)"
+                            outlined
                             dense
                           />
-                          
-                          <q-input 
-                            prefix="%" 
-                            class="q-mb-md" 
-                            outlined 
-                            type="number" 
+
+                          <q-input
+                            prefix="%"
+                            class="q-mb-md"
+                            outlined
+                            type="number"
                             v-model="i.percentage"
                             @input="d(i.percentage)"
-                            dense 
-                            autofocus 
+                            dense
+                            autofocus
                           />
                         </div>
 
@@ -340,7 +340,7 @@
                       <q-input outlined v-model="editedItem.note"  dense type="textarea" />
                     </div>
 
-                      
+
 
                 </div>
             </q-card-section>
@@ -416,7 +416,7 @@ export default {
           index: 0,
           oneTime: true,
           isEditAllocation: false,
-          
+
           model: '',
           options: [
               {
@@ -469,10 +469,10 @@ export default {
               sortable: true
             },
             // ----------------
-            // { 
-            //   name: "profDev", 
+            // {
+            //   name: "profDev",
             //   align: "left",
-            //   label: "Professional Development", 
+            //   label: "Professional Development",
             //   field: "profDev",
             //   sortable: true,
             //   headerClasses: 'hidden'
@@ -485,10 +485,10 @@ export default {
             //   sortable: true,
             //   headerClasses: 'hidden'
             // },
-            // { 
-            //   name: "instruction", 
+            // {
+            //   name: "instruction",
             //   align: "left",
-            //   label: "Instruction", 
+            //   label: "Instruction",
             //   field: "instruction",
             //   sortable: true,
             //   headerClasses: 'hidden'
@@ -511,7 +511,7 @@ export default {
           data: [],
           tempData: [],
           barInfo: {},
-          rowsPerPageArr: ['5', '10', '25', '50', '75', '100'], 
+          rowsPerPageArr: ['5', '10', '25', '50', '75', '100'],
         };
     },
     methods: {
@@ -520,9 +520,9 @@ export default {
             let pdPercentage = this.editedItem.pdPercentage,
                 totalInstruction = this.editedItem.totalInstruction,
                 totalInstructionFinal = this.editedItem.totalInstructionFinal,
-                instruction, 
-                profDev, 
-                total, 
+                instruction,
+                profDev,
+                total,
                 familyEngagemenetEstimated = this.editedItem.familyEngagemenet,
                 familyEngagemenetFinal = this.editedItem.familyEngagemenetFinal;
 
@@ -574,7 +574,7 @@ export default {
         } else {
             this.data.unshift(obj);
         }
-        
+
         this.close()
         },
         openDeleteModal(item) {
@@ -621,12 +621,12 @@ export default {
         console.log('change pagination')
         this.current = val
         this.getAllocationByType(1, this.count, val)
-        
+
         },
         changeRowsPerPage() {
 
         console.log('changeRowsPerPage')
-        
+
         this.count = this.pagination.rowsPerPage
         this.current = 1
 
@@ -664,9 +664,9 @@ export default {
         return year + "-" + month + "-" + day;
         },
 
-        // Add new Row 
+        // Add new Row
         addNewRow() {
-        
+
         let date = this.getToday()
 
         const obj  = {
@@ -687,7 +687,7 @@ export default {
 
         this.data.unshift(obj)
         this.editedItem = obj
-        
+
         },
 
         // Filter key events
@@ -713,8 +713,8 @@ export default {
 
         this.loading = true
 
-        let model = '', url = '';            
-        
+        let model = '', url = '';
+
         if(this.filter != '') {
             url += '&search=' + this.filter
         }
@@ -726,8 +726,8 @@ export default {
         if(this.model != '') {
             this.model == 'Preliminary' ? model = 'pr' : model = 'fn'
             url += '&status=' + model
-        } 
-        
+        }
+
 
         // 1?search=St&status=fn&year=21
 
@@ -740,7 +740,7 @@ export default {
         }
 
         console.log(conf.url)
-        
+
         axios(conf).then(res => {
 
         this.loading = false
@@ -749,7 +749,7 @@ export default {
         this.pages = res.data.pagesCount
 
         for(let i=0; i<data.length; i++) {
-            
+
             data[i].changed = false
             data[i].showEditButton = true
 
@@ -764,7 +764,7 @@ export default {
 
         // this.data = data
         // this.tempData = data
-        
+
         // console.log('Filter result: ', res.data)
         })
 
@@ -794,7 +794,7 @@ export default {
             let parentObj = {}, startNumber = 2;
 
             for(let j=0; j<data[i].length; j++) {
-                
+
                 // Spliced Name
                 const edxName = data[i][j].templateName.replace(/\s/g, '')
                 data[i][j].edxName = edxName
@@ -804,7 +804,7 @@ export default {
                   const ruleInput = data[i][j].rule_input.split(',')
 
                   if(ruleInput.length == 1 && data[i][j].percentage != null) {
-                    
+
                     data[i][j].anotherPercentage = true
 
                     for (const t in data[i]) {
@@ -831,17 +831,17 @@ export default {
 
                 if(i == 0 && this.oneTime) {
 
-                let obj = { 
-                    name: edxName, 
+                let obj = {
+                    name: edxName,
                     align: "left",
-                    label: data[i][j].rule_name, 
+                    label: data[i][j].templateName,
                     field: edxName,
                     sortable: true
                 }
 
                 this.columns.splice(startNumber, 0, obj);
                 startNumber++
-                
+
                 }
 
             }
@@ -991,7 +991,7 @@ export default {
         //     })
 
         // } else {
-        
+
         //   this.data[index].changed = false
 
         //   const conf = {
@@ -1039,7 +1039,7 @@ export default {
         this.editedItem.school_name = this.selectedSchool.label
         console.log(this.editedItem)
     },
-    
+
     getTemplate() {
 
         const conf = {
@@ -1081,10 +1081,10 @@ export default {
             }
         }
 
-        
+
 
         return count.toFixed(2)
-        
+
         }
     },
     allocationAnotherPercentageCalculation(ids, percentage, index, parsingBool) {
@@ -1103,7 +1103,7 @@ export default {
         }
 
 
-        
+
         return count.toFixed(2)
 
     },
@@ -1115,11 +1115,11 @@ export default {
 
     //
     openAllocationModal(row, index) {
-        
+
         this.index = index
         this.editedItem = {...row}
         this.showAllocationModal = true
-        
+
     }
 
     },
@@ -1144,7 +1144,7 @@ export default {
     titleHeader() {
         let title = '';
 
-        this.schoolYear == '' 
+        this.schoolYear == ''
         ? title = this.schoolYears[0] && this.schoolYears[0].value
         : title = this.schoolYear.value
         return 'Title I - ' + title
