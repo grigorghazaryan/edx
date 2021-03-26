@@ -125,7 +125,10 @@
     color: var(--white) !important;
 }
 
-/* TEXT */
+
+
+/* TEXT  ###############################################################################################*/
+
 body > div {
     color: var(--secondary)
 }
@@ -141,6 +144,7 @@ input,
 }
 
 /* table */
+
 table.q-table thead {
     color: var(--gray-dark)
 }
@@ -156,3 +160,5 @@ table.q-table tbody {
 span.edx-header-text {
     color: var(--secondary)
 }
+
+/* End of texts ################################################################################################################## */
