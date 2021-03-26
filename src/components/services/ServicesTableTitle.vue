@@ -64,7 +64,7 @@
 
                 <q-btn 
                     square
-                    class="q-mr-md edx-bg-purple" text-color="white"
+                    class="q-mr-md edx-add-btn" text-color="white"
                     icon="add" 
                     no-caps
                     @click="openNewActivityPopup"
@@ -75,7 +75,7 @@
                 <q-btn
                     icon-right="archive"
                     label="Export to Excel"
-                    class="edx-bg-green" text-color="white"
+                    class="edx-excel-btn" text-color="white"
                     no-caps
                     @click="exportTable"
                 />
@@ -107,7 +107,7 @@
 
                             <q-card-actions align="right">
                             <q-btn flat label="No, thanks" color="primary" v-close-popup />
-                            <q-btn label="Yes" color="red" v-close-popup @click="deleteItem" />
+                            <q-btn label="Yes" color="edx-delete-btn" v-close-popup @click="deleteItem" />
                             </q-card-actions>
                         </q-card>
                     </q-dialog>
@@ -120,7 +120,7 @@
 
                             <q-card-actions align="right">
                             <q-btn flat label="No, thanks" color="primary" v-close-popup />
-                            <q-btn label="Yes" color="red" v-close-popup @click="deleteAttendee" />
+                            <q-btn label="Yes" color="edx-delete-btn" v-close-popup @click="deleteAttendee" />
                             </q-card-actions>
                         </q-card>
                     </q-dialog>
@@ -174,7 +174,7 @@
 
                             <q-card-actions align="right">
                             <q-btn flat label="No, thanks" color="primary" v-close-popup />
-                            <q-btn label="Yes" color="red" v-close-popup @click="deleteTeacherItem" />
+                            <q-btn label="Yes" color="edx-delete-btn" v-close-popup @click="deleteTeacherItem" />
                             </q-card-actions>
                         </q-card>
                     </q-dialog>
@@ -187,7 +187,7 @@
 
                         <q-card-actions align="right">
                             <q-btn flat label="No, thanks" color="primary" v-close-popup />
-                            <q-btn label="Yes" color="red" v-close-popup @click="deleteDate" />
+                            <q-btn label="Yes" color="edx-delete-btn" v-close-popup @click="deleteDate" />
                         </q-card-actions>
                         </q-card>
                     </q-dialog>
@@ -361,8 +361,8 @@
                     <q-td key="type" :props="props">
 
                         <q-chip 
-                            square class="edx-bg-green"
-                            text-color="white" 
+                            square 
+                            color="edx-bg-pd "
                             v-if="props.row.type_uni.name == 'PD'"
                         >
                             <span>PD</span>
@@ -375,7 +375,7 @@
                             </q-tooltip>
                         </q-chip>
 
-                        <q-chip v-else square class="edx-bg-purple" text-color="white" >
+                        <q-chip v-else square color="edx-bg-fe ">
                             <span>FE</span>
                             <q-tooltip 
                                 anchor="top middle" self="bottom middle" :offset="[10, 10]"
@@ -387,7 +387,7 @@
                         </q-chip>
 
                     </q-td>
-
+                    
                     <q-td key="grossPD" :props="props">
                         <div>$ {{ (parseFloat(props.row.amount) + parseFloat(((props.row.amount * props.row.percentage) / 100))).toFixed(2) }}</div>
                     </q-td>
@@ -399,11 +399,11 @@
                     </q-td>
 
                     <q-td key="actions" :props="props" style="min-width: 132px">
-                        <q-fab padding="xs" @click.stop color="purple" icon="keyboard_arrow_up" direction="up">
+                        <q-fab padding="xs" @click.stop color="edx-action-btn" icon="keyboard_arrow_up" direction="up">
                             
                             <q-fab-action
                                 icon="content_copy"
-                                color="orange" 
+                                color="edx-duplicate-btn" 
                                 size=sm 
                                 no-caps
                                 round 
@@ -421,7 +421,7 @@
 
                             <q-fab-action
                                 icon="delete_forever"
-                                color="red" 
+                                color="edx-delete-btn" 
                                 size=sm 
                                 no-caps
                                 round
@@ -452,6 +452,7 @@
                     :max="pages"
                     :direction-links="true"
                     @click="changePagination(current)"
+                    color="edx-pagination"
                 >
                 </q-pagination>
 

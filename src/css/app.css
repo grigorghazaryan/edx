@@ -1,9 +1,11 @@
 @import url('https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/5.8.55/css/materialdesignicons.min.css');
 @import url('./edxchangeClass.css');
 @import url('./edx-quasar-reset.css');
+@import url('./edx.css');
 
 :root {
-  --blue: #01b3ed;
+  --blue: #3f80ea;
+  --light-blue: #538cea;
   --indigo: #6610f2;
   --purple: #6f42c1;
   --pink: #d63384;
@@ -11,9 +13,11 @@
   --orange: #ffba00;
   --yellow: #ffba00;
   --green: #74b100;
+  --excel-green: #1d6f42;
   --teal: #67981a;
   --cyan: #0583c5;
   --white: #fff;
+  --light-white: #ced4da;
   --gray: #999999;
   --gray-dark: #343a40;
   --primary: #ff5a5f;
@@ -121,7 +125,6 @@ span.edx-header-text {
   padding: .5rem 1.5rem;
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
-  color: #000;
   background-color: #fff;
   box-shadow: -1px -1px 2px rgba(0,0,0,0.2);
   z-index: 4;

@@ -1,5 +1,5 @@
 <template>
-  <q-page class="q-pa-sm">
+  <q-page class="q-pa-sm edx-background">
 
     <div class="q-pa-md q-gutter-sm">
       <q-breadcrumbs>

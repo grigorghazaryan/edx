@@ -1,5 +1,5 @@
 <template>
-  <q-page class="q-pa-sm">
+  <q-page class="q-pa-sm edx-background">
     <div class="row q-col-gutter-sm">
       <div class="col-lg-8 col-md-8 col-xs-12 col-sm-12">
         <q-card class="bg-grey-10 text-white">
@@ -7,7 +7,7 @@
             <div class="text-h6">Edit Profile</div>
             <div class="text-subtitle2">Complete your profile</div>
           </q-card-section>
-          <q-card-section class="q-pa-sm">
+          <q-card-section class="q-pa-sm edx-background">
             <q-list class="row">
               <q-item class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <q-item-section side>

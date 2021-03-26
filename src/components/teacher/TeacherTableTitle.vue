@@ -53,15 +53,16 @@
                     <q-td key="type" :props="props">
 
                         <q-chip 
-                            square class="edx-bg-green"
-                            text-color="white">
-                            <span>PD</span>
+                            square 
+                            color="edx-bg-pd "
+                        >
+                            <span>{{props.row.type_uni.name}}</span>
                             <q-tooltip 
                                 anchor="top middle" self="bottom middle" :offset="[10, 10]"
                                 transition-show="flip-right"
                                 transition-hide="flip-left"
                             >
-                                <strong>Professional Development</strong>
+                                <strong>{{ props.row.type_uni.name }}</strong>
                             </q-tooltip>
                         </q-chip>
 
@@ -72,11 +73,11 @@
                     </q-td>
 
                     <q-td key="actions" :props="props" style="min-width: 132px">
-                        <q-fab padding="xs" @click.stop color="purple" icon="keyboard_arrow_up" direction="up">
+                        <q-fab padding="xs" @click.stop color="edx-action-btn" icon="keyboard_arrow_up" direction="up">
                             
                             <q-fab-action
                                 icon="content_copy"
-                                color="orange" 
+                                color="edx-duplicate-btn" 
                                 size=sm 
                                 no-caps
                                 round 
@@ -94,7 +95,7 @@
 
                             <q-fab-action
                                 icon="delete_forever"
-                                color="red" 
+                                color="edx-delete-btn" 
                                 size=sm 
                                 no-caps
                                 round

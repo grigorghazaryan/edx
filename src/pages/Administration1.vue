@@ -1,5 +1,5 @@
 <template>
-  <q-page class="q-pa-sm">
+  <q-page class="q-pa-sm edx-background">
 
     <q-card class="bg-transparent no-shadow no-border q-mb-md q-mt-md">
       <q-card-section class="q-pa-none">

@@ -320,7 +320,7 @@
                             <div class="col-md-2">
                                 <div class="text-subtitle2 q-mb-sm">
                                     Fringe
-                                    <span v-if="editedItem.frienge">/{{ editedItem.frienge.label }}</span>
+                                    <span v-if="editedItem.frienge">/{{ editedItem.frienge.label.slice(0, 1) }}</span>
                                 </div>
 
                                 <q-input  
@@ -460,6 +460,7 @@
                         <div class="text-subtitle2 q-mb-sm">
                             Calculated Assignment Details
                         </div>
+
                         <q-table
                             class="q-mt-md q-mb-md border"
                             :data="monthlyDetails"
@@ -482,11 +483,8 @@
                                         {{ workDays }}
                                     </q-td>
 
-
                                     <q-td key="workHours" :props="props">
-                                        <span>
                                             {{ workHours }}
-                                        </span>
                                     </q-td>
 
                                     <q-td key="billingCycles" :props="props">
@@ -518,7 +516,7 @@
                     <q-separator class="q-mt-lg q-mb-lg" />
 
                     <div class="col-md-3 q-pl-md">
-                        <q-btn @click="showPaySchedule = true" color="primary q-mt-lg">
+                        <q-btn @click="paySchedule" color="primary q-mt-lg">
                             View pay schedule
                         </q-btn>
                     </div>
@@ -550,17 +548,20 @@
             :show="showPaySchedule" 
             :icon="'attach_money'"
 
-            
             :startDate="editedItem.startDate" 
             :endDate="editedItem.endDate"
-            :chargeRate="chargeRate"
-            :employeeType="totalHours >= 40 ? 1 : 0"
-            :weekHours="totalHours"
-            :billingCicle="1"
+            :hourlyFringe="chargeRate"
+            :selectedWeekDays="scheduleWeekDays"
 
             :category="editedItem.category"
             :employee="editedItem.teacher"
+
         />
+
+            <!-- :chargeRate="chargeRate"
+            :employeeType="totalHours >= 40 ? 1 : 0"
+            :weekHours="totalHours"
+            :billingCicle="1" -->
 
         <!-- :startDate="1" 
             :endDate="2"
@@ -704,6 +705,9 @@ export default {
         }
     },
     methods: {
+        paySchedule() {
+            this.showPaySchedule = true
+        },
         closePaySchedulePopup() {
             this.showPaySchedule = false
         },
@@ -1116,11 +1120,13 @@ export default {
             console.log('this.totalHours', this.totalH)
 
             if(this.editedItem.isHoursWeek && this.editedItem.isHoursWeek.id == 1) {
-                console.log('if', diff * this.totalH)
+                // console.log('if', diff * this.totalH)
                 this.workHours = diff * this.totalH
+                // this.workHours = 900
             }else {
-                console.log('else', diff * this.editedItem.hoursWM)
+                // console.log('else', diff * this.editedItem.hoursWM)
                 this.workHours = diff * this.editedItem.hoursWM
+                // this.workHours = 500
             }
         
         },
@@ -1171,8 +1177,7 @@ export default {
                     { id: 7, name: 'S', hours: null, checked: false }
                 ]
             }
-        }
-        
+        },
     },
     created() {
 

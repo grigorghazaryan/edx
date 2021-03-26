@@ -130,7 +130,7 @@
 
                 <div class="row q-mb-sm">
                     <div class="col-md-12 text-right">
-                        <q-btn @click="editSchoolInfo" class="edx-bg-purple" text-color="white" label="Save" />
+                        <q-btn @click="editSchoolInfo" class="edx-add-btn" text-color="white" label="Save" />
                     </div>
                 </div>
             </div>

@@ -52,13 +52,13 @@
 
           </q-select>
 
-          <q-btn square class="q-mr-md edx-bg-purple" text-color="white" icon="add" 
+          <q-btn square class="q-mr-md edx-add-btn" text-color="white" icon="add" 
           @click="openAllocationModal(data[0], 0)" no-caps>Add</q-btn>
           
           <q-btn
             icon-right="archive"
             label="Export to Excel"
-            class="edx-bg-green" text-color="white"
+            class="edx-excel-btn" text-color="white"
             no-caps
             @click="exportTable"
           />
@@ -88,7 +88,7 @@
 
                 <q-card-actions align="right">
                   <q-btn flat label="No, thanks" color="primary" v-close-popup />
-                  <q-btn label="Yes" color="red" v-close-popup @click="deleteItem" />
+                  <q-btn label="Yes" color="edx-delete-btn" v-close-popup @click="deleteItem" />
                 </q-card-actions>
               </q-card>
             </q-dialog>
@@ -143,8 +143,10 @@
               
               <q-td key="status" :props="props">
 
-                <q-chip square class="cursor-pointer edx-bg-purple" text-color="white">
+                <q-chip square class="cursor-pointer edx-bg-final">
+
                   {{props.row.final.shortName}}
+
                   <q-tooltip 
                       anchor="top middle" self="bottom middle" :offset="[10, 10]"
                       transition-show="flip-right"
@@ -152,6 +154,7 @@
                   >
                     <strong>{{props.row.final.label}}</strong>
                   </q-tooltip>
+
                 </q-chip>
 
               </q-td>
@@ -200,7 +203,7 @@
                     <q-btn 
                       icon="delete_forever"
                       text-color="white" 
-                      class="q-mr-sm edx-bg-red"
+                      class="q-mr-sm edx-delete-btn"
                       @click="openDeleteModal(props.row)" 
                       size=sm 
                       no-caps
@@ -224,11 +227,13 @@
 
         <template v-slot:bottom class="justify-end">
           <div class="q-pa-md flex flex-center">
+
             <q-pagination
               v-model="current"
               :max="pages"
               :direction-links="true"
               @click="changePagination(current)"
+              color="edx-pagination"
             >
             </q-pagination>
 

@@ -123,6 +123,9 @@ const config = {
     // INVENTORY CATEGORIES
     getInventoryCategories: 'https://edxchange-activity.aimtech.am/api/v1/get-inventory-category-type',
 
+    // allocation fund id
+    allocationFundId: 'https://edxchange-activity.aimtech.am/api/v1/get-fund-source-id/', // title id / 1 - pd / 2 - fe / 3 - inst / 4 - material
+    getBudgetBalance: 'https://edxchange-activity.aimtech.am/api/v1/get-budget-balance/', // allocationFundId/ tab /school id
 
     // TEACHERS
     getTeachersData: 'https://edxchange-teacher.aimtech.am/api/v1/teacher',

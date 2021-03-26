@@ -1,5 +1,5 @@
 <template>
-    <div class="q-pa-sm">
+    <div class="q-pa-sm edx-background">
 
     <div class="q-pa-md q-gutter-sm">
       <q-breadcrumbs>
@@ -83,6 +83,7 @@
               :max="pages"
               :direction-links="true"
               @click="changePagination(current)"
+              color="edx-pagination"
             >
             </q-pagination>
 

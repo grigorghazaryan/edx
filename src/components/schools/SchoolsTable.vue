@@ -62,10 +62,11 @@
                     </q-td>
 
                     <q-td key="action" :props="props">
-                        <q-fab padding="xs" color="purple" icon="keyboard_arrow_up" direction="up">
+                        <q-fab padding="xs" color="edx-action-btn" icon="keyboard_arrow_up" direction="up">
+                            
                             <q-fab-action
                                 icon="edit"
-                                color="blue" 
+                                color="edx-edit-btn" 
                                 size=sm 
                                 no-caps
                                 round 
@@ -83,7 +84,7 @@
 
                             <q-fab-action
                                 icon="delete_forever"
-                                color="red" 
+                                color="edx-delete-btn" 
                                 size=sm 
                                 no-caps
                                 round 
@@ -108,10 +109,15 @@
         </q-table>
 
         <div class="q-mt-md q-mb-sm q-ml-md">
-            <q-btn @click="isAddAddressOpened = true" icon="add" class="edx-bg-purple" text-color="white" round/>
+            <q-btn @click="isAddAddressOpened = true" icon="add" class="edx-add-btn" text-color="white" round/>
         </div>
 
-        <dialog-draggable :width="600" :modelDialog="isAddAddressOpened" :title="edit ? 'Edit Address' : 'Add Address'" @onHide="isAddAddressOpened=false">
+        <dialog-draggable 
+            :width="600" 
+            :modelDialog="isAddAddressOpened" 
+            :title="edit ? 'Edit Address' : 'Add Address'" 
+            @onHide="isAddAddressOpened=false"
+        >
              <div class="q-pa-md"> 
                 <div class="row q-mb-sm">
                     <div class="col-md-12 q-mb-sm">
@@ -177,7 +183,7 @@
                 </q-card-section>
 
                 <q-card-actions align="right">
-                    <q-btn flat label="No, thanks" color="primary" v-close-popup />
+                    <q-btn flat label="No, thanks" color="edx-delete-btn" v-close-popup />
                     <q-btn label="Yes" color="red" @click="removeAddress" />
                 </q-card-actions>
             </q-card>

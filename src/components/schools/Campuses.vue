@@ -6,7 +6,7 @@
                 <q-icon class="q-mr-sm" name="people_alt"  color="green" style="font-size: 1.5em"/>
                 Campus Name
             </div>
-            <q-btn @click="isAddCampusOpened=true" class="edx-bg-purple" text-color="white" label="Add Campus" />
+            <q-btn @click="isAddCampusOpened=true" class="edx-add-btn" text-color="white" label="Add Campus" />
         </div>
 
         <q-separator class="q-mt-sm q-mb-lg"/>

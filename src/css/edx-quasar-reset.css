@@ -1,21 +1,4 @@
-.q-item__section--side {
-    color: var(--orange) !important;
-}
-
-/* .q-router-link--exact-active {
-    .q-item__section {
-      .q-item__label, i {
-        color: var(--orange) !important;
-      }
-    }
-  } */
 
 
-.q-router-link--exact-active .q-item__section .q-item__label {
-color: var(--orange) !important; 
-}
-.q-router-link--exact-active .q-item__section i {
-color: var(--orange) !important; 
-}
 
 

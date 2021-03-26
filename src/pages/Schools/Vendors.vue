@@ -1,5 +1,5 @@
 <template>
-    <div class="q-pa-sm">
+    <div class="q-pa-sm edx-background">
 
     <div class="q-pa-md q-gutter-sm">
       <q-breadcrumbs>
@@ -49,7 +49,7 @@
 
             <q-btn 
               square
-              class="q-mr-md edx-bg-purple" text-color="white" icon="add" 
+              class="q-mr-md edx-add-btn" text-color="white" icon="add" 
               @click="showPopup" 
               no-caps
             >
@@ -111,6 +111,7 @@
               :max="pages"
               :direction-links="true"
               @click="changePagination(current)"
+              color="edx-pagination"
             >
             </q-pagination>
 

@@ -64,7 +64,7 @@
 
                 <q-btn 
                     square
-                    class="q-mr-md edx-bg-purple" text-color="white"
+                    class="q-mr-md edx-add-btn" text-color="white"
                     icon="add" 
                     no-caps
                     @click="openNewActivityPopup"
@@ -75,7 +75,7 @@
                 <q-btn
                     icon-right="archive"
                     label="Export to Excel"
-                    class="edx-bg-green" text-color="white"
+                    class="edx-excel-btn" text-color="white"
                     no-caps
                     @click="exportTable"
                 />
@@ -390,7 +390,7 @@
                     <q-td key="type" :props="props">
 
                         <q-chip 
-                            square class="edx-bg-green"
+                            square class="edx-excel-btn"
                             text-color="white" 
                             v-if="props.row.type_uni.name == 'PD'"
                         >
@@ -404,7 +404,7 @@
                             </q-tooltip>
                         </q-chip>
 
-                        <q-chip v-else square class="edx-bg-purple" text-color="white" >
+                        <q-chip v-else square class="edx-add-btn" text-color="white" >
                             <span>FE</span>
                             <q-tooltip 
                                 anchor="top middle" self="bottom middle" :offset="[10, 10]"

@@ -10,9 +10,10 @@
 
         <q-card-section style="max-height: 60vh" class="scroll q-pt-none q-pb-none q-pr-none q-pl-none">
             <div class="row q-mr-lg q-ml-lg q-mb-lg q-mt-lg">
+
                 <div class="col-md-6 q-pr-sm q-mb-md">
                     <div class="row items-center q-mb-sm">
-                        <div class="text-subtitle2 q-mr-md">Billing Cycle</div>
+                        <div class="text-subtitle2 q-mr-md q-mb-sm">Billing Cycle</div>
                         <div class="w-100 row cursor-pointer h-popup">
                             <q-select 
                                 class="full-width"
@@ -42,6 +43,7 @@
                         :data="data" 
                         :columns="columns"
                         hide-bottom
+                        :pagination.sync="pagination"
                     >
                         <!-- Table Body -->
                         <template v-slot:body="props">
@@ -55,7 +57,7 @@
                                 <q-td key="category" :props="props">
                                     
                                     <q-chip 
-                                        square class="edx-bg-green"
+                                        square class="edx-excel-btn"
                                         text-color="white"
                                     >
                                         <span>{{props.row.category}}</span>
@@ -90,8 +92,7 @@
 </template>
 
 <script>
-import axios from 'axios'
-import config from '../../../config'
+
 import DialogDraggable from '../DialogDraggable.vue';
 
 export default {
@@ -104,13 +105,17 @@ export default {
 
         startDate : { required : false, default: '01/01/2020' },
         endDate : { required : false, default: '01/01/2020' },
-        chargeRate : { required : false, default: 0 },
-        employeeType : { required : false, default: 1 },
-        weekHours : { required : false, default: 0 },
-        billingCicle : { required : false, default: 0 },
+        hourlyFringe: { required: false, default: 0 },
+        
+        // chargeRate : { required : false, default: 0 },
+        // employeeType : { required : false, default: 1 },
+        // weekHours : { required : false, default: 0 },
+        // billingCicle : { required : false, default: 0 },
+
+        selectedWeekDays: { required: false, default: [] },
 
         category: { required : false, default: null},
-        employee: { required : false, default: null}
+        employee: { required : false, default: null},
 
     },
     components: {
@@ -118,20 +123,8 @@ export default {
     },
     data() {
         return {
-            data: [
-                { 
-                    transaction: 'Joe Biden', 
-                    date: '10/09/20',
-                    category: 'I',
-                    amount: 42000
-                },
-                { 
-                    transaction: 'Joe Biden', 
-                    date: '10/09/20',
-                    category: 'I',
-                    amount: 42000
-                },
-            ],
+            pagination: { rowsPerPage: 48 },
+            data: [],
             columns: [
                 {
                     name: "transaction",
@@ -168,7 +161,7 @@ export default {
         }
     },
     created() {
-        
+        this.getPayScheduleInfo()
     },
     watch: {
         show(val) {
@@ -182,39 +175,129 @@ export default {
             this.$emit('hidePaySchedulePopup', false);
         },
         getPayScheduleInfo() {
-
-            let uri = config.paySchedule + 
-                this.startDate.replaceAll('/', '-') + 
-                '/' + this.endDate.replaceAll('/', '-') + 
-                '/' + this.chargeRate + '/' + this.employeeType + 
-                '/' + this.weekHours + '/' + this.billingCicle;
-
-            // startDate / endDate / chargeRate / employeeType / weekHourse / billingCicle === 1 
-            const conf = {
-                method: 'GET',
-                url: uri,
-                headers: {
-                    Accept: 'application/json',
-                }
-            }
-
-            axios(conf).then(res => {
-                
-                console.log('res', res.data.payShedule)
+            
                 let arr = []
-                let schedule = res.data.payShedule
-                for(let i=0; i<schedule.length; i++) {
+                // let schedule = res.data.payShedule
+                // for(let i=0; i<schedule.length; i++) {
+                //     arr.push({ 
+                //         transaction: this.employee.label, 
+                //         date: schedule[i].currentDate,
+                //         category: this.category.name,
+                //         amount: schedule[i].pay
+                //     })
+                // }
+                // this.data = arr
+
+                let dates = this.dateRange(this.startDate, this.endDate)
+                let selectedWeekDays = this.selectedWeekDays
+                console.log('selectedWeekDays', selectedWeekDays)
+                console.log('dates', dates)
+
+                for(let i=0; i<dates.length; i++) {
+
+                    let splittedDate = dates[i].split('-')
+                    
+                    let date1 = splittedDate[0].split('/')
+                    let date2 = splittedDate[1].split('/')
+                    
+                    let month = date1[1]
+                    let startDay = parseInt(date1[2])
+                    let endDay = parseInt(date2[2])
+                    
+                    let count = 0;
+                    
+                    console.log('#######################')
+                    
+                    for(let j=startDay; j<=endDay; j++) {
+                    
+                        let fullMonth = date1[0] + '/' + month + '/' + j
+                        let nd = new Date(fullMonth).getDay()
+                        
+                        for(let t=0; t<=selectedWeekDays.length; t++) {
+                            if(selectedWeekDays[t]) {
+                                if(selectedWeekDays[t].checked && selectedWeekDays[t].id == nd) {
+                                    
+                                    console.log('selectedWeekDays[t].hours', selectedWeekDays[t].hours)
+                                    count += parseFloat(selectedWeekDays[t].hours)
+
+                                    break
+                                }
+                            }
+                        }
+                    } 
+
+                    console.log('count=', count)
+                    console.log('hourlyFringe= ', this.hourlyFringe * count)
+
                     arr.push({ 
-                        transaction: this.employee.label, 
-                        date: schedule[i].currentDate,
+                        transaction: this.employee ? this.employee.label : '', 
+                        date: splittedDate[0] + ' - ' +splittedDate[1],
                         category: this.category.name,
-                        amount: schedule[i].pay
+                        amount: (count * this.hourlyFringe).toFixed(2)
                     })
+
+                    this.data = arr
                 }
-                this.data = arr
-                console.log('arr', arr)
-            })
-        }
+
+        },
+        dateRange(startDate, endDate) {
+
+            var start      = startDate.split('/');
+            var end        = endDate.split('/');
+            var startYear  = parseInt(start[0]);
+            var endYear    = parseInt(end[0]);
+            var dates      = [];
+            
+            for(var i = startYear; i <= endYear; i++) {
+            
+                var endMonth = i != endYear ? 11 : parseInt(end[1]) - 1;
+                var startMon = i === startYear ? parseInt(start[1])-1 : 0;
+                
+                let startDay;  
+                
+                for(var j = startMon; j <= endMonth; j = j > 12 ? j % 12 || 11 : j+1) {
+                    
+                startDay = j+1;
+                var month = j+1;
+                var displayMonth = month < 10 ? '0' + month : month;
+                
+                if(parseInt(start[1]) == startDay  && i == parseInt(start[0])) {
+                    startDay = parseInt(start[2]) < 10 ? '0' + parseInt(start[2])  : parseInt(start[2]);
+                }else {
+                    startDay = '01'
+                }
+                
+                let monthLastDay;
+                
+                if(j+1 ==  parseInt(end[1]) && i == parseInt(end[0])) { 
+                
+                    if(parseInt(end[1]) == this.daysInMonth(displayMonth, i)) {
+                    monthLastDay = this.daysInMonth(displayMonth, i)
+                    }else {
+                    monthLastDay = end[2];
+                    }
+                    
+                }else {
+                    monthLastDay = this.daysInMonth(displayMonth, i)
+                }
+                
+                dates.push( 
+                    [i, displayMonth, startDay].join('/')
+                    + '-' +
+                    [i, displayMonth, monthLastDay].join('/') 
+                );
+                
+                }
+                
+            }
+            return dates;
+
+        },
+
+        // daysInMonth(01, 2021)
+        daysInMonth (month, year) {
+            return new Date(year, month, 0).getDate();
+        },
     },
     computed: {
         isShow() {

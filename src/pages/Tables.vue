@@ -1,5 +1,5 @@
 <template>
-  <q-page class="q-pa-sm">
+  <q-page class="q-pa-sm edx-background">
     <q-card>
       <q-card-section>
         <div class="text-h6 text-grey-8">

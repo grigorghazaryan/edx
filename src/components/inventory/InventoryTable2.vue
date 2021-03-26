@@ -90,13 +90,13 @@
         </template>
       </q-select>
 
-              <q-btn :disabled="addNew" square class="q-mr-md edx-bg-purple" text-color="white" icon="add" 
+              <q-btn :disabled="addNew" square class="q-mr-md edx-add-btn" text-color="white" icon="add" 
               @click="addNew = true, addNewRow()" no-caps>Add</q-btn>
 
               <q-btn
                 icon-right="archive"
                 label="Export to Excel"
-                class="edx-bg-green" text-color="white"
+                class="edx-excel-btn" text-color="white"
                 no-caps
                 @click="exportTable"
               />
@@ -534,8 +534,8 @@
               <q-btn
                 @click="cancellChange(props.rowIndex)"
                 icon="cancel"
-                text-color="white" 
-                class="q-mr-sm edx-bg-orange"
+                color="edx-cancel-btn" 
+                class="q-mr-sm"
                 size=sm 
                 no-caps
                 round 
@@ -551,8 +551,8 @@
               
               <q-btn
                 @click="editInventory(props.rowIndex)"
-                text-color="white" 
-                class="q-mr-sm edx-bg-green"
+                color="edx-save-btn"
+                class="q-mr-sm"
                 icon="save"
                 size=sm 
                 no-caps
@@ -572,8 +572,8 @@
             <div v-if="props.row.showEditButton && !props.row.changed">
               <q-btn 
                  icon="delete_forever"
-                    text-color="white" 
-                    class="q-mr-sm edx-bg-red"
+                    color="edx-delete-btn"
+                    class="q-mr-sm"
                     @click="openDeleteModal(props.row)" 
                     size=sm 
                     no-caps
@@ -855,6 +855,7 @@
           :max="pages"
           :direction-links="true"
           @click="changePagination(current)"
+          color="edx-pagination"
         >
         </q-pagination>
 

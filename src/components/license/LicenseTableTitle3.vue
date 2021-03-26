@@ -19,13 +19,13 @@
             <!-- Table Header -->
             <template v-slot:top-right="props">
 
-              <q-btn :disabled="addNew" square class="q-mr-md edx-bg-purple" text-color="white" icon="add" 
+              <q-btn :disabled="addNew" square class="q-mr-md edx-add-btn" text-color="white" icon="add" 
               @click="addNew = true, addNewRow()" no-caps>Add</q-btn>
 
               <q-btn
                 icon-right="archive"
                 label="Export to Excel"
-                class="edx-bg-green" text-color="white"
+                class="edx-excel-btn" text-color="white"
                 no-caps
                 @click="exportTable"
               />
@@ -267,7 +267,7 @@
                     <q-btn 
                        icon="delete_forever"
                     text-color="white" 
-                    class="q-mr-sm edx-bg-red"
+                    class="q-mr-sm edx-delete-btn"
                     @click="openDeleteModal(props.row)" 
                     size=sm 
                     no-caps
@@ -331,6 +331,7 @@
                   :max="pages"
                   :direction-links="true"
                   @click="changePagination(current)"
+                  color="edx-pagination"
                   >
                   </q-pagination>
 

@@ -1,5 +1,6 @@
 <template>
     <div>
+
         <q-table
             class="overflow-auto"
             :data="data" 
@@ -65,7 +66,7 @@
 
                 <q-btn 
                     square
-                    class="q-mr-md edx-bg-purple" text-color="white"
+                    class="q-mr-md edx-add-btn" text-color="white"
                     icon="add" 
                     no-caps
                     @click="openNewActivityPopup"
@@ -76,7 +77,7 @@
                 <q-btn
                     icon-right="archive"
                     label="Export to Excel"
-                    class="edx-bg-green" text-color="white"
+                    class="edx-excel-btn" text-color="white"
                     no-caps
                     @click="exportTable"
                 />
@@ -108,7 +109,7 @@
 
                             <q-card-actions align="right">
                             <q-btn flat label="No, thanks" color="primary" v-close-popup />
-                            <q-btn label="Yes" color="red" v-close-popup @click="deleteItem" />
+                            <q-btn label="Yes" color="edx-delete-btn" v-close-popup @click="deleteItem" />
                             </q-card-actions>
                         </q-card>
                     </q-dialog>
@@ -121,7 +122,7 @@
 
                             <q-card-actions align="right">
                             <q-btn flat label="No, thanks" color="primary" v-close-popup />
-                            <q-btn label="Yes" color="red" v-close-popup @click="deleteAttendee" />
+                            <q-btn label="Yes" color="edx-delete-btn" v-close-popup @click="deleteAttendee" />
                             </q-card-actions>
                         </q-card>
                     </q-dialog>
@@ -175,7 +176,7 @@
 
                             <q-card-actions align="right">
                             <q-btn flat label="No, thanks" color="primary" v-close-popup />
-                            <q-btn label="Yes" color="red" v-close-popup @click="deleteTeacherItem" />
+                            <q-btn label="Yes" color="edx-delete-btn" v-close-popup @click="deleteTeacherItem" />
                             </q-card-actions>
                         </q-card>
                     </q-dialog>
@@ -188,7 +189,7 @@
 
                         <q-card-actions align="right">
                             <q-btn flat label="No, thanks" color="primary" v-close-popup />
-                            <q-btn label="Yes" color="red" v-close-popup @click="deleteDate" />
+                            <q-btn label="Yes" color="edx-delete-btn" v-close-popup @click="deleteDate" />
                         </q-card-actions>
                         </q-card>
                     </q-dialog>
@@ -394,9 +395,8 @@
                     <q-td key="type" :props="props">
 
                         <q-chip 
-                            square class="edx-bg-green"
-                            text-color="white" 
-                            v-if="props.row.type_uni.name == 'PD'"
+                            square 
+                            color="edx-bg-pd"
                         >
                             <span>PD</span>
                             <q-tooltip 
@@ -405,17 +405,6 @@
                                 transition-hide="flip-left"
                             >
                                 <strong>Professional Development</strong>
-                            </q-tooltip>
-                        </q-chip>
-
-                        <q-chip v-else square class="edx-bg-purple" text-color="white" >
-                            <span>FE</span>
-                            <q-tooltip 
-                                anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                                transition-show="flip-right"
-                                transition-hide="flip-left"
-                            >
-                                <strong>Family Engagement</strong>
                             </q-tooltip>
                         </q-chip>
 
@@ -432,11 +421,11 @@
                     </q-td>
 
                     <q-td key="actions" :props="props" style="min-width: 132px">
-                        <q-fab padding="xs" @click.stop color="purple" icon="keyboard_arrow_up" direction="up">
+                        <q-fab padding="xs" @click.stop color="edx-action-btn" icon="keyboard_arrow_up" direction="up">
                             
                             <q-fab-action
                                 icon="content_copy"
-                                color="orange" 
+                                color="edx-duplicate-btn" 
                                 size=sm 
                                 no-caps
                                 round 
@@ -454,7 +443,7 @@
 
                             <q-fab-action
                                 icon="delete_forever"
-                                color="red" 
+                                color="edx-delete-btn" 
                                 size=sm 
                                 no-caps
                                 round
@@ -485,6 +474,7 @@
                     :max="pages"
                     :direction-links="true"
                     @click="changePagination(current)"
+                    color="edx-pagination"
                 >
                 </q-pagination>
 
@@ -1440,13 +1430,12 @@
             :title="'Budgeted Spending'" 
             @onHide="isRemainingPopupOpen=false"
             :icon="'attach_money'"
-            :color="'green'"
         >
 
         <q-card-section style="max-height: 60vh" class="scroll q-pt-none q-pb-none q-pr-none q-pl-none">
             <div class="row q-mr-lg q-ml-lg q-mb-lg q-mt-lg">
                 <div class="col-md-6 q-pr-sm q-mb-md">
-                    <div class="text-subtitle2 q-mb-sm">Allocation Funds</div>
+                    <!-- <div class="text-subtitle2 q-mb-sm">Allocation Funds</div>
                     <div class="row cursor-pointer h-popup">
                         <q-select 
                             class="full-width"
@@ -1455,16 +1444,16 @@
                             outlined
                             dense
                         />
-                    </div>
+                    </div> -->
                 </div>
                 <div class="col-md-6 q-pr-sm q-mb-md">
                     <div class="row q-mt-lg">
                         <div class="col-md-9 q-pr-md text-right">Priliminary:</div>
-                        <div class="col-md-3"> <b>$ 49701</b> </div>
+                        <div class="col-md-3"> <b>$ -----</b> </div>
                     </div>
                     <div class="row">
                         <div class="col-md-9 q-pr-md text-right">Available to spend:</div>
-                        <div class="col-md-3"> <b>$ 24850</b> </div>
+                        <div class="col-md-3"> <b>$ -----</b> </div>
                     </div>
                 </div>
 
@@ -1485,9 +1474,11 @@
                                     {{props.row.date}}
                                 </q-td>
                                 <q-td key="type" :props="props">
+
                                     <q-chip 
-                                        square class="edx-bg-green"
-                                        text-color="white"
+                                        v-if="props.row.type == 'PD' "
+                                        square 
+                                        color="edx-bg-pd"
                                     >
                                         <span>{{props.row.type}}</span>
                                         <q-tooltip 
@@ -1498,6 +1489,21 @@
                                             <strong>{{ props.row.type }}</strong>
                                         </q-tooltip>
                                     </q-chip>
+                                    <q-chip 
+                                        v-else
+                                        square 
+                                        color="edx-bg-fe"
+                                    >
+                                        <span>{{props.row.type}}</span>
+                                        <q-tooltip 
+                                            anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                                            transition-show="flip-right"
+                                            transition-hide="flip-left"
+                                        >
+                                            <strong>{{ props.row.type }}</strong>
+                                        </q-tooltip>
+                                    </q-chip>
+
                                 </q-td>
                                 <q-td key="amount" :props="props">
                                     $ {{props.row.amount}}
@@ -1557,29 +1563,7 @@ export default {
         return {
             testCategory: '',
             testSubcategory: '',
-            tdata: [
-                { 
-                    transaction: 'Episode IV - A New Hope', 
-                    date: '10/09/20 - 10/22/20',
-                    type: 'PD',
-                    amount: 42000,
-                    balance: 20650
-                },
-                { 
-                    transaction: 'Episode V – The Empire Strikes Back', 
-                    date: '10/09/20 - 10/22/20',
-                    type: 'L',
-                    amount: 1480,
-                    balance: 19170
-                },
-                { 
-                    transaction: 'Episode VI – Return of the Jedi', 
-                    date: '10/09/20 - 10/22/20',
-                    type: 'PD',
-                    amount: 3675,
-                    balance: 15495
-                },
-            ],
+            tdata: [],
             tcolumns: [
                 {
                     name: "transaction",
@@ -1855,6 +1839,55 @@ export default {
         }
     },
     methods: {
+        // allocationFundId/ tab /school id
+        getBudgetBalance(allocationFundId, tab, schoolId) {
+            
+            const conf = {
+                method: 'GET',
+                url: config.getBudgetBalance + allocationFundId + '/' + tab + '/' +  schoolId,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+
+                let budgetInfo = res.data.budgetInfo, arr = [];
+
+                for(let i=0; i<budgetInfo.length; i++) {
+                    arr.push({ 
+                        transaction: budgetInfo[i].name, 
+                        date: budgetInfo[i].updated_at,
+                        type: budgetInfo[i].category && budgetInfo[i].category.abbreviation,
+                        amount: budgetInfo[i].unit_total_cost,
+                        balance: budgetInfo[i].unti_cost_markup,
+                    })
+                }
+
+                this.tdata = arr
+            })
+        },
+        getAllocationFundId(tab, activiryId) {
+            
+            const conf = {
+                method: 'GET',
+                url: config.allocationFundId + tab + '/' + activiryId,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+
+                const allocationFundId = res.data.allocationFundSource[0].allocation_fund_template_id
+                const tab = parseInt(this.tab)
+                const schoolId = this.$route.params.id
+
+                this.getBudgetBalance(allocationFundId, tab, schoolId)
+                // console.log(res.data.allocationFundSource[0].allocation_fund_template_id, 'getAllocationFundId getAllocationFundId getAllocationFundId getAllocationFundId')
+            })
+
+        },
         exportTable() {
             // naive encoding to csv format
             const content = [this.columns.map(col => wrapCsvValue(col.label))].concat(
@@ -3159,38 +3192,9 @@ export default {
     watch: {
         showRemainingBalance(val) {
             if(val) {
-                // this.visibleColumns = [
-                // "toggle",
-                // "online",
-                // "provider", 
-                // "status", 
-                // "approvals",
-                // "PDActivity", 
-                // "dateOfActivity", 
-                // "noAttending",
-                // "amount",
-                // "type",
-                // "grossPD",
-                // "RemainingBalance",
-                // "actions"
-                // ]
                 this.isRemainingPopupOpen = true
             }else {
                 this.isRemainingPopupOpen = false
-                // this.visibleColumns = [
-                // "toggle",
-                // "online",
-                // "provider", 
-                // "status", 
-                // "approvals",
-                // "PDActivity", 
-                // "dateOfActivity", 
-                // "noAttending",
-                // "amount",
-                // "type",
-                // "grossPD",
-                // "actions"
-                // ]
             }
         },
         isRemainingPopupOpen(val) {
@@ -3212,6 +3216,7 @@ export default {
         },
     },
     created() {
+
         this.tab = this.title.toString()
         let tab = parseInt(this.tab)
         this.getActivityByType( tab, this.$route.params.id, this.count, this.current )
@@ -3223,6 +3228,7 @@ export default {
         this.getSchoolYears()
 
         this.getFunds(tab)
+        this.getAllocationFundId(tab, 1)
         
     }
 
