@@ -361,27 +361,15 @@
 
                         <q-chip 
                             square 
-                            color="edx-bg-pd "
-                            v-if="props.row.type_uni.name == 'PD'"
+                            color="edx-bg-m"
                         >
-                            <span>PD</span>
+                            <span>M</span>
                             <q-tooltip 
                                 anchor="top middle" self="bottom middle" :offset="[10, 10]"
                                 transition-show="flip-right"
                                 transition-hide="flip-left"
                             >
-                                <strong>Professional Development</strong>
-                            </q-tooltip>
-                        </q-chip>
-
-                        <q-chip v-else square color="edx-bg-fe ">
-                            <span>FE</span>
-                            <q-tooltip 
-                                anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                                transition-show="flip-right"
-                                transition-hide="flip-left"
-                            >
-                                <strong>Family Engagement</strong>
+                                <strong>Material</strong>
                             </q-tooltip>
                         </q-chip>
 

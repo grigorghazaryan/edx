@@ -47,7 +47,7 @@
 
                 </q-select>
 
-                <q-select
+                <!-- <q-select
                     :disable="showRemainingBalance" 
                     @input="filterActivity"
                     class="q-mr-md"
@@ -62,7 +62,7 @@
                     <q-icon name="cancel" @click.stop="typeModel = '', filterActivity()" class="cursor-pointer" />
                     </template>
                     
-                </q-select>
+                </q-select> -->
 
                 <q-btn 
                     square
@@ -1425,7 +1425,7 @@
         </dialog-draggable>
 
         <dialog-draggable
-            :width="750" 
+            :width="850" 
             :modelDialog="isRemainingPopupOpen" 
             :title="'Budgeted Spending'" 
             @onHide="isRemainingPopupOpen=false"
@@ -1449,50 +1449,41 @@
                 <div class="col-md-6 q-pr-sm q-mb-md">
                     <div class="row q-mt-lg">
                         <div class="col-md-9 q-pr-md text-right">Priliminary:</div>
-                        <div class="col-md-3"> <b>$ -----</b> </div>
+                        <div class="col-md-3"> <b>$ {{ priliminary }}</b> </div>
                     </div>
                     <div class="row">
                         <div class="col-md-9 q-pr-md text-right">Available to spend:</div>
-                        <div class="col-md-3"> <b>$ -----</b> </div>
+                        <div class="col-md-3"> <b>$ {{ availableToSpend }}</b> </div>
                     </div>
                 </div>
 
                 <div class="col-md-12 q-mt-md">
                     <q-table
+                        class="overflow-auto"
                         :data="tdata" 
                         :columns="tcolumns"
-                        hide-bottom
+                        :loading="tloading"
+                        :pagination.sync="tpagination"
                     >
                         <!-- Table Body -->
                         <template v-slot:body="props">
                             <q-tr :props="props" class="cursor-pointer">
-                                <q-td key="transaction" :props="props">
-                                    <q-icon name="calendar_today" color="orange" style="font-size: 1.5em" />
-                                    {{props.row.transaction}}
+                                <q-td key="transaction"  
+                                    :style="{maxWidth: '350px', width: '350px'}"
+                                    :props="props">
+                                    <span class="inline-span">
+                                        <q-icon name="calendar_today" color="orange" style="font-size: 1.5em" />
+                                        {{props.row.transaction}}
+                                    </span>
                                 </q-td>
                                 <q-td key="date" :props="props">
                                     {{props.row.date}}
                                 </q-td>
                                 <q-td key="type" :props="props">
 
-                                    <q-chip 
-                                        v-if="props.row.type == 'PD' "
+                                    <q-chip
                                         square 
                                         color="edx-bg-pd"
-                                    >
-                                        <span>{{props.row.type}}</span>
-                                        <q-tooltip 
-                                            anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                                            transition-show="flip-right"
-                                            transition-hide="flip-left"
-                                        >
-                                            <strong>{{ props.row.type }}</strong>
-                                        </q-tooltip>
-                                    </q-chip>
-                                    <q-chip 
-                                        v-else
-                                        square 
-                                        color="edx-bg-fe"
                                     >
                                         <span>{{props.row.type}}</span>
                                         <q-tooltip 
@@ -1512,6 +1503,32 @@
                                     $ {{props.row.balance}}
                                 </q-td>
                             </q-tr>
+                        </template>
+
+                        <!-- Pagination -->
+                        <template v-slot:bottom class="justify-end">
+                            <div class="q-pa-md flex flex-center">
+
+                            <q-pagination
+                                v-model="budgetCurrent"
+                                color="edx-pagination"
+                                :max-pages="6"
+                                :max="budgetPages"
+                                :direction-links="true"
+                                @click="changeBudgetPagination(budgetCurrent)"
+                            >
+                            </q-pagination>
+
+                            <div class="row justify-center items-center">
+                                <span class="q-mr-md">Rows Per page</span>
+                                <q-select dense outlined 
+                                @input="changeBudgetRowsPerPage"
+                                v-model="tpagination.rowsPerPage" 
+                                :options="rowsPerPageArr" 
+                                />
+                            </div>
+                            
+                            </div>
                         </template>
                     </q-table>
                 </div>
@@ -1563,6 +1580,7 @@ export default {
         return {
             testCategory: '',
             testSubcategory: '',
+
             tdata: [],
             tcolumns: [
                 {
@@ -1570,7 +1588,7 @@ export default {
                     align: "left",
                     label: "Transaction",
                     field: "transaction",
-                    sortable: true
+                    sortable: true,
                 },
                 {
                     name: "date",
@@ -1601,14 +1619,24 @@ export default {
                     sortable: true
                 },
             ],
+            tloading: true,
+            priliminary: null,
+            availableToSpend: null,
             //
             mode: 'list',
             tab: '1',
+            //
             pages: 1,
             current: 1,
             count: 10,
             pagination: { rowsPerPage: 10 },
             rowsPerPageArr: ['5', '10', '25', '50', '75', '100'], 
+            //
+            budgetPages: 1,
+            budgetCurrent: 1,
+            budgetCount: 10,
+            allocationFundId: null,
+            tpagination: { rowsPerPage: 10 },
             //
             totalPDremainder: this.barInfo.totalsAmount.PD,
             totalFEremainder: this.barInfo.totalsAmount.FE,
@@ -1840,11 +1868,18 @@ export default {
     },
     methods: {
         // allocationFundId/ tab /school id
-        getBudgetBalance(allocationFundId, tab, schoolId) {
+        getBudgetBalance(allocationFundId, tab, categoryId, schoolId, limit, page) {
             
+            this.tloading = true
+
             const conf = {
                 method: 'GET',
-                url: config.getBudgetBalance + allocationFundId + '/' + tab + '/' +  schoolId,
+                url: config.getBudgetBalance + 
+                tab + '/' 
+                + schoolId + '/' +  
+                allocationFundId + '/' +
+                categoryId 
+                + '?limit=' + limit + '&page=' + page,
                 headers: {
                     Accept: 'application/json',
                 }
@@ -1852,19 +1887,27 @@ export default {
 
             axios(conf).then(res => {
 
-                let budgetInfo = res.data.budgetInfo, arr = [];
+                let budgetInfo = res.data.budgetInfo, 
+                    arr = [];
+
+                this.budgetPages = res.data.pagesCount
+
+                this.priliminary = res.data.preliminiary;
+                this.availableToSpend = res.data.availableBalance;
 
                 for(let i=0; i<budgetInfo.length; i++) {
                     arr.push({ 
                         transaction: budgetInfo[i].name, 
-                        date: budgetInfo[i].updated_at,
+                        date: budgetInfo[i].start_date + ' ' + budgetInfo[i].end_date,
                         type: budgetInfo[i].category && budgetInfo[i].category.abbreviation,
                         amount: budgetInfo[i].unit_total_cost,
-                        balance: budgetInfo[i].unti_cost_markup,
+                        balance: budgetInfo[i].balance,
                     })
                 }
 
                 this.tdata = arr
+                this.tloading = false
+
             })
         },
         getAllocationFundId(tab, activiryId) {
@@ -1879,15 +1922,12 @@ export default {
 
             axios(conf).then(res => {
 
-                const allocationFundId = res.data.allocationFundSource[0].allocation_fund_template_id
-                const tab = parseInt(this.tab)
-                const schoolId = this.$route.params.id
-
-                this.getBudgetBalance(allocationFundId, tab, schoolId)
+                this.allocationFundId = res.data.allocationFundSource[0].allocation_fund_template_id
                 // console.log(res.data.allocationFundSource[0].allocation_fund_template_id, 'getAllocationFundId getAllocationFundId getAllocationFundId getAllocationFundId')
             })
 
         },
+
         exportTable() {
             // naive encoding to csv format
             const content = [this.columns.map(col => wrapCsvValue(col.label))].concat(
@@ -2043,6 +2083,7 @@ export default {
 
         },
         getActivityByType(type, id, limit, page) {
+
             this.loading = true
 
             const conf = {
@@ -2590,7 +2631,6 @@ export default {
 
             })
         },
-
 
         // ATTENDING
         showAttendingDialog() {
@@ -3187,12 +3227,43 @@ export default {
                 }
                 this.optionsCategoryTracking = categoryTrackingArr
             })
+        },
+
+        // Budget 
+        changeBudgetRowsPerPage(){
+
+            this.budgetCount = this.tpagination.rowsPerPage
+            this.budgetCurrent = 1
+
+            const tab = parseInt(this.tab)
+            const schoolId = this.$route.params.id
+            const allocationFundId = this.allocationFundId
+
+            this.getBudgetBalance(allocationFundId, tab, 1, schoolId, this.budgetCount, this.current)
+        },
+        changeBudgetPagination(val) {
+
+            this.budgetCurrent = val
+            
+            const tab = parseInt(this.tab)
+            const schoolId = this.$route.params.id
+            const allocationFundId = this.allocationFundId
+
+            this.getBudgetBalance(allocationFundId, tab, 1, schoolId, this.count, val)
         }
     },
     watch: {
         showRemainingBalance(val) {
             if(val) {
+
                 this.isRemainingPopupOpen = true
+                
+                const tab = parseInt(this.tab)
+                const schoolId = this.$route.params.id
+                const allocationFundId = this.allocationFundId
+
+                this.getBudgetBalance(allocationFundId, tab, 1, schoolId, this.count, this.current)
+
             }else {
                 this.isRemainingPopupOpen = false
             }

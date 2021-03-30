@@ -46,7 +46,7 @@
 
                 </q-select>
 
-                <q-select
+                <!-- <q-select
                     :disable="showRemainingBalance" 
                     @input="filterActivity"
                     class="q-mr-md"
@@ -61,7 +61,7 @@
                     <q-icon name="cancel" @click.stop="typeModel = '', filterActivity()" class="cursor-pointer" />
                     </template>
                     
-                </q-select>
+                </q-select> -->
 
                 <q-btn 
                     square
@@ -1422,59 +1422,55 @@
         </dialog-draggable>
 
         <dialog-draggable
-            :width="750" 
+            :width="850" 
             :modelDialog="isRemainingPopupOpen" 
             :title="'Budgeted Spending'" 
             @onHide="isRemainingPopupOpen=false"
             :icon="'attach_money'"
-            :color="'green'"
         >
 
         <q-card-section style="max-height: 60vh" class="scroll q-pt-none q-pb-none q-pr-none q-pl-none">
             <div class="row q-mr-lg q-ml-lg q-mb-lg q-mt-lg">
                 <div class="col-md-6 q-pr-sm q-mb-md">
-                    <div class="text-subtitle2 q-mb-sm">Allocation Funds</div>
-                    <div class="row cursor-pointer h-popup">
-                        <q-select 
-                            class="full-width"
-                            v-model="testCategory" 
-                            :options="typeArr"
-                            outlined
-                            dense
-                        />
-                    </div>
                 </div>
                 <div class="col-md-6 q-pr-sm q-mb-md">
                     <div class="row q-mt-lg">
                         <div class="col-md-9 q-pr-md text-right">Priliminary:</div>
-                        <div class="col-md-3"> <b>$ 49701</b> </div>
+                        <div class="col-md-3"> <b>$ {{ priliminary }}</b> </div>
                     </div>
                     <div class="row">
                         <div class="col-md-9 q-pr-md text-right">Available to spend:</div>
-                        <div class="col-md-3"> <b>$ 24850</b> </div>
+                        <div class="col-md-3"> <b>$ {{ availableToSpend }}</b> </div>
                     </div>
                 </div>
 
                 <div class="col-md-12 q-mt-md">
                     <q-table
+                        class="overflow-auto"
                         :data="tdata" 
                         :columns="tcolumns"
-                        hide-bottom
+                        :loading="tloading"
+                        :pagination.sync="tpagination"
                     >
                         <!-- Table Body -->
                         <template v-slot:body="props">
                             <q-tr :props="props" class="cursor-pointer">
-                                <q-td key="transaction" :props="props">
-                                    <q-icon name="calendar_today" color="orange" style="font-size: 1.5em" />
-                                    {{props.row.transaction}}
+                                <q-td key="transaction"  
+                                    :style="{maxWidth: '350px', width: '350px'}"
+                                    :props="props">
+                                    <span class="inline-span">
+                                        <q-icon name="calendar_today" color="orange" style="font-size: 1.5em" />
+                                        {{props.row.transaction}}
+                                    </span>
                                 </q-td>
                                 <q-td key="date" :props="props">
                                     {{props.row.date}}
                                 </q-td>
                                 <q-td key="type" :props="props">
-                                    <q-chip 
-                                        square class="edx-excel-btn"
-                                        text-color="white"
+
+                                    <q-chip
+                                        square 
+                                        color="edx-bg-fe"
                                     >
                                         <span>{{props.row.type}}</span>
                                         <q-tooltip 
@@ -1485,6 +1481,7 @@
                                             <strong>{{ props.row.type }}</strong>
                                         </q-tooltip>
                                     </q-chip>
+
                                 </q-td>
                                 <q-td key="amount" :props="props">
                                     $ {{props.row.amount}}
@@ -1493,6 +1490,32 @@
                                     $ {{props.row.balance}}
                                 </q-td>
                             </q-tr>
+                        </template>
+
+                        <!-- Pagination -->
+                        <template v-slot:bottom class="justify-end">
+                            <div class="q-pa-md flex flex-center">
+
+                            <q-pagination
+                                v-model="budgetCurrent"
+                                color="edx-pagination"
+                                :max-pages="6"
+                                :max="budgetPages"
+                                :direction-links="true"
+                                @click="changeBudgetPagination(budgetCurrent)"
+                            >
+                            </q-pagination>
+
+                            <div class="row justify-center items-center">
+                                <span class="q-mr-md">Rows Per page</span>
+                                <q-select dense outlined 
+                                @input="changeBudgetRowsPerPage"
+                                v-model="tpagination.rowsPerPage" 
+                                :options="rowsPerPageArr" 
+                                />
+                            </div>
+                            
+                            </div>
                         </template>
                     </q-table>
                 </div>
@@ -1544,29 +1567,8 @@ export default {
         return {
             testCategory: '',
             testSubcategory: '',
-            tdata: [
-                { 
-                    transaction: 'Episode IV - A New Hope', 
-                    date: '10/09/20 - 10/22/20',
-                    type: 'PD',
-                    amount: 42000,
-                    balance: 20650
-                },
-                { 
-                    transaction: 'Episode V – The Empire Strikes Back', 
-                    date: '10/09/20 - 10/22/20',
-                    type: 'L',
-                    amount: 1480,
-                    balance: 19170
-                },
-                { 
-                    transaction: 'Episode VI – Return of the Jedi', 
-                    date: '10/09/20 - 10/22/20',
-                    type: 'PD',
-                    amount: 3675,
-                    balance: 15495
-                },
-            ],
+
+            tdata: [],
             tcolumns: [
                 {
                     name: "transaction",
@@ -1604,14 +1606,24 @@ export default {
                     sortable: true
                 },
             ],
+            tloading: true,
+            priliminary: null,
+            availableToSpend: null,
             //
             mode: 'list',
             tab: '1',
+            //
             pages: 1,
             current: 1,
             count: 10,
             pagination: { rowsPerPage: 10 },
             rowsPerPageArr: ['5', '10', '25', '50', '75', '100'], 
+            //
+            budgetPages: 1,
+            budgetCurrent: 1,
+            budgetCount: 10,
+            allocationFundId: null,
+            tpagination: { rowsPerPage: 10 },
             //
             totalPDremainder: this.barInfo.totalsAmount.PD,
             totalFEremainder: this.barInfo.totalsAmount.FE,
@@ -1842,6 +1854,66 @@ export default {
         }
     },
     methods: {
+        getBudgetBalance(allocationFundId, tab, categoryId, schoolId, limit, page) {
+            
+            this.tloading = true
+
+            const conf = {
+                method: 'GET',
+                url: config.getBudgetBalance + 
+                tab + '/' 
+                + schoolId + '/' +  
+                allocationFundId + '/' +
+                categoryId 
+                + '?limit=' + limit + '&page=' + page,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+
+                let budgetInfo = res.data.budgetInfo, 
+                    arr = [];
+
+                this.budgetPages = res.data.pagesCount
+
+                this.priliminary = res.data.preliminiary;
+                this.availableToSpend = res.data.availableBalance;
+
+                for(let i=0; i<budgetInfo.length; i++) {
+                    arr.push({ 
+                        transaction: budgetInfo[i].name, 
+                        date: budgetInfo[i].start_date + ' ' + budgetInfo[i].end_date,
+                        type: budgetInfo[i].category && budgetInfo[i].category.abbreviation,
+                        amount: budgetInfo[i].unit_total_cost,
+                        balance: budgetInfo[i].balance,
+                    })
+                }
+
+                this.tdata = arr
+                this.tloading = false
+
+            })
+        },
+        getAllocationFundId(tab, activiryId) {
+            
+            const conf = {
+                method: 'GET',
+                url: config.allocationFundId + tab + '/' + activiryId,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+
+                this.allocationFundId = res.data.allocationFundSource[0].allocation_fund_template_id
+                // console.log(res.data.allocationFundSource[0].allocation_fund_template_id, 'getAllocationFundId getAllocationFundId getAllocationFundId getAllocationFundId')
+            })
+
+        },
+
         exportTable() {
             // naive encoding to csv format
             const content = [this.columns.map(col => wrapCsvValue(col.label))].concat(
@@ -3141,43 +3213,45 @@ export default {
                 }
                 this.optionsCategoryTracking = categoryTrackingArr
             })
+        },
+
+        // Budget 
+        changeBudgetRowsPerPage(){
+
+            this.budgetCount = this.tpagination.rowsPerPage
+            this.budgetCurrent = 1
+
+            const tab = parseInt(this.tab)
+            const schoolId = this.$route.params.id
+            const allocationFundId = this.allocationFundId
+
+            this.getBudgetBalance(allocationFundId, tab, 2, schoolId, this.budgetCount, this.current)
+        },
+        changeBudgetPagination(val) {
+
+            this.budgetCurrent = val
+            
+            const tab = parseInt(this.tab)
+            const schoolId = this.$route.params.id
+            const allocationFundId = this.allocationFundId
+
+            this.getBudgetBalance(allocationFundId, tab, 2, schoolId, this.count, val)
         }
     },
     watch: {
         showRemainingBalance(val) {
             if(val) {
-                // this.visibleColumns = [
-                // "toggle",
-                // "online",
-                // "provider", 
-                // "status", 
-                // "approvals",
-                // "PDActivity", 
-                // "dateOfActivity", 
-                // "noAttending",
-                // "amount",
-                // "type",
-                // "grossPD",
-                // "RemainingBalance",
-                // "actions"
-                // ]
+
                 this.isRemainingPopupOpen = true
+                
+                const tab = parseInt(this.tab)
+                const schoolId = this.$route.params.id
+                const allocationFundId = this.allocationFundId
+
+                this.getBudgetBalance(allocationFundId, tab, 2, schoolId, this.count, this.current)
+
             }else {
                 this.isRemainingPopupOpen = false
-                // this.visibleColumns = [
-                // "toggle",
-                // "online",
-                // "provider", 
-                // "status", 
-                // "approvals",
-                // "PDActivity", 
-                // "dateOfActivity", 
-                // "noAttending",
-                // "amount",
-                // "type",
-                // "grossPD",
-                // "actions"
-                // ]
             }
         },
         isRemainingPopupOpen(val) {
@@ -3210,7 +3284,8 @@ export default {
         this.getSchoolYears()
 
         this.getFunds(tab)
-        
+        this.getAllocationFundId(tab, 2)
+
     }
 
 }
