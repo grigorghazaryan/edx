@@ -1578,6 +1578,7 @@ export default {
     },
     data() {
         return {
+
             testCategory: '',
             testSubcategory: '',
 
@@ -2088,7 +2089,8 @@ export default {
 
             const conf = {
                 method: 'GET',
-                url: config.getActivity + type + '/' + id + '/' + 1 + '?limit=' + limit + '&page=' + page + '&category=1',
+                url: config.getActivity + type + '/' + id + '/' + 1 + '?limit=' 
+                + limit + '&page=' + page + '&category=1',
                 headers: {
                 Accept: 'application/json',
                 }
@@ -2120,6 +2122,7 @@ export default {
         },
         // Add Activity
         openNewActivityPopup() {
+            
             this.isEdit = false
             this.isShowActivityPopup = true
             this.editedItem = {
@@ -3290,6 +3293,7 @@ export default {
 
         this.tab = this.title.toString()
         let tab = parseInt(this.tab)
+
         this.getActivityByType( tab, this.$route.params.id, this.count, this.current )
         this.getAdditionalInfo(tab)
         this.getCategoryTypes(tab)
