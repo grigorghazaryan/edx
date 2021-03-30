@@ -11,6 +11,190 @@
                 <q-inner-loading showing color="primary" />
             </template>
 
+            <!-- Table Header -->
+            <template v-slot:top-right="props">
+
+                <q-input
+                    :disable="showRemainingBalance"
+                    class="q-mr-md"
+                    outlines
+                    dense
+                    v-model="filter"
+                    placeholder="Search"
+                    @keyup="keyUpFilter" 
+                    @keydown="keyDownFilter"
+                    style="min-width: 250px; max-width: 250px"
+                >
+                    <template v-slot:append>
+                    <q-icon name="search" />
+                    </template>
+                </q-input>
+       
+                <q-select class="q-mr-md" style="min-width: 200px; max-width: 200px" 
+                    dense outlines 
+                    v-model="schoolYear" 
+                    :options="schoolYears" 
+                    label="School year" 
+                    @input="filterTeachers"
+                    :disable="showRemainingBalance"
+                >
+                    <template v-if="schoolYear" v-slot:append>
+                    <q-icon name="cancel" @click.stop="schoolYear = '', filterTeachers()" class="cursor-pointer" />
+                    </template>
+
+                </q-select>
+
+            
+
+                <q-btn 
+                    square
+                    class="q-mr-md edx-add-btn" text-color="white"
+                    icon="add" 
+                    no-caps
+                    @click="openNewTeacherPopup"
+                >
+                    Add
+                </q-btn>
+
+                <q-btn
+                    icon-right="archive"
+                    label="Export to Excel"
+                    class="edx-excel-btn" text-color="white"
+                    no-caps
+                    @click="exportTable"
+                />
+
+                <q-btn
+                    flat
+                    round
+                    dense
+                    :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+                    @click="props.toggleFullscreen"
+                    v-if="mode === 'list'" class="q-px-sm"
+                >
+                    <q-tooltip
+                    :disable="$q.platform.is.mobile"
+                    v-close-popup
+                    >{{props.inFullscreen ? 'Exit Fullscreen' : 'Toggle Fullscreen'}}
+                    </q-tooltip>
+                </q-btn>
+
+                <q-checkbox v-model="showRemainingBalance" label="Show remaining balance" />
+
+                <div class="q-pa-sm q-gutter-sm">
+
+                    <q-dialog v-model="confirm" persistent>
+                        <q-card>
+                            <q-card-section class="row items-center">
+                            <span class="q-ml-sm">Are you sure to delete this item?</span>
+                            </q-card-section>
+
+                            <q-card-actions align="right">
+                            <q-btn flat label="No, thanks" color="primary" v-close-popup />
+                            <q-btn label="Yes" color="edx-delete-btn" v-close-popup @click="deleteItem" />
+                            </q-card-actions>
+                        </q-card>
+                    </q-dialog>
+                </div>
+                <!-- <div class="q-pa-sm q-gutter-sm">
+
+                    <q-dialog v-model="confirm" persistent>
+                        <q-card>
+                            <q-card-section class="row items-center">
+                            <span class="q-ml-sm">Are you sure to delete this item?</span>
+                            </q-card-section>
+
+                            <q-card-actions align="right">
+                            <q-btn flat label="No, thanks" color="primary" v-close-popup />
+                            <q-btn label="Yes" color="edx-delete-btn" v-close-popup @click="deleteItem" />
+                            </q-card-actions>
+                        </q-card>
+                    </q-dialog>
+
+                    <q-dialog v-model="confirmAttendeeModal" persistent>
+                        <q-card>
+                            <q-card-section class="row items-center">
+                            <span class="q-ml-sm">Are you sure to delete this?</span>
+                            </q-card-section>
+
+                            <q-card-actions align="right">
+                            <q-btn flat label="No, thanks" color="primary" v-close-popup />
+                            <q-btn label="Yes" color="edx-delete-btn" v-close-popup @click="deleteAttendee" />
+                            </q-card-actions>
+                        </q-card>
+                    </q-dialog>
+
+                    <q-dialog v-model="addParticipantModal">
+                        <q-card style="width: 550px; max-width: 80vw;">
+
+                        <q-card-section class="row" style="width: 500px; display: flex; align-items: center;">
+                            <q-icon name="perm_identity" class="text-blue q-mr-sm" style="font-size: 2em"/>
+                            <span class="text-h6" style="line-height: 2.5rem">Create New Attendee</span>
+                        </q-card-section>
+
+                    
+                        <q-card-section
+                            style="max-height: 60vh"
+                            class="scroll q-pt-none q-pb-none"
+                        >
+                            <div class="row">
+
+                            <div class="col-12">
+                                <q-input outlined v-model="addNewAttendee.firstName" label="First Name" />
+                            </div>
+
+                            <div class="col-12 q-mt-sm">
+                                <q-input outlined v-model="addNewAttendee.lastName" label="Last Name" />
+                            </div>
+
+                            <div class="col-12 q-mt-sm">
+                                <q-input outlined v-model="addNewAttendee.email" label="Email" />
+                            </div>
+                            
+                            </div>
+                        </q-card-section>
+
+                        <q-card-actions class="row justify-end">
+                            <div>
+                            <q-btn flat label="Cancel" color="primary" v-close-popup></q-btn>
+                            <q-btn flat label="Add" color="primary" @click="addParticipant"></q-btn>
+                            </div>
+                        </q-card-actions>
+                    
+
+                        </q-card>
+                    </q-dialog>
+
+                    <q-dialog v-model="confirmTeacherModal" persistent>
+                        <q-card>
+                            <q-card-section class="row items-center">
+                            <span class="q-ml-sm">Are you sure to delete this item?</span>
+                            </q-card-section>
+
+                            <q-card-actions align="right">
+                            <q-btn flat label="No, thanks" color="primary" v-close-popup />
+                            <q-btn label="Yes" color="edx-delete-btn" v-close-popup @click="deleteTeacherItem" />
+                            </q-card-actions>
+                        </q-card>
+                    </q-dialog>
+
+                    <q-dialog v-model="confirmDate" persistent>
+                        <q-card>
+                        <q-card-section class="row items-center">
+                            <span class="q-ml-sm">Are you sure to delete this item?</span>
+                        </q-card-section>
+
+                        <q-card-actions align="right">
+                            <q-btn flat label="No, thanks" color="primary" v-close-popup />
+                            <q-btn label="Yes" color="edx-delete-btn" v-close-popup @click="deleteDate" />
+                        </q-card-actions>
+                        </q-card>
+                    </q-dialog>
+
+                </div> -->
+
+            </template>
+
             <!-- Table Body -->
             <template v-slot:body="props">
             
@@ -54,7 +238,7 @@
 
                         <q-chip 
                             square 
-                            color="edx-bg-pd "
+                            color="edx-bg-i"
                         >
                             <span>{{props.row.type_uni.name}}</span>
                             <q-tooltip 
@@ -118,7 +302,7 @@
             </template>
 
             <!-- Pagination -->
-            <!-- <template v-slot:bottom class="justify-end">
+            <template v-slot:bottom class="justify-end">
                 <div class="q-pa-md flex flex-center">
                 <q-pagination
                     v-model="current"
@@ -139,7 +323,7 @@
                 </div>
                 
                 </div>
-            </template> -->
+            </template>
 
         </q-table>
 
@@ -147,8 +331,11 @@
         <TeacherPopup 
         
             @hidePopup="closeTeacherPopup" 
-            :show="showTeacherModal" :id="id" :title="title" 
+            :show="showTeacherModal" :id="id" 
+            :title="title" 
             :isEdit="isEdit"
+            :isDuplicate="isDuplicate"
+
         />
  
         
@@ -162,6 +349,9 @@ import axios from 'axios'
 import config from '../../../config'
 import TeacherPopup from './TeacherPopup'
 
+let typingTimer
+let doneTypingInterval = 500
+
 export default {
     props: {
         title: {
@@ -173,7 +363,9 @@ export default {
     },
     data() {
         return {
+
             loading: false,
+            isRemainingPopupOpen: false,
             data: [],
             columns: [
                 {
@@ -232,19 +424,80 @@ export default {
                     field: "actions"
                 }
             ],
-            pagination: { rowsPerPage: 10 },
-            rowsPerPageArr: ['5', '10', '25', '50', '75', '100'], 
+            //
+            mode: 'list',
+            tab: '1',
+            //
+            pages: 1,
             current: 1,
             count: 10,
-            pages: 0,
+            pagination: { rowsPerPage: 10 },
+            rowsPerPageArr: ['5', '10', '25', '50', '75', '100'], 
+            //
+            
 
             // #########
             id: null,
             showTeacherModal: false,
             isEdit: true,
+            isDuplicate: false,
+            showRemainingBalance: false,
+            //
+            filter: '',
+            schoolYear: null,
+            schoolYears: [],
+            //
+            confirm: false,
         }
     },
     methods: {
+        openDeleteModal(row) {
+            this.confirm = true
+        },
+        deleteItem() {
+            
+            // const conf = {
+            //     method: 'DELETE',
+            //     url: config.deleteActivity + this.editedItem.id,
+            //     headers: {
+            //         Accept: 'application/json',
+            //     }
+            // }
+
+            // axios(conf).then(res => {
+            //     const index = this.data.indexOf(this.editedItem)
+            //     this.data.splice(index, 1)
+            //         this.$q.notify({
+            //             message: 'Activity deleted!',
+            //             type: 'positive',
+            //         })
+            //     })
+        },
+        exportTable() {
+            // naive encoding to csv format
+            const content = [this.columns.map(col => wrapCsvValue(col.label))].concat(
+                this.data.map(row => this.columns.map(col => wrapCsvValue(
+                    typeof col.field === 'function'
+                        ? col.field(row)
+                        : row[col.field === void 0 ? col.name : col.field],
+                    col.format
+                )).join(','))
+            ).join('\r\n')
+
+            const status = exportFile(
+                'table-export.csv',
+                content,
+                'text/csv'
+            )
+
+            if (status !== true) {
+                this.$q.notify({
+                    message: 'Browser denied file download...',
+                    color: 'negative',
+                    icon: 'warning'
+                })
+            }
+        },
         teachersParsing(data) {
             let arr = []
             for(let i=0; i<data.length; i++) {
@@ -306,9 +559,110 @@ export default {
         closeTeacherPopup() {
             this.showTeacherModal = false
         },
+        //
+        // Pagination
+        changePagination (val) {
+            this.current = val
+            this.getTeacherBudgetByType( parseInt(this.tab), this.$route.params.id, this.count, val )
+        },
+        changeRowsPerPage() {
+            this.count = this.pagination.rowsPerPage
+            this.current = 1
+            this.getTeacherBudgetByType( parseInt(this.tab), this.$route.params.id, this.count, this.current )
+        },
+        //
+        // Filter key events
+        keyUpFilter() {
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(this.doneTyping, doneTypingInterval);
+        },
+        keyDownFilter() {
+            clearTimeout(typingTimer);
+        },
+        doneTyping() {
+            if(this.filter.length > 1 || this.filter.length == 0) {
+                this.filterTeachers()
+            }
+        },
+        //
+        filterTeachers() {
+            
+            // let uri = '';
+
+            // if(this.filter != '') {
+            //     uri += '&search=' + this.filter
+            // }
+
+            // if(this.schoolYear) {
+            //     uri += '&year=' + this.schoolYear.id
+            // }
+
+            // const conf = {
+            //     method: 'GET',
+            //     url: config.filterActivity + this.tab + '/' + this.$route.params.id + '/1' + '?' + uri,
+            //     headers: {
+            //     Accept: 'application/json',
+            //     }
+            // }
+
+            // axios(conf).then(res => {
+
+            //     this.pages = res.data.pagesCount
+            //     let data = res.data.items
+                
+            //     let filteredData = this.activityParsing(data, this.final)
+
+            //     this.data = filteredData
+            //     this.tempDataX = filteredData
+
+            //     this.loading = false
+            // });
+        },
+                // Get School Years
+        getSchoolYears() {
+            const conf = {
+                method: 'GET',
+                url: config.getSchoolYears,
+                headers: {
+                Accept: 'application/json',
+                }
+            }
+            axios(conf).then(res => {
+                console.log('getSchoolYears',  res)
+
+                let data = res.data, schoolsArr = []
+                for(let i=0; i<data.length; i++) {
+                let obj = {
+                    id: data[i].id,
+                    label: data[i].year_name,
+                    value: data[i].year_name
+                }
+                schoolsArr.push(obj)
+                }
+                this.schoolYears = schoolsArr
+            })
+        },
+        openNewTeacherPopup() {
+
+            this.isEdit = false
+            this.showTeacherModal = true
+
+        },
+        openDuplicatePopup(row) {
+            
+            this.showTeacherModal = true
+            this.isDuplicate = true
+            this.isEdit = false
+
+        }
+        
     },
     created() {
+        this.tab = this.title.toString()
+        let tab = parseInt(this.tab)
+
         this.getTeacherBudgetByType(this.title, this.$route.params.id, this.count, this.current)
+        this.getSchoolYears()
     }
 }
 </script>

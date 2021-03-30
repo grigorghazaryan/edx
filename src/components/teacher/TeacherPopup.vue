@@ -534,10 +534,18 @@
                 </div>
             </div>
 
+            <!-- <q-card-actions align="right"> -->
+                <!-- <q-btn flat label="Cancel" color="primary" @click="hidePopup" /> -->
+                <!-- <q-btn v-if="isEdit" :loading="btnLoading" @click="editTeacher" flat label="Save" color="primary" /> -->
+
+                <!-- <q-btn v-else :loading="btnLoading" @click="addTeacher" flat label="Add" color="primary" /> -->
+            <!-- </q-card-actions> -->
+
             <q-card-actions align="right">
-                <q-btn flat label="Cancel" color="primary" @click="hidePopup" />
-                <q-btn v-if="isEdit" :loading="btnLoading" @click="editTeacher" flat label="Save" color="primary" />
-                <q-btn v-else :loading="btnLoading" @click="addTeacher" flat label="Add" color="primary" />
+                <q-btn flat label="Cancel" color="primary" v-close-popup/>
+                <q-btn v-if="isEdit && !isDuplicate" :loading="btnLoading" @click="editTeacher" flat label="Save" color="primary" />
+                <q-btn v-if="!isEdit && !isDuplicate" :loading="btnLoading" @click="addTeacher" flat label="Add" color="primary" />
+                <q-btn v-if="isDuplicate && !isEdit" :loading="btnLoading" @click="duplicateTeacher" flat label="Duplicate" color="primary" />
             </q-card-actions>
             
         </dialog-draggable>
@@ -609,6 +617,9 @@ export default {
             required: true
         },
         isEdit: {
+            required: true
+        },
+        isDuplicate: {
             required: true
         }
     },
@@ -705,6 +716,7 @@ export default {
         }
     },
     methods: {
+
         paySchedule() {
             this.showPaySchedule = true
         },
@@ -1132,11 +1144,14 @@ export default {
         },
         // =========================
         addTeacher() {
-
+            alert('add')
         },
         editTeacher() {
-
+alert('edit')
         },
+        duplicateTeacher() {
+alert('duplicate')
+        }
     },
     watch: {
         editedItem(val) {

@@ -232,7 +232,7 @@ export default {
                     arr.push({ 
                         transaction: this.employee ? this.employee.label : '', 
                         date: splittedDate[0] + ' - ' +splittedDate[1],
-                        category: this.category.name,
+                        category: this.category ? this.category.name : '',
                         amount: (count * this.hourlyFringe).toFixed(2)
                     })
 
@@ -298,6 +298,10 @@ export default {
         daysInMonth (month, year) {
             return new Date(year, month, 0).getDate();
         },
+
+
+
+        
     },
     computed: {
         isShow() {

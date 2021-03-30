@@ -114,7 +114,7 @@
           align="left"
           narrow-indicator
         >
-          <q-tab name="1" label="Title I"/>
+          <!-- <q-tab name="1" label="Title I"/> -->
           <q-tab name="2" label="Title II"/>
           <q-tab name="3" label="Title III"/>
           <q-tab name="4" label="Title IV"/>
@@ -127,9 +127,9 @@
 
         <q-tab-panels v-model="tab" animated class="tab-panels-parent">
 
-          <q-tab-panel name="1" class="q-p-sm">
+          <!-- <q-tab-panel name="1" class="q-p-sm">
             <MaterialTableTitle :title="1" :barInfo="barInfo" @final="finalResult"/>
-          </q-tab-panel>
+          </q-tab-panel> -->
 
           <q-tab-panel name="2" class="q-p-sm">
             <MaterialTableTitle :title="2" :barInfo="barInfo" @final="finalResult"/>
@@ -174,7 +174,7 @@
         data() {
           return {
             schoolName: '',
-            tab: '1',
+            tab: '2',
             mode: 'list',
             isFinal: false,
             loading: false,
