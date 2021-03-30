@@ -24,7 +24,7 @@
                             />
                         </div>
                     </div>
-                    <!-- <q-checkbox :v-model="schedule" label="Schedule Transactions for billing" /> -->
+                    <q-checkbox :v-model="schedule" label="Schedule Transactions for billing" />
                 </div>
                 <div class="col-md-6 q-pr-sm q-mb-md">
                     <!-- <div class="row q-mt-lg">
