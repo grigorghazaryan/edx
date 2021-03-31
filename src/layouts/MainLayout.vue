@@ -66,7 +66,7 @@
         <q-scroll-area class="fit">
           <q-list>
 
-          <q-item to="/" @click="addDataToLS('Dashboard', '/')" active-class="q-item-no-link-highlighting">
+          <q-item to="/" active-class="q-item-no-link-highlighting">
             <q-item-section avatar>
               <q-icon name="dashboard"/>
             </q-item-section>
@@ -75,8 +75,10 @@
             </q-item-section>
           </q-item>
 
+          <!-- MANAGEMENT -->
+
           <q-expansion-item v-if="!miniState"
-            icon="person"
+            icon="settings"
             label="Management"
           >
             <q-list class="bg-sidebar-opened edx-menu-toggle">
@@ -84,7 +86,7 @@
               @click="addDataToLS('Schools', 'Schools')"  
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
-                  <q-icon name="person"/>
+                  <q-icon name="apartment"/>
                 </q-item-section>
                 <q-item-section>
                   <q-item-label>Schools</q-item-label>
@@ -96,7 +98,7 @@
               @click="addDataToLS('Administration', 'Vendors')"  
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
-                  <q-icon name="person"/>
+                  <q-icon name="recent_actors"/>
                 </q-item-section>
                 <q-item-section>
                   <q-item-label>Vendors</q-item-label>
@@ -104,11 +106,19 @@
               </q-item>
             </q-list>
             <q-list class="bg-sidebar-opened edx-menu-toggle">
-              <q-item to="/SchoolYear" 
-              @click="addDataToLS('School Year', 'SchoolYear')"  
-              active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
+              <q-item to="/TeachersXX" active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
-                  <q-icon name="person"/>
+                  <q-icon name="people"/>
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label>Teachers</q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-list>
+            <q-list class="bg-sidebar-opened edx-menu-toggle">
+              <q-item to="/SchoolYear" active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
+                <q-item-section avatar>
+                  <q-icon name="date_range"/>
                 </q-item-section>
                 <q-item-section>
                   <q-item-label>School Year</q-item-label>
@@ -119,7 +129,7 @@
 
           <q-item v-else active-class="q-item-no-link-highlighting">
             <q-item-section avatar>
-              <q-icon name="person"/>
+              <q-icon name="settings"/>
             </q-item-section>
             <q-item-section>
               <q-item-label>Management</q-item-label>
@@ -129,30 +139,40 @@
               anchor="top right"
               self="top left"
             >
-              <q-list style="min-width: 100px">
-                <q-item clickable  v-close-popup to="/Schools" @click="addDataToLS('Schools', 'Schools')"  active-class="q-item-no-link-highlighting">
+              <q-list class="edx-sidebar-background edx-sidebar-menu-text" style="min-width: 100px">
+                <q-item clickable  v-close-popup to="/Schools" active-class="q-item-no-link-highlighting">
                   <q-item-section avatar>
-                    <q-icon name="person"/>
+                    <q-icon name="apartment"/>
                   </q-item-section>
                   <q-item-section>
                     <q-item-label>Schools</q-item-label>
                   </q-item-section>
                 </q-item>
               </q-list>
-              <q-list style="min-width: 100px">
-                <q-item clickable  v-close-popup to="/Vendors" @click="addDataToLS('Vendors', 'Vendors')"  active-class="q-item-no-link-highlighting">
+              <q-list class="edx-sidebar-background edx-sidebar-menu-text" style="min-width: 100px">
+                <q-item clickable  v-close-popup to="/Vendors"  active-class="q-item-no-link-highlighting">
                   <q-item-section avatar>
-                    <q-icon name="person"/>
+                    <q-icon name="recent_actors"/>
                   </q-item-section>
                   <q-item-section>
                     <q-item-label>Vendors</q-item-label>
                   </q-item-section>
                 </q-item>
               </q-list>
-              <q-list style="min-width: 100px">
-                <q-item clickable  v-close-popup to="/SchoolYear" @click="addDataToLS('School Year', 'SchoolYear')"  active-class="q-item-no-link-highlighting">
+              <q-list class="edx-sidebar-background edx-sidebar-menu-text" style="min-width: 100px">
+                <q-item clickable  v-close-popup to="/TeachersXXX" active-class="q-item-no-link-highlighting">
                   <q-item-section avatar>
-                    <q-icon name="person"/>
+                    <q-icon name="people"/>
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>Teachers</q-item-label>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+              <q-list class="edx-sidebar-background edx-sidebar-menu-text" style="min-width: 100px">
+                <q-item clickable  v-close-popup to="/SchoolYear" active-class="q-item-no-link-highlighting">
+                  <q-item-section avatar>
+                    <q-icon name="date_range"/>
                   </q-item-section>
                   <q-item-section>
                     <q-item-label>SchoolYear</q-item-label>
@@ -163,8 +183,10 @@
             </q-menu>
           </q-item>
 
+          <!-- ADMINISTRATION -->
+
           <q-expansion-item v-if="!miniState"
-            icon="person"
+            icon="admin_panel_settings"
             label="Administration"
           >
             <q-list class="bg-sidebar-opened edx-menu-toggle">
@@ -172,7 +194,7 @@
               @click="addDataToLS('Users', 'Users')"  
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
-                  <q-icon name="person"/>
+                  <q-icon name="account_circle"/>
                 </q-item-section>
                 <q-item-section>
                   <q-item-label>Users</q-item-label>
@@ -182,7 +204,7 @@
               @click="addDataToLS('Roles', 'Roles')"  
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
-                  <q-icon name="person"/>
+                  <q-icon name="supervised_user_circle"/>
                 </q-item-section>
                 <q-item-section>
                   <q-item-label>Roles</q-item-label>
@@ -193,7 +215,7 @@
 
           <q-item v-else active-class="q-item-no-link-highlighting">
             <q-item-section avatar>
-              <q-icon name="person"/>
+              <q-icon name="admin_panel_settings"/>
             </q-item-section>
             <q-item-section>
               <q-item-label>Administration</q-item-label>
@@ -203,20 +225,20 @@
               anchor="top right"
               self="top left"
             >
-              <q-list style="min-width: 100px">
+              <q-list class="edx-sidebar-background edx-sidebar-menu-text" style="min-width: 100px">
                 <q-item clickable  v-close-popup to="/Users" @click="addDataToLS('Users', 'Users')"  active-class="q-item-no-link-highlighting">
                   <q-item-section avatar>
-                    <q-icon name="person"/>
+                    <q-icon name="account_circle"/>
                   </q-item-section>
                   <q-item-section>
                     <q-item-label>Users</q-item-label>
                   </q-item-section>
                 </q-item>
               </q-list>
-              <q-list style="min-width: 100px">
+              <q-list class="edx-sidebar-background edx-sidebar-menu-text" style="min-width: 100px">
                 <q-item clickable  v-close-popup to="/Roles" @click="addDataToLS('Roles', 'Roles')"  active-class="q-item-no-link-highlighting">
                   <q-item-section avatar>
-                    <q-icon name="person"/>
+                    <q-icon name="supervised_user_circle"/>
                   </q-item-section>
                   <q-item-section>
                     <q-item-label>Roles</q-item-label>
@@ -226,65 +248,67 @@
             </q-menu>
           </q-item>
 
+          <!-- ALLOCATIONS -->
+
           <q-expansion-item
-            icon="text_format"
+            icon="account_balance"
             label="Allocations"
             class="menu-parent"
             v-if="!miniState"
           >
             <q-list class="bg-sidebar-opened edx-menu-toggle">
-              <q-item to="/Allocations/Title1" @click="addDataToLS('Title I', '/Allocations/Title1')"  
+              <q-item to="/Allocations/Title1" 
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
-                  <q-icon name="text_format"/>
+                  <q-icon name="request_page"/>
                 </q-item-section>
                 <q-item-section>
-                  <q-item-label>Title I</q-item-label>
+                  <q-item-label>Title I Funds</q-item-label>
                 </q-item-section>
               </q-item>
-              <q-item to="/Allocations/Title2" @click="addDataToLS('Title II', '/Allocations/Title2')" 
+              <q-item to="/Allocations/Title2" 
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
-                  <q-icon name="text_format"/>
+                  <q-icon name="request_page"/>
                 </q-item-section>
                 <q-item-section>
-                  <q-item-label>Title II</q-item-label>
+                  <q-item-label>Title II Funds</q-item-label>
                 </q-item-section>
               </q-item>
-              <q-item to="/Allocations/Title3"  @click="addDataToLS('Title III', '/Allocations/Title3')" 
+              <q-item to="/Allocations/Title3" 
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
-                  <q-icon name="text_format"/>
+                  <q-icon name="request_page"/>
                 </q-item-section>
                 <q-item-section>
-                  <q-item-label>Title III</q-item-label>
+                  <q-item-label>Title III Funds</q-item-label>
                 </q-item-section>
               </q-item>
-              <q-item to="/Allocations/Title4"  @click="addDataToLS('Title IV', '/Allocations/Title4')" 
+              <q-item to="/Allocations/Title4"
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
-                  <q-icon name="text_format"/>
+                  <q-icon name="request_page"/>
                 </q-item-section>
                 <q-item-section>
-                  <q-item-label>Title IV</q-item-label>
+                  <q-item-label>Title IV Funds</q-item-label>
                 </q-item-section>
               </q-item>
-              <q-item to="/Allocations/esser" @click="addDataToLS('ESSER', '/Allocations/esser')"  
+              <q-item to="/Allocations/esser"  
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
-                  <q-icon name="text_format"/>
+                  <q-icon name="request_page"/>
                 </q-item-section>
                 <q-item-section>
-                  <q-item-label>ESSER</q-item-label>
+                  <q-item-label>ESSER Funds</q-item-label>
                 </q-item-section>
               </q-item>
-              <q-item to="/Allocations/geer" @click="addDataToLS('GEER', '/Allocations/geer')"  
+              <q-item to="/Allocations/geer" 
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
-                  <q-icon name="text_format"/>
+                  <q-icon name="request_page"/>
                 </q-item-section>
                 <q-item-section>
-                  <q-item-label>GEER</q-item-label>
+                  <q-item-label>GEER Funds</q-item-label>
                 </q-item-section>
               </q-item>
             </q-list>
@@ -292,7 +316,7 @@
 
           <q-item v-else active-class="q-item-no-link-highlighting">
             <q-item-section avatar>
-              <q-icon name="text_format"/>
+              <q-icon name="account_balance"/>
             </q-item-section>
             <q-item-section>
               <q-item-label>Allocations</q-item-label>
@@ -302,74 +326,67 @@
               self="top left"
             >
               <q-list style="min-width: 100px">
-                <!-- <q-item clickable v-close-popup>
-                  <q-item-section>anchor="top right"</q-item-section>
-                </q-item>
-                <q-item clickable v-close-popup>
-                  <q-item-section>self="top left"</q-item-section>
-                </q-item> -->
-
-                <q-item clickable  v-close-popup to="/Allocations/Title1" @click="addDataToLS('Title I', '/Allocations/Title1')"  active-class="q-item-no-link-highlighting">
+                <q-item class="edx-sidebar-background edx-sidebar-menu-text" clickable  v-close-popup to="/Allocations/Title1"  active-class="q-item-no-link-highlighting">
                   <q-item-section avatar>
-                    <q-icon name="text_format"/>
+                    <q-icon name="request_page"/>
                   </q-item-section>
                   <q-item-section>
-                    <q-item-label>Title I</q-item-label>
+                    <q-item-label>Title I Funds</q-item-label>
                   </q-item-section>
                 </q-item>
-                <q-item clickable  v-close-popup to="/Allocations/Title2" @click="addDataToLS('Title II', '/Allocations/Title2')"  active-class="q-item-no-link-highlighting">
+                <q-item class="edx-sidebar-background edx-sidebar-menu-text" clickable  v-close-popup to="/Allocations/Title2"  active-class="q-item-no-link-highlighting">
                   <q-item-section avatar>
-                    <q-icon name="text_format"/>
+                    <q-icon name="request_page"/>
                   </q-item-section>
                   <q-item-section>
-                    <q-item-label>Title II</q-item-label>
+                    <q-item-label>Title II Funds</q-item-label>
                   </q-item-section>
                 </q-item>
-                <q-item clickable v-close-popup to="/Allocations/Title3" @click="addDataToLS('Title III', '/Allocations/Title3')"  active-class="q-item-no-link-highlighting">
+                <q-item class="edx-sidebar-background edx-sidebar-menu-text" clickable v-close-popup to="/Allocations/Title3"  active-class="q-item-no-link-highlighting">
                   <q-item-section avatar>
-                    <q-icon name="text_format"/>
+                    <q-icon name="request_page"/>
                   </q-item-section>
                   <q-item-section>
-                    <q-item-label>Title III</q-item-label>
+                    <q-item-label>Title III Funds</q-item-label>
                   </q-item-section>
                 </q-item>
-                <q-item clickable v-close-popup to="/Allocations/Title4" @click="addDataToLS('Title IV', '/Allocations/Title4')"   active-class="q-item-no-link-highlighting">
+                <q-item class="edx-sidebar-background edx-sidebar-menu-text" clickable v-close-popup to="/Allocations/Title4"  active-class="q-item-no-link-highlighting">
                   <q-item-section avatar>
-                    <q-icon name="text_format"/>
+                    <q-icon name="request_page"/>
                   </q-item-section>
                   <q-item-section>
-                    <q-item-label>Title IV</q-item-label>
+                    <q-item-label>Title IV Funds</q-item-label>
                   </q-item-section>
                 </q-item>
-                <q-item clickable v-close-popup to="/Allocations/esser" @click="addDataToLS('ESSER', '/Allocations/esser')"   active-class="q-item-no-link-highlighting">
+                <q-item class="edx-sidebar-background edx-sidebar-menu-text" clickable v-close-popup to="/Allocations/esser"  active-class="q-item-no-link-highlighting">
                   <q-item-section avatar>
-                    <q-icon name="text_format"/>
+                    <q-icon name="request_page"/>
                   </q-item-section>
                   <q-item-section>
-                    <q-item-label>ESSER</q-item-label>
+                    <q-item-label>ESSER Funds</q-item-label>
                   </q-item-section>
                 </q-item>
-                <q-item clickable v-close-popup to="/Allocations/geer"  @click="addDataToLS('GEER', '/Allocations/geer')"  active-class="q-item-no-link-highlighting">
+                <q-item class="edx-sidebar-background edx-sidebar-menu-text" clickable v-close-popup to="/Allocations/geer"  active-class="q-item-no-link-highlighting">
                   <q-item-section avatar>
-                    <q-icon name="text_format"/>
+                    <q-icon name="request_page"/>
                   </q-item-section>
                   <q-item-section>
-                    <q-item-label>GEER</q-item-label>
+                    <q-item-label>GEER Funds</q-item-label>
                   </q-item-section>
                 </q-item>
               </q-list>
             </q-menu>
           </q-item>
 
+          <!-- RESOURCES -->
 
-          <q-expansion-item v-if="!miniState"
+          <!-- <q-expansion-item v-if="!miniState"
             icon="person"
             label="Resources"
           >
             <q-list class="bg-sidebar-opened edx-menu-toggle">
               
               <q-item to="/ManageTeachers" 
-              @click="addDataToLS('Manage Teachers', 'ManageTeachers')"  
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
                   <q-icon name="person"/>
@@ -380,7 +397,6 @@
               </q-item>
 
               <q-item to="/TeacherSalaries" 
-              @click="addDataToLS('Teacher Salaries', 'TeacherSalaries')"  
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
                   <q-icon name="person"/>
@@ -405,6 +421,7 @@
           </q-expansion-item>
 
           <q-item v-else active-class="q-item-no-link-highlighting">
+
             <q-item-section avatar>
               <q-icon name="person"/>
             </q-item-section>
@@ -417,8 +434,8 @@
               self="top left"
             >
 
-              <q-list style="min-width: 100px">
-                <q-item clickable  v-close-popup to="/ManageTeachers" @click="addDataToLS('Manage Teachers', 'ManageTeachers')"  active-class="q-item-no-link-highlighting">
+              <q-list class="edx-sidebar-background edx-sidebar-menu-text" style="min-width: 100px">
+                <q-item clickable active-class="q-item-no-link-highlighting">
                   <q-item-section avatar>
                     <q-icon name="person"/>
                   </q-item-section>
@@ -428,8 +445,8 @@
                 </q-item>
               </q-list>
 
-              <q-list style="min-width: 100px">
-                <q-item clickable  v-close-popup to="/TeacherSalaries" @click="addDataToLS('Teacher Salaries', 'TeacherSalaries')"  active-class="q-item-no-link-highlighting">
+              <q-list class="edx-sidebar-background edx-sidebar-menu-text" style="min-width: 100px">
+                <q-item clickable v-close-popup to="/TeacherSalaries" active-class="q-item-no-link-highlighting">
                   <q-item-section avatar>
                     <q-icon name="person"/>
                   </q-item-section>
@@ -438,27 +455,30 @@
                   </q-item-section>
                 </q-item>
               </q-list>
-            </q-menu>
-          </q-item>
 
+            </q-menu>
+          </q-item> -->
+
+          <!-- INVENTORY -->
+          
           <q-expansion-item v-if="!miniState"
-            icon="person"
+            icon="inventory"
             label="Inventory"
           >
             <q-list class="bg-sidebar-opened edx-menu-toggle">
-              <q-item to="/Inventory" @click="addDataToLS('Inventory', '/Inventory')"   
+              <q-item to="/Inventory"
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
-                  <q-icon name="person"/>
+                  <q-icon name="inventory"/>
                 </q-item-section>
                 <q-item-section>
                   <q-item-label>Inventory</q-item-label>
                 </q-item-section>
               </q-item>
-              <q-item to="/License" @click="addDataToLS('License', '/License')"   
+              <q-item to="/License"  
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
-                  <q-icon name="person"/>
+                  <q-icon name="dvr"/>
                 </q-item-section>
                 <q-item-section>
                   <q-item-label>License</q-item-label>
@@ -468,8 +488,9 @@
           </q-expansion-item>
 
           <q-item v-else active-class="q-item-no-link-highlighting">
+
             <q-item-section avatar>
-              <q-icon name="person"/>
+              <q-icon name="inventory"/>
             </q-item-section>
             <q-item-section>
               <q-item-label>Inventory</q-item-label>
@@ -478,18 +499,18 @@
               anchor="top right"
               self="top left"
             >
-              <q-list style="min-width: 100px">
-                <q-item clickable  v-close-popup to="/Inventory" @click="addDataToLS('Inventory', '/Inventory')" active-class="q-item-no-link-highlighting">
+              <q-list class="edx-sidebar-background edx-sidebar-menu-text" style="min-width: 100px">
+                <q-item clickable  v-close-popup to="/Inventory" active-class="q-item-no-link-highlighting">
                   <q-item-section avatar>
-                    <q-icon name="person"/>
+                    <q-icon name="inventory"/>
                   </q-item-section>
                   <q-item-section>
                     <q-item-label>Inventory</q-item-label>
                   </q-item-section>
                 </q-item>
-                <q-item clickable  v-close-popup to="/License" @click="addDataToLS('License', '/License')" active-class="q-item-no-link-highlighting">
+                <q-item clickable  v-close-popup to="/License" active-class="q-item-no-link-highlighting">
                   <q-item-section avatar>
-                    <q-icon name="person"/>
+                    <q-icon name="dvr"/>
                   </q-item-section>
                   <q-item-section>
                     <q-item-label>License</q-item-label>
@@ -499,45 +520,43 @@
             </q-menu>
           </q-item>
 
-          <!-- Activities -->
+          <!-- BUDGET -->
 
           <q-expansion-item v-if="!miniState"
-            icon="account_balance"
+            icon="account_balance_wallet"
             label="Budget"
           >
             
-            
+            <q-list class="bg-sidebar-opened edx-menu-toggle">
+                <q-item to="/Professional Development"
+                active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
+                  <q-item-section avatar>
+                    <q-icon name="how_to_reg"/>
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>Professional Development</q-item-label>
+                  </q-item-section>
+                </q-item>
+            </q-list>
 
-              <q-list class="bg-sidebar-opened edx-menu-toggle">
-                  <q-item to="/Activity" @click="addDataToLS('Activity', '/Activity')"  
-                  active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
-                    <q-item-section avatar>
-                      <q-icon name="account_balance"/>
-                    </q-item-section>
-                    <q-item-section>
-                      <q-item-label>Professional Development</q-item-label>
-                    </q-item-section>
-                  </q-item>
-              </q-list>
-
-              <q-list class="bg-sidebar-opened edx-menu-toggle">
-                  <q-item to="/ActivityFE" 
-                  active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
-                    <q-item-section avatar>
-                      <q-icon name="account_balance"/>
-                    </q-item-section>
-                    <q-item-section>
-                      <q-item-label>Family Engagement</q-item-label>
-                    </q-item-section>
-                  </q-item>
-              </q-list>
+            <q-list class="bg-sidebar-opened edx-menu-toggle">
+                <q-item to="/Family Engagement" 
+                active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
+                  <q-item-section avatar>
+                    <q-icon name="family_restroom"/>
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>Family Engagement</q-item-label>
+                  </q-item-section>
+                </q-item>
+            </q-list>
 
 
             <q-list class="bg-sidebar-opened edx-menu-toggle">
               <q-item to="/Material" @click="addDataToLS('Materials', '/Material')" 
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
-                  <q-icon name="account_balance"/>
+                  <q-icon name="request_quote"/>
                 </q-item-section>
                 <q-item-section>
                   <q-item-label>Material Purchases</q-item-label>
@@ -546,40 +565,19 @@
             </q-list>
 
             <q-list class="bg-sidebar-opened edx-menu-toggle">
-              <q-item to="/Services" @click="addDataToLS('Services', '/Services')" 
+              <q-item to="/Instruction Services"
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
-                  <q-icon name="account_balance"/>
+                  <q-icon name="local_library"/>
                 </q-item-section>
                 <q-item-section>
                   <q-item-label>Instructional Services</q-item-label>
                 </q-item-section>
               </q-item>
             </q-list>
-            <!-- <q-list class="bg-sidebar-opened edx-menu-toggle">
-              <q-item to="/LicenseSubscription" @click="addDataToLS('LicenseSubscription', '/Services')" 
-              active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
-                <q-item-section avatar>
-                  <q-icon name="account_balance"/>
-                </q-item-section>
-                <q-item-section>
-                  <q-item-label>License & Subscription</q-item-label>
-                </q-item-section>
-              </q-item>
-            </q-list>
+
             <q-list class="bg-sidebar-opened edx-menu-toggle">
-              <q-item to="/Counseling" @click="addDataToLS('Counseling', '/Counseling')" 
-              active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
-                <q-item-section avatar>
-                  <q-icon name="account_balance"/>
-                </q-item-section>
-                <q-item-section>
-                  <q-item-label>Counseling</q-item-label>
-                </q-item-section>
-              </q-item>
-            </q-list> -->
-            <q-list class="bg-sidebar-opened edx-menu-toggle">
-              <q-item to="/Teachers" 
+              <q-item to="/Teacher Assignments" 
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
                   <q-icon name="school"/>
@@ -594,7 +592,7 @@
 
           <q-item v-else active-class="q-item-no-link-highlighting">
             <q-item-section avatar>
-              <q-icon name="account_balance"/>
+              <q-icon name="account_balance_wallet"/>
             </q-item-section>
             <q-item-section>
               <q-item-label>Budget</q-item-label>
@@ -603,61 +601,45 @@
               anchor="top right"
               self="top left"
             >
-              <q-list style="min-width: 100px">
-                <q-item clickable  v-close-popup to="/Activity" @click="addDataToLS('Activity', '/Activity')"  active-class="q-item-no-link-highlighting">
+              <q-list class="edx-sidebar-background edx-sidebar-menu-text" style="min-width: 100px">
+                <q-item clickable  v-close-popup to="/Professional Development" active-class="q-item-no-link-highlighting">
                   <q-item-section avatar>
-                    <q-icon name="account_balance"/>
+                    <q-icon name="how_to_reg"/>
                   </q-item-section>
                   <q-item-section>
-                    <q-item-label>Activity</q-item-label>
+                    <q-item-label>Professional Development</q-item-label>
                   </q-item-section>
                 </q-item>
-                <!-- <q-item clickable  v-close-popup to="/ActivityProcesses" @click="addDataToLS('Activity Processes', '/ActivityProcesses')"  active-class="q-item-no-link-highlighting">
+                <q-item clickable  v-close-popup to="/Family Engagement" active-class="q-item-no-link-highlighting">
                   <q-item-section avatar>
-                    <q-icon name="account_balance"/>
+                    <q-icon name="family_restroom"/>
                   </q-item-section>
                   <q-item-section>
-                    <q-item-label>Activity Processes</q-item-label>
+                    <q-item-label>Family Engagement</q-item-label>
                   </q-item-section>
-                </q-item> -->
-                <q-item clickable  v-close-popup to="/Material" @click="addDataToLS('Materials', '/Material')"  active-class="q-item-no-link-highlighting">
+                </q-item>
+                <q-item clickable  v-close-popup to="/Material" active-class="q-item-no-link-highlighting">
                   <q-item-section avatar>
-                    <q-icon name="account_balance"/>
+                    <q-icon name="request_quote"/>
                   </q-item-section>
                   <q-item-section>
                     <q-item-label>Material Purchases</q-item-label>
                   </q-item-section>
                 </q-item>
-                <q-item clickable  v-close-popup to="/Services" @click="addDataToLS('Services', '/Services')"  active-class="q-item-no-link-highlighting">
+                <q-item clickable  v-close-popup to="/Instruction Services" active-class="q-item-no-link-highlighting">
                   <q-item-section avatar>
-                    <q-icon name="account_balance"/>
+                    <q-icon name="local_library"/>
                   </q-item-section>
                   <q-item-section>
                     <q-item-label>Instructional Services</q-item-label>
                   </q-item-section>
                 </q-item>
-                <!-- <q-item clickable  v-close-popup to="/LicenseSubscription" @click="addDataToLS('LicenseSubscription', '/LicenseSubscription')"  active-class="q-item-no-link-highlighting">
+                <q-item clickable  v-close-popup to="/Teacher Assignments"  active-class="q-item-no-link-highlighting">
                   <q-item-section avatar>
                     <q-icon name="account_balance"/>
                   </q-item-section>
                   <q-item-section>
-                    <q-item-label>License & Subscription</q-item-label>
-                  </q-item-section>
-                </q-item>
-                <q-item clickable  v-close-popup to="/Counseling" @click="addDataToLS('Counseling', '/Counseling')"  active-class="q-item-no-link-highlighting">
-                  <q-item-section avatar>
-                    <q-icon name="account_balance"/>
-                  </q-item-section>
-                  <q-item-section>
-                    <q-item-label>Counseling</q-item-label>
-                  </q-item-section>
-                </q-item> -->
-                <q-item clickable  v-close-popup to="/Counseling" @click="addDataToLS('Teacher Costs', '/Teachers')"   active-class="q-item-no-link-highlighting">
-                  <q-item-section avatar>
-                    <q-icon name="account_balance"/>
-                  </q-item-section>
-                  <q-item-section>
-                    <q-item-label>Teacher Costs</q-item-label>
+                    <q-item-label>Teacher Assignments</q-item-label>
                   </q-item-section>
                 </q-item>
               </q-list>
@@ -665,68 +647,20 @@
           </q-item>
 
 
-          <!-- <q-expansion-item v-if="!miniState"
-            icon="account_balance"
-            label="Material purchases"
-          >
-            <q-list class="bg-sidebar-opened edx-menu-toggle">
-              <q-item to="/Material" @click="addDataToLS('Material', '/Material')"  
-              active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
-                <q-item-section avatar>
-                  <q-icon name="account_balance"/>
-                </q-item-section>
-                <q-item-section>
-                  <q-item-label>Material purchases</q-item-label>
-                </q-item-section>
-              </q-item>
-            </q-list>
-          </q-expansion-item>
-
-          <q-item v-else active-class="q-item-no-link-highlighting">
-            <q-item-section avatar>
-              <q-icon name="account_balance"/>
-            </q-item-section>
-            <q-item-section>
-              <q-item-label>Material purchases</q-item-label>
-            </q-item-section>
-            <q-menu
-              anchor="top right"
-              self="top left"
-            >
-              <q-list style="min-width: 100px">
-                <q-item clickable  v-close-popup to="/Material" @click="addDataToLS('Material', '/Material')"  active-class="q-item-no-link-highlighting">
-                  <q-item-section avatar>
-                    <q-icon name="account_balance"/>
-                  </q-item-section>
-                  <q-item-section>
-                    <q-item-label>Material purchases</q-item-label>
-                  </q-item-section>
-                </q-item>
-              </q-list>
-            </q-menu>
-          </q-item> -->
-          
-          
-          
-          <!-- ### ########## -->
-
-          <!-- Materials
-          Services
-          License & Subscription
-          Counseling -->
+          <!-- BILLING & EXPENSES -->
 
           <q-expansion-item v-if="!miniState"
-            icon="attach_money"
-            label="Expenses"
+            icon="monetization_on"
+            label="Billing & Expenses"
           >
             <q-list class="bg-sidebar-opened edx-menu-toggle">
-              <q-item to="/Expenses" @click="addDataToLS('Expenses', '/Expenses')"  
+              <q-item to="/Expenses" 
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
-                  <q-icon name="attach_money"/>
+                  <q-icon name="receipt"/>
                 </q-item-section>
                 <q-item-section>
-                  <q-item-label>Invoices</q-item-label>
+                  <q-item-label>Billing Invoices</q-item-label>
                 </q-item-section>
               </q-item>
             </q-list>
@@ -734,89 +668,97 @@
 
           <q-item v-else active-class="q-item-no-link-highlighting">
             <q-item-section avatar>
-              <q-icon name="attach_money"/>
+              <q-icon name="monetization_on"/>
             </q-item-section>
             <q-item-section>
-              <q-item-label>Invoices</q-item-label>
+              <q-item-label>Billing & Expenses</q-item-label>
             </q-item-section>
             <q-menu
               anchor="top right"
               self="top left"
             >
-              <q-list style="min-width: 100px">
-                <q-item clickable  v-close-popup to="/Expenses"  @click="addDataToLS('Expenses', '/Expenses')" active-class="q-item-no-link-highlighting">
+              <q-list class="edx-sidebar-background edx-sidebar-menu-text" style="min-width: 100px">
+                <q-item clickable  v-close-popup to="/Expenses" active-class="q-item-no-link-highlighting">
                   <q-item-section avatar>
-                    <q-icon name="attach_money"/>
+                    <q-icon name="receipt"/>
                   </q-item-section>
                   <q-item-section>
-                    <q-item-label>Expenses</q-item-label>
+                    <q-item-label>Billing Invoices</q-item-label>
                   </q-item-section>
                 </q-item>
               </q-list>
             </q-menu>
           </q-item>
 
+
+          <!-- REIMBURSEMENT -->
+
           <q-expansion-item v-if="!miniState"
-            icon="money"
+            icon="credit_card"
             label="Reimbursement"
           >
             <q-list class="bg-sidebar-opened edx-menu-toggle">
-              <q-item to="/ManageUsers" @click="addDataToLS('Manage Users', '/ManageUsers')" 
+              <q-item to="/ManageUsers"
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
-                  <q-icon name="money"/>
+                  <q-icon name="card_travel"/>
                 </q-item-section>
                 <q-item-section>
-                  <q-item-label>Manage Users</q-item-label>
+                  <q-item-label>Manage Events</q-item-label>
                 </q-item-section>
               </q-item>
-              <q-item to="/Approvals" @click="addDataToLS('Approvals', '/Approvals')" 
+              <q-item to="/Approvals"
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
-                  <q-icon name="money"/>
+                  <q-icon name="approval"/>
                 </q-item-section>
                 <q-item-section>
                   <q-item-label>Approvals</q-item-label>
                 </q-item-section>
-              </q-item>
+            </q-item>
             </q-list>
           </q-expansion-item>
 
           <q-item v-else active-class="q-item-no-link-highlighting">
             <q-item-section avatar>
-              <q-icon name="money"/>
+              <q-icon name="credit_card"/>
             </q-item-section>
             <q-item-section>
               <q-item-label>Reimbursement</q-item-label>
             </q-item-section>
-            <q-menu
-              anchor="top right"
-              self="top left"
-            >
-              <q-list style="min-width: 100px">
-                <q-item clickable  v-close-popup to="/ManageUsers" @click="addDataToLS('Manage Users', '/ManageUsers')" active-class="q-item-no-link-highlighting">
+            <q-menu anchor="top right" self="top left">
+              <q-list class="edx-sidebar-background edx-sidebar-menu-text" style="min-width: 100px">
+                <q-item clickable  v-close-popup to="/ManageUsers" active-class="q-item-no-link-highlighting">
                   <q-item-section avatar>
-                    <q-icon name="money"/>
+                    <q-icon name="card_travel"/>
                   </q-item-section>
                   <q-item-section>
-                    <q-item-label>Manage Users</q-item-label>
+                    <q-item-label>Manage Events</q-item-label>
+                  </q-item-section>
+                </q-item>
+                <q-item clickable  v-close-popup to="/Approvals" active-class="q-item-no-link-highlighting">
+                  <q-item-section avatar>
+                    <q-icon name="approval"/>
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>Approvals</q-item-label>
                   </q-item-section>
                 </q-item>
               </q-list>
             </q-menu>
           </q-item>
 
-
+          <!-- REPORTING -->
 
           <q-expansion-item v-if="!miniState"
-            icon="attach_money"
+            icon="leaderboard"
             label="Reporting"
           >
             <q-list class="bg-sidebar-opened edx-menu-toggle">
-              <q-item to="/AllocationReports" @click="addDataToLS('Allocation Reports', '/AllocationReports')"  
+              <q-item to="/AllocationReports"
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
-                  <q-icon name="attach_money"/>
+                  <q-icon name="poll"/>
                 </q-item-section>
                 <q-item-section>
                   <q-item-label>Allocation Reports</q-item-label>
@@ -828,7 +770,7 @@
               <q-item to="/BillingReports" @click="addDataToLS('Billing Reports', '/BillingReports')"  
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
-                  <q-icon name="attach_money"/>
+                  <q-icon name="poll"/>
                 </q-item-section>
                 <q-item-section>
                   <q-item-label>Billing Reports</q-item-label>
@@ -840,7 +782,7 @@
               <q-item to="/ActivityReports" @click="addDataToLS('Activity Reports', '/ActivityReports')"  
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
-                  <q-icon name="attach_money"/>
+                  <q-icon name="poll"/>
                 </q-item-section>
                 <q-item-section>
                   <q-item-label>Activity Reports</q-item-label>
@@ -852,7 +794,7 @@
               <q-item to="/InventoryReports" @click="addDataToLS('Inventory Reports', '/InventoryReports')"  
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
-                  <q-icon name="attach_money"/>
+                  <q-icon name="poll"/>
                 </q-item-section>
                 <q-item-section>
                   <q-item-label>Inventory Reports</q-item-label>
@@ -864,7 +806,7 @@
               <q-item to="/ReimbursementReports" @click="addDataToLS('Reimbursement Reports', '/ReimbursementReports')"  
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
-                  <q-icon name="attach_money"/>
+                  <q-icon name="poll"/>
                 </q-item-section>
                 <q-item-section>
                   <q-item-label>Reimbursement Reports</q-item-label>
@@ -875,7 +817,7 @@
 
           <q-item v-else active-class="q-item-no-link-highlighting">
             <q-item-section avatar>
-              <q-icon name="attach_money"/>
+              <q-icon name="leaderboard"/>
             </q-item-section>
             <q-item-section>
               <q-item-label>Reporting</q-item-label>
@@ -884,50 +826,50 @@
               anchor="top right"
               self="top left"
             >
-              <q-list style="min-width: 100px">
-                <q-item clickable  v-close-popup to="/AllocationReports"  @click="addDataToLS('Allocation Reports', '/AllocationReports')" active-class="q-item-no-link-highlighting">
+              <q-list class="edx-sidebar-background edx-sidebar-menu-text" style="min-width: 100px">
+                <q-item clickable  v-close-popup to="/AllocationReports" active-class="q-item-no-link-highlighting">
                   <q-item-section avatar>
-                    <q-icon name="attach_money"/>
+                    <q-icon name="poll"/>
                   </q-item-section>
                   <q-item-section>
                     <q-item-label>Allocation Reports</q-item-label>
                   </q-item-section>
                 </q-item>
               </q-list>
-              <q-list style="min-width: 100px">
-                <q-item clickable  v-close-popup to="/BillingReports"  @click="addDataToLS('Billing Reports', '/BillingReports')" active-class="q-item-no-link-highlighting">
+              <q-list class="edx-sidebar-background edx-sidebar-menu-text" style="min-width: 100px">
+                <q-item clickable  v-close-popup to="/BillingReports" active-class="q-item-no-link-highlighting">
                   <q-item-section avatar>
-                    <q-icon name="attach_money"/>
+                    <q-icon name="poll"/>
                   </q-item-section>
                   <q-item-section>
                     <q-item-label>Billing Reports</q-item-label>
                   </q-item-section>
                 </q-item>
               </q-list>
-              <q-list style="min-width: 100px">
-                <q-item clickable  v-close-popup to="/ActivityReports"  @click="addDataToLS('Activity Reports', '/ActivityReports')" active-class="q-item-no-link-highlighting">
+              <q-list class="edx-sidebar-background edx-sidebar-menu-text" style="min-width: 100px">
+                <q-item clickable  v-close-popup to="/ActivityReports" active-class="q-item-no-link-highlighting">
                   <q-item-section avatar>
-                    <q-icon name="attach_money"/>
+                    <q-icon name="poll"/>
                   </q-item-section>
                   <q-item-section>
                     <q-item-label>Activity Reports</q-item-label>
                   </q-item-section>
                 </q-item>
               </q-list>
-              <q-list style="min-width: 100px">
-                <q-item clickable  v-close-popup to="/InventoryReports"  @click="addDataToLS('Inventory Reports', '/InventoryReports')" active-class="q-item-no-link-highlighting">
+              <q-list class="edx-sidebar-background edx-sidebar-menu-text" style="min-width: 100px">
+                <q-item clickable  v-close-popup to="/InventoryReports" active-class="q-item-no-link-highlighting">
                   <q-item-section avatar>
-                    <q-icon name="attach_money"/>
+                    <q-icon name="poll"/>
                   </q-item-section>
                   <q-item-section>
                     <q-item-label>Inventory Reports</q-item-label>
                   </q-item-section>
                 </q-item>
               </q-list>
-              <q-list style="min-width: 100px">
-                <q-item clickable  v-close-popup to="/InventoryReports"  @click="addDataToLS('Inventory Reports', '/InventoryReports')" active-class="q-item-no-link-highlighting">
+              <q-list class="edx-sidebar-background edx-sidebar-menu-text" style="min-width: 100px">
+                <q-item clickable  v-close-popup to="/InventoryReports" active-class="q-item-no-link-highlighting">
                   <q-item-section avatar>
-                    <q-icon name="attach_money"/>
+                    <q-icon name="poll"/>
                   </q-item-section>
                   <q-item-section>
                     <q-item-label>Inventory Reports</q-item-label>
@@ -937,8 +879,14 @@
 
             </q-menu>
           </q-item>
+
+          <!-- ################# -->
+          <!-- ################# -->
+          <!-- ####### Development ########## -->
+          <!-- ################# -->
+          <!-- ################# -->
           
-        <hr>
+          <hr v-if="!miniState">
 
           <q-expansion-item v-if="!miniState"
             icon="developer_mode"
@@ -959,16 +907,11 @@
           </q-list>
         </q-scroll-area>
 
-        <!--
-          in this case, we use a button (can be anything)
-          so that user can switch back
-          to mini-mode
-        -->
       </q-drawer>
 
     <q-page-container class="edx-background">
-      <!-- <router-view/> -->
-          <router-tab :max-alive="10" :tabs="tabs" restore />
+        <!-- <router-view/> -->
+        <router-tab :max-alive="10" :tabs="tabs" restore />
     </q-page-container>
 
     </q-layout>
@@ -977,12 +920,8 @@
 
 <script>
 
-    import EssentialLink from 'components/EssentialLink'
-    import Messages from "./Messages";
-
-    // import config from '../../config';
-    // import axios from 'axios';
-    // import lodash from 'lodash'
+import EssentialLink from 'components/EssentialLink'
+import Messages from "./Messages";
 
 export default {
 
@@ -1007,51 +946,10 @@ export default {
   },
 
   methods: {
-    containsObject(obj, list) {
-      let i;
-      for (i = 0; i < list.length; i++) {
-        console.log(list[i], obj)
-          if (JSON.stringify(list[i]) === JSON.stringify(obj)) {
-              return true;
-          }
-      }
-      return false;
-    },
-    addDataToLS(name, path) {
-
-      let tabs = JSON.parse(localStorage.getItem('tabs'))
-      let currentTab = { name, path }
-
-      // if(!tabs.length) {
-      //     tabs.push(currentTab)
-      //     localStorage.setItem('tabs', JSON.stringify(tabs))
-      // } else {
-        let x = this.containsObject(currentTab, tabs)
-        if(!x) {
-          tabs.push(currentTab)
-          localStorage.setItem('tabs', JSON.stringify(tabs))
-        }
-      // }
-
-    },
     drawerClick (e) {
       if(this.miniState) {
         e.preventDefault()
       }
-      // e.stopPropagation()
-      // console.log(e)
-      
-      // if in "mini" state and user
-      // click on drawer, we switch it to "normal" mode
-
-      // if (this.miniState) {
-      //   this.miniState = false
-
-      //   // notice we have registered an event with capture flag;
-      //   // we need to stop further propagation as this click is
-      //   // intended for switching drawer to "normal" mode only
-      //   // e.stopPropagation()
-      // }
     },
     setMiniState() {
       this.miniState = !this.miniState
@@ -1073,43 +971,9 @@ export default {
 
 <style lang="scss">
 
-// .scroll.relative-position.fit.hide-scrollbar {
-//   background: #304156 !important;
-// }
-
-// .bg-grey-sidebar {
-//   background: #304156 !important;
-// }
-
-// .bg-sidebar-opened edx-menu-toggle {
-//   background: #1f2d3d !important;
-// }
-
-// .q-item.q-item-type.row.no-wrap {
-//     cursor: pointer;
-// }
-
-// a.q-item.q-item-type.row.no-wrap.q-item--clickable.q-link.cursor-pointer.q-focusable.q-hoverable {
-//     background: #304156;
-//     color: #fff;
-// }
-// .q-item__section--avatar {
-//     color: inherit;
-//     min-width: 34px;
-// }
-
-// .q-menu {
-//   border-radius: 0;
-// }
-
 .sidebar-dropdown-bottom-menu {
   padding-left: 40px;
 }
-
-// a.q-item.q-item-type.row.no-wrap.q-item--clickable.q-link.cursor-pointer.q-focusable.q-hoverable {
-//     background: #1f2d3d;
-//     color: #fff;
-// }
 
 .nested-item .q-item.q-item-type.row.no-wrap.q-item--clickable.q-link.cursor-pointer.q-focusable.q-hoverable {
     padding-left: 40px;

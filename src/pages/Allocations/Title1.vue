@@ -1,13 +1,13 @@
 <template>
   <q-page class="q-pa-sm edx-background">  
 
-    <div class="q-pa-md q-gutter-sm">
+    <!-- <div class="q-pa-md q-gutter-sm">
       <q-breadcrumbs>
         <q-breadcrumbs-el icon="dashboard" label="Dashboard" to="/" />
         <q-breadcrumbs-el label="Allocations"/>
         <q-breadcrumbs-el label="Title I"/>
       </q-breadcrumbs>
-    </div>
+    </div> -->
 
     <AllocationBar :title="1" />
     <AllocationTable :title="1" />

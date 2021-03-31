@@ -137,6 +137,7 @@ const config = {
     getEmployementTypes: 'https://edxchange-teacher.aimtech.am/api/v1/get-teacher-employement-type',
     fringeTypes: 'https://edxchange-teacher.aimtech.am/api/v1/get-fring',
     paySchedule: 'https://edxchange-teacher.aimtech.am/api/v1/count-shceduled-pay/', // startDate / endDate / chargeRate / employeeType / weekHourse / billingCicle === 1 
+    filterTeacher: 'https://edxchange-teacher.aimtech.am/api/v1/filter-teacher-assignment/', // 1/1001?search=Joelle&school_year=1015
 }
 
 export default config

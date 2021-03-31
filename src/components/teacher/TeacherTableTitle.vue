@@ -586,39 +586,41 @@ export default {
         },
         //
         filterTeachers() {
+
+            this.loading = true
             
-            // let uri = '';
+            let uri = '';
 
-            // if(this.filter != '') {
-            //     uri += '&search=' + this.filter
-            // }
+            if(this.filter != '') {
+                uri += '&search=' + this.filter
+            }
 
-            // if(this.schoolYear) {
-            //     uri += '&year=' + this.schoolYear.id
-            // }
+            if(this.schoolYear) {
+                uri += '&year=' + this.schoolYear.id
+            }
 
-            // const conf = {
-            //     method: 'GET',
-            //     url: config.filterActivity + this.tab + '/' + this.$route.params.id + '/1' + '?' + uri,
-            //     headers: {
-            //     Accept: 'application/json',
-            //     }
-            // }
+            const conf = {
+                method: 'GET',
+                url: config.filterTeacher + this.tab + '/' + this.$route.params.id + '?' + uri,
+                headers: {
+                Accept: 'application/json',
+                }
+            }
 
-            // axios(conf).then(res => {
+            axios(conf).then(res => {
 
-            //     this.pages = res.data.pagesCount
-            //     let data = res.data.items
+                this.pages = res.data.pagesCount
+                let data = res.data.teachers
                 
-            //     let filteredData = this.activityParsing(data, this.final)
+                let filteredData = this.teachersParsing(data)
 
-            //     this.data = filteredData
-            //     this.tempDataX = filteredData
+                this.data = filteredData
 
-            //     this.loading = false
-            // });
+                this.loading = false
+
+            });
         },
-                // Get School Years
+        // Get School Years
         getSchoolYears() {
             const conf = {
                 method: 'GET',

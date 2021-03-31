@@ -1,13 +1,13 @@
 <template>
   <q-page class="q-pa-sm edx-background">
 
-    <div class="q-pa-md q-gutter-sm">
+    <!-- <div class="q-pa-md q-gutter-sm">
       <q-breadcrumbs>
         <q-breadcrumbs-el icon="dashboard" label="Dashboard" to="/" />
         <q-breadcrumbs-el label="Inventory" to="/Inventory" />
         <q-breadcrumbs-el :label="schoolName" />
       </q-breadcrumbs>
-    </div>
+    </div> -->
 
     <q-card class="bg-transparent no-shadow no-border">
       <q-card-section class="q-pa-none">

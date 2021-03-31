@@ -1,14 +1,14 @@
 <template>
   <q-page class="q-pa-sm edx-background">  
 
-    <div class="q-pa-md q-gutter-sm">
+    <!-- <div class="q-pa-md q-gutter-sm">
       <q-breadcrumbs>
         <q-breadcrumbs-el icon="dashboard" label="Dashboard" to="/" />
         <q-breadcrumbs-el label="Budget"/>
         <q-breadcrumbs-el label="Teacher Costs"/>
         <q-breadcrumbs-el :label="this.$route.query.name"/>
       </q-breadcrumbs>
-    </div>
+    </div> -->
 
     <q-card class="bg-transparent no-shadow no-border">
       <q-card-section class="q-pa-none">

@@ -1,13 +1,13 @@
 <template>
     <div class="q-pa-sm edx-background">
 
-    <div class="q-pa-md q-gutter-sm">
+    <!-- <div class="q-pa-md q-gutter-sm">
       <q-breadcrumbs>
         <q-breadcrumbs-el icon="dashboard" label="Dashboard" to="/" />
         <q-breadcrumbs-el label="Inventory" />
         <q-breadcrumbs-el label="Inventory" />
       </q-breadcrumbs>
-    </div>
+    </div> -->
 
     <div class="q-pa-sm q-mt-sm q-gutter-sm">
       

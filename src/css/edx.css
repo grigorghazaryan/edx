@@ -108,6 +108,7 @@
 
 
 /* STATUS CHIPS */
+
 .edx-bg-final {
     background-color: var(--indigo);
     color: var(--white) !important;
@@ -146,6 +147,7 @@ body > div {
 }
 
 /* Inputs text */
+
 input,
 .q-field__native, .q-field__prefix, .q-field__suffix, .q-field__input {
     color: var(--secondary) !important

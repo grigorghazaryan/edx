@@ -25,21 +25,21 @@ const routes = [
       {path: '/License', name: 'License', meta: { title: 'License' }, component: () => import('pages/Inventory/LicenseSchools.vue')},
       {path: '/License/:id', name: 'License', meta: { title: 'License' }, component: () => import('pages/Inventory/License.vue')},
       // ------------------------------------------------------------------------------------
-      {path: '/Teachers', name: 'Teachers', meta: { title: 'Teachers' }, component: () => import('pages/Teachers/TeacherSchools.vue')},
+      {path: '/Teacher Assignments', name: 'Teacher Assignments', meta: { title: 'Teacher Assignments' }, component: () => import('pages/Teachers/TeacherSchools.vue')},
       {path: '/Teachers/:id', name: 'Teachers', meta: { title: 'Teachers' }, component: () => import('pages/Teachers/BudgetEstimates.vue')},
       {path: '/Expenses', name: 'Expenses', meta: { title: 'Expenses' }, component: () => import('pages/Expenses/Expenses.vue')},
       // ------------------------------------------------------------------------------
-      {path: '/Activity', name: 'Activity', meta: { title: 'Activity' }, component: () => import('pages/Activity/ActivitySchools.vue')},
+      {path: '/Professional Development', name: 'Professional Development', meta: { title: 'Professional Development' }, component: () => import('pages/Activity/ActivitySchools.vue')},
       {path: '/Activity/:id', name: 'Activity', meta: { title: 'Activity' }, component: () => import('pages/Activity/Activity.vue')},
       {path: '/ActivityProcesses', name: 'ActivityProcesses', meta: { title: 'ActivityProcesses' }, component: () => import('pages/Activity/ActivityProcesses.vue')},
       // -------------
-      {path: '/ActivityFE', name: 'Activity FE', meta: { title: 'Activity FE' }, component: () => import('pages/Activity/ActivitySchoolsFE.vue')},
+      {path: '/Family Engagement', name: 'Family Engagement', meta: { title: 'Family Engagement' }, component: () => import('pages/Activity/ActivitySchoolsFE.vue')},
       {path: '/ActivityFE/:id', name: 'Activity FE', meta: { title: 'Activity FE' }, component: () => import('pages/Activity/ActivityFE.vue')},
       // -------------
       {path: '/Material', name: 'Material', meta: { title: 'Material' }, component: () => import('pages/Material/MaterialSchools.vue')},
       {path: '/Material/:id', name: 'Material', meta: { title: 'Material' }, component: () => import('pages/Material/Material.vue')},
       // -------------
-      {path: '/Services', name: 'Services', meta: { title: 'Services' }, component: () => import('pages/Services/ServicesSchools.vue')},
+      {path: '/Instruction Services', name: 'Instruction Services', meta: { title: 'Instruction Services' }, component: () => import('pages/Services/ServicesSchools.vue')},
       {path: '/Services/:id', name: 'Services', meta: { title: 'Services' }, component: () => import('pages/Services/Services.vue')},
       // -------------
       {path: '/LicenseSubscription', name: 'LicenseSubscription', meta: { title: 'LicenseSubscription' }, component: () => import('pages/LicenseSubscription/LicenseSubscriptionSchools.vue')},

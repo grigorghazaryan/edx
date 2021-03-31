@@ -1448,7 +1448,7 @@
                 </div>
                 <div class="col-md-6 q-pr-sm q-mb-md">
                     <div class="row q-mt-lg">
-                        <div class="col-md-9 q-pr-md text-right">Priliminary:</div>
+                        <div class="col-md-9 q-pr-md text-right">Total Allocation:</div>
                         <div class="col-md-3"> <b>$ {{ priliminary }}</b> </div>
                     </div>
                     <div class="row">

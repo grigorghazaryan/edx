@@ -726,11 +726,11 @@ export default {
         hidePopup() {
             this.$emit('hidePopup', true);
         },
-        getTeacherBudgetById() {
+        getTeacherBudgetById(id) {
 
             const conf = {
               method: 'GET',
-              url: config.getTeacherBudgetById + this.id,
+              url: config.getTeacherBudgetById + id,
               headers: {
                 Accept: 'application/json',
               }
@@ -744,12 +744,12 @@ export default {
 
                 this.editedItem = {
                     teacher: {
-                        id: teacherInfo.teacher.id,
-                        label: teacherInfo.teacher.first_name + ' ' + teacherInfo.teacher.last_name,
+                        id:  teacherInfo.teacher.id,
+                        label:  teacherInfo.teacher.first_name + ' ' + teacherInfo.teacher.last_name,
                     },
                     role: {
-                        id: teacherInfo.teacher.role_type.id,
-                        label: teacherInfo.teacher.role_type.name
+                        id: teacherInfo.teacher.role_type && teacherInfo.teacher.role_type.id,
+                        label: teacherInfo.teacher.role_type && teacherInfo.teacher.role_type.name
                     },
 
                     // hourly: teacherInfo.hourly_pay,
@@ -758,33 +758,33 @@ export default {
                     // benefits: teacherInfo.has_benefits == '0' ? false : true,
                     
                     assignmentType: {
-                        id: teacherInfo.compensation_type.id,
-                        label: teacherInfo.compensation_type.name,
+                        id: teacherInfo.compensation_type?.id,
+                        label: teacherInfo.compensation_type?.name,
                     },
                     category: {
-                        id: teacherInfo.teacher.assignment_compensation.category.id,
-                        label: teacherInfo.teacher.assignment_compensation.category.name,
-                        name: teacherInfo.teacher.assignment_compensation.category.abbreviation
+                        id:  teacherInfo.teacher.assignment_compensation && teacherInfo.teacher.assignment_compensation.category ? teacherInfo.teacher.assignment_compensation.category.id : 0,
+                        label: teacherInfo.teacher.assignment_compensation && teacherInfo.teacher.assignment_compensation.category ? teacherInfo.teacher.assignment_compensation.category.name : "",
+                        name: teacherInfo.teacher.assignment_compensation &&  teacherInfo.teacher.assignment_compensation.category ? teacherInfo.teacher.assignment_compensation.category.abbreviation : ""
                     },
                     subcategory: {
-                        id: teacherInfo.teacher.assignment_compensation.sub_category ? teacherInfo.teacher.assignment_compensation.sub_category.id : 0,
-                        label: teacherInfo.teacher.assignment_compensation.sub_category ? teacherInfo.teacher.assignment_compensation.sub_category.name : '',
-                        name: teacherInfo.teacher.assignment_compensation.sub_category ? teacherInfo.teacher.assignment_compensation.sub_category.abbreviation : ''
+                        id: teacherInfo.teacher.assignment_compensation && teacherInfo.teacher.assignment_compensation.sub_category ? teacherInfo.teacher.assignment_compensation.sub_category.id : 0,
+                        label: teacherInfo.teacher.assignment_compensation && teacherInfo.teacher.assignment_compensation.sub_category ? teacherInfo.teacher.assignment_compensation.sub_category.name : '',
+                        name: teacherInfo.teacher.assignment_compensation && teacherInfo.teacher.assignment_compensation.sub_category ? teacherInfo.teacher.assignment_compensation.sub_category.abbreviation : ''
                     },
                     trackingCategory: {
-                        id: teacherInfo.teacher.assignment_compensation.category_tracking ? teacherInfo.teacher.assignment_compensation.category_tracking.id : 0,
-                        label: teacherInfo.teacher.assignment_compensation.category_tracking ? teacherInfo.teacher.assignment_compensation.category_tracking.name : 0
+                        id: teacherInfo.teacher.assignment_compensation && teacherInfo.teacher.assignment_compensation.category_tracking ? teacherInfo.teacher.assignment_compensation.category_tracking.id : 0,
+                        label: teacherInfo.teacher.assignment_compensation && teacherInfo.teacher.assignment_compensation.category_tracking ? teacherInfo.teacher.assignment_compensation.category_tracking.name : 0
                     },
 
-                    employement: teacherInfo.teacher.teacher_type.name,
-                    compensation: teacherInfo.compensation_type,
+                    employement: teacherInfo.teacher.teacher_type && teacherInfo.teacher.teacher_type.name,
+                    compensation: teacherInfo.teacher.teacher_type && teacherInfo.compensation_type,
                     payFrequesncy: teacherInfo.pay_frequency,
                     pay: teacherInfo.payInfo,
                     workMonth: teacherInfo.work_month,
                     benefits: teacherInfo.has_benefits == '1' ? 'Y' : 'N',
 
-                    startDate: teacherInfo.teacher.assignment_compensation.start_date,
-                    endDate: teacherInfo.teacher.assignment_compensation.end_date,
+                    startDate:  teacherInfo.teacher.assignment_compensation?.start_date,
+                    endDate: teacherInfo.teacher.assignment_compensation?.end_date,
                     // hoursWeek: teacherInfo.teacher.assignment_compensation.hours_per_week,
                     isHoursWeek: { id: 1, label: 'Hours/Week'},
                     hoursWM: 0,
@@ -792,23 +792,23 @@ export default {
                     hourlyFrienge: 100,
                     totalAmount: 0,
                     assignmentStatus: {
-                        id: teacherInfo.teacher.assignment_compensation.status.id,
-                        label: teacherInfo.teacher.assignment_compensation.status.name,
+                        id: teacherInfo.teacher.assignment_compensation && teacherInfo.teacher.assignment_compensation.status.id,
+                        label: teacherInfo.teacher.assignment_compensation && teacherInfo.teacher.assignment_compensation.status.name,
                     },
                     assignmentType: {
-                        id: teacherInfo.teacher.assignment_compensation.status.id,
-                        label: teacherInfo.teacher.assignment_compensation.status.name,
+                        id: teacherInfo.teacher?.assignment_compensation?.status?.id,
+                        label: teacherInfo.teacher?.assignment_compensation?.status?.name,
                     },
                     // billingStatus: {
                     //     id: teacherInfo.teacher.assignment_compensation.billing_status.id,
                     //     label: teacherInfo.teacher.assignment_compensation.billing_status.name,
                     // },
-                    note: teacherInfo.teacher.assignment_compensation.note,
+                    note: teacherInfo.teacher.assignment_compensation?.note,
                     salary_pay: teacherInfo.salary_pay,
 
                     adminMarkupFee: res.data.admin_markup_fee,
-                    allocationPercentage: parseFloat(teacherInfo.teacher.assignment_compensation.allocation_percentage),
-                    markupFee: res.data.markup_fee,
+                    allocationPercentage: parseFloat(teacherInfo?.teacher.assignment_compensation?.allocation_percentage),
+                    markupFee: res.data?.markup_fee,
                     //
                     fullTime: false,
 
@@ -1159,7 +1159,10 @@ alert('duplicate')
         },
         show(val) {
             if(val) {
-                this.getTeacherBudgetById()
+            
+                // this.getTeacherBudgetById(this.id)
+                
+               
             }
         },
         'editedItem.startDate'(){
@@ -1193,6 +1196,9 @@ alert('duplicate')
                 ]
             }
         },
+        'editedItem.teacher'(val) {
+            // this.getTeacherBudgetById(val.id)
+        }
     },
     created() {
 
