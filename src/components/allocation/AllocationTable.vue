@@ -22,7 +22,7 @@
         <!-- Table Header -->
         <template v-slot:top-right="props">
 
-          <q-select class="q-mr-md" style="min-width: 200px; max-width: 200px" 
+          <!-- <q-select class="q-mr-md" style="min-width: 200px; max-width: 200px" 
             dense outlines 
             v-model="schoolYear" 
             :options="schoolYears" 
@@ -33,7 +33,7 @@
               <q-icon name="cancel" @click.stop="schoolYear = '', filterAllocation()" class="cursor-pointer" />
             </template>
 
-          </q-select>
+          </q-select> -->
 
           <q-input label="Search" class="q-mr-md" outlines dense 
           v-model="filter" @keyup="keyUpFilter" @keydown="keyDownFilter">
