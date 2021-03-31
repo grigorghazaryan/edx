@@ -165,7 +165,7 @@ export default {
     },
     changeRoute(id, name) {
       this.$router.push({
-        path: '/ActivityFE/' + id,
+        path: '/Family Engagement/' + id,
         query: { name }
       })
     },

@@ -30,11 +30,11 @@ const routes = [
       {path: '/Expenses', name: 'Expenses', meta: { title: 'Expenses' }, component: () => import('pages/Expenses/Expenses.vue')},
       // ------------------------------------------------------------------------------
       {path: '/Professional Development', name: 'Professional Development', meta: { title: 'Professional Development' }, component: () => import('pages/Activity/ActivitySchools.vue')},
-      {path: '/Activity/:id', name: 'Activity', meta: { title: 'Activity' }, component: () => import('pages/Activity/Activity.vue')},
+      {path: '/Professional Development/:id', name: 'Professional Development', meta: { title: 'Professional Development' }, component: () => import('pages/Activity/Activity.vue')},
       {path: '/ActivityProcesses', name: 'ActivityProcesses', meta: { title: 'ActivityProcesses' }, component: () => import('pages/Activity/ActivityProcesses.vue')},
       // -------------
       {path: '/Family Engagement', name: 'Family Engagement', meta: { title: 'Family Engagement' }, component: () => import('pages/Activity/ActivitySchoolsFE.vue')},
-      {path: '/ActivityFE/:id', name: 'Activity FE', meta: { title: 'Activity FE' }, component: () => import('pages/Activity/ActivityFE.vue')},
+      {path: '/Family Engagement/:id', name: 'Family Engagement', meta: { title: 'Family Engagement' }, component: () => import('pages/Activity/ActivityFE.vue')},
       // -------------
       {path: '/Material', name: 'Material', meta: { title: 'Material' }, component: () => import('pages/Material/MaterialSchools.vue')},
       {path: '/Material/:id', name: 'Material', meta: { title: 'Material' }, component: () => import('pages/Material/Material.vue')},
@@ -60,6 +60,7 @@ const routes = [
 
       // Test
       {path: '/A0', component: () => import('pages/BudgetTest.vue')},
+      {path: '/testmaterials', component: () => import('pages/test/material.vue')},
       
     ]
   },

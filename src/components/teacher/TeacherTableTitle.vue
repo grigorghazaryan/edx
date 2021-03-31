@@ -30,7 +30,7 @@
                     </template>
                 </q-input>
        
-                <q-select class="q-mr-md" style="min-width: 200px; max-width: 200px" 
+                <!-- <q-select class="q-mr-md" style="min-width: 200px; max-width: 200px" 
                     dense outlines 
                     v-model="schoolYear" 
                     :options="schoolYears" 
@@ -42,7 +42,7 @@
                     <q-icon name="cancel" @click.stop="schoolYear = '', filterTeachers()" class="cursor-pointer" />
                     </template>
 
-                </q-select>
+                </q-select> -->
 
             
 

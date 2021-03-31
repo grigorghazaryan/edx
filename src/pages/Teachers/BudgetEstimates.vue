@@ -17,10 +17,10 @@
           <div class="col-md-2 col-sm-12 col-xs-12">
             <q-item style="background-color: #fff" class="q-pa-none q-ml-xs">
               <q-item-section side style="background-color: #fff" class=" q-pa-lg q-mr-none text-white">
-                <q-icon name="school" color="orange" size="24px"></q-icon>
+               <q-icon name="monetization_on" class="edx-green" size="35px"></q-icon>
               </q-item-section>
               <q-item-section class="q-ml-none">
-                <q-item-label class="text-grey-7">Total Allocations</q-item-label>
+                <q-item-label class="text-grey-7">Total I</q-item-label>
                 <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{  }}</q-item-label>
               </q-item-section>
             </q-item>
@@ -29,7 +29,7 @@
           <div class="col-md-2 col-sm-12 col-xs-12">
             <q-item style="background-color: #fff" class="q-pa-none q-ml-xs">
               <q-item-section side style="background-color: #fff" class=" q-pa-lg q-mr-none text-white">
-                <q-icon name="attach_money" color="blue" size="24px"></q-icon>
+               <q-icon name="monetization_on" class="edx-green" size="35px"></q-icon>
               </q-item-section>
               <q-item-section class="q-ml-none">
                 <q-item-label class="text-grey-7">Total Salaries</q-item-label>
@@ -41,7 +41,7 @@
           <div class="col-md-2 col-sm-12 col-xs-12">
             <q-item style="background-color: #fff" class="q-pa-none q-ml-xs">
               <q-item-section side style="background-color: #fff" class=" q-pa-lg q-mr-none text-white">
-                <q-icon name="attach_money" color="pink" size="24px"></q-icon>
+                <q-icon name="monetization_on" class="edx-green" size="35px"></q-icon>
               </q-item-section>
               <q-item-section class="q-ml-none">
                 <q-item-label class="text-grey-7">Total Hourly</q-item-label>

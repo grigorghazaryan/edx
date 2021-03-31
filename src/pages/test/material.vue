@@ -1,14 +1,14 @@
 <template>
   <q-page class="q-pa-sm edx-background">  
 
-    <!-- <div class="q-pa-md q-gutter-sm">
+    <div class="q-pa-md q-gutter-sm">
       <q-breadcrumbs>
         <q-breadcrumbs-el icon="dashboard" label="Dashboard" to="/" />
         <q-breadcrumbs-el label="Budget"/>
-        <q-breadcrumbs-el label="Family Engagement"/>
+        <q-breadcrumbs-el label="Material"/>
         <q-breadcrumbs-el :label="schoolName" />
       </q-breadcrumbs>
-    </div> -->
+    </div>
 
     <q-card class="bg-transparent no-shadow no-border">
       <q-card-section class="q-pa-none">
@@ -20,10 +20,10 @@
                 <q-icon name="monetization_on" class="edx-green" size="35px"></q-icon>
               </q-item-section>
               <q-item-section class="q-ml-none">
-                <q-item-label class="text-grey-7">Total FE</q-item-label>
-                <q-item-label class="text-dark text-h6 text-weight-bolder">
-                  <div>$ {{barInfo.totalsAmount.FE}}</div>
-                  <div v-if="!isFinal" class="fs-1">$ {{ (barInfo.totalsAmount.FE / 2).toFixed(2) }}</div>
+                <q-item-label class="text-grey-7">Total I</q-item-label>
+                <q-item-label class="edx-card-text text-h6 text-weight-bolder">
+                  <div v-if="!isFinal">$ {{ (barInfo.totalsAmount.PD / 2).toFixed(2) }}</div>
+                  <div class="fs-1">$ {{ barInfo.totalsAmount.PD }}</div>
                 </q-item-label>
               </q-item-section>
             </q-item>
@@ -35,8 +35,8 @@
                 <q-icon name="monetization_on" class="edx-red" size="35px"></q-icon>
               </q-item-section>
               <q-item-section class="q-ml-none">
-                <q-item-label class="text-grey-7">Used FE</q-item-label>
-                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{barInfo.usedAmount.FE }}</q-item-label>
+                <q-item-label class="text-grey-7">Used I</q-item-label>
+                <q-item-label class="edx-card-text text-h6 text-weight-bolder">$ {{barInfo.usedAmount.PD}} </q-item-label>
               </q-item-section>
             </q-item>
           </div>
@@ -47,8 +47,8 @@
                 <q-icon name="monetization_on" class="edx-orange" size="35px"></q-icon>
               </q-item-section>
               <q-item-section class="q-ml-none">
-                <q-item-label class="text-grey-7">Remaining FE</q-item-label>
-                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{barInfo.remaining.FE }} </q-item-label>
+                <q-item-label class="text-grey-7">Remaining I</q-item-label>
+                <q-item-label class="edx-card-text text-h6 text-weight-bolder">$ {{barInfo.remaining.PD }} </q-item-label>
               </q-item-section>
             </q-item>
           </div>
@@ -89,27 +89,27 @@
         <q-tab-panels v-model="tab" animated class="tab-panels-parent">
 
           <q-tab-panel name="1" class="q-p-sm">
-            <ActivityTableTitle :title="1" :barInfo="barInfo" @final="finalResult"/>
+            <MaterialTableTitle :title="1" :barInfo="barInfo" @final="finalResult"/>
           </q-tab-panel>
 
           <q-tab-panel name="2" class="q-p-sm">
-            <ActivityTableTitle :title="2" :barInfo="barInfo" @final="finalResult"/>
+            <MaterialTableTitle :title="2" :barInfo="barInfo" @final="finalResult"/>
           </q-tab-panel>
 
           <q-tab-panel name="3" class="q-p-sm">
-            <ActivityTableTitle :title="3" :barInfo="barInfo" @final="finalResult"/>
+            <MaterialTableTitle :title="3" :barInfo="barInfo" @final="finalResult"/>
           </q-tab-panel>
 
           <q-tab-panel name="4" class="q-p-sm">
-            <ActivityTableTitle :title="4" :barInfo="barInfo" @final="finalResult"/>
+            <MaterialTableTitle :title="4" :barInfo="barInfo" @final="finalResult"/>
           </q-tab-panel>
 
           <q-tab-panel name="5" class="q-p-sm">
-            <ActivityTableTitle :title="5" :barInfo="barInfo" @final="finalResult"/>
+            <MaterialTableTitle :title="5" :barInfo="barInfo" @final="finalResult"/>
           </q-tab-panel>
 
           <q-tab-panel name="6" class="q-p-sm">
-            <ActivityTableTitle :title="6" :barInfo="barInfo" @final="finalResult"/>
+            
           </q-tab-panel>
 
 
@@ -126,11 +126,11 @@
     import axios from 'axios'
     import config from '../../../config'
 
-    import ActivityTableTitle from '../../components/activityFE/ActivityTableTitle'
+    import MaterialTableTitle from '../../components/material/MaterialTableTitle'
     
     export default {
         components: {
-          ActivityTableTitle
+          MaterialTableTitle
         },
         data() {
           return {

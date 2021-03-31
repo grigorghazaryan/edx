@@ -165,7 +165,7 @@ export default {
     },
     changeRoute(id, name) {
       this.$router.push({
-        path: '/Activity/' + id,
+        path: '/Professional Development/' + id,
         query: { name }
       })
     },

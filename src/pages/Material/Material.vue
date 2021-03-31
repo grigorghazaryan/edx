@@ -17,10 +17,10 @@
           <div class="col-md-2 col-sm-12 col-xs-12">
             <q-item style="background-color: #fff" class="q-pa-none q-ml-xs">
               <q-item-section side style="background-color: #fff" class=" q-pa-lg q-mr-none text-white">
-                <q-icon name="attach_money" color="red" size="24px"></q-icon>
+                <q-icon name="monetization_on" class="edx-green" size="35px"></q-icon>
               </q-item-section>
               <q-item-section class="q-ml-none">
-                <q-item-label class="text-grey-7">Total PD</q-item-label>
+                <q-item-label class="text-grey-7">Total M</q-item-label>
                 <q-item-label class="text-dark text-h6 text-weight-bolder">
                   <div>$ {{ barInfo.totalsAmount.PD }}</div>
                   <div v-if="!isFinal" class="fs-1">$ {{ (barInfo.totalsAmount.PD / 2).toFixed(2) }}</div>
@@ -29,28 +29,14 @@
             </q-item>
           </div>
 
-          <div class="col-md-2 col-sm-12 col-xs-12">
-            <q-item style="background-color: #fff" class="q-pa-none q-ml-xs">
-              <q-item-section side style="background-color: #fff" class=" q-pa-lg q-mr-none text-white">
-                <q-icon name="attach_money" color="red" size="24px"></q-icon>
-              </q-item-section>
-              <q-item-section class="q-ml-none">
-                <q-item-label class="text-grey-7">Total FE</q-item-label>
-                <q-item-label class="text-dark text-h6 text-weight-bolder">
-                  <div>$ {{barInfo.totalsAmount.FE}}</div>
-                  <div v-if="!isFinal" class="fs-1">$ {{ (barInfo.totalsAmount.FE / 2).toFixed(2) }}</div>
-                </q-item-label>
-              </q-item-section>
-            </q-item>
-          </div>
 
           <div class="col-md-2 col-sm-12 col-xs-12">
             <q-item style="background-color: #fff" class="q-pa-none q-ml-xs">
               <q-item-section side style="background-color: #fff" class=" q-pa-lg q-mr-none text-white">
-                <q-icon name="attach_money" color="green" size="24px"></q-icon>
+                <q-icon name="monetization_on" class="edx-red" size="35px"></q-icon>
               </q-item-section>
               <q-item-section class="q-ml-none">
-                <q-item-label class="text-grey-7">Used PD</q-item-label>
+                <q-item-label class="text-grey-7">Used M</q-item-label>
                 <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{barInfo.usedAmount.PD}} </q-item-label>
               </q-item-section>
             </q-item>
@@ -59,38 +45,16 @@
           <div class="col-md-2 col-sm-12 col-xs-12">
             <q-item style="background-color: #fff" class="q-pa-none q-ml-xs">
               <q-item-section side style="background-color: #fff" class=" q-pa-lg q-mr-none text-white">
-                <q-icon name="attach_money" color="green" size="24px"></q-icon>
+                <q-icon name="monetization_on" class="edx-orange" size="35px"></q-icon>
               </q-item-section>
               <q-item-section class="q-ml-none">
-                <q-item-label class="text-grey-7">Used FE</q-item-label>
-                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{barInfo.usedAmount.FE }}</q-item-label>
+                <q-item-label class="text-grey-7">Remainig M</q-item-label>
+                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{barInfo.usedAmount.PD}} </q-item-label>
               </q-item-section>
             </q-item>
           </div>
 
-          <div class="col-md-2 col-sm-12 col-xs-12">
-            <q-item style="background-color: #fff" class="q-pa-none q-ml-xs">
-              <q-item-section side style="background-color: #fff" class=" q-pa-lg q-mr-none text-white">
-                <q-icon name="attach_money" color="purple" size="24px"></q-icon>
-              </q-item-section>
-              <q-item-section class="q-ml-none">
-                <q-item-label class="text-grey-7">Remaining PD</q-item-label>
-                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{barInfo.remaining.PD }} </q-item-label>
-              </q-item-section>
-            </q-item>
-          </div>
 
-          <div class="col-md-2 col-sm-12 col-xs-12">
-            <q-item style="background-color: #fff" class="q-pa-none q-ml-xs">
-              <q-item-section side style="background-color: #fff" class=" q-pa-lg q-mr-none text-white">
-                <q-icon name="attach_money" color="purple" size="24px"></q-icon>
-              </q-item-section>
-              <q-item-section class="q-ml-none">
-                <q-item-label class="text-grey-7">Remaining FE</q-item-label>
-                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{barInfo.remaining.FE }} </q-item-label>
-              </q-item-section>
-            </q-item>
-          </div>
          
 
         </div>
