@@ -7,7 +7,7 @@
             :title="'Teacher Assignment Details'" 
             @onHide="hidePopup"
             :icon="'group'"
-            :color="'green'"
+            
         >
             <div class="q-pa-md scroll" style="max-height: 70vh">
                 <div class="row">
@@ -637,7 +637,16 @@ export default {
                 isHourlyOverride: false,
                 hourlyOverride: 0,
             }],
-            editedItem: {},
+            editedItem: {
+                assignmentStatus: {
+                    id: 1,
+                    label: 'Canceled',
+                },
+                isHoursWeek: {
+                    id: 1,
+                    label: 'Hours/Week',
+                }
+            },
             optionsTeachers: [],
             optionsTeachersForFilter: [],
             optionsCategoryTracking: [],
@@ -760,8 +769,8 @@ export default {
                     hourlyFrienge: 100,
                     totalAmount: 0,
                     assignmentStatus: {
-                        id: teacherInfo.teacher.assignment_compensation ? teacherInfo.teacher.assignment_compensation.status.id : 0,
-                        label: teacherInfo.teacher.assignment_compensation ? teacherInfo.teacher.assignment_compensation.status.name : '',
+                        id: teacherInfo.teacher.assignment_compensation ? teacherInfo.teacher.assignment_compensation.status.id : 1,
+                        label: teacherInfo.teacher.assignment_compensation ? teacherInfo.teacher.assignment_compensation.status.name : 'Canceled',
                     },
                     assignmentType: {
                         id: teacherInfo.teacher?.assignment_compensation?.status?.id,
@@ -1284,6 +1293,7 @@ export default {
                 hourly_charge_override: this.monthlyDetails[0].hourlyOverride,
                 
                 note: this.editedItem.note,
+                teacher_id: this.editedItem.teacher.id,
                 // is_client_agree
             }
 

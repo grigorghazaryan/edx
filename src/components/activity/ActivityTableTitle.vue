@@ -498,7 +498,7 @@
             :title="'Activity Details'" 
             @onHide="isShowActivityPopup=false"
             :icon="'calendar_today'"
-            :color="'orange'"
+            
         >
             <div class="q-pa-md scroll" style="max-height: 70vh">
                 <div class="row">
@@ -949,7 +949,7 @@
             :title="'Activity Attendees'" 
             @onHide="isShowAttendingDialog=false"
             :icon="'people_alt'"
-            :color="'green'"
+            
         >    
 
             <q-card-section>
@@ -1097,7 +1097,7 @@
             :title="'Schedule Activity'" 
             @onHide="isShowAddDate=false"
             :icon="'calendar_today'"
-            :color="'orange'"
+            
         >  
             <q-card-section
                 style="max-height: 60vh"

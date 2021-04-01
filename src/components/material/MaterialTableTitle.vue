@@ -462,7 +462,7 @@
             :title="'Material Details'" 
             @onHide="isShowActivityPopup=false"
             :icon="'calendar_today'"
-            :color="'orange'"
+            
         >
             <div class="q-pa-md">
                 <div class="row">
@@ -900,7 +900,7 @@
             :title="'Activity Attendees'" 
             @onHide="isShowAttendingDialog=false"
             :icon="'people_alt'"
-            :color="'green'"
+            
         >    
 
             <q-card-section>
