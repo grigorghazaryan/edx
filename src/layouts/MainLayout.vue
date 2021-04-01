@@ -83,7 +83,7 @@
           >
             <q-list class="bg-sidebar-opened edx-menu-toggle">
               <q-item to="/Schools" 
-              @click="addDataToLS('Schools', 'Schools')"  
+              
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
                   <q-icon name="apartment"/>
@@ -95,7 +95,7 @@
             </q-list>
             <q-list class="bg-sidebar-opened edx-menu-toggle">
               <q-item to="/Vendors" 
-              @click="addDataToLS('Administration', 'Vendors')"  
+             
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
                   <q-icon name="recent_actors"/>
@@ -191,7 +191,7 @@
           >
             <q-list class="bg-sidebar-opened edx-menu-toggle">
               <q-item to="/Users" 
-              @click="addDataToLS('Users', 'Users')"  
+              
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
                   <q-icon name="account_circle"/>
@@ -200,8 +200,7 @@
                   <q-item-label>Users</q-item-label>
                 </q-item-section>
               </q-item>
-              <q-item to="/Roles" 
-              @click="addDataToLS('Roles', 'Roles')"  
+              <q-item to="/Roles"  
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
                   <q-icon name="supervised_user_circle"/>
@@ -226,7 +225,7 @@
               self="top left"
             >
               <q-list class="edx-sidebar-background edx-sidebar-menu-text" style="min-width: 100px">
-                <q-item clickable  v-close-popup to="/Users" @click="addDataToLS('Users', 'Users')"  active-class="q-item-no-link-highlighting">
+                <q-item clickable  v-close-popup to="/Users"   active-class="q-item-no-link-highlighting">
                   <q-item-section avatar>
                     <q-icon name="account_circle"/>
                   </q-item-section>
@@ -236,7 +235,7 @@
                 </q-item>
               </q-list>
               <q-list class="edx-sidebar-background edx-sidebar-menu-text" style="min-width: 100px">
-                <q-item clickable  v-close-popup to="/Roles" @click="addDataToLS('Roles', 'Roles')"  active-class="q-item-no-link-highlighting">
+                <q-item clickable  v-close-popup to="/Roles" active-class="q-item-no-link-highlighting">
                   <q-item-section avatar>
                     <q-icon name="supervised_user_circle"/>
                   </q-item-section>
@@ -553,7 +552,7 @@
 
 
             <q-list class="bg-sidebar-opened edx-menu-toggle">
-              <q-item to="/Material" @click="addDataToLS('Materials', '/Material')" 
+              <q-item to="/Material" 
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
                   <q-icon name="request_quote"/>
@@ -767,7 +766,7 @@
             </q-list>
 
             <q-list class="bg-sidebar-opened edx-menu-toggle">
-              <q-item to="/BillingReports" @click="addDataToLS('Billing Reports', '/BillingReports')"  
+              <q-item to="/BillingReports" 
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
                   <q-icon name="poll"/>
@@ -779,7 +778,7 @@
             </q-list>
 
             <q-list class="bg-sidebar-opened edx-menu-toggle">
-              <q-item to="/ActivityReports" @click="addDataToLS('Activity Reports', '/ActivityReports')"  
+              <q-item to="/ActivityReports" 
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
                   <q-icon name="poll"/>
@@ -791,7 +790,7 @@
             </q-list>
 
             <q-list class="bg-sidebar-opened edx-menu-toggle">
-              <q-item to="/InventoryReports" @click="addDataToLS('Inventory Reports', '/InventoryReports')"  
+              <q-item to="/InventoryReports"  
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
                   <q-icon name="poll"/>
@@ -803,7 +802,7 @@
             </q-list>
 
             <q-list class="bg-sidebar-opened edx-menu-toggle">
-              <q-item to="/ReimbursementReports" @click="addDataToLS('Reimbursement Reports', '/ReimbursementReports')"  
+              <q-item to="/ReimbursementReports" 
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
                   <q-icon name="poll"/>

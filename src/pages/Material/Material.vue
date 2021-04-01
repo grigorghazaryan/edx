@@ -21,9 +21,9 @@
               </q-item-section>
               <q-item-section class="q-ml-none">
                 <q-item-label class="text-grey-7">Total M</q-item-label>
-                <q-item-label class="text-dark text-h6 text-weight-bolder">
-                  <div>$ {{ barInfo.totalsAmount.PD }}</div>
-                  <div v-if="!isFinal" class="fs-1">$ {{ (barInfo.totalsAmount.PD / 2).toFixed(2) }}</div>
+               <q-item-label v-if="barInfo.totalAmount" class="text-dark text-h6 text-weight-bolder">
+                  <div >$ {{ barInfo.totalAmount.total}}</div>
+                  <div class="fs-1">$ {{ barInfo.totalAmount.preliminary}}</div>
                 </q-item-label>
               </q-item-section>
             </q-item>
@@ -37,7 +37,7 @@
               </q-item-section>
               <q-item-section class="q-ml-none">
                 <q-item-label class="text-grey-7">Used M</q-item-label>
-                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{barInfo.usedAmount.PD}} </q-item-label>
+                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{barInfo.usedBalance}} </q-item-label>
               </q-item-section>
             </q-item>
           </div>
@@ -49,7 +49,10 @@
               </q-item-section>
               <q-item-section class="q-ml-none">
                 <q-item-label class="text-grey-7">Remainig M</q-item-label>
-                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{barInfo.usedAmount.PD}} </q-item-label>
+                <q-item-label v-if="barInfo.remainingBalance" class="text-dark text-h6 text-weight-bolder">
+                  <div >$ {{ barInfo.remainingBalance.total }}</div>
+                  <div class="fs-1">$ {{ barInfo.remainingBalance.preliminary }}</div>
+                </q-item-label>
               </q-item-section>
             </q-item>
           </div>
@@ -78,7 +81,7 @@
           align="left"
           narrow-indicator
         >
-          <!-- <q-tab name="1" label="Title I"/> -->
+          <q-tab name="1" label="Title I"/>
           <q-tab name="2" label="Title II"/>
           <q-tab name="3" label="Title III"/>
           <q-tab name="4" label="Title IV"/>
@@ -91,24 +94,24 @@
 
         <q-tab-panels v-model="tab" animated class="tab-panels-parent">
 
-          <!-- <q-tab-panel name="1" class="q-p-sm">
-            <MaterialTableTitle :title="1" :barInfo="barInfo" @final="finalResult"/>
-          </q-tab-panel> -->
+          <q-tab-panel name="1" class="q-p-sm">
+            <MaterialTableTitle :title="1" :barInfo="barInfo" />
+          </q-tab-panel>
 
           <q-tab-panel name="2" class="q-p-sm">
-            <MaterialTableTitle :title="2" :barInfo="barInfo" @final="finalResult"/>
+            <MaterialTableTitle :title="2" :barInfo="barInfo"/>
           </q-tab-panel>
 
           <q-tab-panel name="3" class="q-p-sm">
-            <MaterialTableTitle :title="3" :barInfo="barInfo" @final="finalResult"/>
+            <MaterialTableTitle :title="3" :barInfo="barInfo" />
           </q-tab-panel>
 
           <q-tab-panel name="4" class="q-p-sm">
-            <MaterialTableTitle :title="4" :barInfo="barInfo" @final="finalResult"/>
+            <MaterialTableTitle :title="4" :barInfo="barInfo" />
           </q-tab-panel>
 
           <q-tab-panel name="5" class="q-p-sm">
-            <MaterialTableTitle :title="5" :barInfo="barInfo" @final="finalResult"/>
+            <MaterialTableTitle :title="5" :barInfo="barInfo" />
           </q-tab-panel>
 
           <q-tab-panel name="6" class="q-p-sm">
@@ -138,27 +141,21 @@
         data() {
           return {
             schoolName: '',
-            tab: '2',
+            tab: '1',
             mode: 'list',
             isFinal: false,
             loading: false,
-            barInfo: {
-              remaining: { FE: '', PD: '' },
-              totalsAmount: { FE: '', PD: '' },
-              usedAmount: { FE: '', PD: '' }
-            },
+            barInfo: {},
           };
         },
         methods: {
-          finalResult(data) {
-            console.log('Is Final', data)
-            this.isFinal = data
-          },
-          getActivityBar(type, schoolId) {
+          // Title 1 / ShcoolId/ pageType / category
+          getActivityBar(type, schoolId, pageType, category) {
 
+            
             const conf = {
               method: 'GET',
-              url: config.getActivityBar + type + '/' + schoolId,
+              url: config.getActivityBar + type + '/' + schoolId + '/' + pageType + '/' + category,
               headers: {
                 Accept: 'application/json',
               }
@@ -166,14 +163,33 @@
 
             axios(conf).then(res => {
               this.barInfo = res.data
-              console.log('[[[', this.barInfo)
-            })
+              console.log('Bar info = ', this.barInfo)
+            });
 
           }
         },
+        watch: {
+          tab(val) {
+            this.getActivityBar(parseInt(val), this.$route.params.id, 1, 1)
+          }
+        },
         created() {
+
+          // Page types
+          // PD, FE : 1
+          // M : 2
+          // T : 6
+
+          // Category
+          // PD : 1
+          // FE : 2
+          // I : 3
+          // M : 4
+
+          // Title 1 / ShcoolId/ pageType / category
+
           this.schoolName = this.$route.query.name
-          this.getActivityBar(parseInt(this.tab), this.$route.params.id)
+          this.getActivityBar(parseInt(this.tab), this.$route.params.id, 1, 1)
         }
     }
 

@@ -24,7 +24,7 @@
                             />
                         </div>
                     </div>
-                    <q-checkbox :v-model="schedule" label="Schedule Transactions for billing" />
+                    <q-checkbox v-model="schedule" label="Schedule Transactions for billing" />
                 </div>
                 <div class="col-md-6 q-pr-sm q-mb-md">
                     <!-- <div class="row q-mt-lg">
@@ -57,8 +57,7 @@
                                 <q-td key="category" :props="props">
                                     
                                     <q-chip 
-                                        square class="edx-excel-btn"
-                                        text-color="white"
+                                        square class="bg-edx-bg-i"
                                     >
                                         <span>{{props.row.category}}</span>
                                         <q-tooltip 
@@ -85,6 +84,7 @@
         <q-card-actions class="row justify-end">
             <div>
                 <q-btn flat @click="hidePopup" label="Cancel" color="primary" v-close-popup></q-btn>
+                <q-btn flat v-if="schedule" @click="savePaySchedule" label="Save" color="primary"></q-btn>
             </div>
         </q-card-actions>
 
@@ -93,6 +93,8 @@
 
 <script>
 
+import axios from 'axios'
+import config from '../../../config'
 import DialogDraggable from '../DialogDraggable.vue';
 
 export default {
@@ -103,14 +105,12 @@ export default {
             default: false
         },
 
+        title: { required: true },
+
         startDate : { required : false, default: '01/01/2020' },
         endDate : { required : false, default: '01/01/2020' },
         hourlyFringe: { required: false, default: 0 },
         
-        // chargeRate : { required : false, default: 0 },
-        // employeeType : { required : false, default: 1 },
-        // weekHours : { required : false, default: 0 },
-        // billingCicle : { required : false, default: 0 },
 
         selectedWeekDays: { required: false, default: [] },
 
@@ -298,10 +298,46 @@ export default {
         daysInMonth (month, year) {
             return new Date(year, month, 0).getDate();
         },
+        savePaySchedule() {
 
+            let payScheduleArray = []
 
+            for(let i=0; i<this.data.length; i++) {
 
-        
+                payScheduleArray.push({
+                    name: this.data[i].transaction,
+                    start_date: this.data[i].date.split('-')[0].substring(0, 10),
+                    end_date: this.data[i].date.split('-')[1].substring(0, 10),
+                    unit_cost: this.data[i].amount,
+                })
+            }
+
+            console.log(payScheduleArray)
+
+            const conf = {
+                method: 'POST',
+                url: config.addTeacherBudget + this.title,
+                headers: {
+                    Accept: 'application/json',
+                },
+                data: payScheduleArray
+            }
+
+            axios(conf)
+                .then(res => {
+                    console.log('res data ', res.data)
+                    this.$q.notify({
+                        message: 'Success!',
+                        type: 'positive',
+                    })
+                })
+                .catch(err => {
+                    this.$q.notify({
+                        message: 'Error! Please try again later.',
+                        type: 'negative',
+                    })
+                })
+        }
     },
     computed: {
         isShow() {

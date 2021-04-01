@@ -131,6 +131,11 @@ const config = {
     getTeachersData: 'https://edxchange-teacher.aimtech.am/api/v1/teacher',
     getTeachers: 'https://edxchange-teacher.aimtech.am/api/v1/teacher?pagination=0',
     getTeacherBudget: 'https://edxchange-activity.aimtech.am/api/v1/get-teacher-budget-list/', // title id + school id
+    getTeacherTotalBar: 'https://edxchange-activity.aimtech.am/api/v1/get-teacher-totals/', // 1/1001/3 
+    createTeacherAssignment: 'https://edxchange-teacher.aimtech.am/api/v1/create-teacher-assignment/',
+    addTeacherBudget: 'https://edxchange-activity.aimtech.am/api/v1/add-teacher-budget/',
+    editTeacherAssignment: 'https://edxchange-activity.aimtech.am/api/v1/edit-teacher-assignment/',
+    
     // getTeacherBudgetById: 'https://edxchange-activity.aimtech.am/api/v1/get-teacher-assignment-details/', // + budget id
     getTeacherBudgetById: 'https://edxchange-teacher.aimtech.am/api/v1/get-teacher-compensation/', // + budget id
     getRoleTypes: 'https://edxchange-teacher.aimtech.am/api/v1/get-teacher-role-type',

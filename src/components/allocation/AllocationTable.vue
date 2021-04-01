@@ -298,7 +298,7 @@
 
                     <div v-for="i in editedItem" :key="i.edxName" class="q-mb-md col-md-4 q-pr-lg">
                       <div v-if="i.allocationFundTemplateId">
-                        <div class="text-subtitle2 q-mb-sm">{{ i.rule_name }}</div>
+                        <div class="text-subtitle2 q-mb-sm">{{ i.edxName }}</div>
 
                         <div v-if="i.percentage == null">
                           <q-input 
@@ -839,7 +839,7 @@ export default {
                 let obj = { 
                     name: edxName, 
                     align: "left",
-                    label: data[i][j].rule_name, 
+                    label: data[i][j].edxName, 
                     field: edxName,
                     sortable: true
                 }

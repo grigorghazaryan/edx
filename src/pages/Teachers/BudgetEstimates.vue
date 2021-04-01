@@ -21,7 +21,10 @@
               </q-item-section>
               <q-item-section class="q-ml-none">
                 <q-item-label class="text-grey-7">Total I</q-item-label>
-                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{  }}</q-item-label>
+                <q-item-label v-if="barInfo.totalAllocation" class="text-dark text-h6 text-weight-bolder">
+                  <div >$ {{ barInfo.totalAllocation.amount.total.toFixed(2)}}</div>
+                  <div class="fs-1">$ {{ barInfo.totalAllocation.amount.preliminary.toFixed(2) }}</div>
+                </q-item-label>
               </q-item-section>
             </q-item>
           </div>
@@ -33,7 +36,9 @@
               </q-item-section>
               <q-item-section class="q-ml-none">
                 <q-item-label class="text-grey-7">Total Salaries</q-item-label>
-                <q-item-label class="text-dark text-h6 text-weight-bolder">% 0.00</q-item-label>
+                <q-item-label class="text-dark text-h6 text-weight-bolder">
+                  $ {{ barInfo.totalCharge }}
+                </q-item-label>
               </q-item-section>
             </q-item>
           </div>
@@ -45,7 +50,7 @@
               </q-item-section>
               <q-item-section class="q-ml-none">
                 <q-item-label class="text-grey-7">Total Hourly</q-item-label>
-                <q-item-label class="text-dark text-h6 text-weight-bolder">% 0.00</q-item-label>
+                <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{ barInfo.hourlyCharge }}</q-item-label>
               </q-item-section>
             </q-item>
           </div>
@@ -121,7 +126,8 @@
 <script>
 
 import TeacherTableTitle from '../../components/teacher/TeacherTableTitle'
-
+import axios from 'axios'
+import config from '../../../config'
 
 export default {
   name: 'Teacher',
@@ -131,10 +137,36 @@ export default {
   data() {
     return {
       tab: '1',
+      barInfo: {},
     }
   },
+  // getTeacherTotalBar // 1/1001/3
   methods: {
+    getActivityBar(type, schoolId) {
 
+      const conf = {
+        method: 'GET',
+        url: config.getTeacherTotalBar + type + '/' + schoolId + '/3',
+        headers: {
+          Accept: 'application/json',
+        }
+      }
+
+      axios(conf).then(res => {
+        this.barInfo = res.data
+        console.log('Bar info = ', this.barInfo)
+      });
+
+    }
+  },
+  watch: {
+    tab(val) {
+      this.getActivityBar(parseInt(val), this.$route.params.id)
+    }
+  },
+  created() {
+    this.schoolName = this.$route.query.name
+    this.getActivityBar(parseInt(this.tab), this.$route.params.id)
   },
   computed: {
     routeTab() {

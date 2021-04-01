@@ -386,7 +386,7 @@
                     </q-td>
 
                     <q-td key="actions" :props="props" style="min-width: 132px">
-                        <q-fab padding="xs" @click.stop color="edx-action-btn" icon="keyboard_arrow_up" direction="up">
+                        <q-fab padding="xs" @click.stop color="edx-action-btn" icon="keyboard_arrow_left" direction="left">
                             
                             <q-fab-action
                                 icon="content_copy"
@@ -556,21 +556,12 @@
                                 <div class="text-subtitle2 q-mb-sm">Allocation Category</div>
                                 <div class="row cursor-pointer h-popup">
 
-                                    <div v-if="editedItem.type_uni && editedItem.type_uni.name == 'PD'">
+                                    <div>
                                         <q-chip 
-                                            square color="green" 
-                                            text-color="white" 
+                                            square color="edx-bg-i" 
                                         >
-                                            <span>PD</span>
+                                            <span>I</span>
                                         </q-chip>
-                                        <span>Professional Development</span>
-                                    </div>
-
-                                    <div v-else>
-                                        <q-chip square color="purple" text-color="white" >
-                                            <span>FE</span>
-                                        </q-chip>
-                                        <span>Family Engagement</span>
                                     </div>
 
                                     <q-popup-edit v-model="editedItem.type_uni" buttons>
@@ -1538,8 +1529,8 @@ export default {
             tpagination: { rowsPerPage: 10 },
             //
 
-            totalPDremainder: this.barInfo.totalsAmount.PD,
-            totalFEremainder: this.barInfo.totalsAmount.FE,
+            // totalPDremainder: this.barInfo.totalsAmount.PD,
+            // totalFEremainder: this.barInfo.totalsAmount.FE,
             //
             filter: '',
             schoolYear: null,
@@ -1729,7 +1720,7 @@ export default {
     },
     methods: {
 
-        getBudgetBalance(allocationFundId, tab, categoryId, schoolId, limit, page) {
+        getBudgetBalance( tab, categoryId, schoolId, limit, page) {
             
             this.tloading = true
 
@@ -1738,7 +1729,6 @@ export default {
                 url: config.getBudgetBalance + 
                 tab + '/' 
                 + schoolId + '/' +  
-                allocationFundId + '/' +
                 categoryId 
                 + '?limit=' + limit + '&page=' + page,
                 headers: {
@@ -1833,21 +1823,21 @@ export default {
                 charge = 0
             }
 
-            if(data[i].category.id == 1) {
-                // PD
-                if(final == 1) {
-                    this.totalPDremainder = this.totalPDremainder - charge
-                }else {
-                    this.totalPDremainder = (this.totalPDremainder / 2) - charge
-                }
-            }else {
-                // FE
-                if(final == 1) {
-                    this.totalFEremainder = this.totalFEremainder - charge
-                }else {
-                    this.totalFEremainder = (this.totalFEremainder / 2) - charge
-                }
-            }
+            // if(data[i].category.id == 1) {
+            //     // PD
+            //     if(final == 1) {
+            //         this.totalPDremainder = this.totalPDremainder - charge
+            //     }else {
+            //         this.totalPDremainder = (this.totalPDremainder / 2) - charge
+            //     }
+            // }else {
+            //     // FE
+            //     if(final == 1) {
+            //         this.totalFEremainder = this.totalFEremainder - charge
+            //     }else {
+            //         this.totalFEremainder = (this.totalFEremainder / 2) - charge
+            //     }
+            // }
 
             // PD = 1 totalPDremainder
             // FE = 2 totalFEremainder
@@ -1855,7 +1845,8 @@ export default {
         
         let activityObj = {
             // remainingBalance: charge,
-            remainingBalance: data[i].category.id == 1 ? this.totalPDremainder : this.totalFEremainder,
+            remainingBalance: 0,
+            // data[i].category.id == 1 ? this.totalPDremainder : this.totalFEremainder,
             id: data[i].id,
             description: data[i].description,
             tracking_category_uni: {
@@ -1983,9 +1974,9 @@ status_uni: {
                     label: 'Needs Assessment'
                 },
                 type_uni: {
-                    id: 1,
-                    label: 'PD',
-                    name: 'PD',
+                    id: 3,
+                    label: 'I',
+                    name: 'I',
                 },
                 billing: {
                     id: 4,
@@ -3036,7 +3027,7 @@ status_uni: {
             const schoolId = this.$route.params.id
             const allocationFundId = this.allocationFundId
 
-            this.getBudgetBalance(allocationFundId, tab, 3, schoolId, this.budgetCount, this.current)
+            this.getBudgetBalance(tab, 3, schoolId, this.budgetCount, this.current)
         },
         changeBudgetPagination(val) {
 
@@ -3046,7 +3037,7 @@ status_uni: {
             const schoolId = this.$route.params.id
             const allocationFundId = this.allocationFundId
 
-            this.getBudgetBalance(allocationFundId, tab, 3, schoolId, this.count, val)
+            this.getBudgetBalance(tab, 3, schoolId, this.count, val)
         }
     },
     watch: {
@@ -3059,7 +3050,7 @@ status_uni: {
                 const schoolId = this.$route.params.id
                 const allocationFundId = this.allocationFundId
 
-                this.getBudgetBalance(allocationFundId, tab, 3, schoolId, this.count, this.current)
+                this.getBudgetBalance( tab, 3, schoolId, this.count, this.current)
 
             }else {
                 this.isRemainingPopupOpen = false

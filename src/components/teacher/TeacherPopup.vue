@@ -134,44 +134,13 @@
 
                                     <div v-if="editedItem.category">
                                         <q-chip 
-                                            square color="green" 
-                                            text-color="white" 
+                                            square 
+                                            color="edx-bg-i"
                                         >
                                             <span>{{ editedItem.category.name }}</span>
                                         </q-chip>
-                                        <span>{{ editedItem.category.label  }}</span>
                                     </div>
 
-
-                                    <q-popup-edit v-model="editedItem.category" buttons>
-                                        <div class="q-mb-lg q-mt-lg">
-                                                <div class="text-subtitle2 q-mb-sm">Allocation Category</div>
-                                                <div class="cursor-pointer h-popup">
-                                                    <q-select 
-                                                        v-model="editedItem.category" 
-                                                        :options="typeArr"
-                                                        outlined
-                                                        dense
-                                                    />
-                                                </div>
-                                        </div>
-                                    </q-popup-edit>  
-
-                                </div>
-                            </div>
-                            <div class="col-6 q-pr-sm q-mb-md">
-                                <div class="text-subtitle2 q-mb-sm">Allocation Subcategory</div>
-                                <div class="row cursor-pointer h-popup">
-
-                                    <div v-if="editedItem.subcategory">
-                                        <q-chip 
-                                            square color="purple" 
-                                            text-color="white" 
-                                        >
-                                            <span>{{ editedItem.subcategory.name }}</span>
-                                        </q-chip>
-                                        <span>{{ editedItem.subcategory.label  }}</span>
-                                    </div>
 
                                     <q-popup-edit v-model="editedItem.subcategory" buttons>
                                         <div class="q-mb-lg q-mt-lg">
@@ -501,10 +470,11 @@
                                         <div class="row justify-end">
                                             <q-checkbox v-model="props.row.isHourlyOverride" />
                                             <q-input
-                                            :disable="!props.row.isHourlyOverride" 
-                                            :filled="!props.row.isHourlyOverride" 
-                                            outlined
-                                            class="w-80px" prefix="$"  dense v-model="props.row.hourlyOverride"/>
+                                                :disable="!props.row.isHourlyOverride" 
+                                                :filled="!props.row.isHourlyOverride" 
+                                                outlined
+                                                class="w-80px" prefix="$"  
+                                                dense v-model="props.row.hourlyOverride"/>
                                         </div>
                                     </q-td>
 
@@ -555,6 +525,7 @@
             @hidePaySchedulePopup="closePaySchedulePopup" 
             :show="showPaySchedule" 
             :icon="'attach_money'"
+            :title="title"
 
             :startDate="editedItem.startDate" 
             :endDate="editedItem.endDate"
@@ -566,27 +537,6 @@
 
         />
 
-            <!-- :chargeRate="chargeRate"
-            :employeeType="totalHours >= 40 ? 1 : 0"
-            :weekHours="totalHours"
-            :billingCicle="1" -->
-
-        <!-- :startDate="1" 
-            :endDate="2"
-            :chargeRate="3"
-            :employeeType="4"
-            :weekHours="5"
-            :billingCicle="1" -->
-
-         <!-- 
-            :startDate="editedItem.startDate" 
-            :endDate="editedItem.endDate"
-            :chargeRate="chargeRate"
-            :employeeType="totalHours >= 40 ? 1 : 0"
-            :weekHours="totalHours"
-            :billingCicle="1"
-            
-             -->
 
     </div>
 </template>
@@ -597,7 +547,8 @@ import axios from 'axios'
 import config from '../../../config'
 import DialogDraggable from '../DialogDraggable'
 import PaySchedule from './PaySchedule'
-var moment = require('moment-business-days');
+import { format } from 'quasar'
+let moment = require('moment-business-days');
 
 
 export default {
@@ -625,6 +576,9 @@ export default {
     },
     data() {
         return {
+            test: null,
+            testDay: null,
+            //
             showPaySchedule: false,
             btnLoading: false,
             teacherSubColumns: [
@@ -673,13 +627,13 @@ export default {
             ],
             monthlyDetails: [{
                 hourlyFringe: 0,
-                chargeRate: 90,
-                workDays: 12,
-                workHours: 34,
-                billingCycles: 3,
-                assignmentTotal: 900,
-                isHourlyOverride: true,
-                hourlyOverride: 60,
+                chargeRate: 0,
+                workDays: 0,
+                workHours: 0,
+                billingCycles: 0,
+                assignmentTotal: 0,
+                isHourlyOverride: false,
+                hourlyOverride: 0,
             }],
             editedItem: {},
             optionsTeachers: [],
@@ -743,13 +697,19 @@ export default {
                 console.log('Techer info', teacherInfo)
 
                 this.editedItem = {
+
+                    teacherId: teacherInfo.teacher_id,
                     teacher: {
                         id:  teacherInfo.teacher.id,
                         label:  teacherInfo.teacher.first_name + ' ' + teacherInfo.teacher.last_name,
                     },
                     role: {
-                        id: teacherInfo.teacher.role_type && teacherInfo.teacher.role_type.id,
-                        label: teacherInfo.teacher.role_type && teacherInfo.teacher.role_type.name
+                        id: teacherInfo.teacher.assignment_compensation && teacherInfo.teacher.assignment_compensation.role_type ? teacherInfo.teacher.assignment_compensation.role_type.id : 0,
+                        label: teacherInfo.teacher.assignment_compensation && teacherInfo.teacher.assignment_compensation.role_type ? teacherInfo.teacher.assignment_compensation.role_type.name : 0,
+                    },
+                    campus: {
+                        id: teacherInfo.teacher.assignment_compensation && teacherInfo.teacher.assignment_compensation.campus ? teacherInfo.teacher.assignment_compensation.campus.id : 0,
+                        label: teacherInfo.teacher.assignment_compensation && teacherInfo.teacher.assignment_compensation.campus ? teacherInfo.teacher.assignment_compensation.campus.name : 0
                     },
 
                     // hourly: teacherInfo.hourly_pay,
@@ -783,8 +743,8 @@ export default {
                     workMonth: teacherInfo.work_month,
                     benefits: teacherInfo.has_benefits == '1' ? 'Y' : 'N',
 
-                    startDate:  teacherInfo.teacher.assignment_compensation?.start_date,
-                    endDate: teacherInfo.teacher.assignment_compensation?.end_date,
+                    startDate:  teacherInfo.teacher.assignment_compensation?.start_date.replaceAll("-", "/"),
+                    endDate: teacherInfo.teacher.assignment_compensation?.end_date.replaceAll("-", "/"),
                     // hoursWeek: teacherInfo.teacher.assignment_compensation.hours_per_week,
                     isHoursWeek: { id: 1, label: 'Hours/Week'},
                     hoursWM: 0,
@@ -814,8 +774,8 @@ export default {
 
                 }
 
-                this.monthlyDetails.override = teacherInfo.teacher.assignment_compensation.is_override == '0' ? false : true
-                this.monthlyDetails.hourlyRate = teacherInfo.teacher.assignment_compensation.hourly_rate
+                this.monthlyDetails[0].isHourlyOverride = teacherInfo.teacher.assignment_compensation.is_override == '0' ? false : true
+                this.monthlyDetails[0].hourlyOverride = teacherInfo.teacher.assignment_compensation.hourly_charge_override
                 // this.pages = res.data.pagesCount
                 // let data = res.data.items
 
@@ -936,6 +896,7 @@ export default {
         })
         },
         getSubcategories(id) {
+
             const conf = {
                 method: 'GET',
                 url: config.getSubcategories + id,
@@ -1112,32 +1073,174 @@ export default {
 
 
         },
+        dateRange(startDate, endDate) {
+
+            let start      = startDate.split('/');
+            let end        = endDate.split('/');
+            let startYear  = parseInt(start[0]);
+            let endYear    = parseInt(end[0]);
+            let dates      = [];
+            
+            for(let i = startYear; i <= endYear; i++) {
+            
+                let endMonth = i != endYear ? 11 : parseInt(end[1]) - 1;
+                let startMon = i === startYear ? parseInt(start[1])-1 : 0;
+                
+                let startDay;  
+                
+                for(let j = startMon; j <= endMonth; j = j > 12 ? j % 12 || 11 : j+1) {
+                    
+                startDay = j+1;
+                let month = j+1;
+                let displayMonth = month < 10 ? '0' + month : month;
+                
+                if(parseInt(start[1]) == startDay  && i == parseInt(start[0])) {
+                    startDay = parseInt(start[2]) < 10 ? '0' + parseInt(start[2])  : parseInt(start[2]);
+                }else {
+                    startDay = '01'
+                }
+                
+                let monthLastDay;
+                
+                if(j+1 ==  parseInt(end[1]) && i == parseInt(end[0])) { 
+                
+                    if(parseInt(end[1]) == this.daysInMonth(displayMonth, i)) {
+                    monthLastDay = this.daysInMonth(displayMonth, i)
+                    }else {
+                    monthLastDay = end[2];
+                    }
+                    
+                }else {
+                    monthLastDay = this.daysInMonth(displayMonth, i)
+                }
+                
+                dates.push( 
+                    [i, displayMonth, startDay].join('/')
+                    + '-' +
+                    [i, displayMonth, monthLastDay].join('/') 
+                );
+                
+                }
+                
+            }
+            return dates;
+
+        },
+        // daysInMonth(01, 2021)
+        daysInMonth (month, year) {
+            return new Date(year, month, 0).getDate();
+        },
+        getPayScheduleInfo() {
+
+             let arr = [],
+                dayArr = [];
+
+   
+                let dates = this.dateRange(this.editedItem.startDate.substring(0, 10), this.editedItem.endDate.substring(0, 10))
+                let scheduleWeekDays = this.scheduleWeekDays
+
+                console.log('dates', dates)
+
+
+                for(let i=0; i<dates.length; i++) {
+
+                    let splittedDate = dates[i].split('-');
+                    
+                    let date1 = splittedDate[0].split('/')
+                    let date2 = splittedDate[1].split('/')
+
+                    console.log('dates', date1, date2)
+                    
+                    let month = date1[1]
+                    let startDay = parseInt(date1[2])
+                    let endDay = parseInt(date2[2])
+                    
+                    let count = 0;
+                    let dayCount = 0;
+                    
+                    console.log('#######################')
+                    console.log('lklklklk', startDay, endDay)
+
+                    
+                    for(let j=startDay; j<=endDay; j++) {
+
+                        let fullMonth = date1[0] + '/' + month + '/' + j
+                        let nd = new Date(fullMonth).getDay()
+                        
+                        for(let t=0; t<=scheduleWeekDays.length; t++) {
+                            if(scheduleWeekDays[t]) {
+                                if(scheduleWeekDays[t].checked && scheduleWeekDays[t].id == nd) {
+                                    
+                                    console.log('scheduleWeekDays[t].hours', scheduleWeekDays[t].hours)
+                                    count += parseFloat(scheduleWeekDays[t].hours)
+                                    dayCount++
+                                    break
+                                }
+                            }
+                        }
+                    } 
+
+                    arr.push({ 
+                        time: count
+                    })
+
+                    dayArr.push(dayCount)
+                    
+                    this.test = arr
+                    this.testDay = dayArr
+                    
+                }
+                
+
+        },
         calculateBusinessDays() {
 
-            const start = this.editedItem.startDate.substring(0, 10);
-            const end = this.editedItem.endDate.substring(0, 10);
+            const startBilling = this.editedItem.startDate.substring(0, 10);
+            const endBilling = this.editedItem.endDate.substring(0, 10);
 
-            let isWorkingDay = moment(end, 'YYYY-MM-DD').isBusinessDay()
+            // console.log('st', start)
+            // console.log('end', end)
 
-            this.monthDiff(start, end)
-            
-            let diff = moment(start, 'YYYY-MM-DD').businessDiff(moment(end,'YYYY-MM-DD'));
-            
-            if(isWorkingDay) {
-                diff = diff + 1
+            this.getPayScheduleInfo()
+            console.log('oioioi', this.test)
+
+            let count = 0;
+            for(let i=0; i<this.test.length; i++) {
+                count += this.test[i].time
             }
 
-            this.workDays = diff
+            let dCount = 0;
+            for(let i=0; i<this.testDay.length; i++) {
+                dCount += this.testDay[i]
+            }
 
-            console.log('this.totalHours', this.totalH)
+            console.log(count, 'countcountcount')
+            console.log(dCount, 'testDaytestDaytestDay')
+            // let isWorkingDay = moment(end, 'YYYY-MM-DD').isBusinessDay()
+
+            this.monthDiff(startBilling, endBilling)
+            
+            // let diff = moment(start, 'YYYY-MM-DD').businessDiff(moment(end,'YYYY-MM-DD'));
+            
+            // if(isWorkingDay) {
+            //     diff = diff + 1
+            // }
+
+            // this.workDays = diff
+
+            // console.log('this.totalHours', this.totalH)
 
             if(this.editedItem.isHoursWeek && this.editedItem.isHoursWeek.id == 1) {
                 // console.log('if', diff * this.totalH)
-                this.workHours = diff * this.totalH
+                this.workHours = count 
+                this.workDays = dCount
+                // * this.totalH
                 // this.workHours = 900
             }else {
                 // console.log('else', diff * this.editedItem.hoursWM)
-                this.workHours = diff * this.editedItem.hoursWM
+                this.workHours = count 
+                this.workDays = dCount
+                // * this.editedItem.hoursWM
                 // this.workHours = 500
             }
         
@@ -1147,22 +1250,72 @@ export default {
             alert('add')
         },
         editTeacher() {
-alert('edit')
+
+            let data = {
+
+                teacher_role_type_id: this.editedItem.role.id,
+                campus_id: this.editedItem.campus.id,
+                subcategory_id: this.editedItem.subcategory.id,
+                category_tracking_id: this.editedItem.trackingCategory.id,
+                start_date: this.editedItem.startDate,
+                end_date: this.editedItem.endDate,
+                hourly_base_rate: this.baseRate,
+                total_charge: this.baseRate,
+                fringe_type_id: this.editedItem.frienge.id,
+                total_fringe: this.editedItem.totalAmount,
+                // teacher_type_id: 
+                status_id: this.editedItem.assignmentStatus.id,
+
+                is_override: this.monthlyDetails[0].isHourlyOverride,
+                hourly_charge_override: this.monthlyDetails[0].hourlyOverride,
+                
+                note: this.editedItem.note,
+                // is_client_agree
+            }
+
+            if(this.editedItem.isHoursWeek.id == 1) {
+                data.work_hours_per_week = this.totalHours
+            }else {
+                data.work_hours_per_day = this.editedItem.hoursWM
+            }
+
+            // allocationType / TeacherId / school_id
+
+            const conf = {
+                method: 'PUT',
+                url: config.editTeacherAssignment + this.title + '/' + this.editedItem.teacherId  + '/' + this.$route.params.id,
+                headers: {
+                    Accept: 'application/json',
+                },
+                data: data
+            }
+
+            axios(conf).then(res => {
+                console.log(res.data, 'edit teacher -------')
+                this.getTeacherBudgetById(this.id)
+                    this.$q.notify({
+                        message: 'Teacher edited!',
+                        type: 'positive',
+                    })
+            })
+
         },
         duplicateTeacher() {
-alert('duplicate')
+            alert('duplicate')
         }
     },
     watch: {
+        // scheduleWeekDays(val) {
+            // console.log('scheduleWeekDays', val)
+            // this.calculateBusinessDays()
+        // },
         editedItem(val) {
             console.log('edited item', val)
+            this.calculateBusinessDays()
         },
         show(val) {
             if(val) {
-            
-                // this.getTeacherBudgetById(this.id)
-                
-               
+                this.getTeacherBudgetById(this.id)
             }
         },
         'editedItem.startDate'(){
@@ -1205,7 +1358,7 @@ alert('duplicate')
         this.getEmployees()
         this.getCampueses()
         this.getCategoryTypes(this.title)
-        this.getSubcategories(this.title)
+        this.getSubcategories(3)
         this.getTrackingCategories()
         this.getRoletypes()
         this.getEmployementTypes()
@@ -1213,8 +1366,6 @@ alert('duplicate')
         this.getFringeTypes()
 
         // ----
-
-
 
     },
     computed: {

@@ -421,7 +421,7 @@
                     </q-td>
 
                     <q-td key="actions" :props="props" style="min-width: 132px">
-                        <q-fab padding="xs" @click.stop color="edx-action-btn" icon="keyboard_arrow_up" direction="up">
+                        <q-fab padding="xs" @click.stop color="edx-action-btn" icon="keyboard_arrow_left" direction="left">
                             
                             <q-fab-action
                                 icon="content_copy"
@@ -593,12 +593,11 @@
 
                                     <div>
                                         <q-chip 
-                                            square color="green" 
-                                            text-color="white" 
+                                            square 
+                                            color="edx-bg-pd" 
                                         >
                                             <span>PD</span>
                                         </q-chip>
-                                        <!-- <span>Professional Development</span> -->
                                     </div>
 
                                     <q-popup-edit v-if="optionsSubcategory.length" v-model="editedItem.type_uni" buttons>
@@ -1569,9 +1568,9 @@ export default {
         DialogDraggable
     },
     props: {
-        barInfo: {
-            required: true
-        },
+        // barInfo: {
+        //     required: true
+        // },
         title: {
             required: true
         }
@@ -1639,8 +1638,8 @@ export default {
             allocationFundId: null,
             tpagination: { rowsPerPage: 10 },
             //
-            totalPDremainder: this.barInfo.totalsAmount.PD,
-            totalFEremainder: this.barInfo.totalsAmount.FE,
+            // totalPDremainder: this.barInfo.totalsAmount.PD,
+            // totalFEremainder: this.barInfo.totalsAmount.FE,
             //
             filter: '',
             schoolYear: null,
@@ -1869,7 +1868,7 @@ export default {
     },
     methods: {
         // allocationFundId/ tab /school id
-        getBudgetBalance(allocationFundId, tab, categoryId, schoolId, limit, page) {
+        getBudgetBalance(tab, categoryId, schoolId, limit, page) {
             
             this.tloading = true
 
@@ -1878,7 +1877,6 @@ export default {
                 url: config.getBudgetBalance + 
                 tab + '/' 
                 + schoolId + '/' +  
-                allocationFundId + '/' +
                 categoryId 
                 + '?limit=' + limit + '&page=' + page,
                 headers: {
@@ -1972,24 +1970,25 @@ export default {
                 charge = 0
             }
 
-            if(data[i].category.id == 1) {
-                // PD
-                if(final == 1) {
-                    this.totalPDremainder = this.totalPDremainder - charge
-                }else {
-                    this.totalPDremainder = (this.totalPDremainder / 2) - charge
-                }
-            }else {
-                // FE
-                if(final == 1) {
-                    this.totalFEremainder = this.totalFEremainder - charge
-                }else {
-                    this.totalFEremainder = (this.totalFEremainder / 2) - charge
-                }
-            }
+            // if(data[i].category.id == 1) {
+            //     // PD
+            //     if(final == 1) {
+            //         this.totalPDremainder = this.totalPDremainder - charge
+            //     }else {
+            //         this.totalPDremainder = (this.totalPDremainder / 2) - charge
+            //     }
+            // }else {
+            //     // FE
+            //     if(final == 1) {
+            //         this.totalFEremainder = this.totalFEremainder - charge
+            //     }else {
+            //         this.totalFEremainder = (this.totalFEremainder / 2) - charge
+            //     }
+            // }
 
             // PD = 1 totalPDremainder
             // FE = 2 totalFEremainder
+
             let isOnline;
             if(data[i].is_online == 1) {
                 isOnline = 'Online'
@@ -2000,7 +1999,8 @@ export default {
         
         let activityObj = {
             // remainingBalance: charge,
-            remainingBalance: data[i].category.id == 1 ? this.totalPDremainder : this.totalFEremainder,
+            remainingBalance: 0,
+            // data[i].category.id == 1 ? this.totalPDremainder : this.totalFEremainder,
             id: data[i].id,
             description: data[i].description,
             tracking_category_uni: {
@@ -2029,12 +2029,12 @@ export default {
                 label: data[i].status ? data[i].status.name : 'N/A'
             },
             approval_status_uni: {
-                id: data[i].approval_status.id,
-                label: data[i].approval_status.name
+                id: data[i].approval_status?.id,
+                label: data[i].approval_status?.name
             },
             approval_type_uni: {
-                label: data[i].approval_types.name,
-                value: data[i].approval_types.id
+                label: data[i].approval_types?.name,
+                value: data[i].approval_types?.id
             },
             activity: data[i].name,
             activity_date: sd == null ? 'TBD' : fullDate,
@@ -3240,9 +3240,8 @@ export default {
 
             const tab = parseInt(this.tab)
             const schoolId = this.$route.params.id
-            const allocationFundId = this.allocationFundId
 
-            this.getBudgetBalance(allocationFundId, tab, 1, schoolId, this.budgetCount, this.current)
+            this.getBudgetBalance(tab, 1, schoolId, this.budgetCount, this.current)
         },
         changeBudgetPagination(val) {
 
@@ -3250,12 +3249,12 @@ export default {
             
             const tab = parseInt(this.tab)
             const schoolId = this.$route.params.id
-            const allocationFundId = this.allocationFundId
 
-            this.getBudgetBalance(allocationFundId, tab, 1, schoolId, this.count, val)
+            this.getBudgetBalance(tab, 1, schoolId, this.count, val)
         }
     },
     watch: {
+
         showRemainingBalance(val) {
             if(val) {
 
@@ -3263,14 +3262,14 @@ export default {
                 
                 const tab = parseInt(this.tab)
                 const schoolId = this.$route.params.id
-                const allocationFundId = this.allocationFundId
 
-                this.getBudgetBalance(allocationFundId, tab, 1, schoolId, this.count, this.current)
+                this.getBudgetBalance(tab, 1, schoolId, this.count, this.current)
 
             }else {
                 this.isRemainingPopupOpen = false
             }
         },
+
         isRemainingPopupOpen(val) {
             if(val) {
                 this.showRemainingBalance = true
@@ -3278,6 +3277,7 @@ export default {
                 this.showRemainingBalance = false
             }
         },
+
         isShowActivityPopup(val) {
             if(!val) {
                 this.isEdit = false
@@ -3287,7 +3287,7 @@ export default {
                 this.getStatus(parseInt(this.tab));
                 this.getTrackingCategories();
             }
-        },
+        }
     },
     created() {
 
@@ -3303,7 +3303,7 @@ export default {
         this.getSchoolYears()
 
         this.getFunds(tab)
-        this.getAllocationFundId(tab, 1)
+        // this.getAllocationFundId(tab, 1)
         
     }
 
