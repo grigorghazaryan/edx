@@ -27,6 +27,7 @@
                                         input-debounce="0"
                                         :options="optionsTeachers"
                                         @filter="filterTeachers"
+                                        @input="getEmployeeInfo"
                                     />
                                 </div>
                             </div>
@@ -132,12 +133,12 @@
                                 <div class="text-subtitle2 q-mb-sm">Allocation Category</div>
                                 <div class="row cursor-pointer h-popup">
 
-                                    <div v-if="editedItem.category">
+                                    <div>
                                         <q-chip 
                                             square 
                                             color="edx-bg-i"
                                         >
-                                            <span>{{ editedItem.category.name }}</span>
+                                            <span>I</span>
                                         </q-chip>
                                     </div>
 
@@ -230,6 +231,7 @@
                             </div>
 
                             <div class="col-md-2 q-pr-sm">
+
                                 <div class="text-subtitle2 q-mb-sm" v-if="editedItem.isHoursWeek">
                                     {{editedItem.isHoursWeek.label}}
                                 </div>
@@ -671,6 +673,12 @@ export default {
     },
     methods: {
 
+        getEmployeeInfo() {
+            let id = this.editedItem.teacher.id ? this.editedItem.teacher.id : 0
+
+           this.getTeacherBudgetById(id)
+        },
+
         paySchedule() {
             this.showPaySchedule = true
         },
@@ -752,8 +760,8 @@ export default {
                     hourlyFrienge: 100,
                     totalAmount: 0,
                     assignmentStatus: {
-                        id: teacherInfo.teacher.assignment_compensation && teacherInfo.teacher.assignment_compensation.status.id,
-                        label: teacherInfo.teacher.assignment_compensation && teacherInfo.teacher.assignment_compensation.status.name,
+                        id: teacherInfo.teacher.assignment_compensation ? teacherInfo.teacher.assignment_compensation.status.id : 0,
+                        label: teacherInfo.teacher.assignment_compensation ? teacherInfo.teacher.assignment_compensation.status.name : '',
                     },
                     assignmentType: {
                         id: teacherInfo.teacher?.assignment_compensation?.status?.id,
@@ -774,8 +782,8 @@ export default {
 
                 }
 
-                this.monthlyDetails[0].isHourlyOverride = teacherInfo.teacher.assignment_compensation.is_override == '0' ? false : true
-                this.monthlyDetails[0].hourlyOverride = teacherInfo.teacher.assignment_compensation.hourly_charge_override
+                this.monthlyDetails[0].isHourlyOverride = teacherInfo.teacher.assignment_compensation && this.monthlyDetails[0].isHourlyOverride.is_override == '0' ? false : true
+                this.monthlyDetails[0].hourlyOverride = teacherInfo.teacher.assignment_compensation && teacherInfo.teacher.assignment_compensation.hourly_charge_override
                 // this.pages = res.data.pagesCount
                 // let data = res.data.items
 
@@ -1075,8 +1083,12 @@ export default {
         },
         dateRange(startDate, endDate) {
 
-            let start      = startDate.split('/');
+            if(startDate && endDate) {
+
+                            let start      = startDate.split('/') ;
             let end        = endDate.split('/');
+
+
             let startYear  = parseInt(start[0]);
             let endYear    = parseInt(end[0]);
             let dates      = [];
@@ -1125,6 +1137,8 @@ export default {
             }
             return dates;
 
+            }
+
         },
         // daysInMonth(01, 2021)
         daysInMonth (month, year) {
@@ -1136,12 +1150,12 @@ export default {
                 dayArr = [];
 
    
-                let dates = this.dateRange(this.editedItem.startDate.substring(0, 10), this.editedItem.endDate.substring(0, 10))
+                let dates = this.dateRange(this.editedItem.startDate && this.editedItem.startDate.substring(0, 10), this.editedItem.endDate && this.editedItem.endDate.substring(0, 10))
                 let scheduleWeekDays = this.scheduleWeekDays
 
                 console.log('dates', dates)
 
-
+                if(dates.length) {
                 for(let i=0; i<dates.length; i++) {
 
                     let splittedDate = dates[i].split('-');
@@ -1190,13 +1204,15 @@ export default {
                     this.testDay = dayArr
                     
                 }
+                }
+
                 
 
         },
         calculateBusinessDays() {
 
-            const startBilling = this.editedItem.startDate.substring(0, 10);
-            const endBilling = this.editedItem.endDate.substring(0, 10);
+            const startBilling = this.editedItem.startDate ? this.editedItem.startDate.substring(0, 10) : '2021/01/01';
+            const endBilling = this.editedItem.endDate ? this.editedItem.endDate.substring(0, 10) : '2021/01/01';
 
             // console.log('st', start)
             // console.log('end', end)
@@ -1247,7 +1263,55 @@ export default {
         },
         // =========================
         addTeacher() {
-            alert('add')
+            
+            let data = {
+
+                teacher_role_type_id: this.editedItem.role.id,
+                campus_id: this.editedItem.campus.id,
+                subcategory_id: this.editedItem.subcategory.id,
+                category_id: 3,
+                category_tracking_id: this.editedItem.trackingCategory.id,
+                start_date: this.editedItem.startDate,
+                end_date: this.editedItem.endDate,
+                hourly_base_rate: this.baseRate,
+                total_charge: this.baseRate,
+                fringe_type_id: this.editedItem.frienge.id,
+                total_fringe: this.editedItem.totalAmount,
+                // teacher_type_id: 
+                status_id: this.editedItem.assignmentStatus.id,
+
+                is_override: this.monthlyDetails[0].isHourlyOverride,
+                hourly_charge_override: this.monthlyDetails[0].hourlyOverride,
+                
+                note: this.editedItem.note,
+                // is_client_agree
+            }
+
+            if(this.editedItem.isHoursWeek.id == 1) {
+                data.work_hours_per_week = this.totalHours
+            }else {
+                data.work_hours_per_day = this.editedItem.hoursWM
+            }
+
+            const conf = {
+                method: 'POST',
+                url: config.addTeacherAssignment + 6 + '/' + this.title + '/' + this.$route.params.id,
+                headers: {
+                    Accept: 'application/json',
+                },
+                data: data
+            }
+
+            axios(conf).then(res => {
+
+                    this.getTeacherBudgetById(this.id)
+                    this.$q.notify({
+                        message: 'Teacher Added!',
+                        type: 'positive',
+                    })
+            })
+
+
         },
         editTeacher() {
 
@@ -1314,7 +1378,7 @@ export default {
             this.calculateBusinessDays()
         },
         show(val) {
-            if(val) {
+            if(val && this.isEdit) {
                 this.getTeacherBudgetById(this.id)
             }
         },
@@ -1350,6 +1414,7 @@ export default {
             }
         },
         'editedItem.teacher'(val) {
+            console.log('asdasd', val)
             // this.getTeacherBudgetById(val.id)
         }
     },
