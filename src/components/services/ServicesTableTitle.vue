@@ -566,19 +566,11 @@
 
                                     <q-popup-edit v-model="editedItem.type_uni" buttons>
                                         <div class="row q-mb-lg q-mt-lg">
-                                            <div class="col-md-6 q-pr-sm q-mb-md">
-                                                <div class="text-subtitle2 q-mb-sm">Allocation Category</div>
-                                                <div class="row cursor-pointer h-popup">
-                                                    <q-select 
-                                                        v-model="editedItem.type_uni" 
-                                                        :options="typeArr"
-                                                    />
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6 q-pr-sm q-mb-md">
+                                            <div class="col-md-12 q-pr-sm q-mb-md">
                                                 <div class="text-subtitle2 q-mb-sm">Allocation Subcategory</div>
                                                 <div class="row cursor-pointer h-popup">
                                                     <q-select 
+                                                    class="w-100"
                                                         v-model="editedItem.subcategory_uni" 
                                                         :options="optionsSubcategory"
                                                     />
@@ -3084,7 +3076,7 @@ status_uni: {
         this.getApprovals()
         this.getRcurranceTypes()
         this.getSchoolYears()
-        this.getSubcategories(tab)
+        this.getSubcategories(3)
 
         this.getAllocationFundId(tab, 3)
     }

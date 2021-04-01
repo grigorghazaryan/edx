@@ -617,20 +617,13 @@
                                     </div>
 
                                     <q-popup-edit v-model="editedItem.type_uni" buttons>
-                                        <div class="row q-mb-lg q-mt-lg">
-                                            <div class="col-md-6 q-pr-sm q-mb-md">
-                                                <div class="text-subtitle2 q-mb-sm">Allocation Category</div>
-                                                <div class="row cursor-pointer h-popup">
-                                                    <q-select 
-                                                        v-model="editedItem.type_uni" 
-                                                        :options="typeArr"
-                                                    />
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6 q-pr-sm q-mb-md">
+                                        <div class="row  w-100 q-mb-lg q-mt-lg">
+                                            
+                                            <div class="col-md-12 q-pr-sm q-mb-md">
                                                 <div class="text-subtitle2 q-mb-sm">Allocation Subcategory</div>
                                                 <div class="row cursor-pointer h-popup">
                                                     <q-select 
+                                                        class="w-100"
                                                         v-model="editedItem.subcategory_uni" 
                                                         :options="optionsSubcategory"
                                                     />
@@ -2879,7 +2872,7 @@ export default {
         this.getApprovals()
         this.getRcurranceTypes()
         this.getSchoolYears()
-        this.getSubcategories(tab)
+        this.getSubcategories(4)
         this.getInventoryCategories();
 
         this.getAllocationFundId(tab, 4)
