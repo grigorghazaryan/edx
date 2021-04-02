@@ -771,8 +771,8 @@ export default {
                     workMonth: teacherInfo.work_month,
                     benefits: teacherInfo.has_benefits == '1' ? 'Y' : 'N',
 
-                    startDate:  teacherInfo.teacher.assignment_compensation?.start_date.replaceAll("-", "/"),
-                    endDate: teacherInfo.teacher.assignment_compensation?.end_date.replaceAll("-", "/"),
+                    startDate:  teacherInfo.start_date,
+                    endDate: teacherInfo.end_date,
                     // hoursWeek: teacherInfo.teacher.assignment_compensation.hours_per_week,
                     isHoursWeek: { id: 1, label: 'Hours/Week'},
                     hoursWM: 0,
