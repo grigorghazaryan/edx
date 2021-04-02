@@ -482,10 +482,12 @@
                         <div class="q-mb-md">
                             <div class="text-subtitle2 q-mb-sm">Material Description</div>
                             <q-input
+                                type="textarea"
                                 outlined
                                 v-model="editedItem.description" 
                                 dense 
                                 autofocus
+                                rows="2"
                             />
                         </div>
 
@@ -554,7 +556,7 @@
                                     readonly  
                                     class="q-mb-md" 
                                     type="text" 
-                                    v-model="( parseFloat(editedItem.amount) * parseFloat(editedItem.quantity)  + parseFloat(((  (parseFloat(editedItem.amount) * parseFloat(editedItem.quantity))  * editedItem.percentage) / 100))).toFixed(2)" 
+                                    v-model="totalMarkup" 
                                     dense autofocus 
                                 />
                             </div>
@@ -604,7 +606,7 @@
 
                         <div class="row">
                             <div class="col-md-10 q-pr-sm q-mb-md">
-                                <div class="text-subtitle2 q-mb-sm">Allocation Category</div>
+                                <div class="text-subtitle2 q-mb-sm">Category</div>
                                 <div class="row cursor-pointer h-popup">
 
                                     <div>
@@ -768,10 +770,15 @@
                         <div class="q-mb-md" v-if="editedItem.status_uni">
                             <div class="text-subtitle2 q-mb-sm">Material Status</div>
                             <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-md-6">
 
-                                     <div class="h-popup cursor-pointer">
-                                        <!-- <q-icon name="done" color="orange" style="font-size: 1.5em"></q-icon> -->
+                                    <div class="h-popup cursor-pointer">
+                                        <q-icon 
+                                            :name="activityStatusIcon" 
+                                            :class="activityStatusIconColor" 
+                                            class="q-mr-sm"
+                                            style="font-size: 1.5em"
+                                        ></q-icon>
                                         <span>{{ editedItem.status_uni.label }}</span>
                                     </div>
 
@@ -1172,6 +1179,7 @@ import dialogDraggable from '../../components/DialogDraggable'
 
 import axios from 'axios'
 import config from '../../../config'
+import ICONS from '../../../icons'
 import DialogDraggable from '../DialogDraggable.vue';
 
 let typingTimer
@@ -1706,8 +1714,8 @@ export default {
             this.isShowActivityPopup = true
             this.editedItem = {
                 status_uni: { 
-                    id: 1, 
-                    label: "In Progress" 
+                    id: null, 
+                    label: "N/A" 
                 },
                 subcategory_uni: this.optionsSubcategory[0],
                 approval_status_uni: {
@@ -2750,10 +2758,12 @@ export default {
 
         },
         // tracking categories
-        getTrackingCategories() {
+        getTrackingCategories(title, categoryId) {
+            console.log('TRACKING CATEGORY')
+
             const conf = {
                 method: 'GET',
-                url: config.getTrackingCategories,
+                url: config.getTrackingCategories+title+'/'+categoryId,
                 headers: {
                     Accept: 'application/json',
                 }
@@ -2763,6 +2773,11 @@ export default {
                 const categoryTracking = res.data.categoryTracking
                 let categoryTrackingArr = [];
 
+                categoryTrackingArr.push({
+                    id: null,
+                    label: 'N/A'
+                })
+
                 for(let i=0; i<categoryTracking.length; i++) {
                     categoryTrackingArr.push({
                         id: categoryTracking[i].id,
@@ -2770,6 +2785,7 @@ export default {
                     })
                 }
                 this.optionsCategoryTracking = categoryTrackingArr
+                console.log('TRACKING CATEGORY', this.optionsCategoryTracking)
             })
         },
         //
@@ -2853,7 +2869,7 @@ export default {
             }else {
                 this.getCampueses();
                 this.getStatus(parseInt(this.tab));
-                this.getTrackingCategories();
+                this.getTrackingCategories(this.tab, 4);
             }
         },
     },
@@ -2876,10 +2892,73 @@ export default {
         this.getInventoryCategories();
 
         this.getAllocationFundId(tab, 4)
-    }
+    },
+    computed: {
+        totalMarkup() {
+            let charge = ( parseFloat(this.editedItem.amount) * parseFloat(this.editedItem.quantity)  + parseFloat(((  (parseFloat(this.editedItem.amount) * parseFloat(this.editedItem.quantity))  * this.editedItem.percentage) / 100)))
+            if(charge) {
+                return charge.toFixed(2)
+            }else {
+                return 0
+            }
+        },
+        activityStatusIcon() {
+            // id: 1 : Canceled
+            // id: 2 : Budgeted
+            // id: 3 : Gathering Documents
+            // id: 4 : Ready for billing
+            const iconId = this.editedItem.status_uni.id;
+            let icon = null;
+
+            switch(iconId) {
+                case 1:
+                    icon = ICONS.canceled
+                    break;
+                case 2:
+                    icon = ICONS.budgeted
+                    break;
+                case 3:
+                    icon = ICONS.gatheringDocuments
+                    break;
+                case 4:
+                    icon = ICONS.eeadyForBilling
+                    break;
+                case null:
+                    icon = ICONS.noAnswer
+                    break;
+            }
+
+            return icon
+        },
+        activityStatusIconColor() {
+            const iconId = this.editedItem.status_uni.id;
+            let color = null;
+
+            switch(iconId) {
+                case 1:
+                    color = 'edx-icon-canceled'
+                    break;
+                case 2:
+                    color = 'edx-icon-budgeted'
+                    break;
+                case 3:
+                    color = 'edx-icon-gathering-documents'
+                    break;
+                case 4:
+                    color = 'edx-icon-ready-for-billing'
+                    break;
+                case null:
+                    color = 'edx-icon-no-answer'
+                    break
+            }
+
+            return color
+        }
+    },
 
 }
 </script>
+
 
 <style lang="scss" scoped>
 
