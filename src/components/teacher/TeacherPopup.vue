@@ -771,8 +771,8 @@ export default {
                     workMonth: teacherInfo.work_month,
                     benefits: teacherInfo.has_benefits == '1' ? 'Y' : 'N',
 
-                    startDate:  teacherInfo.start_date,
-                    endDate: teacherInfo.end_date,
+                    startDate:  teacherInfo.teacher.assignment_compensation?.start_date.replaceAll("-", "/"),
+                    endDate: teacherInfo.teacher.assignment_compensation?.end_date.replaceAll("-", "/"),
                     // hoursWeek: teacherInfo.teacher.assignment_compensation.hours_per_week,
                     isHoursWeek: { id: 1, label: 'Hours/Week'},
                     hoursWM: 0,
@@ -1114,7 +1114,7 @@ export default {
 
             if(startDate && endDate) {
 
-                            let start      = startDate.split('/') ;
+            let start      = startDate.split('/') ;
             let end        = endDate.split('/');
 
 
@@ -1334,7 +1334,6 @@ export default {
 
             axios(conf).then(res => {
 
-                    this.getTeacherBudgetById(this.id)
                     this.$q.notify({
                         message: 'Teacher Added!',
                         type: 'positive',
