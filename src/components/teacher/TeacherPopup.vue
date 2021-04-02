@@ -369,9 +369,19 @@
                         <div class="q-mb-md">
                                 <div class="text-subtitle2 q-mb-sm">Assignment Status</div>
                                 <div class="row">
-                                    <div class="col-md-4">
+                                    <div class="col-md-6">
+
+                                        <!-- <div v-if="editedItem.assignmentStatus" class="h-popup cursor-pointer">
+                                            <span>{{ editedItem.assignmentStatus.label }}</span>
+                                        </div> -->
 
                                         <div v-if="editedItem.assignmentStatus" class="h-popup cursor-pointer">
+                                            <q-icon 
+                                                :name="activityStatusIcon" 
+                                                :class="activityStatusIconColor" 
+                                                class="q-mr-sm"
+                                                style="font-size: 1.5em"
+                                            ></q-icon>
                                             <span>{{ editedItem.assignmentStatus.label }}</span>
                                         </div>
 
@@ -547,6 +557,7 @@
 
 import axios from 'axios'
 import config from '../../../config'
+import ICONS from '../../../icons'
 import DialogDraggable from '../DialogDraggable'
 import PaySchedule from './PaySchedule'
 import { format } from 'quasar'
@@ -937,10 +948,13 @@ export default {
                 this.optionsSubcategory = subcategoriesArr
             })
         },
-        getTrackingCategories() {
+        // tracking categories
+        getTrackingCategories(title, categoryId) {
+            console.log('TRACKING CATEGORY')
+
             const conf = {
                 method: 'GET',
-                url: config.getTrackingCategories,
+                url: config.getTrackingCategories+title+'/'+categoryId,
                 headers: {
                     Accept: 'application/json',
                 }
@@ -950,6 +964,11 @@ export default {
                 const categoryTracking = res.data.categoryTracking
                 let categoryTrackingArr = [];
 
+                categoryTrackingArr.push({
+                    id: null,
+                    label: 'N/A'
+                })
+
                 for(let i=0; i<categoryTracking.length; i++) {
                     categoryTrackingArr.push({
                         id: categoryTracking[i].id,
@@ -957,6 +976,7 @@ export default {
                     })
                 }
                 this.optionsCategoryTracking = categoryTrackingArr
+                console.log('TRACKING CATEGORY', this.optionsCategoryTracking)
             })
         },
         getRoletypes() {
@@ -1434,7 +1454,7 @@ export default {
         this.getCampueses()
         this.getCategoryTypes(this.title)
         this.getSubcategories(3)
-        this.getTrackingCategories()
+        this.getTrackingCategories(this.tab, 6);
         this.getRoletypes()
         this.getEmployementTypes()
         this.getStatus(this.title)
@@ -1612,6 +1632,60 @@ export default {
                return total.toFixed(2)
                 
             }
+        },
+
+        /////////
+        activityStatusIcon() {
+            // id: 1 : Canceled
+            // id: 2 : Budgeted
+            // id: 3 : Gathering Documents
+            // id: 4 : Ready for billing
+            const iconId = this.editedItem.assignmentStatus.id;
+            let icon = null;
+
+            switch(iconId) {
+                case 1:
+                    icon = ICONS.canceled
+                    break;
+                case 2:
+                    icon = ICONS.budgeted
+                    break;
+                case 3:
+                    icon = ICONS.gatheringDocuments
+                    break;
+                case 4:
+                    icon = ICONS.eeadyForBilling
+                    break;
+                case null:
+                    icon = ICONS.noAnswer
+                    break;
+            }
+
+            return icon
+        },
+        activityStatusIconColor() {
+            const iconId = this.editedItem.assignmentStatus.id;
+            let color = null;
+
+            switch(iconId) {
+                case 1:
+                    color = 'edx-icon-canceled'
+                    break;
+                case 2:
+                    color = 'edx-icon-budgeted'
+                    break;
+                case 3:
+                    color = 'edx-icon-gathering-documents'
+                    break;
+                case 4:
+                    color = 'edx-icon-ready-for-billing'
+                    break;
+                case null:
+                    color = 'edx-icon-no-answer'
+                    break
+            }
+
+            return color
         }
     }
 }

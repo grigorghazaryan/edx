@@ -136,6 +136,7 @@ const config = {
     addTeacherBudget: 'https://edxchange-activity.aimtech.am/api/v1/add-teacher-budget/',
     editTeacherAssignment: 'https://edxchange-activity.aimtech.am/api/v1/edit-teacher-assignment/',
     addTeacherAssignment: 'https://edxchange-activity.aimtech.am/api/v1/add-teacher-assignment/',
+    deleteTeacher: 'https://edxchange-activity.aimtech.am/api/v1/remove-teacher-assignment/',
 
     // getTeacherBudgetById: 'https://edxchange-activity.aimtech.am/api/v1/get-teacher-assignment-details/', // + budget id
     getTeacherBudgetById: 'https://edxchange-teacher.aimtech.am/api/v1/get-teacher-compensation/', // + budget id

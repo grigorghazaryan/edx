@@ -95,6 +95,7 @@
                             </q-card-actions>
                         </q-card>
                     </q-dialog>
+                    
                 </div>
                 <!-- <div class="q-pa-sm q-gutter-sm">
 
@@ -448,30 +449,33 @@ export default {
             schoolYears: [],
             //
             confirm: false,
+            editedItem: {},
         }
     },
     methods: {
+        //
         openDeleteModal(row) {
+            this.editedItem = row
             this.confirm = true
         },
         deleteItem() {
             
-            // const conf = {
-            //     method: 'DELETE',
-            //     url: config.deleteActivity + this.editedItem.id,
-            //     headers: {
-            //         Accept: 'application/json',
-            //     }
-            // }
+            const conf = {
+                method: 'DELETE',
+                url: config.deleteTeacher + this.editedItem.id,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
 
-            // axios(conf).then(res => {
-            //     const index = this.data.indexOf(this.editedItem)
-            //     this.data.splice(index, 1)
-            //         this.$q.notify({
-            //             message: 'Activity deleted!',
-            //             type: 'positive',
-            //         })
-            //     })
+            axios(conf).then(res => {
+                const index = this.data.indexOf(this.editedItem)
+                this.data.splice(index, 1)
+                    this.$q.notify({
+                        message: 'Teacher deleted!',
+                        type: 'positive',
+                    })
+                })
         },
         exportTable() {
             // naive encoding to csv format
