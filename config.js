@@ -119,7 +119,7 @@ const config = {
     // GET CAMPUSES
     getCampuses: 'https://edxchange-school.aimtech.am/api/v1/get-school-campus-list/', // + school id
     // TRACKING CATEGORY
-    getTrackingCategories: 'https://edxchange-activity.aimtech.am/api/v1/get-item-category-tracking',
+    getTrackingCategories: 'https://edxchange-activity.aimtech.am/api/v1/get-item-category-tracking/', // Title1 / CategoryId
     // INVENTORY CATEGORIES
     getInventoryCategories: 'https://edxchange-activity.aimtech.am/api/v1/get-inventory-category-type',
 

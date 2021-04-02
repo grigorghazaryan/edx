@@ -172,3 +172,28 @@ span.edx-header-text {
 }
 
 /* End of texts ################################################################################################################## */
+
+
+
+
+/* ICONS */
+
+/* Budget => PD */
+/* Activity Status */
+
+.edx-icon-canceled {
+    color: var(--red)
+}
+.edx-icon-budgeted {
+    color: var(--yellow)
+}
+.edx-icon-gathering-documents {
+    color: var(--green)
+}
+.edx-icon-ready-for-billing {
+    color: var(--blue)
+}
+/* N/A */
+.edx-icon-no-answer {
+    color: var(--red)
+}
