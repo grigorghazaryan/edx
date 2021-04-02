@@ -178,14 +178,14 @@ span.edx-header-text {
 
 /* ICONS */
 
-/* Budget => PD */
+/* Budget  */
 /* Activity Status */
 
 .edx-icon-canceled {
-    color: var(--red)
+    color: var(--purple)
 }
 .edx-icon-budgeted {
-    color: var(--yellow)
+    color: var(--blue)
 }
 .edx-icon-gathering-documents {
     color: var(--green)

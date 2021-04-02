@@ -1871,12 +1871,12 @@ export default {
                 label: data[i].status ? data[i].status.name : 'N/A'
             },
             approval_status_uni: {
-                id: data[i].approval_status.id,
-                label: data[i].approval_status.name
+                id: data[i].approval_status ? data[i].approval_status.id : null,
+                label: data[i].approval_status ? data[i].approval_status.name : 'N/A'
             },
             approval_type_uni: {
-                label: data[i].approval_types.name,
-                value: data[i].approval_types.id
+                label: data[i].approval_types ? data[i].approval_types.name : 'N/A',
+                value: data[i].approval_types ? data[i].approval_types.id : null
             },
             activity: data[i].name,
             activity_date: sd == null ? 'TBD' : fullDate,

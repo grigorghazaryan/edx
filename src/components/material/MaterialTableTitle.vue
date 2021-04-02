@@ -605,7 +605,7 @@
                     <div class="col-md-6 q-pl-md">
 
                         <div class="row">
-                            <div class="col-md-10 q-pr-sm q-mb-md">
+                            <div class="col-md-3 q-pr-sm q-mb-md">
                                 <div class="text-subtitle2 q-mb-sm">Category</div>
                                 <div class="row cursor-pointer h-popup">
 
@@ -615,6 +615,21 @@
                                             color="edx-bg-m"
                                         >
                                             <span>M</span>
+                                        </q-chip>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-3 q-pr-sm q-mb-md">
+                                <div class="text-subtitle2 q-mb-sm">Subcategory</div>
+                                <div class="row cursor-pointer h-popup">
+
+                                    <div v-if="editedItem.subcategory_uni">
+                                        <q-chip 
+                                            square 
+                                            color="edx-bg-m"
+                                        >
+                                            <span>{{ editedItem.subcategory_uni.name }}</span>
                                         </q-chip>
                                     </div>
 

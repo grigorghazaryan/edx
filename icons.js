@@ -1,8 +1,8 @@
 const ICONS = {
     /* Budget => PD */
     /* Activity Status */
-    canceled:  'do_disturb_on',
-    budgeted: 'signal_wifi_bad',
+    canceled:  'verified',
+    budgeted: 'lock',
     gatheringDocuments: 'wrong_location',
     eeadyForBilling: 'event_busy',
     // N/A

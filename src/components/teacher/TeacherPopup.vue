@@ -732,12 +732,12 @@ export default {
                         label:  teacherInfo.teacher.first_name + ' ' + teacherInfo.teacher.last_name,
                     },
                     role: {
-                        id: teacherInfo.teacher.assignment_compensation && teacherInfo.teacher.assignment_compensation.role_type ? teacherInfo.teacher.assignment_compensation.role_type.id : 0,
-                        label: teacherInfo.teacher.assignment_compensation && teacherInfo.teacher.assignment_compensation.role_type ? teacherInfo.teacher.assignment_compensation.role_type.name : 0,
+                        id: teacherInfo.teacher.assignment_compensation && teacherInfo.teacher.assignment_compensation.role_type ? teacherInfo.teacher.assignment_compensation.role_type.id : null,
+                        label: teacherInfo.teacher.assignment_compensation && teacherInfo.teacher.assignment_compensation.role_type ? teacherInfo.teacher.assignment_compensation.role_type.name : 'N/A',
                     },
                     campus: {
-                        id: teacherInfo.teacher.assignment_compensation && teacherInfo.teacher.assignment_compensation.campus ? teacherInfo.teacher.assignment_compensation.campus.id : 0,
-                        label: teacherInfo.teacher.assignment_compensation && teacherInfo.teacher.assignment_compensation.campus ? teacherInfo.teacher.assignment_compensation.campus.name : 0
+                        id: teacherInfo.teacher.assignment_compensation && teacherInfo.teacher.assignment_compensation.campus ? teacherInfo.teacher.assignment_compensation.campus.id : null,
+                        label: teacherInfo.teacher.assignment_compensation && teacherInfo.teacher.assignment_compensation.campus ? teacherInfo.teacher.assignment_compensation.campus.name : 'N/A'
                     },
 
                     // hourly: teacherInfo.hourly_pay,
@@ -755,13 +755,13 @@ export default {
                         name: teacherInfo.teacher.assignment_compensation &&  teacherInfo.teacher.assignment_compensation.category ? teacherInfo.teacher.assignment_compensation.category.abbreviation : ""
                     },
                     subcategory: {
-                        id: teacherInfo.teacher.assignment_compensation && teacherInfo.teacher.assignment_compensation.sub_category ? teacherInfo.teacher.assignment_compensation.sub_category.id : 0,
-                        label: teacherInfo.teacher.assignment_compensation && teacherInfo.teacher.assignment_compensation.sub_category ? teacherInfo.teacher.assignment_compensation.sub_category.name : '',
-                        name: teacherInfo.teacher.assignment_compensation && teacherInfo.teacher.assignment_compensation.sub_category ? teacherInfo.teacher.assignment_compensation.sub_category.abbreviation : ''
+                        id: teacherInfo.teacher.assignment_compensation && teacherInfo.teacher.assignment_compensation.sub_category ? teacherInfo.teacher.assignment_compensation.sub_category.id : null,
+                        label: teacherInfo.teacher.assignment_compensation && teacherInfo.teacher.assignment_compensation.sub_category ? teacherInfo.teacher.assignment_compensation.sub_category.name : 'N/A',
+                        name: teacherInfo.teacher.assignment_compensation && teacherInfo.teacher.assignment_compensation.sub_category ? teacherInfo.teacher.assignment_compensation.sub_category.abbreviation : 'N/A'
                     },
                     trackingCategory: {
-                        id: teacherInfo.teacher.assignment_compensation && teacherInfo.teacher.assignment_compensation.category_tracking ? teacherInfo.teacher.assignment_compensation.category_tracking.id : 0,
-                        label: teacherInfo.teacher.assignment_compensation && teacherInfo.teacher.assignment_compensation.category_tracking ? teacherInfo.teacher.assignment_compensation.category_tracking.name : 0
+                        id: teacherInfo.teacher.assignment_compensation && teacherInfo.teacher.assignment_compensation.category_tracking ? teacherInfo.teacher.assignment_compensation.category_tracking.id : null,
+                        label: teacherInfo.teacher.assignment_compensation && teacherInfo.teacher.assignment_compensation.category_tracking ? teacherInfo.teacher.assignment_compensation.category_tracking.name : 'N/A'
                     },
 
                     employement: teacherInfo.teacher.teacher_type && teacherInfo.teacher.teacher_type.name,
@@ -1175,67 +1175,60 @@ export default {
         },
         getPayScheduleInfo() {
 
-             let arr = [],
-                dayArr = [];
+            let arr = [],
+            dayArr = [];
 
-   
-                let dates = this.dateRange(this.editedItem.startDate && this.editedItem.startDate.substring(0, 10), this.editedItem.endDate && this.editedItem.endDate.substring(0, 10))
-                let scheduleWeekDays = this.scheduleWeekDays
+            let dates = this.dateRange(this.editedItem.startDate && this.editedItem.startDate.substring(0, 10), this.editedItem.endDate && this.editedItem.endDate.substring(0, 10))
+            let scheduleWeekDays = this.scheduleWeekDays
 
-                console.log('dates', dates)
+            for(let i=0; i<dates.length; i++) {
 
-                if(dates.length) {
-                for(let i=0; i<dates.length; i++) {
+                let splittedDate = dates[i].split('-');
+                
+                let date1 = splittedDate[0].split('/')
+                let date2 = splittedDate[1].split('/')
 
-                    let splittedDate = dates[i].split('-');
-                    
-                    let date1 = splittedDate[0].split('/')
-                    let date2 = splittedDate[1].split('/')
-
-                    console.log('dates', date1, date2)
-                    
-                    let month = date1[1]
-                    let startDay = parseInt(date1[2])
-                    let endDay = parseInt(date2[2])
-                    
-                    let count = 0;
-                    let dayCount = 0;
-                    
-                    console.log('#######################')
-                    console.log('lklklklk', startDay, endDay)
-
-                    
-                    for(let j=startDay; j<=endDay; j++) {
-
-                        let fullMonth = date1[0] + '/' + month + '/' + j
-                        let nd = new Date(fullMonth).getDay()
-                        
-                        for(let t=0; t<=scheduleWeekDays.length; t++) {
-                            if(scheduleWeekDays[t]) {
-                                if(scheduleWeekDays[t].checked && scheduleWeekDays[t].id == nd) {
-                                    
-                                    console.log('scheduleWeekDays[t].hours', scheduleWeekDays[t].hours)
-                                    count += parseFloat(scheduleWeekDays[t].hours)
-                                    dayCount++
-                                    break
-                                }
-                            }
-                        }
-                    } 
-
-                    arr.push({ 
-                        time: count
-                    })
-
-                    dayArr.push(dayCount)
-                    
-                    this.test = arr
-                    this.testDay = dayArr
-                    
-                }
-                }
+                console.log('dates', date1, date2)
+                
+                let month = date1[1]
+                let startDay = parseInt(date1[2])
+                let endDay = parseInt(date2[2])
+                
+                let count = 0;
+                let dayCount = 0;
+                
+                console.log('#######################')
+                console.log('lklklklk', startDay, endDay)
 
                 
+                for(let j=startDay; j<=endDay; j++) {
+
+                    let fullMonth = date1[0] + '/' + month + '/' + j
+                    let nd = new Date(fullMonth).getDay()
+                    
+                    for(let t=0; t<=scheduleWeekDays.length; t++) {
+                        if(scheduleWeekDays[t]) {
+                            if(scheduleWeekDays[t].checked && scheduleWeekDays[t].id == nd) {
+                                
+                                console.log('scheduleWeekDays[t].hours', scheduleWeekDays[t].hours)
+                                count += parseFloat(scheduleWeekDays[t].hours)
+                                dayCount++
+                                break
+                            }
+                        }
+                    }
+                } 
+
+                arr.push({ 
+                    time: count
+                })
+
+                dayArr.push(dayCount)
+                
+                this.test = arr
+                this.testDay = dayArr
+                
+            } 
 
         },
         calculateBusinessDays() {
@@ -1334,10 +1327,14 @@ export default {
 
             axios(conf).then(res => {
 
+                    let teacher = res.data.items[0]
+                    this.$emit('addTeacherToTable', teacher);
+
                     this.$q.notify({
                         message: 'Teacher Added!',
                         type: 'positive',
                     })
+
             })
 
 
