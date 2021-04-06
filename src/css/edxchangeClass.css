@@ -104,6 +104,9 @@
 .edx-blue {
     color: var(--blue);
 }
+.edx-light-blue {
+    color: var(--light-blue);
+}
 .edx-indigo {
     color: var(--indigo);
 }
@@ -199,4 +202,7 @@
 }
 .edx-lighter-green {
     color: var(--green);
+}
+.edx-excel-green {
+    color: var(--excel-green)
 }

@@ -1,5 +1,6 @@
 <template>
     <div>
+
         <q-table
             class="overflow-auto"
             :data="data" 
@@ -108,7 +109,7 @@
 
                             <q-card-actions align="right">
                             <q-btn flat label="No, thanks" color="primary" v-close-popup />
-                            <q-btn label="Yes" color="red" v-close-popup @click="deleteItem" />
+                            <q-btn label="Yes" color="edx-delete-btn" v-close-popup @click="deleteItem" />
                             </q-card-actions>
                         </q-card>
                     </q-dialog>
@@ -121,7 +122,7 @@
 
                             <q-card-actions align="right">
                             <q-btn flat label="No, thanks" color="primary" v-close-popup />
-                            <q-btn label="Yes" color="red" v-close-popup @click="deleteAttendee" />
+                            <q-btn label="Yes" color="edx-delete-btn" v-close-popup @click="deleteAttendee" />
                             </q-card-actions>
                         </q-card>
                     </q-dialog>
@@ -175,7 +176,7 @@
 
                             <q-card-actions align="right">
                             <q-btn flat label="No, thanks" color="primary" v-close-popup />
-                            <q-btn label="Yes" color="red" v-close-popup @click="deleteTeacherItem" />
+                            <q-btn label="Yes" color="edx-delete-btn" v-close-popup @click="deleteTeacherItem" />
                             </q-card-actions>
                         </q-card>
                     </q-dialog>
@@ -188,7 +189,7 @@
 
                         <q-card-actions align="right">
                             <q-btn flat label="No, thanks" color="primary" v-close-popup />
-                            <q-btn label="Yes" color="red" v-close-popup @click="deleteDate" />
+                            <q-btn label="Yes" color="edx-delete-btn" v-close-popup @click="deleteDate" />
                         </q-card-actions>
                         </q-card>
                     </q-dialog>
@@ -252,7 +253,7 @@
                             </q-tooltip>
                         </q-icon>
 
-                        <q-icon v-else name="cancel" class="edx-red" style="font-size: 2em">
+                        <q-icon v-else name="cancel_schedule_send" class="edx-red" style="font-size: 2em">
                             <q-tooltip 
                                 anchor="top middle" self="bottom middle" :offset="[10, 10]"
                                 transition-show="flip-right"
@@ -267,7 +268,7 @@
                     <q-td key="approvals" :props="props">
 
                         <q-icon v-if="props.row.approval_status_uni.label == 'Approved'" 
-                        name="done" class="edx-green" style="font-size: 1.5em">
+                        name="approval" class="edx-green" style="font-size: 1.5em">
                             <q-tooltip 
                                 anchor="top middle" self="bottom middle" :offset="[10, 10]"
                                 transition-show="flip-right"
@@ -278,7 +279,7 @@
                         </q-icon>
 
                         <q-icon v-else-if="props.row.approval_status_uni.label == 'Pending'" 
-                        name="access_time" class="edx-orange" style="font-size: 1.5em">
+                        name="av_timer" class="edx-orange" style="font-size: 1.5em">
                         <q-tooltip 
                             anchor="top middle" self="bottom middle" :offset="[10, 10]"
                             transition-show="flip-right"
@@ -288,7 +289,7 @@
                         </q-tooltip>
                         </q-icon>
 
-                        <q-icon v-else name="unpublished" class="edx-red" style="font-size: 2em">
+                        <q-icon v-else name="thumb_down_alt" class="edx-red" style="font-size: 2em">
                         <q-tooltip 
                             anchor="top middle" self="bottom middle" :offset="[10, 10]"
                             transition-show="flip-right"
@@ -418,7 +419,7 @@
                     </q-td>
 
                     <q-td key="actions" :props="props" style="min-width: 132px">
-                        <q-fab padding="xs" @click.stop color="edx-action-btn" icon="keyboard_arrow_left" direction="left">
+                        <q-fab padding="xs" @click.stop color="edx-action-btn" icon="toc" active-icon="menu_open"  direction="left">
                             
                             <q-fab-action
                                 icon="content_copy"
@@ -625,7 +626,7 @@
 
                                     <div v-if="editedItem.fund_source">
                                         <q-chip 
-                                            square color="green" 
+                                            square color="edx-bg-fe" 
                                             text-color="white" 
                                         >
                                             <span>{{ editedItem.fund_source.abbr }}</span>
@@ -686,15 +687,15 @@
                                         <div>
                                             <!-- Approval status  -->
                                             <div v-if="editedItem.approval_status_uni.label == 'Approved'" class="q-mr-md">
-                                                <q-icon name="done" color="green" style="font-size: 1.5em"></q-icon>
+                                                <q-icon name="approval" color="green" style="font-size: 1.5em"></q-icon>
                                                 <span>Approved</span>
                                             </div>
                                             <div v-else-if="editedItem.approval_status_uni.label == 'Pending'" class="q-mr-md">
-                                                <q-icon name="access_time" color="amber-7" style="font-size: 1.5em"></q-icon>
+                                                <q-icon name="av_timer" color="amber-7" style="font-size: 1.5em"></q-icon>
                                                 <span>Pending</span>
                                             </div>
                                             <div v-else class="q-mr-md">
-                                                <q-icon name="unpublished" color="red" style="font-size: 1.5em"></q-icon>
+                                                <q-icon name="thumb_down_alt" class="edx-red" style="font-size: 1.5em"></q-icon>
                                                 <span>Declined</span>
                                             </div>
                                             

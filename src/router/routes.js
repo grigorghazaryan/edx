@@ -27,7 +27,7 @@ const routes = [
       // ------------------------------------------------------------------------------------
       {path: '/Teacher Assignments', name: 'Teacher Assignments', meta: { title: 'Teacher Assignments' }, component: () => import('pages/Teachers/TeacherSchools.vue')},
       {path: '/Teachers/:id', name: 'Teachers', meta: { title: 'Teachers' }, component: () => import('pages/Teachers/BudgetEstimates.vue')},
-      {path: '/Expenses', name: 'Expenses', meta: { title: 'Expenses' }, component: () => import('pages/Expenses/Expenses.vue')},
+      {path: '/Billing Invoices', name: 'Billing Invoices', meta: { title: 'Billing Invoices' }, component: () => import('pages/BillingExpenses/BillingInvoices.vue')},
       // ------------------------------------------------------------------------------
       {path: '/Professional Development', name: 'Professional Development', meta: { title: 'Professional Development' }, component: () => import('pages/Activity/ActivitySchools.vue')},
       {path: '/Professional Development/:id', name: 'Professional Development', meta: { title: 'Professional Development' }, component: () => import('pages/Activity/Activity.vue')},

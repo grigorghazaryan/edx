@@ -1,18 +1,24 @@
-@import url('https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/5.8.55/css/materialdesignicons.min.css');
-@import url('./edxchangeClass.css');
-@import url('./edx-quasar-reset.css');
-@import url('./edx.css');
+@import url("https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/5.8.55/css/materialdesignicons.min.css");
+@import url("./edxchangeClass.css");
+@import url("./edx-quasar-reset.css");
+@import url("./edx.css");
 
 :root {
   --blue: #3f80ea;
-  --light-blue: #538dea49;
+  --light-blue: #538dead7;
+  --light-blue-chip: #538dea49;
   --indigo: #6610f2;
   --purple: #6f42c1;
   --pink: #e83e8c;
   --red: #d9534f;
-  --orange: #fd7d14b9;
+  --light-red: #d9544fc5;
+  --light-red-chip: #d9544f81;
+  --orange: #fd7d14de;
+  --light-orange: #fd7d14c2;
+  --light-orange-chip: #fd7d14c2;
   --yellow: #e5a54b;
   --green: #4bbf74c0;
+  --light-green: #4bbf74d0;
   /*--green: #74b100;*/
   --excel-green: #1d6f42;
   --teal: #67981a;
@@ -42,7 +48,6 @@
   --gray-06: #f0f2f3;
 }
 
-
 /* app global css */
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
@@ -52,15 +57,14 @@ input::-webkit-inner-spin-button {
 }
 
 /* Firefox */
-input[type=number] {
+input[type="number"] {
   -moz-appearance: textfield;
 }
-
 
 /* Global styles for refactor  */
 .q-table__title {
   margin-left: -28px;
-  margin-top: .75rem;
+  margin-top: 0.75rem;
   padding: 2px 10px 2px 25px;
   background: #e0e0e0;
   color: #616161;
@@ -92,7 +96,8 @@ input[type=number] {
   border-radius: 3px 5px 5px 0;
 }
 
-.q-table__top.relative-position.row.items-center .q-table__control:nth-child(3) {
+.q-table__top.relative-position.row.items-center
+  .q-table__control:nth-child(3) {
   width: 100%;
   display: flex;
   justify-content: flex-end;
@@ -122,11 +127,11 @@ input[type=number] {
 
 span.edx-header-text {
   font-size: 1.45rem;
-  padding: .5rem 1.5rem;
+  padding: 0.5rem 1.5rem;
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
   background-color: #fff;
-  box-shadow: -1px -1px 2px rgba(0,0,0,0.2);
+  box-shadow: -1px -1px 2px rgba(0, 0, 0, 0.2);
   z-index: 4;
   position: absolute;
 }
@@ -134,9 +139,8 @@ span.edx-header-text {
 .bordered-box {
   border: 1px solid #bcbcbc;
   padding: 1rem;
-  border-radius: .3rem;
+  border-radius: 0.3rem;
 }
-
 
 /* .q-tab-panel {
   padding: 0 !important;
@@ -147,7 +151,6 @@ span.edx-header-text {
 } */
 
 .table-text {
-
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -155,7 +158,6 @@ span.edx-header-text {
   text-overflow: ellipsis;
   max-height: 40px;
   height: 40px;
-
 }
 
 .w-100 {
@@ -170,4 +172,10 @@ span.edx-header-text {
   align-items: center;
 }
 
+.q-icon, .material-icons {
+  font-size: 1.5rem;
+}
 
+.mw-100 {
+  min-width: 100px;
+}

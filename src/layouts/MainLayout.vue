@@ -653,7 +653,7 @@
             label="Billing & Expenses"
           >
             <q-list class="bg-sidebar-opened edx-menu-toggle">
-              <q-item to="/Expenses" 
+              <q-item to="/Billing Invoices" 
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
                   <q-icon name="receipt"/>
@@ -677,7 +677,7 @@
               self="top left"
             >
               <q-list class="edx-sidebar-background edx-sidebar-menu-text" style="min-width: 100px">
-                <q-item clickable  v-close-popup to="/Expenses" active-class="q-item-no-link-highlighting">
+                <q-item clickable  v-close-popup to="/Billing Invoices" active-class="q-item-no-link-highlighting">
                   <q-item-section avatar>
                     <q-icon name="receipt"/>
                   </q-item-section>

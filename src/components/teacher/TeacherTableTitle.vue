@@ -259,7 +259,7 @@
                     </q-td>
 
                     <q-td key="actions" :props="props" style="min-width: 132px">
-                        <q-fab padding="xs" @click.stop color="edx-action-btn" icon="keyboard_arrow_left" direction="left">
+                        <q-fab padding="xs" @click.stop color="edx-action-btn" icon="toc" active-icon="menu_open"  direction="left">
                             
                             <q-fab-action
                                 icon="content_copy"
