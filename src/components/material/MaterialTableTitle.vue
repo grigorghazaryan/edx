@@ -79,6 +79,8 @@
                     @click="exportTable"
                 />
 
+                <q-btn @click="showRemainingBalance=true" no-caps class="edx-budget-balance-btn q-ml-md" flat> Budget Balance </q-btn>
+
                 <q-btn
                     flat
                     round
@@ -94,7 +96,7 @@
                     </q-tooltip>
                 </q-btn>
 
-                <q-checkbox v-model="showRemainingBalance" label="Show remaining balance" />
+                
 
                 <div class="q-pa-sm q-gutter-sm">
 
@@ -1112,7 +1114,6 @@
                                     :style="{maxWidth: '350px', width: '350px'}"
                                     :props="props">
                                     <span class="inline-span">
-                                        <q-icon name="calendar_today" color="orange" style="font-size: 1.5em" />
                                         {{props.row.transaction}}
                                     </span>
                                 </q-td>
@@ -1140,7 +1141,7 @@
                                     $ {{props.row.amount}}
                                 </q-td>
                                 <q-td key="balance" :props="props">
-                                    $ {{props.row.balance}}
+                                    $ {{(props.row.balance).toFixed(2)}}
                                 </q-td>
                             </q-tr>
                         </template>

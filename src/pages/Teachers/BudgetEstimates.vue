@@ -19,11 +19,13 @@
               <q-item-section side style="background-color: #fff" class=" q-pa-lg q-mr-none text-white">
                <q-icon name="monetization_on" class="edx-green" size="35px"></q-icon>
               </q-item-section>
-              <q-item-section class="q-ml-none">
+              <q-item-section v-if="barInfo.totalAllocation" class="q-ml-none">
                 <q-item-label class="text-grey-7">Total I</q-item-label>
-                <q-item-label v-if="barInfo.totalAllocation" class="text-dark text-h6 text-weight-bolder">
+                <q-item-label  class="text-dark text-h6 text-weight-bolder">
                   <div >$ {{ barInfo.totalAllocation.amount.total.toFixed(2)}}</div>
-                  <div class="fs-1">$ {{ barInfo.totalAllocation.amount.preliminary.toFixed(2) }}</div>
+                </q-item-label>
+                <q-item-label>
+                  <div class="fs-1" :class="barInfo.totalAllocation.amount.preliminary > 0  ? 'edx-green' : 'edx-red' ">$ {{ barInfo.totalAllocation.amount.preliminary.toFixed(2) }}</div>
                 </q-item-label>
               </q-item-section>
             </q-item>

@@ -70,6 +70,7 @@
             </q-input>
             
             <q-btn 
+                @click="openAddPopup"
                 square
                 class="q-mr-md edx-add-btn" text-color="white"
                 icon="add" 
@@ -110,7 +111,7 @@
 
         <!-- Table Body -->
         <template v-slot:body="props">
-            <q-tr :props="props" class="cursor-pointer" @click="openInvoicePopup">
+            <q-tr :props="props" class="cursor-pointer" @click="openInvoicePopup(props.row.id)">
                 <q-td key="invoiceNo" :props="props">
                     {{props.row.invoiceNo}}
                 </q-td>
@@ -124,7 +125,7 @@
                     {{props.row.invoiceDate}}
                 </q-td>
                 <q-td key="amount" :props="props">
-                    {{props.row.amount}}
+                    $ {{props.row.amount}}
                 </q-td>
                 <q-td key="dueDate" :props="props">
                     {{props.row.dueDate}}
@@ -164,15 +165,16 @@
 
     </q-table>
 
-    <InvoicePopup @togglePopup="togglePopup" :show="newInvoice" />
+    <InvoicePopup @togglePopup="togglePopup" :id="id" :show="newInvoice" :isEdit="isEdit" />
 
     </div>
 </template>
 
 <script>
 
-
 import InvoicePopup from '../../components/billingExpenses/InvoicePopup'
+import axios from 'axios'
+import config from '../../../config'
 
 export default {
     components: {
@@ -335,14 +337,20 @@ export default {
                     isPaid: true,
                 },
             ],
+
+            isEdit: false,
+            id: null,
+            /////
             pages: 1,
             current: 1,
             count: 10,
             pagination: { rowsPerPage: 10 },
             rowsPerPageArr: ['5', '10', '25', '50', '75', '100'], 
+
             // Search
             filter: '',
             checkbox: false,
+
             //
             searchByOptions: [
                 'Google', 'Facebook', 'Twitter', 'Apple', 'Oracle'
@@ -365,13 +373,58 @@ export default {
             this.current = 1
             // function
         },
-        openInvoicePopup() {
+        openInvoicePopup(id) {
+            this.id = id
+            this.isEdit = true
             this.newInvoice = true
         },
         togglePopup(bool) {
-            console.log('togglePopup', bool)
             this.newInvoice = bool
+        },
+        openAddPopup() {
+            this.isEdit = false
+            this.newInvoice = true
+        },
+        getInvoices(limit, page) {
+
+            const conf = {
+                method: 'GET',
+                url: config.getInvoices + '?limit=' + limit + '&page=' + page,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+
+                let invoices = res.data.items
+                let invoiceArray = []
+
+                for(let i=0; i<invoices.length; i++) {
+                    
+                    console.log(i, invoices[i])
+                    invoiceArray.push({
+                        id: invoices[i].id,
+                        invoiceNo: invoices[i].id,
+                        school: invoices[i].schoolName,
+                        allocation: invoices[i]?.line_item?.budget?.allocation?.name,
+                        invoiceDate: invoices[i].date,
+                        amount: invoices[i].total_amount,
+                        dueDate: invoices[i].due_date,
+                        status: invoices[i].invoice_status?.name,
+                        isPaid: invoices[i]?.invoice_status?.id == 2 ? true : false,
+                    })
+
+                }
+
+                this.data = invoiceArray
+
+            })
+
         }
+    },
+    created() {
+        this.getInvoices(this.count, this.current)
     }
 }
 

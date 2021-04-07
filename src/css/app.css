@@ -1,4 +1,5 @@
 @import url("https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/5.8.55/css/materialdesignicons.min.css");
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 @import url("./edxchangeClass.css");
 @import url("./edx-quasar-reset.css");
 @import url("./edx.css");
@@ -13,14 +14,14 @@
   --red: #d9534f;
   --light-red: #d9544fc5;
   --light-red-chip: #d9544f81;
-  --orange: #fd7d14de;
+  --orange: #ff943cee;
   --light-orange: #fd7d14c2;
   --light-orange-chip: #fd7d14c2;
   --yellow: #e5a54b;
   --green: #4bbf74c0;
   --light-green: #4bbf74d0;
   /*--green: #74b100;*/
-  --excel-green: #1d6f42;
+  --excel-green: #147c44;
   --teal: #67981a;
   --cyan: #0583c5;
   --white: #fff;
@@ -33,6 +34,7 @@
   --info: #3f93f3;
   --warning: #ffba00;
   --danger: #ff0000;
+  --tooltip-background: #747474;
   --light: #f0f0f0;
   --dark: #000;
   --white: #fff;
@@ -172,7 +174,8 @@ span.edx-header-text {
   align-items: center;
 }
 
-.q-icon, .material-icons {
+.q-icon,
+.material-icons {
   font-size: 1.5rem;
 }
 

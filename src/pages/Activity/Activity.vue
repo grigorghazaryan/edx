@@ -23,7 +23,9 @@
                 <q-item-label class="text-grey-7">Total PD</q-item-label>
                 <q-item-label v-if="barInfo.totalAmount" class="text-dark text-h6 text-weight-bolder">
                   <div >$ {{ barInfo.totalAmount.total.toFixed(2)}}</div>
-                  <div class="fs-1">$ {{ barInfo.totalAmount.preliminary.toFixed(2) }}</div>
+                </q-item-label>
+                <q-item-label>
+                  <div class="fs-1" :class="barInfo.totalAmount.preliminary > 0  ? 'edx-green' : 'edx-red' ">$ {{ barInfo.totalAmount.preliminary.toFixed(2) }}</div>
                 </q-item-label>
               </q-item-section>
             </q-item>
@@ -50,7 +52,10 @@
                 <q-item-label class="text-grey-7">Remaining PD</q-item-label>
                 <q-item-label v-if="barInfo.remainingBalance" class="text-dark text-h6 text-weight-bolder">
                   <div >$ {{ barInfo.remainingBalance.total.toFixed(2) }}</div>
-                  <div class="fs-1">$ {{ barInfo.remainingBalance.preliminary.toFixed(2) }}</div>
+                  
+                </q-item-label>
+                <q-item-label>
+                  <div class="fs-1" :class="barInfo.remainingBalance.preliminary > 0  ? 'edx-green' : 'edx-red' ">$ {{ barInfo.remainingBalance.preliminary.toFixed(2) }}</div>
                 </q-item-label>
               </q-item-section>
             </q-item>

@@ -19,11 +19,14 @@
               <q-item-section side style="background-color: #fff" class=" q-pa-lg q-mr-none text-white">
                 <q-icon name="monetization_on" class="edx-green" size="35px"></q-icon>
               </q-item-section>
-              <q-item-section class="q-ml-none">
+              <q-item-section  v-if="barInfo.totalAmount" class="q-ml-none">
                 <q-item-label class="text-grey-7">Total M</q-item-label>
-               <q-item-label v-if="barInfo.totalAmount" class="text-dark text-h6 text-weight-bolder">
+               <q-item-label class="text-dark text-h6 text-weight-bolder">
                   <div >$ {{ barInfo.totalAmount.total}}</div>
-                  <div class="fs-1">$ {{ barInfo.totalAmount.preliminary}}</div>
+                  <!-- <div class="fs-1">$ {{ barInfo.totalAmount.preliminary}}</div> -->
+                </q-item-label>
+                <q-item-label>
+                  <div class="fs-1" :class="barInfo.totalAmount.preliminary > 0  ? 'edx-green' : 'edx-red' ">$ {{ barInfo.totalAmount.preliminary.toFixed(2) }}</div>
                 </q-item-label>
               </q-item-section>
             </q-item>
@@ -47,11 +50,13 @@
               <q-item-section side style="background-color: #fff" class=" q-pa-lg q-mr-none text-white">
                 <q-icon name="monetization_on" class="edx-orange" size="35px"></q-icon>
               </q-item-section>
-              <q-item-section class="q-ml-none">
+              <q-item-section v-if="barInfo.remainingBalance" class="q-ml-none">
                 <q-item-label class="text-grey-7">Remainig M</q-item-label>
-                <q-item-label v-if="barInfo.remainingBalance" class="text-dark text-h6 text-weight-bolder">
+                <q-item-label  class="text-dark text-h6 text-weight-bolder">
                   <div >$ {{ barInfo.remainingBalance.total }}</div>
-                  <div class="fs-1">$ {{ barInfo.remainingBalance.preliminary }}</div>
+                </q-item-label>
+                <q-item-label >
+                  <div class="fs-1" :class="barInfo.remainingBalance.preliminary > 0  ? 'edx-green' : 'edx-red' ">$ {{ barInfo.remainingBalance.preliminary.toFixed(2) }}</div>
                 </q-item-label>
               </q-item-section>
             </q-item>

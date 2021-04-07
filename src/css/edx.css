@@ -69,6 +69,16 @@
   color: var(--white) !important;
 }
 
+.edx-budget-balance-btn {
+  background-color: var(--light-blue);
+  color: var(--white) !important;
+}
+
+.edx-ledger-balance-btn {
+  background-color: var(--yellow);
+  color: var(--white) !important;
+}
+
 /* ACTIONS  */
 
 .bg-edx-action-btn {
@@ -216,13 +226,13 @@ span.edx-header-text {
   color: var(--red);
 }
 
- /* Activity Type */
- .edx-icon-online {
+/* Activity Type */
+.edx-icon-online {
   color: var(--red);
- }
- .edx-icon-on-site {
+}
+.edx-icon-on-site {
   color: var(--blue);
- }
+}
 
 /* Approval status */
 .edx-icon-approved {
@@ -268,3 +278,24 @@ span.edx-header-text {
   color: var(--blue);
 }
 
+/* Rotated text botton*/
+.edx-vert-rotate-chip {
+  color: var(--blue);
+  display: block;
+  transform: rotate(45deg);
+  margin: 50px;
+  border-width: 5px;
+}
+
+/* Tooltip */
+.edx-tooltip {
+  color: var(--white);
+  font-size: 12px;
+  font-weight: bold;
+  background-color: var(--tooltip-background);
+  max-width: 200px;
+  border-radius: 10px;
+  border-width: 3px;
+  border-style: solid;
+  border-color: var(--blue);
+}

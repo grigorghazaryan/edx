@@ -1,9 +1,10 @@
 <template>
     <div>
+        
         <dialog-draggable 
             :width="900" 
             :modelDialog="showPopup" 
-            :title="'New Invoice'" 
+            :title=" isEdit ? 'Edit Invoice' : 'New Invoice'" 
             :icon="'description'"
         >  
             <q-card-section style="max-height: 60vh" class="scroll q-pt-none q-pb-none q-pr-none q-pl-none">
@@ -114,7 +115,16 @@
                                                 {{props.row.description}}
                                             </q-td>
                                             <q-td key="type" :props="props">
-                                                {{props.row.type}}
+                                                <q-chip square class="bg-edx-bg-wr">
+                                                    <span> {{props.row.type}}</span>
+                                                    <q-tooltip 
+                                                        anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                                                        transition-show="flip-right"
+                                                        transition-hide="flip-left"
+                                                    >
+                                                        <strong> {{props.row.type}}</strong>
+                                                    </q-tooltip>
+                                                </q-chip>
                                             </q-td>
                                             <q-td key="qty" :props="props">
                                                 {{props.row.qty}}
@@ -126,7 +136,7 @@
                                                 {{props.row.amount}}
                                             </q-td>
                                             <q-td>
-                                                <q-btn icon="delete" class="bg-edx-delete-btn" size="sm" round>
+                                                <q-btn @click="openDeleteModal" icon="delete" class="bg-edx-delete-btn" size="sm" round>
                                                     <q-tooltip 
                                                         anchor="top middle" self="bottom middle" :offset="[10, 10]"
                                                         transition-show="flip-right"
@@ -139,6 +149,7 @@
                                         </q-tr>
                                     </template>
                                 </q-table>
+                                
                             </div>
                         </div>
                         <div class="col-md-12">
@@ -211,18 +222,31 @@
             <q-card-actions class="row justify-end">
                 <div>
                     <q-btn flat label="Cancel" color="primary" @click="emitClosePopup"></q-btn>
-                    <!-- <q-btn v-if="!isEditSchedule" flat label="Confirm" color="primary"></q-btn>
-                    <q-btn v-else flat label="Save" color="primary"></q-btn> -->
-                    <q-btn flat label="Save" color="primary"></q-btn>
+                    <q-btn v-if="!isEdit" @click="addInvoice" flat label="Add" color="primary"></q-btn>
+                    <q-btn v-else @click="editInvoice" flat label="Save" color="primary"></q-btn>
                 </div>
             </q-card-actions>
 
         </dialog-draggable>
 
+        <q-dialog v-model="openDeletePopup" persistent>
+            <q-card>
+                <q-card-section class="row items-center">
+                <span class="q-ml-sm">Are you sure to delete this item?</span>
+                </q-card-section>
+
+                <q-card-actions align="right">
+                <q-btn flat label="No, thanks" color="primary" v-close-popup />
+                <q-btn label="Yes" color="edx-delete-btn" @click="deleteItem" />
+                </q-card-actions>
+            </q-card>
+        </q-dialog>
+
         <BudgetItemsPopup 
-            @closeBudgetitemsPopup="closeBudgetItemsPopup" 
+            @toggleBudgetItemsPopup="toggleBudgetItemsPopup" 
             :show="showBudgetItemsPopup"
         />
+        
     </div>
 </template>
 
@@ -230,12 +254,20 @@
 
 import ICONS from '../../../icons'
 import dialogDraggable from '../../components/DialogDraggable'
-import BudgetItemsPopup from './BudgetItemsPopup';
+import BudgetItemsPopup from './BudgetItemsPopup'
+import axios from 'axios'
+import config from '../../../config'
 
 export default {
     
     props: {
         show: {
+            required: true
+        },
+        isEdit: {
+            required: true
+        },
+        id: {
             required: true
         }
     },
@@ -382,6 +414,7 @@ export default {
             note: '',
 
             showBudgetItemsPopup: false,
+            openDeletePopup: false,
 
         }
     },
@@ -389,9 +422,37 @@ export default {
         emitClosePopup() {
             this.$emit('togglePopup', false)
         },
-        closeBudgetitemsPopup(bool) {
+        toggleBudgetItemsPopup(bool) {
+            console.log(bool, 'Hello')
             this.showBudgetItemsPopup = bool
-        }
+        },
+        openDeleteModal() {
+            this.openDeletePopup = true
+        },
+        deleteItem() {
+            alert('Delete')
+        },
+        addInvoice() {
+            alert('Add Invoice')
+        },
+        editInvoice() {
+            alert('Edit Invoice')
+        },
+        getInvoiceById() {
+
+            const conf = {
+                method: 'GET',
+                url: config.getInvoices + '/' + this.id,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+                console.log('Get invoice by id', res.data.item[0])
+            })
+
+        },
     },
     computed: {
         showPopup() {
@@ -404,6 +465,9 @@ export default {
     watch: {
         show(val) {
             this.$emit('togglePopup', val)
+            if(val) {
+                this.getInvoiceById()
+            }
         }
     }
 }

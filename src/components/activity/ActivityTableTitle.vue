@@ -66,6 +66,7 @@
 
                 <q-btn 
                     square
+                    size="13px"
                     class="q-mr-md edx-add-btn" text-color="white"
                     icon="add" 
                     no-caps
@@ -75,12 +76,19 @@
                 </q-btn>
 
                 <q-btn
-                    icon-right="archive"
-                    label="Export to Excel"
+                    round 
+                    icon="mdi-file-excel-box"
+                    size="10px"
                     class="edx-excel-btn" text-color="white"
                     no-caps
                     @click="exportTable"
-                />
+                >
+                <q-tooltip content-class="edx-tooltip">Export to Excel</q-tooltip>
+                </q-btn>
+
+                <q-btn round size="10px" icon="price_check" @click="showRemainingBalance=true" no-caps class="edx-ledger-balance-btn q-ml-md" flat> 
+                    <q-tooltip content-class="edx-tooltip">View Ledger Balances</q-tooltip>
+                </q-btn>
 
                 <q-btn
                     flat
@@ -90,14 +98,14 @@
                     @click="props.toggleFullscreen"
                     v-if="mode === 'list'" class="q-px-sm"
                 >
-                    <q-tooltip
+                    <q-tooltip content-class="edx-tooltip"
                     :disable="$q.platform.is.mobile"
                     v-close-popup
                     >{{props.inFullscreen ? 'Exit Fullscreen' : 'Toggle Fullscreen'}}
                     </q-tooltip>
                 </q-btn>
 
-                <q-checkbox v-model="showRemainingBalance" label="Show remaining balance" />
+               
 
                 <div class="q-pa-sm q-gutter-sm">
 
@@ -208,6 +216,7 @@
                         <span :class="activityTypeIconColor(props.row.online_uni.id)" class="material-icons cursor-pointer">
                             {{ activityTypeIcon(props.row.online_uni.id) }}
                             <q-tooltip 
+                                content-class="edx-tooltip"
                                 anchor="top middle" self="bottom middle" :offset="[10, 10]"
                                 transition-show="flip-right"
                                 transition-hide="flip-left"
@@ -232,6 +241,7 @@
                             :class="activityStatusIconColor(props.row.status_uni.id)"
                         >
                             <q-tooltip 
+                                content-class="edx-tooltip"
                                 anchor="top middle" self="bottom middle" :offset="[10, 10]"
                                 transition-show="flip-right"
                                 transition-hide="flip-left"
@@ -249,6 +259,7 @@
                             :class="approvalStatusIconColor(props.row.approval_status_uni.id)"
                         >
                             <q-tooltip 
+                                content-class="edx-tooltip"
                                 anchor="top middle" self="bottom middle" :offset="[10, 10]"
                                 transition-show="flip-right"
                                 transition-hide="flip-left"
@@ -264,6 +275,7 @@
                             :class="approvalTypeIconColor(props.row.approval_type_uni.id)" 
                         >
                             <q-tooltip 
+                                content-class="edx-tooltip"
                                 anchor="top middle" self="bottom middle" :offset="[10, 10]"
                                 transition-show="flip-right"
                                 transition-hide="flip-left"
@@ -324,6 +336,7 @@
                         >
                             <span>PD</span>
                             <q-tooltip 
+                                content-class="edx-tooltip"
                                 anchor="top middle" self="bottom middle" :offset="[10, 10]"
                                 transition-show="flip-right"
                                 transition-hide="flip-left"
@@ -358,6 +371,7 @@
                                 @click="openDuplicatePopup(props.row)"
                             >
                                 <q-tooltip 
+                                    content-class="edx-tooltip"
                                     anchor="top middle" self="bottom middle" :offset="[10, 10]"
                                     transition-show="flip-right"
                                     transition-hide="flip-left"
@@ -375,6 +389,7 @@
                                 @click="openDeleteModal(props.row)" 
                             >
                                 <q-tooltip 
+                                    content-class="edx-tooltip"
                                     anchor="top middle" self="bottom middle" :offset="[10, 10]"
                                     transition-show="flip-right"
                                     transition-hide="flip-left"
@@ -523,6 +538,7 @@
                                         >
                                             <span>PD</span>
                                             <q-tooltip 
+                                                content-class="edx-tooltip"
                                                 anchor="top middle" self="bottom middle" :offset="[10, 10]"
                                                 transition-show="flip-right"
                                                 transition-hide="flip-left"
@@ -1230,7 +1246,6 @@
                                     :style="{maxWidth: '350px', width: '350px'}"
                                     :props="props">
                                     <span class="inline-span">
-                                        <q-icon name="calendar_today" color="orange" style="font-size: 1.5em" />
                                         {{props.row.transaction}}
                                     </span>
                                 </q-td>
@@ -1258,7 +1273,7 @@
                                     $ {{props.row.amount}}
                                 </q-td>
                                 <q-td key="balance" :props="props">
-                                    $ {{props.row.balance}}
+                                    $ {{(props.row.balance).toFixed(2)}}
                                 </q-td>
                             </q-tr>
                         </template>
@@ -1455,7 +1470,7 @@ export default {
                 {
                     name: "noAttending",
                     align: "left",
-                    label: "Attendee Summary",
+                    label: "Attendee",
                     field: "noAttending"
                 },
                 {
