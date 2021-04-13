@@ -86,8 +86,6 @@
                 no-caps
             />
 
-            <q-checkbox class="q-ml-sm" v-model="checkbox" />
-
             <q-btn
                 flat
                 round
@@ -131,7 +129,7 @@
                     {{props.row.dueDate}}
                 </q-td>
                 <q-td key="status" :props="props">
-                    <div :class="props.row.isPaid ? 'edx-excel-green' : 'edx-red'">
+                    <div :class="statusColor(props.row.invoiceStatus.id)">
                         {{props.row.status}}
                     </div>
                 </q-td>
@@ -235,108 +233,7 @@ export default {
                 sortable: true
             },
             ],
-            data: [
-                {
-                    invoiceNo: 111,
-                    school: 'Atlas Preparaty Academy',
-                    allocation: 'ESSER',
-                    invoiceDate: '14/06/1965',
-                    amount: 4899,
-                    dueDate: '14/07/1965',
-                    status: 'Pending',
-                    isPaid: false,
-                },
-                {
-                    invoiceNo: 111,
-                    school: 'Atlas Preparaty Academy',
-                    allocation: 'ESSER',
-                    invoiceDate: '14/06/1965',
-                    amount: 4899,
-                    dueDate: '14/07/1965',
-                    status: 'Paid',
-                    isPaid: true,
-                },
-                {
-                    invoiceNo: 111,
-                    school: 'Atlas Preparaty Academy',
-                    allocation: 'ESSER',
-                    invoiceDate: '14/06/1965',
-                    amount: 4899,
-                    dueDate: '14/07/1965',
-                    status: 'Pending',
-                    isPaid: false,
-                },
-                {
-                    invoiceNo: 111,
-                    school: 'Atlas Preparaty Academy',
-                    allocation: 'ESSER',
-                    invoiceDate: '14/06/1965',
-                    amount: 4899,
-                    dueDate: '14/07/1965',
-                    status: 'Paid',
-                    isPaid: true,
-                },
-                {
-                    invoiceNo: 111,
-                    school: 'Atlas Preparaty Academy',
-                    allocation: 'ESSER',
-                    invoiceDate: '14/06/1965',
-                    amount: 4899,
-                    dueDate: '14/07/1965',
-                    status: 'Pending',
-                    isPaid: false,
-                },
-                {
-                    invoiceNo: 111,
-                    school: 'Atlas Preparaty Academy',
-                    allocation: 'ESSER',
-                    invoiceDate: '14/06/1965',
-                    amount: 4899,
-                    dueDate: '14/07/1965',
-                    status: 'Paid',
-                    isPaid: true,
-                },
-                {
-                    invoiceNo: 111,
-                    school: 'Atlas Preparaty Academy',
-                    allocation: 'ESSER',
-                    invoiceDate: '14/06/1965',
-                    amount: 4899,
-                    dueDate: '14/07/1965',
-                    status: 'Pending',
-                    isPaid: false,
-                },
-                {
-                    invoiceNo: 111,
-                    school: 'Atlas Preparaty Academy',
-                    allocation: 'ESSER',
-                    invoiceDate: '14/06/1965',
-                    amount: 4899,
-                    dueDate: '14/07/1965',
-                    status: 'Paid',
-                    isPaid: true,
-                },
-                {
-                    invoiceNo: 111,
-                    school: 'Atlas Preparaty Academy',
-                    allocation: 'ESSER',
-                    invoiceDate: '14/06/1965',
-                    amount: 4899,
-                    dueDate: '14/07/1965',
-                    status: 'Pending',
-                    isPaid: false,
-                },
-                {
-                    invoiceNo: 111,
-                    school: 'Atlas Preparaty Academy',
-                    allocation: 'ESSER',
-                    invoiceDate: '14/06/1965',
-                    amount: 4899,
-                    dueDate: '14/07/1965',
-                    status: 'Paid',
-                    isPaid: true,
-                },
-            ],
+            data: [],
 
             isEdit: false,
             id: null,
@@ -407,12 +304,13 @@ export default {
                         id: invoices[i].id,
                         invoiceNo: invoices[i].id,
                         school: invoices[i].schoolName,
-                        allocation: invoices[i]?.line_item?.budget?.allocation?.name,
+                        allocation: invoices[i]?.allocation?.name,
                         invoiceDate: invoices[i].date,
                         amount: invoices[i].total_amount,
                         dueDate: invoices[i].due_date,
                         status: invoices[i].invoice_status?.name,
                         isPaid: invoices[i]?.invoice_status?.id == 2 ? true : false,
+                        invoiceStatus: invoices[i]?.invoice_status
                     })
 
                 }
@@ -421,11 +319,30 @@ export default {
 
             })
 
+        },
+        statusColor(id) {
+            let className = ''
+
+            switch(id) {
+                case 1:
+                    // Created
+                    className = 'edx-teal'
+                    break;
+                case 2:
+                    // Billed
+                    className = 'edx-orange'
+                    break;
+                case 3:
+                    // Paid
+                    className = 'edx-green'
+                    break;
+            }
+            return className
         }
     },
     created() {
         this.getInvoices(this.count, this.current)
-    }
+    },
 }
 
 </script>

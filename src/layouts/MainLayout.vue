@@ -900,6 +900,14 @@
                   <q-item-label>Login</q-item-label>
                 </q-item-section>
               </q-item>
+              <q-item to="/icons"  active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
+                <q-item-section avatar>
+                  <q-icon name=""/>
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label>Icons</q-item-label>
+                </q-item-section>
+              </q-item>
             </q-list>
           </q-expansion-item>
         

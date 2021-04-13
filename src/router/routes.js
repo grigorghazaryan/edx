@@ -60,6 +60,7 @@ const routes = [
 
       // Test
       {path: '/A0', component: () => import('pages/BudgetTest.vue')},
+      {path: '/icons', component: () => import('pages/test/icons.vue')},
       {path: '/testmaterials', component: () => import('pages/test/material.vue')},
       
     ]

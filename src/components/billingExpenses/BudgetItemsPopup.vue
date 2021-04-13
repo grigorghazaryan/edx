@@ -1,28 +1,27 @@
 <template>
-    
     <div>
 
         <dialog-draggable 
-            :width="750" 
+            :width="850" 
             :modelDialog="showPopup" 
             :title="'Budget Items'" 
             :icon="'attach_money'"
             :pagination.sync="pagination"
-        >  
+        > 
 
             <q-card-section style="max-height: 60vh" class="scroll q-pt-none q-pb-none q-pr-none q-pl-none">
                 <div class="q-pa-md">
                     <div class="row">
-                        <div class="col-md-5">
+                        <div class="col-md-8">
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="q-mb-md">
                                         <div class="text-subtitle2 q-mb-sm">Start Date</div>
-                                        <q-input outlined class="q-mr-md" dense v-model="start">
+                                        <q-input  outlined class="q-mr-md" dense v-model="start">
                                             <template v-slot:append>
                                                 <q-icon name="event" class="cursor-pointer">
                                                     <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                                    <q-date v-model="start">
+                                                    <q-date mask="DD/MM/YYYY" @input="filterBudgetItems" v-model="start">
                                                         <div class="row items-center justify-end">
                                                         <q-btn v-close-popup label="Close" color="primary" flat />
                                                         </div>
@@ -33,14 +32,14 @@
                                         </q-input>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="q-mb-md">
                                         <div class="text-subtitle2 q-mb-sm">End Date</div>
-                                        <q-input outlined class="q-mr-md" dense v-model="end">
+                                        <q-input  outlined class="q-mr-md" dense v-model="end">
                                             <template v-slot:append>
                                                 <q-icon name="event" class="cursor-pointer">
                                                     <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                                    <q-date v-model="end">
+                                                    <q-date mask="DD/MM/YYYY" @input="filterBudgetItems" v-model="end">
                                                         <div class="row items-center justify-end">
                                                         <q-btn v-close-popup label="Close" color="primary" flat />
                                                         </div>
@@ -53,8 +52,37 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-7 row justify-end items-center">
-                                <b>Total selected: $ <span>24.765.78</span> </b>
+                        <div class="col-md-4 row justify-end items-center">
+                            <b>Total selected: $ <span>{{ totalSelected }}</span> </b>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3 q-pr-sm">
+                            <div class="q-mb-md">
+                                <div class="text-subtitle2 q-mb-sm">Category</div>
+                                <q-select outlined dense 
+                                v-model="selectedCategory" 
+                                :options="optionsCategory"
+                                @input="filterBudgetItems" />
+                            </div>
+                        </div>
+                        <div class="col-md-3 q-pr-sm">
+                            <div class="q-mb-md">
+                                <div class="text-subtitle2 q-mb-sm">Subcategory</div>
+                                <q-select outlined dense 
+                                v-model="selectedCategory" 
+                                :options="optionsCategory"
+                                @input="filterBudgetItems" />
+                            </div>
+                        </div>
+                        <div class="col-md-3 q-pr-sm">
+                            <div class="q-mb-md">
+                                <div class="text-subtitle2 q-mb-sm">Funding source</div>
+                                <q-select outlined dense 
+                                v-model="selectedCategory" 
+                                :options="optionsCategory"
+                                @input="filterBudgetItems" />
+                            </div>
                         </div>
                     </div>
                     <div class="row q-mt-md">
@@ -80,13 +108,13 @@
                                     </q-td>
                                     <q-td key="type" :props="props">
                                         <q-chip square class="bg-edx-bg-wr">
-                                            <span>{{props.row.type}}</span>
+                                            <span>{{props.row.type.abbreviation}}</span>
                                             <q-tooltip 
                                                 anchor="top middle" self="bottom middle" :offset="[10, 10]"
                                                 transition-show="flip-right"
                                                 transition-hide="flip-left"
                                             >
-                                                <strong>{{props.row.type}}</strong>
+                                                <strong>{{props.row.type.name}}</strong>
                                             </q-tooltip>
                                         </q-chip>
                                     </q-td>
@@ -97,7 +125,7 @@
                                         {{props.row.balance}}
                                     </q-td>
                                     <q-td key="select" :props="props">
-                                        <q-checkbox v-model="props.row.select" />
+                                        <q-checkbox v-model="props.row.select" @input="calculateSelectedPrice(props.row)"/>
                                     </q-td>
                                 </q-tr>
                             </template>
@@ -111,61 +139,38 @@
             <q-card-actions class="row justify-end">
                 <div>
                     <q-btn flat label="Cancel" color="primary" @click="emitClosePopup"></q-btn>
-                    <q-btn flat label="Add Selected" class="edx-add-btn q-ml-sm"></q-btn>
+                    <q-btn flat label="Add Selected" @click="addSelected" class="edx-add-btn q-ml-sm"></q-btn>
                 </div>
             </q-card-actions>
 
         </dialog-draggable>
 
     </div>
-
 </template>
 
 <script>
 import dialogDraggable from '../../components/DialogDraggable'
+import axios from 'axios'
+import config from '../../../config'
 
 export default {
     props: {
+
         show: {
             required: true
+        },
+        categoryId: {
+            required: true
+        },
+        invoiceId: {
+            required: true,
+            default: 0
         }
+
     },
     data() {
         return {
-            data: [
-                {
-                    transaction: "Teaching with Google Classroom, #2-197",
-                    date: "10/09/2021",
-                    type: "PD",
-                    qty: 1,
-                    balance: 42000,
-                    select: true
-                },
-                {
-                    transaction: "Teaching with Google Classroom, #2-197",
-                    date: "09/11/2021",
-                    type: "FE",
-                    qty: 1,
-                    balance: 89000,
-                    select: false
-                },
-                {
-                    transaction: "Teaching with Google Classroom, #2-197",
-                    date: "10/09/2021",
-                    type: "PD",
-                    qty: 1,
-                    balance: 42000,
-                    select: true
-                },
-                {
-                    transaction: "Teaching with Google Classroom, #2-197",
-                    date: "09/11/2021",
-                    type: "FE",
-                    qty: 1,
-                    balance: 89000,
-                    select: false
-                },
-            ],
+            data: [],
             columns: [
                 {
                     name: "transaction",
@@ -210,27 +215,151 @@ export default {
                     sortable: true
                 },
             ],
+
+            selectedTransactions: new Set([]),
             pagination: { rowsPerPage: 999 },
-            start: '',
-            end: '',
+            start: null,
+            end: null,
+            selectedCategory: null,
+            optionsCategory: [
+            ],
+
         }
     },
     methods: {
         emitClosePopup() {
             this.$emit('toggleBudgetItemsPopup', false)
+        },
+        addSelected() {
+            let budgetIds = Array.from(this.selectedTransactions);
+
+            const conf = {
+                method: 'POST',
+                url: config.addSelected + this.invoiceId,
+                headers: {
+                    Accept: 'application/json',
+                },
+                data: {
+                    budget_ids: budgetIds
+                }
+            }
+
+            axios(conf).then(res => {
+                console.log('res data 8888', res.data)
+            })
+
+
+        },
+        getBudgetItems() {
+
+            let id = this.categoryId && this.categoryId.id
+
+            let uri = '?start_date=' + (this.start ? this.start : null) + '&end_date=' + (this.end ? this.end : null)
+            
+            if(this.selectedCategory && this.selectedCategory.id) {
+                uri += '&category=' + this.selectedCategory.id
+            }
+
+
+            const conf = {
+                method: 'GET',
+                url: config.getBudgetItems + id + uri,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+                console.log('gggg', res.data.items)
+
+                let budgetItems = res.data.items,
+                    arr = []
+
+                for(let i=0; i<budgetItems.length; i++) {
+                    arr.push({
+                        id: budgetItems[i].id,
+                        transaction: budgetItems[i].name,
+                        date: budgetItems[i].completed_date,
+                        type: budgetItems[i].category,
+                        qty: budgetItems[i].quantity,
+                        balance: budgetItems[i].unit_total_cost,
+                        select: false
+                    })
+                }
+
+                this.data = arr
+            })
+        },
+        calculateSelectedPrice(row) {
+
+            if(this.selectedTransactions.has(row.id)) {
+                this.selectedTransactions.delete(row.id) 
+            }else {
+                this.selectedTransactions.add(row.id)
+            }
+
+            console.log(this.selectedTransactions)
+        },
+        getcategories() {
+
+            const conf = {
+                method: 'GET',
+                url: config.getAllCategories,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+
+                console.log(res.data.categories, 'res.data.categories')
+                let categories = res.data.categories
+                let arr = []
+
+                for(let i=0; i<categories.length; i++) {
+                    console.log(categories[i])
+
+                    arr.push({
+                        id: categories[i].id,
+                        label: categories[i].name
+                    })
+                }
+
+                this.optionsCategory = arr
+            })
+        },
+        filterBudgetItems() {
+            this.getBudgetItems()
         }
     },
     components: {
         dialogDraggable
     },
+    created() {
+    },
     computed: {
         showPopup() {
             return this.show
+        },
+        totalSelected() {
+            let count = 0;
+            for(let i=0; i<this.data.length; i++) {
+                if(this.data[i].select) {
+                    count += parseFloat(this.data[i].balance)
+                }
+            }
+            return count
         }
     },
     watch: {
         show(val) {
             this.$emit('toggleBudgetItemsPopup', val)
+
+            if(val) {
+                this.getBudgetItems()
+                this.getcategories()
+            }
+
         }
     }
 }

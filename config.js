@@ -88,6 +88,7 @@ const config = {
     getActivity: 'https://edxchange-activity.aimtech.am/api/v1/item/', // + 1/1001/ if activity : 1 , if material : 2, ...,
     getAttendeesById: 'https://edxchange-activity.aimtech.am/api/v1/get-atendee/', // + id
     getCategoryTypes: 'https://edxchange-activity.aimtech.am/api/v1/get-types-categories/', // + 1 ? Title 1
+    getAllCategories: 'https://edxchange-activity.aimtech.am/api/v1/get-all-categories', 
     editActivity: 'https://edxchange-activity.aimtech.am/api/v1/item/', // + id
     // editActivity: 'https://edxchange-activity.aimtech.am/api/v1/activity/', // + id
     // addActivity: 'https://edxchange-activity.aimtech.am/api/v1/activity',
@@ -147,6 +148,10 @@ const config = {
     filterTeacher: 'https://edxchange-teacher.aimtech.am/api/v1/filter-teacher-assignment/', // 1/1001?search=Joelle&school_year=1015
 
     getInvoices: 'http://edxchange-invoice.aimtech.am/api/v1/item',
+    getTerms: 'http://edxchange-invoice.aimtech.am/api/v1/invoice-term',
+
+    getBudgetItems: 'http://edxchange-invoice.aimtech.am/api/v1/get-budget-list/', // + id
+    addSelected: 'http://edxchange-invoice.aimtech.am/api/v1/add-budget-items/', // + 1 title 1
 }
 
 export default config

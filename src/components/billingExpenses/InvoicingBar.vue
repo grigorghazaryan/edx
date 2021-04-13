@@ -6,7 +6,10 @@
             <div class="col-md-3 col-sm-12 col-xs-12">
                 <q-item class="q-pa-none q-ml-xs">
                 <q-item-section side style="background-color: #fff" class=" q-pa-lg q-mr-none text-white">
-                <q-icon name="monetization_on" class="edx-light-blue" size="35px"></q-icon>
+                    
+                    <q-icon name="test_icon" class="edx-light-blue" size="35px"></q-icon>
+                    
+
                 </q-item-section>
                 <q-item-section class="q-ml-none">
                     <q-item-label class="text-grey-7">Total Paid</q-item-label>

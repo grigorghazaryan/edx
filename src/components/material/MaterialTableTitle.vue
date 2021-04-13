@@ -72,14 +72,19 @@
                 </q-btn>
 
                 <q-btn
-                    icon-right="archive"
-                    label="Export to Excel"
+                    round 
+                    icon="mdi-file-excel-box"
+                    size="10px"
                     class="edx-excel-btn" text-color="white"
                     no-caps
                     @click="exportTable"
-                />
+                >
+                    <q-tooltip content-class="edx-tooltip">Export to Excel</q-tooltip>
+                </q-btn>
 
-                <q-btn @click="showRemainingBalance=true" no-caps class="edx-budget-balance-btn q-ml-md" flat> Budget Balance </q-btn>
+                <q-btn round size="10px" icon="price_check" @click="showRemainingBalance=true" no-caps class="edx-ledger-balance-btn q-ml-md" flat> 
+                    <q-tooltip content-class="edx-tooltip">View Ledger Balances</q-tooltip>
+                </q-btn>
 
                 <q-btn
                     flat
@@ -87,12 +92,11 @@
                     dense
                     :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
                     @click="props.toggleFullscreen"
-                    v-if="mode === 'list'" class="q-px-sm"
+                    v-if="mode === 'list'" 
+                    class="q-ml-md"
                 >
-                    <q-tooltip
-                    :disable="$q.platform.is.mobile"
-                    v-close-popup
-                    >{{props.inFullscreen ? 'Exit Fullscreen' : 'Toggle Fullscreen'}}
+                    <q-tooltip content-class="edx-tooltip" :disable="$q.platform.is.mobile">
+                        {{props.inFullscreen ? 'Exit Fullscreen' : 'Toggle Fullscreen'}}
                     </q-tooltip>
                 </q-btn>
 
@@ -1141,7 +1145,9 @@
                                     $ {{props.row.amount}}
                                 </q-td>
                                 <q-td key="balance" :props="props">
-                                    $ {{(props.row.balance).toFixed(2)}}
+                                    <div :class="props.row.balance > 0 ? 'edx-green' : 'edx-red' ">
+                                        $ {{(props.row.balance).toFixed(2)}}
+                                    </div>
                                 </q-td>
                             </q-tr>
                         </template>
