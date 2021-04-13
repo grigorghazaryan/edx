@@ -48,5 +48,5 @@ export default {
         IconPaid
     }
 }
-return path // base 64
+
 </script>
