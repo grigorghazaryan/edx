@@ -182,3 +182,7 @@ span.edx-header-text {
 .mw-100 {
   min-width: 100px;
 }
+
+.p-0 {
+  padding: 0 !important
+}

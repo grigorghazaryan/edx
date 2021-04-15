@@ -66,21 +66,21 @@
                                 @input="filterBudgetItems" />
                             </div>
                         </div>
-                        <div class="col-md-3 q-pr-sm">
+                        <div v-if="optionsSubcategory.length" class="col-md-3 q-pr-sm">
                             <div class="q-mb-md">
                                 <div class="text-subtitle2 q-mb-sm">Subcategory</div>
                                 <q-select outlined dense 
-                                v-model="selectedCategory" 
-                                :options="optionsCategory"
+                                v-model="selectedSubcategory" 
+                                :options="optionsSubcategory"
                                 @input="filterBudgetItems" />
                             </div>
                         </div>
-                        <div class="col-md-3 q-pr-sm">
+                        <div v-if="optionsFundSource.length" class="col-md-3 q-pr-sm">
                             <div class="q-mb-md">
                                 <div class="text-subtitle2 q-mb-sm">Funding source</div>
                                 <q-select outlined dense 
-                                v-model="selectedCategory" 
-                                :options="optionsCategory"
+                                v-model="selectedFundSource" 
+                                :options="optionsFundSource"
                                 @input="filterBudgetItems" />
                             </div>
                         </div>
@@ -91,6 +91,7 @@
                             :data="data" 
                             :columns="columns"
                             hide-bottom
+                            :pagination.sync="pagination"
                         >
                             <!-- Table Body -->
                             <template v-slot:body="props">
@@ -107,14 +108,14 @@
                                         {{props.row.allocation}}
                                     </q-td>
                                     <q-td key="type" :props="props">
-                                        <q-chip square class="bg-edx-bg-wr">
-                                            <span>{{props.row.type.abbreviation}}</span>
+                                        <q-chip square :class="checkType(props.row.type.abbreviation)">
+                                            <span> {{props.row.type.abbreviation}}</span>
                                             <q-tooltip 
                                                 anchor="top middle" self="bottom middle" :offset="[10, 10]"
                                                 transition-show="flip-right"
                                                 transition-hide="flip-left"
                                             >
-                                                <strong>{{props.row.type.name}}</strong>
+                                                <strong> {{props.row.type.name}}</strong>
                                             </q-tooltip>
                                         </q-chip>
                                     </q-td>
@@ -139,7 +140,7 @@
             <q-card-actions class="row justify-end">
                 <div>
                     <q-btn flat label="Cancel" color="primary" @click="emitClosePopup"></q-btn>
-                    <q-btn flat label="Add Selected" @click="addSelected" class="edx-add-btn q-ml-sm"></q-btn>
+                    <q-btn :loading="loading" flat label="Add Selected" @click="addSelected" class="edx-add-btn q-ml-sm"></q-btn>
                 </div>
             </q-card-actions>
 
@@ -165,11 +166,17 @@ export default {
         invoiceId: {
             required: true,
             default: 0
+        },
+        allocation: {
+            required: true
         }
 
     },
     data() {
         return {
+            loading: false,
+
+            pagination: { rowsPerPage: 999 },
             data: [],
             columns: [
                 {
@@ -216,13 +223,19 @@ export default {
                 },
             ],
 
-            selectedTransactions: new Set([]),
+            selectedTransactions: null,
             pagination: { rowsPerPage: 999 },
             start: null,
             end: null,
+
             selectedCategory: null,
-            optionsCategory: [
-            ],
+            optionsCategory: [],
+
+            selectedSubcategory: null,
+            optionsSubcategory: [],
+
+            selectedFundSource: null,
+            optionsFundSource: [],
 
         }
     },
@@ -231,6 +244,7 @@ export default {
             this.$emit('toggleBudgetItemsPopup', false)
         },
         addSelected() {
+            this.loading = true
             let budgetIds = Array.from(this.selectedTransactions);
 
             const conf = {
@@ -245,7 +259,15 @@ export default {
             }
 
             axios(conf).then(res => {
-                console.log('res data 8888', res.data)
+                
+
+                this.$q.notify({
+                    message: 'Added!',
+                    type: 'positive',
+                })
+                this.loading = false
+                this.emitClosePopup()
+
             })
 
 
@@ -254,10 +276,23 @@ export default {
 
             let id = this.categoryId && this.categoryId.id
 
-            let uri = '?start_date=' + (this.start ? this.start : null) + '&end_date=' + (this.end ? this.end : null)
+            let uri = '?';
+
+            if(this.start) {
+                uri += `start_date=${this.start}&`
+            }
+            if(this.end) {
+                uri += `end_date=${this.end}&`
+            }
             
             if(this.selectedCategory && this.selectedCategory.id) {
-                uri += '&category=' + this.selectedCategory.id
+                uri += `category=${this.selectedCategory.id}&`
+            }
+            if(this.selectedSubcategory && this.selectedSubcategory.id) {
+                uri += `subcategory=${this.selectedSubcategory.id}&`
+            }
+            if(this.selectedFundSource && this.selectedFundSource.id) {
+                uri += `fundSource=${this.selectedFundSource.id}&`
             }
 
 
@@ -330,12 +365,96 @@ export default {
         },
         filterBudgetItems() {
             this.getBudgetItems()
+        },
+        // Get subcategories
+        getSubcategories(id) {
+            const conf = {
+                method: 'GET',
+                url: config.getSubcategories + id,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+                const subcategoriesArr = []
+                const subcategories = res.data.typesCategories
+                for(let i=0; i<subcategories.length; i++) {
+                    let obj = {
+                        id: subcategories[i].id,
+                        name: subcategories[i].abbreviation,
+                        label: subcategories[i].name
+                    }
+                    subcategoriesArr.push(obj)
+                }
+                this.optionsSubcategory = subcategoriesArr
+            })
+        },
+        // Funds
+        getFunds(title) {
+
+            const conf = {
+                method: 'GET',
+                url: config.getFunds + title,
+                headers: {
+                Accept: 'application/json',
+                }
+            }
+            
+            axios(conf).then(res => {
+
+                console.log('funds ======', res.data)
+
+                let fundSource = res.data.fundSource;
+                let fundSourceArr = [];
+
+                for(let i=0; i<fundSource.length; i++) {
+                    
+                    let obj = {
+                        id: fundSource[i].id,
+                        label: fundSource[i].name,
+                        abbr: fundSource[i].abbreviation
+                    }
+                    fundSourceArr.push(obj)
+                }
+
+                this.optionsFundSource = fundSourceArr;
+            })
+        },
+        checkType(type) {
+
+            let className = ''
+            
+            switch(type) {
+                case 'I':
+                className = 'bg-edx-bg-i';
+                break;
+
+                case 'M':
+                className = 'bg-edx-bg-m';
+                break;
+
+                case 'PD':
+                className = 'bg-edx-bg-pd';
+                break;
+
+                case 'FE':
+                className = 'bg-edx-bg-fe';
+                break;
+
+                default:
+                className = '';
+                break;
+            }
+
+            return className
         }
     },
     components: {
         dialogDraggable
     },
     created() {
+        
     },
     computed: {
         showPopup() {
@@ -356,10 +475,21 @@ export default {
             this.$emit('toggleBudgetItemsPopup', val)
 
             if(val) {
+
+                this.selectedTransactions = new Set([])
                 this.getBudgetItems()
                 this.getcategories()
+
+                console.log('invoiceId', this.allocation)
+
+                let id = this.allocation?.id
+                // console.log('idididididid', id, this.title)
+                this.getFunds(id)
             }
 
+        },
+        selectedCategory(val) {
+            this.getSubcategories(val.id)
         }
     }
 }

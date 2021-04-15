@@ -707,41 +707,61 @@
                             </div>
                         </div>
 
-                        <div class="q-mb-md" v-if="editedItem.status_uni">
-                            <div class="text-subtitle2 q-mb-sm">Activity Status</div>
+                        <div class="q-mb-md" >
                             <div class="row">
-                                <div class="col-md-6">
+                                <div v-if="editedItem.status_uni" class="col-md-5"> 
+                                    <div class="text-subtitle2 q-mb-sm">Activity Status</div>
+                                    <div class="row">
+                                        <div class="col-md-12">
 
-                                    <div class="h-popup cursor-pointer">
-                                        <q-icon 
-                                            :name="activityStatusIcon(editedItem.status_uni.id)" 
-                                            :class="activityStatusIconColor(editedItem.status_uni.id)" 
-                                            class="q-mr-sm"
-                                            style="font-size: 1.5em"
-                                        ></q-icon>
-                                        <span>{{ editedItem.status_uni.label }}</span>
+                                            <div class="h-popup cursor-pointer">
+                                                <q-icon 
+                                                    :name="activityStatusIcon(editedItem.status_uni.id)" 
+                                                    :class="activityStatusIconColor(editedItem.status_uni.id)" 
+                                                    class="q-mr-sm"
+                                                    style="font-size: 1.5em"
+                                                ></q-icon>
+                                                <span>{{ editedItem.status_uni.label }}</span>
+                                            </div>
+
+                                            <q-popup-edit v-model="editedItem.status_uni" title="Activity Status" buttons >
+                                                <q-select  
+                                                    outlined
+                                                    dense
+                                                    input-debounce="0"
+                                                    v-model="editedItem.status_uni" 
+                                                    :options="optionsStatus"
+                                                >
+                                                    <template v-slot:no-option>
+                                                        <q-item>
+                                                            <q-item-section class="text-grey">
+                                                            No results
+                                                            </q-item-section>
+                                                        </q-item>
+                                                    </template>
+                                                </q-select>
+                                            </q-popup-edit>
+                                            
+                                        </div>
                                     </div>
-
-                                    <q-popup-edit v-model="editedItem.status_uni" title="Activity Status" buttons >
-                                        <q-select  
-                                            outlined
-                                            dense
-                                            input-debounce="0"
-                                            v-model="editedItem.status_uni" 
-                                            :options="optionsStatus"
-                                        >
-                                            <template v-slot:no-option>
-                                                <q-item>
-                                                    <q-item-section class="text-grey">
-                                                    No results
-                                                    </q-item-section>
-                                                </q-item>
-                                            </template>
-                                        </q-select>
-                                    </q-popup-edit>
-                                    
+                                </div>
+                                <div class="col-md-5"> 
+                                    <div class="text-subtitle2 q-mb-sm">Documents and Tasks</div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="h-popup cursor-pointer">
+                                                <q-icon 
+                                                    @click="openDocumentsModal"
+                                                    name="folder"
+                                                    class="edx-folder q-mr-sm"
+                                                    style="font-size: 2em"
+                                                ></q-icon>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+                            
                         </div>
 
                         <div class="row" v-show="editedItem.status_uni && editedItem.status_uni.label == 'Completed' ">
@@ -1318,6 +1338,12 @@
 
         </dialog-draggable>
 
+        <DocumentsPopup 
+            :show="showDocumentPopup" 
+            @togglePopup="togglePopup"
+            :activity="editedItem"
+        />
+
     </div>
 </template>
 
@@ -1325,6 +1351,7 @@
 
 import dialogDraggable from '../../components/DialogDraggable'
 import DateOfActivityTable from './DateOfActivityTable';
+import DocumentsPopup from '../documentsPopup/DocumentsPopup';
 
 import axios from 'axios'
 import config from '../../../config'
@@ -1341,7 +1368,8 @@ export default {
     components: {
         dialogDraggable,
         DateOfActivityTable,
-        DialogDraggable
+        DialogDraggable,
+        DocumentsPopup
     },
     props: {
         // barInfo: {
@@ -1353,6 +1381,8 @@ export default {
     },
     data() {
         return {
+
+            showDocumentPopup: false,
 
             testCategory: '',
             testSubcategory: '',
@@ -1643,6 +1673,12 @@ export default {
         }
     },
     methods: {
+        togglePopup(val) {
+            this.showDocumentPopup = val
+        },
+        openDocumentsModal() {
+            this.showDocumentPopup = true
+        },
         // allocationFundId/ tab /school id
         getBudgetBalance(tab, categoryId, schoolId, limit, page) {
             

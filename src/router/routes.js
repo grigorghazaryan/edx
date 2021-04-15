@@ -56,8 +56,9 @@ const routes = [
       // Vendors
       {path: '/Vendors', name: 'Vendors', meta: { title: 'Vendors' }, component: () => import('pages/Schools/Vendors.vue')},
       {path: '/Vendors/:id', name: 'Vendors', meta: { title: 'Vendors' }, component: () => import('pages/Schools/VendorsNested.vue')},
-
-
+      // Tracking
+      {path: '/Activity Checklist', name: 'Tracking', meta: { title: 'Tracking' }, component: () => import('pages/Tracking/ActivityChecklist.vue')},
+      
       // Test
       {path: '/A0', component: () => import('pages/BudgetTest.vue')},
       {path: '/icons', component: () => import('pages/test/icons.vue')},

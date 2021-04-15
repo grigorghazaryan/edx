@@ -747,6 +747,52 @@
             </q-menu>
           </q-item>
 
+          <!-- TRACKING -->
+
+          <q-expansion-item v-if="!miniState"
+            icon="published_with_changes"
+            label="Tracking"
+          >
+
+            <q-list class="bg-sidebar-opened edx-menu-toggle">
+              <q-item to="/Activity Checklist"
+              active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
+                <q-item-section avatar>
+                  <q-icon name="checklist_rtl"/>
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label>Activity Checklist</q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-list>
+
+          </q-expansion-item>
+
+          <q-item v-else active-class="q-item-no-link-highlighting">
+            <q-item-section avatar>
+              <q-icon name="published_with_changes"/>
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>Tracking</q-item-label>
+            </q-item-section>
+            <q-menu
+              anchor="top right"
+              self="top left"
+            >
+              <q-list class="edx-sidebar-background edx-sidebar-menu-text" style="min-width: 100px">
+                <q-item clickable  v-close-popup to="/Activity Checklist" active-class="q-item-no-link-highlighting">
+                  <q-item-section avatar>
+                    <q-icon name="checklist_rtl"/>
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>Activity Checklist</q-item-label>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+
+            </q-menu>
+          </q-item>
+
           <!-- REPORTING -->
 
           <q-expansion-item v-if="!miniState"

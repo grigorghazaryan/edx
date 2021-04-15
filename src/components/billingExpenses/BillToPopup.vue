@@ -13,23 +13,18 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="row">
-                                <div class="col-md-4">
-                                    <div class="text-subtitle2 q-mb-sm">Send bill to</div>
-                                    <q-select outlined dense 
-                                        v-model="bill" 
-                                        :options="bills"
-                                    />
+                                <div class="col-md-3">
+                                    
                                 </div>
                                 <div class="col-md-5">
-
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-4 bordered-box">
                                     <div class="text-subtitle2 q-mb-sm">Billing address</div>
-                                    <div>Mukake Public school</div>
-                                    <div>1505 North 6th Street</div>
-                                    <div>Mukake WI 45890</div>
-                                    <div>414-505-8899</div>
+                                    <div>{{ schoolInfo.address }}</div>
+                                    <div>{{ schoolInfo.state }} {{ schoolInfo.city }} {{ schoolInfo.zip }}</div>
+                                    <div>{{ schoolInfo.phone }}</div>
                                 </div>
+                                
                             </div>
                         </div>
                     </div>
@@ -40,6 +35,7 @@
                             :data="data" 
                             :columns="columns"
                             hide-bottom
+                            :pagination.sync="pagination"
                         >
                             <!-- Table Body -->
                             <template v-slot:body="props">
@@ -63,7 +59,7 @@
                                         {{props.row.phone}}
                                     </q-td>
                                     <q-td key="select" :props="props" >
-                                        <q-checkbox v-model="props.row.select" />
+                                        <q-radio @input="selectAddress" dense v-model="selectedAddress" :val="props.row.id" />
                                     </q-td>
                                 </q-tr>
                             </template>
@@ -76,7 +72,7 @@
             <q-card-actions class="row justify-end">
                 <div>
                     <q-btn flat label="Cancel" @click="emitClosePopup" color="primary"></q-btn>
-                    <q-btn flat label="Set" class="edx-add-btn q-ml-sm"></q-btn>
+                    <q-btn flat label="Set" @click="sendNewAddressToParent" class="edx-add-btn q-ml-sm"></q-btn>
                 </div>
             </q-card-actions>
 
@@ -96,39 +92,16 @@ export default {
         show: {
             required: true
         },
+        schoolId: { 
+            required: true
+        }
 
     },
     data() {
         return {
-            bill: null,
-            bills: [],
+            selectedAddress: null,
 
-            data: [
-                {
-                    address: '1505 North 6th Street',
-                    city: 'Milwaukee',
-                    state: 'WI',
-                    zipcode: '06003',
-                    phone: '+37494511116',
-                    select: false,
-                },
-                {
-                    address: '1505 North 6th Street',
-                    city: 'Milwaukee',
-                    state: 'WI',
-                    zipcode: '06003',
-                    phone: '+37494511116',
-                    select: false,
-                },
-                {
-                    address: '1505 North 6th Street',
-                    city: 'Milwaukee',
-                    state: 'WI',
-                    zipcode: '06003',
-                    phone: '+37494511116',
-                    select: false,
-                },
-            ],
+            data: [],
             columns: [
                 {
                     name: "address",
@@ -173,12 +146,101 @@ export default {
                     sortable: true
                 },
             ],
+            // Table footer
+            pagination: { rowsPerPage: 999 },
+
+            schoolInfo: {
+                id: '',
+                address: '',
+                city: '',
+                state: '',
+                zip: '',
+                phone: '',
+            }
         }
     },
     methods: {
         emitClosePopup() {
             this.$emit('toggleBillToModal', false)
         },
+        sendNewAddressToParent() {
+            this.$emit('receiveAddress', this.schoolInfo)
+            this.emitClosePopup()
+        },
+        // 
+        // Filter
+        filterFn (val, update, abort) {
+
+            if (val.length < 1) {
+                abort()
+                return
+            }
+
+            update(() => {
+                
+                let arr = []
+                const conf = {
+                    method: 'GET',
+                    url: config.filterSchool + val + '&limit=1000&offset=1',
+                    headers: {
+                        Accept: 'application/json',
+                    }
+                }
+
+                axios(conf).then(res => {
+                    for(let i=0; i<res.data.schools.length; i++) {
+                        arr.push({
+                            id: res.data.schools[i].id,
+                            label: res.data.schools[i].name
+                        })
+                    }
+                    this.schoolsOptions = arr
+                })
+            })
+        },
+        getSchoolAddresses(schooliId) {
+
+            const conf = {
+                method: 'GET',
+                url: config.getSchoolInformationById + schooliId,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+                console.log('res.asdasdkasdhbasd', res.data)
+                let address = res.data.school[0].address
+                let arr = []
+                if(address.length) {
+                    for(let i=0; i<address.length; i++) {
+                        console.log(address[i])
+                        arr.push({
+                            id: address[i].address.id,
+                            address: address[i].address.address_line_1,
+                            city: address[i].address.city,
+                            state: address[i].address.state?.name,
+                            zipcode: address[i].address.postal_code,
+                            phone: address[i].address.phone,
+                            select: false
+                        })
+                    }
+                    this.data = arr
+                }
+            })
+
+        },
+        selectAddress() {
+
+            let index = this.data.findIndex( item => item.id == this.selectedAddress )
+            this.schoolInfo.id = this.data[index].id
+            this.schoolInfo.address = this.data[index].address
+            this.schoolInfo.state = this.data[index].state
+            this.schoolInfo.city = this.data[index].city
+            this.schoolInfo.zip = this.data[index].zipcode
+            this.schoolInfo.phone = this.data[index].phone
+
+        }
     },
     components: {
         dialogDraggable
@@ -186,11 +248,15 @@ export default {
     computed: {
         showPopup() {
             return this.show
-        },
+        }
     },
     watch: {
         show(val) {
             this.$emit('toggleBillToModal', val)
+
+            if(val) {
+                this.getSchoolAddresses(this.schoolId)
+            }
         }
     }
 }

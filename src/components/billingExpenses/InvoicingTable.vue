@@ -24,7 +24,7 @@
                 <template v-slot:append>
                     <q-icon name="event" class="cursor-pointer">
                         <q-popup-proxy transition-show="scale" transition-hide="scale">
-                        <q-date v-model="start">
+                        <q-date @input="filterInvoice" v-model="start">
                             <div class="row items-center justify-end">
                             <q-btn v-close-popup label="Close" color="primary" flat />
                             </div>
@@ -38,7 +38,7 @@
                 <template v-slot:append>
                     <q-icon name="event" class="cursor-pointer">
                         <q-popup-proxy transition-show="scale" transition-hide="scale">
-                        <q-date v-model="end">
+                        <q-date @input="filterInvoice" v-model="end">
                             <div class="row items-center justify-end">
                             <q-btn v-close-popup label="Close" color="primary" flat />
                             </div>
@@ -48,26 +48,53 @@
                 </template>
             </q-input>
 
+            <q-select
+                style="min-width: 300px; max-width: 300px"
+                class="q-mr-md"
+                outlines
+                dense
+                v-model="selectedSchool"
+                use-input
+                @filter="filterFn"
+                :options="schoolsOptions"
+                option-value="id"
+                option-label="label"
+                input-debounce="0"
+                map-options
+                emit-value
+                stack-label
+                @input="filterInvoice"
+            >
+            </q-select>
 
             <q-select
-            class="q-mr-md"
-            style="min-width: 250px; max-width: 250px"
-            outlines dense 
-            v-model="searchBy" 
-            :options="searchByOptions" label="Search by" />
+                class="q-mr-md"
+                style="min-width: 150px; max-width: 150px"
+                outlines dense 
+                v-model="invoiceStatus" 
+                :options="invoiceStatusOptions" @input="filterInvoice" label="By Status" />
+
+            <q-select
+                class="q-mr-md"
+                style="min-width: 150px; max-width: 150px"
+                outlines dense 
+                v-model="selectedAllocation" 
+                :options="allocationOptions" @input="filterInvoice" label="By Allocation" />
 
             <q-input
                 class="q-mr-md"
                 outlines
                 dense
                 v-model="filter"
+                @input="filterInvoice"
                 placeholder="Search"
-                style="min-width: 250px; max-width: 250px"
+                style="min-width: 200px; max-width: 200px"
             >
                 <template v-slot:append>
                 <q-icon name="search" />
                 </template>
             </q-input>
+
             
             <q-btn 
                 @click="openAddPopup"
@@ -80,11 +107,15 @@
             </q-btn>
 
             <q-btn
-                icon-right="archive"
-                label="Export to Excel"
-                class="edx-excel-btn" text-color="white"
-                no-caps
-            />
+                    round 
+                    icon="mdi-file-excel-box"
+                    size="10px"
+                    class="edx-excel-btn" text-color="white"
+                    no-caps
+                    @click="exportTable"
+                >
+                    <q-tooltip content-class="edx-tooltip">Export to Excel</q-tooltip>
+                </q-btn>
 
             <q-btn
                 flat
@@ -133,6 +164,35 @@
                         {{props.row.status}}
                     </div>
                 </q-td>
+                <q-td key="actions" :props="props">
+                        <q-fab 
+                            padding="xs" 
+                            @click.stop 
+                            color="edx-action-btn" 
+                            :icon="qFab" 
+                            :active-icon="qFavOpen" 
+                            direction="left"
+                        >
+                            <q-fab-action
+                                :icon="deleteIcon"
+                                color="edx-delete-btn" 
+                                size=sm 
+                                no-caps
+                                round
+                                @click="openDeleteModal(props.row)" 
+                            >
+                                <q-tooltip 
+                                    content-class="edx-tooltip"
+                                    anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                                    transition-show="flip-right"
+                                    transition-hide="flip-left"
+                                >
+                                    <strong>Delete</strong>
+                                </q-tooltip>
+                            </q-fab-action>
+
+                        </q-fab>
+                </q-td>
             </q-tr>
         </template>
 
@@ -163,7 +223,27 @@
 
     </q-table>
 
-    <InvoicePopup @togglePopup="togglePopup" :id="id" :show="newInvoice" :isEdit="isEdit" />
+    <q-dialog v-model="confirm" persistent>
+        <q-card>
+            <q-card-section class="row items-center">
+            <span class="q-ml-sm">Are you sure to delete this invoice?</span>
+            </q-card-section>
+
+            <q-card-actions align="right">
+            <q-btn flat label="No, thanks" color="primary" v-close-popup />
+            <q-btn label="Yes" color="edx-delete-btn" v-close-popup @click="deleteItem" />
+            </q-card-actions>
+        </q-card>
+    </q-dialog>
+
+    <InvoicePopup 
+        @editInvoice="editInvoice"
+        @addInvoice="addInvoice"
+        @togglePopup="togglePopup" 
+        :id="id" 
+        :show="newInvoice" 
+        :isEdit="isEdit" 
+    />
 
     </div>
 </template>
@@ -173,6 +253,7 @@
 import InvoicePopup from '../../components/billingExpenses/InvoicePopup'
 import axios from 'axios'
 import config from '../../../config'
+import ICONS from '../../../icons'
 
 export default {
     components: {
@@ -186,7 +267,7 @@ export default {
             {
                 name: "invoiceNo",
                 align: "left",
-                label: "Invoice No",
+                label: "Invoice",
                 field: "invoiceNo",
                 sortable: true
             },
@@ -232,6 +313,13 @@ export default {
                 field: "status",
                 sortable: true
             },
+            {
+                name: "actions",
+                align: "left",
+                label: "Actions",
+                field: "actions",
+                sortable: true
+            },
             ],
             data: [],
 
@@ -249,25 +337,192 @@ export default {
             checkbox: false,
 
             //
-            searchByOptions: [
-                'Google', 'Facebook', 'Twitter', 'Apple', 'Oracle'
-            ],
-            searchBy: '',
+            schoolsOptions: [],
+            selectedSchool: '',
+
             start: '',
             end: '',
             //////////
             newInvoice: false,
+
+            invoiceStatus: null,
+            invoiceStatusOptions: [],
+
+            selectedAllocation: null,
+            allocationOptions: [],
+
+            confirm: false,
         }
     },
     methods: {
+        filterInvoice() {
+
+            let uri = '?';
+
+            if(this.start) {
+                uri += `start=${this.start}&`
+            }
+            if(this.end) {
+                uri += `end=${this.end}&`
+            }
+            if(this.selectedSchool) {
+                uri += `school=${this.selectedSchool}&`
+            }
+            if(this.invoiceStatus) {
+                uri += `status=${this.invoiceStatus.id}&`
+            }
+            if(this.selectedAllocation) {
+                uri += `allocation=${this.selectedAllocation.id}&`
+            }
+            if(this.filter.length) {
+                uri += `search=${this.filter}&`
+            }
+
+            console.log(uri, 'URI')
+
+            const conf = {
+                method: 'GET',
+                url: config.filterInvoice + uri,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+                console.log('FILTER = ', res.data.items)
+
+                let invoices = res.data.items
+                let invoiceArray = []
+
+                this.pages = res.data.pagesCount
+
+                for(let i=0; i<invoices.length; i++) {
+                    
+                    console.log(i, invoices[i])
+                    invoiceArray.push({
+                        id: invoices[i].id,
+                        invoiceNo: invoices[i].number,
+                        school: invoices[i].schoolName,
+                        allocation: invoices[i]?.allocation?.name,
+                        invoiceDate: invoices[i].date,
+                        amount: invoices[i].total_amount,
+                        dueDate: invoices[i].due_date,
+                        status: invoices[i].invoice_status?.name,
+                        isPaid: invoices[i]?.invoice_status?.id == 2 ? true : false,
+                        invoiceStatus: invoices[i]?.invoice_status
+                    })
+
+                }
+
+                this.data = invoiceArray
+            })
+
+
+        },
+        // get invoice status
+        getInvoiceStatus() {
+
+            const conf = {
+                method: 'GET',
+                url: config.getInvoiceStatus,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+
+                console.log('getInvoiceStatus ===', res.data)
+
+                let invoiceStatus = res.data.invoiceStatus
+                let arr = []
+                for(let i=0; i<invoiceStatus.length; i++) {
+                    arr.push({
+                        id: invoiceStatus[i].id,
+                        label: invoiceStatus[i].name
+                    })
+                }
+                this.invoiceStatusOptions = arr
+            })
+
+        },
+        // Get titles
+        getAllocations() {
+
+            const conf = {
+                method: 'GET',
+                url: config.getAllocations,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+
+                let allocations = res.data.allocationTypes
+                let arr = []
+                for(let i=0; i<allocations.length; i++) {
+                    arr.push({
+                        id: allocations[i].id,
+                        label: allocations[i].name
+                    })
+                }
+                this.allocationOptions = arr
+            })
+
+        },
+        exportTable() {
+            // naive encoding to csv format
+            const content = [this.columns.map(col => wrapCsvValue(col.label))].concat(
+                this.data.map(row => this.columns.map(col => wrapCsvValue(
+                    typeof col.field === 'function'
+                        ? col.field(row)
+                        : row[col.field === void 0 ? col.name : col.field],
+                    col.format
+                )).join(','))
+            ).join('\r\n')
+
+            const status = exportFile(
+                'table-export.csv',
+                content,
+                'text/csv'
+            )
+
+            if (status !== true) {
+                this.$q.notify({
+                    message: 'Browser denied file download...',
+                    color: 'negative',
+                    icon: 'warning'
+                })
+            }
+        },
+        addInvoice(newInvoice) {
+            this.getInvoices(this.count, this.current)
+        },
+        editInvoice(editedInvoice) {
+
+             this.getInvoices(this.count, this.current)
+
+            // console.log('Child to parent: ', editedInvoice )
+            // console.log('Child to parent: ', typeof editedInvoice )
+
+            // let index = this.data.findIndex( item => item.id == editedInvoice.id )
+            // console.log(index)
+            // this.data[index] = null
+
+            // console.log('KKLLKKLL', this.data)
+
+        },
         // Pagination
         changePagination (val) {
             this.current = val
             // function
+            this.getInvoices(this.count, this.current)
         },
         changeRowsPerPage() {
             this.count = this.pagination.rowsPerPage
             this.current = 1
+            this.getInvoices(this.count, this.current)
             // function
         },
         openInvoicePopup(id) {
@@ -297,12 +552,14 @@ export default {
                 let invoices = res.data.items
                 let invoiceArray = []
 
+                this.pages = res.data.pagesCount
+
                 for(let i=0; i<invoices.length; i++) {
                     
                     console.log(i, invoices[i])
                     invoiceArray.push({
                         id: invoices[i].id,
-                        invoiceNo: invoices[i].id,
+                        invoiceNo: invoices[i].number,
                         school: invoices[i].schoolName,
                         allocation: invoices[i]?.allocation?.name,
                         invoiceDate: invoices[i].date,
@@ -338,11 +595,62 @@ export default {
                     break;
             }
             return className
+        },
+        // Filter
+        filterFn (val, update, abort) {
+
+            if (val.length < 1) {
+                abort()
+                return
+            }
+
+            update(() => {
+                console.log('Update...')
+                let arr = []
+                const conf = {
+                    method: 'GET',
+                    url: config.filterSchool + val + '&limit=1000&offset=1',
+                    headers: {
+                        Accept: 'application/json',
+                    }
+                }
+
+                axios(conf).then(res => {
+                    for(let i=0; i<res.data.schools.length; i++) {
+                        arr.push({
+                            id: res.data.schools[i].id,
+                            label: res.data.schools[i].name
+                        })
+                    }
+                    this.schoolsOptions = arr
+                })
+            })
+        },
+        openDeleteModal(row) {
+            this.confirm = true
+            this.id = row.id
+        },
+        deleteItem() {
+            alert(this.id)
         }
     },
     created() {
         this.getInvoices(this.count, this.current)
+        this.getInvoiceStatus()
+        this.getAllocations()
     },
+    computed: {
+        // BUTTONS
+        qFab() {
+            return ICONS.qFab
+        },
+        qFavOpen() {
+            return ICONS.qFabOpen
+        },
+        deleteIcon() {
+            return ICONS.delete
+        },
+    }
 }
 
 </script>

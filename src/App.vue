@@ -25,4 +25,20 @@ export default {
     border: 1px solid #d1e9ff;
   }
 
+  .tracking-icon-parent {
+
+    width: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 3px;
+
+    & div {
+        text-align: center;
+    }
+
+    i {
+        margin: 0 auto;
+    }
+}
+
 </style>

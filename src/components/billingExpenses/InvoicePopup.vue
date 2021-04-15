@@ -16,6 +16,7 @@
                             <div class="q-mb-sm">
                                 <div class="text-subtitle2 q-mb-sm">School</div>
                                 <q-select
+                                    :disable="isEdit"
                                     outlined
                                     dense
                                     v-model="selectedSchool"
@@ -34,10 +35,10 @@
                         </div>
                         <div class="col-md-3"></div>
                         <div class="col-md-5">
-                            <div class="row justify-between">
+                            <div class="row justify-end">
                                 <div class="text-center q-mr-md"> 
                                     <div class="text-subtitle2 q-mb-sm">Allocation</div>
-                                    <q-chip v-if="title" square color="edx-bg-pd">
+                                    <q-chip v-if="title" class="cursor-pointer" square color="edx-bg-pd">
                                         <span>{{ title.label }}</span>
                                         <q-tooltip 
                                             anchor="top middle" self="bottom middle" :offset="[10, 10]"
@@ -47,25 +48,27 @@
                                             <strong>{{ title.label }}</strong>
                                         </q-tooltip>
                                     </q-chip>
+                                    <q-popup-edit v-if="!isEdit"  v-model="title" buttons>
+                                        <div class="row">
+                                            <div class="col-md-12 q-pr-sm q-mb-md">
+                                                <div class="text-subtitle2 q-mb-sm">Change allocation</div>
+                                                <div class="row cursor-pointer h-popup">
+                                                    <q-select 
+                                                        class="w-100"
+                                                        v-model="title" 
+                                                        :options="allocationOptions"
+                                                        outlined
+                                                        dense
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </q-popup-edit>  
                                 </div>
-                                <div class="text-center q-mr-md">
-                                    <div class="text-subtitle2 q-mb-sm">Invoice Status</div>
-                                    <div v-if="invoiceStatus">
-                                        <q-chip square color="edx-bg-pd">
-                                            <span>{{ invoiceStatus.label }}</span>
-                                            <q-tooltip 
-                                                anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                                                transition-show="flip-right"
-                                                transition-hide="flip-left"
-                                            >
-                                                <strong>{{ invoiceStatus.label }}</strong>
-                                            </q-tooltip>
-                                        </q-chip>
-                                    </div>
-                                </div>
-                                <div class="text-center">
-                                    <div class="text-subtitle2 q-mb-sm">Founding source</div>
-                                    <q-chip v-if="fundSource" square class="bg-edx-bg-wr">
+                                
+                                <div v-if="fundSourceOptions.length" class="text-center">
+                                    <div class="text-subtitle2 q-mb-sm">Funding Source</div>
+                                    <q-chip v-if="fundSource" square class="bg-edx-bg-wr cursor-pointer">
                                         <span>{{ fundSource.abbr }}</span>
                                         <q-tooltip 
                                             anchor="top middle" self="bottom middle" :offset="[10, 10]"
@@ -75,6 +78,22 @@
                                             <strong>{{ fundSource.label }}</strong>
                                         </q-tooltip>
                                     </q-chip>
+                                    <q-popup-edit v-model="fundSource" buttons>
+                                        <div class="row">
+                                            <div class="col-md-12 q-pr-sm q-mb-md">
+                                                <div class="text-subtitle2 q-mb-sm">Change Funding Source</div>
+                                                <div class="row cursor-pointer h-popup">
+                                                    <q-select 
+                                                        class="w-100"
+                                                        v-model="fundSource" 
+                                                        :options="fundSourceOptions"
+                                                        outlined
+                                                        dense
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </q-popup-edit>  
                                 </div>
                             </div>
                         </div>
@@ -82,10 +101,10 @@
 
                     <div class="row">
                         <div class="col-md-4">
-                            <div class="q-mb-lg">
+                            <div class="q-mb-lg" v-if="campusOptions.length">
                                 <div class="text-subtitle2 q-mb-sm">Campus</div>
                                 <q-select
-                                    :disable="!selectedSchool"
+                                    :disable="!selectedSchool || isEdit"
                                     class="q-mr-md w-100"
                                     outlined 
                                     dense 
@@ -96,34 +115,59 @@
                         </div>
                         <div class="col-md-4"></div>
                         <div class="col-md-4">
-                             <!-- <div class="row justify-start">
-                                <div class="q-mr-md"> 
+                            <div class="q-mr-md text-right">
                                     <div class="text-subtitle2 q-mb-sm">Invoice Status</div>
+                                   
                                     <div v-if="invoiceStatus">
-                                        <q-chip square color="edx-bg-pd">
-                                            <span>{{ invoiceStatus.label }}</span>
+
+                                        <q-icon 
+                                            :name="invoiceStatusIcon(invoiceStatus.id)" 
+                                            :class="invoiceStatusIconColor(invoiceStatus.id)"
+                                        >
                                             <q-tooltip 
+                                                content-class="edx-tooltip"
                                                 anchor="top middle" self="bottom middle" :offset="[10, 10]"
                                                 transition-show="flip-right"
                                                 transition-hide="flip-left"
                                             >
-                                                <strong>{{ invoiceStatus.label }}</strong>
+                                                <strong>
+                                                    {{invoiceStatus.label}}
+                                                </strong>
                                             </q-tooltip>
-                                        </q-chip>
+                                        </q-icon>
+
+                                         {{invoiceStatus.label}}
+
+                                        <q-popup-edit  v-model="invoiceStatus" buttons>
+                                            <div class="row">
+                                                <div class="col-md-12 q-pr-sm q-mb-md">
+                                                    <div class="text-subtitle2 q-mb-sm">Change Invoice Status</div>
+                                                    <div class="row cursor-pointer h-popup">
+                                                        <q-select 
+                                                            class="w-100"
+                                                            v-model="invoiceStatus" 
+                                                            :options="invoiceStatusOptions"
+                                                            outlined
+                                                            dense
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </q-popup-edit>  
                                     </div>
-                                </div>
-                            </div> -->
+                            </div>
                         </div>
                     </div>
 
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-4 q-mt-lg">
                             <div class="text-subtitle2 q-mb-sm">Bill to</div>
                             <div class="row justify-between">
                                 <div>
-                                    <div>1505 North 5th Street</div>
-                                    <div>Milwaukee WI 53202</div>
-                                    <div>414-805-8899</div>
+                                    <div>{{ billTo.schoolName  }}</div>
+                                    <div>{{ billTo.address }}</div>
+                                    <div>{{ billTo.state }} {{ billTo.city }} {{ billTo.zip }}</div>
+                                    <div>{{ billTo.phone }}</div>
                                 </div>
                                 <div @click="showBillToModal">
                                     <q-icon :name="edit" class="edx-icon-edit cursor-pointer"/>
@@ -134,6 +178,7 @@
 
                     <div class="row">
                         <div class="col-md-11">
+
                             <div class="q-mt-lg">
                                     <q-table hide-bottom class="overflow-auto" :data="internalInvoiceData" :columns="internalInvoiceColumns">
                                         <!-- Table Body -->
@@ -176,7 +221,7 @@
                                                     </q-input>
                                                 </q-td>
                                                 <q-td class="w-80px" key="terms" :props="props">
-                                                    <q-select outlined dense :options="termsOptions" v-model="props.row.terms.label" />
+                                                    <q-select outlined dense :options="termsOptions" v-model="internalInvoiceData[0].terms" />
                                                 </q-td>
                                             </q-tr>
                                         </template>
@@ -188,21 +233,20 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="q-mt-md">
-                                <q-table hide-bottom class="overflow-auto" :data="data" :columns="columns">
+                                <q-table hide-bottom :pagination.sync="pagination" class="overflow-auto" :data="data" :columns="columns">
                                     <!-- Table Body -->
                                     <template v-slot:body="props">
                                         <q-tr :props="props">
                                             <q-td key="date" :props="props">
                                                 {{props.row.date}}
                                             </q-td>
-                                            <q-td key="description" 
-                                            :style="{maxWidth: '350px', width: '350px'}" :props="props">
+                                            <q-td key="description" :style="{maxWidth: '350px', width: '350px'}" :props="props">
                                                <span class="inline-span">
                                                     {{props.row.description}}
                                                </span>
                                             </q-td>
                                             <q-td key="type" :props="props">
-                                                <q-chip square class="bg-edx-bg-wr">
+                                                <q-chip square :class="checkType(props.row.type)">
                                                     <span> {{props.row.type}}</span>
                                                     <q-tooltip 
                                                         anchor="top middle" self="bottom middle" :offset="[10, 10]"
@@ -223,7 +267,7 @@
                                                 {{props.row.amount}}
                                             </q-td>
                                             <q-td>
-                                                <q-btn @click="openDeleteModal" icon="delete" class="bg-edx-delete-btn" size="sm" round>
+                                                <q-btn @click="openDeleteModal(props.row)" icon="delete" class="bg-edx-delete-btn" size="sm" round>
                                                     <q-tooltip 
                                                         anchor="top middle" self="bottom middle" :offset="[10, 10]"
                                                         transition-show="flip-right"
@@ -253,7 +297,7 @@
                             </div>
                             <div class="col-md-2 text-left">
                                 <div>
-                                    <q-input prefix="$" outlined dense v-model="subtotal" />
+                                    $ <span>{{ subtotal }}</span>
                                 </div>
                             </div>
                         </div>
@@ -266,8 +310,17 @@
                             </div>
                             <div class="col-md-2 text-left">
                                 <div>
-                                    <q-input prefix="$" outlined dense v-model="tax" />
+                                    <q-input prefix="$" outlined dense v-model="calculatedTax" />
+                                    <q-popup-edit v-model="tax" buttons>
+                                        <div class="row">
+                                            <div class="col-md-12 q-mb-sm">
+                                                <div class="text-subtitle2 q-mb-sm">Tax Rate</div>
+                                                <q-input prefix="%" dense outlined v-model="tax" />
+                                            </div>
+                                        </div>
+                                    </q-popup-edit> 
                                 </div>
+                                 
                             </div>
                         </div>
 
@@ -279,7 +332,15 @@
                             </div>
                             <div class="col-md-2 text-left">
                                 <div>
-                                    <q-input prefix="$" outlined dense v-model="charges" />
+                                    <q-input prefix="$" outlined dense v-model="calculatedCharges" />
+                                    <q-popup-edit v-model="charges" buttons>
+                                        <div class="row">
+                                            <div class="col-md-12 q-mb-sm">
+                                                <div class="text-subtitle2 q-mb-sm">Charge Rate</div>
+                                                <q-input prefix="%" dense outlined v-model="charges" />
+                                            </div>
+                                        </div>
+                                    </q-popup-edit> 
                                 </div>
                             </div>
                         </div>
@@ -330,7 +391,7 @@
 
                 <q-card-actions align="right">
                 <q-btn flat label="No, thanks" color="primary" v-close-popup />
-                <q-btn label="Yes" color="edx-delete-btn" @click="deleteItem" />
+                <q-btn :loading="loading" label="Yes" color="edx-delete-btn" @click="deleteItem" />
                 </q-card-actions>
             </q-card>
         </q-dialog>
@@ -341,11 +402,14 @@
             :show="showBudgetItemsPopup"
             :categoryId="title"
             :invoiceId="showBudgetItemsPopup ? id : null"
+            :allocation="showBudgetItemsPopup ? title : null"
         />
 
         <BillToModal 
             @toggleBillToModal="toggleBillToModal" 
             :show="isShowBillToModal" 
+            @receiveAddress="receiveAddress"
+            :schoolId="selectedSchool"
         />
         
     </div>
@@ -380,10 +444,24 @@ export default {
     },
     data() {
         return {
+            loading: false, 
+            pagination: { rowsPerPage: 999 },
+
             selectedSchool: '',
             schoolsOptions: [],
 
-            internalInvoiceData: [],
+            internalInvoiceData: [
+                {
+                    internalInvoice: 0,
+                    invoiceDate: '',
+                    totalDue: 0,
+                    dueDate: '',
+                    terms: {
+                        id: null,
+                        label: 'N/A'
+                    }
+                }
+            ],
             internalInvoiceColumns: [
                 {
                     name: "internalInvoice",
@@ -479,13 +557,19 @@ export default {
             termsOptions: [],
 
             selectedCampus: null,
-            campusOptions: [ ],
+            campusOptions: [],
 
-            title: null,
+            title: {
+                id: null,
+                label: 'N/A'
+            },
             fundSource: null,
-            invoiceStatus: null,
+            invoiceStatus: {
+                id: null,
+                label: 'N/A'
+            },
 
-            subtotal: null,
+            subTotal: 0,
             isTax: false,
             tax: null,
             charges: null,
@@ -493,12 +577,18 @@ export default {
             note: '',
             invoiceMemo: '',
 
+            invoiceId: null,
+
             showBudgetItemsPopup: false,
             openDeletePopup: false,
 
-            invoiceId: 0,
+            isShowBillToModal: false,
 
-            isShowBillToModal: false
+            allocationOptions: [],
+            fundSourceOptions: [],
+            invoiceStatusOptions: [],
+
+            billTo: {},
 
         }
     },
@@ -507,11 +597,16 @@ export default {
             this.$emit('togglePopup', false)
         },
         toggleBudgetItemsPopup(bool) {
-            console.log(bool, 'Hello')
             this.showBudgetItemsPopup = bool
+            if(!bool) { this.getInvoiceById() } 
         },
-        openDeleteModal() {
+        receiveAddress(info) {
+            console.log("NEW ADDRESS", info)
+            this.billTo = info
+        },
+        openDeleteModal(row) {
             this.openDeletePopup = true
+            this.invoiceId = row.id
         },
 
         // Filter
@@ -592,17 +687,137 @@ export default {
         },
 
         deleteItem() {
-            alert('Delete')
+
+            this.loading = true
+
+            const conf = {
+                method: 'DELETE',
+                url: config.deleteBudget + this.invoiceId,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+                let index = this.data.findIndex( item => item.id == this.invoiceId )
+                this.data.splice(index, 1)
+                    this.$q.notify({
+                        message: 'Deleted!',
+                        type: 'positive',
+                    })
+                    this.openDeletePopup = false
+                    this.loading = false
+                })
         },
         addInvoice() {
-            alert('Add Invoice')
+            
+            const data = {
+
+                number: this.internalInvoiceData[0].internalInvoice,
+                
+                invoice_term_id: this.internalInvoiceData[0].terms?.id,
+                bill_to_id: this.billTo.id,
+                ship_to_id: this.selectedSchool,
+                subtotal: this.subtotal,
+
+                due_date: this.internalInvoiceData[0].dueDate,
+                date: this.internalInvoiceData[0].date,
+
+                fund_source_id: this.fundSource ? this.fundSource.id : null,
+                total_amount: this.total,
+
+                invoice_status_id: this.invoiceStatus?.id,
+                allocation_type_id: this.title?.id,
+
+                note: this.note,
+                memo: this.invoiceMemo,
+                school_id: this.selectedSchool,
+                campus_id: this.selectedCampus?.id
+
+            }
+
+            this.isTax ? data.tax = this.tax : null
+            this.isCharges ? data.shipping_fee = this.charges : null
+
+            const conf = {
+                method: 'POST',
+                url: config.addInvoice + this.title.id,
+                headers: {
+                    Accept: 'application/json',
+                },
+                data: data
+            }
+
+            axios(conf).then(res => {
+
+                let invoice = res.data.invoice[0]
+                this.$emit('addInvoice', invoice)
+
+                this.$q.notify({
+                    message: 'Invoice Added!',
+                    type: 'positive',
+                })
+
+                this.emitClosePopup()
+            })
+
+
+
         },
         editInvoice() {
-            alert('Edit Invoice')
+
+            const data = {
+
+                number: this.internalInvoiceData[0].internalInvoice,
+                
+                invoice_term_id: this.internalInvoiceData[0].terms?.id,
+                bill_to_id: this.billTo.id,
+                ship_to_id: this.selectedSchool,
+                subtotal: this.subtotal,
+
+                due_date: this.internalInvoiceData[0].dueDate,
+                date: this.internalInvoiceData[0].date,
+
+                fund_source_id: this.fundSource ? this.fundSource.id : null,
+                total_amount: this.total,
+
+                invoice_status_id: this.invoiceStatus?.id,
+                allocation_type_id: this.title?.id,
+
+                note: this.note,
+                memo: this.invoiceMemo,
+
+            }
+
+            this.isTax ? data.tax = this.tax : null
+            this.isCharges ? data.shipping_fee = this.charges : null
+
+            const conf = {
+                method: 'PUT',
+                url: config.editInvoice + this.id,
+                headers: {
+                    Accept: 'application/json',
+                },
+                data: data
+            }
+
+            axios(conf).then(res => {
+
+                let invoice = res.data.invoice[0]
+                this.$emit('editInvoice', invoice)
+
+                this.$q.notify({
+                    message: 'Invoice Edited!',
+                    type: 'positive',
+                })
+
+                this.emitClosePopup()
+
+            })
+
+
         },
         getInvoiceById() {
-
-            this.internalInvoiceData = []
 
             const conf = {
                 method: 'GET',
@@ -633,7 +848,7 @@ export default {
                     label: data.invoice_status?.name
                 }
                  
-
+                this.internalInvoiceData = []
                 this.internalInvoiceData.push({
                     internalInvoice: data.number,
                     invoiceDate: data.date,
@@ -645,7 +860,17 @@ export default {
                     }
                 })
 
-                this.subtotal = res.data.item[0].subtotal
+                this.billTo = {
+                    id: data.address?.id,
+                    address: data.address.address_line_1,
+                    city: data.address.city,
+                    state: data.address?.state?.name,
+                    zip: data.address.postal_code,
+                    phone: data.address.phone,
+                }
+
+            
+                // this.subtotal = res.data.item[0].subtotal
 
                 if(res.data.item[0].isTaxTurnedOn == 1) {
                     this.isTax = true
@@ -661,12 +886,24 @@ export default {
 
                 this.invoiceMemo = res.data.item[0].memo
 
+                this.schoolsOptions.push({
+                    id: parseInt(res.data.item[0].school_id),
+                    label: res.data.item[0].schoolName
+                })
+                this.selectedSchool = parseInt(res.data.item[0].school_id)
+
+                this.selectedCampus = {
+                    id: res.data.item[0]?.campus?.id,
+                    label: res.data.item[0]?.campus?.name
+                }
+
 
                 let lineItems = res.data.item[0]?.line_item
 
                 let arr = []
                 for(let i=0; i<lineItems.length; i++) {
                     arr.push({
+                        id: lineItems[i].budget[0].id,
                         date: lineItems[i].budget[0].completed_date,
                         description: lineItems[i].budget[0].description,
                         type: lineItems[i].budget[0].category?.abbreviation,
@@ -680,13 +917,175 @@ export default {
 
         },
 
-
         showBillToModal() {
             this.isShowBillToModal = true
         },
         toggleBillToModal(bool) {
             this.isShowBillToModal = bool
         },
+
+        // Get titles
+        getAllocations() {
+
+            const conf = {
+                method: 'GET',
+                url: config.getAllocations,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+
+                let allocations = res.data.allocationTypes
+                let arr = []
+                for(let i=0; i<allocations.length; i++) {
+                    arr.push({
+                        id: allocations[i].id,
+                        label: allocations[i].name
+                    })
+                }
+                this.allocationOptions = arr
+            })
+
+        },
+        // Get Fund source
+        getFundSource() {
+
+            let id = this.title?.id
+
+            const conf = {
+                method: 'GET',
+                url: config.getFundSourceByTitleId + id,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+
+                console.log('Fund source ===', res.data)
+
+                let funds = res.data.fundSource
+                let arr = []
+                for(let i=0; i<funds.length; i++) {
+                    arr.push({
+                        id: funds[i].id,
+                        label: funds[i].name,
+                        abbr: funds[i].abbreviation
+                    })
+                }
+                this.fundSourceOptions = arr
+            })
+
+        },
+        // get invoice status
+        getInvoiceStatus() {
+
+            const conf = {
+                method: 'GET',
+                url: config.getInvoiceStatus,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+
+                console.log('getInvoiceStatus ===', res.data)
+
+                let invoiceStatus = res.data.invoiceStatus
+                let arr = []
+                for(let i=0; i<invoiceStatus.length; i++) {
+                    arr.push({
+                        id: invoiceStatus[i].id,
+                        label: invoiceStatus[i].name
+                    })
+                }
+                this.invoiceStatusOptions = arr
+            })
+
+        },
+        invoiceStatusIcon(id) {
+            
+            // id: 1 : Created
+            // id: 2 : Billed
+            // id: 3 : Paid
+
+            if(id) {
+                
+                const iconId = id
+                let icon = null;
+
+                switch(iconId) {
+                    case 1:
+                        icon = ICONS.created
+                        break;
+                    case 2:
+                        icon = ICONS.billed
+                        break;
+                    case 3:
+                        icon = ICONS.paid
+                        break;
+                }
+
+                return icon
+
+            }
+        },
+        invoiceStatusIconColor(id) {
+
+            if(id) {
+
+                const iconId = id
+                let icon = null;
+
+                switch(iconId) {
+                    case 1:
+                        icon = 'edx-icon-created'
+                        break;
+                    case 2:
+                        icon = 'edx-icon-billed'
+                        break;
+                    case 3:
+                        icon = 'edx-icon-paid'
+                        break;
+                }
+
+                return icon
+
+            }
+        },
+
+        checkType(type) {
+
+            let className = ''
+            
+            switch(type) {
+                case 'I':
+                className = 'bg-edx-bg-i';
+                break;
+
+                case 'M':
+                className = 'bg-edx-bg-m';
+                break;
+
+                case 'PD':
+                className = 'bg-edx-bg-pd';
+                break;
+
+                case 'FE':
+                className = 'bg-edx-bg-fe';
+                break;
+
+                default:
+                className = '';
+                break;
+            }
+
+            return className
+        }
+
     },
     computed: {
         showPopup() {
@@ -703,35 +1102,63 @@ export default {
             if (isNaN(tax)) { tax = 0 }
             if (isNaN(charge)) { charge = 0 }
 
-            return parseFloat(this.subtotal) + 
-                ( this.isTax ? tax : 0) + 
-                ( this.isCharges ? charge : 0)
+
+
+            return parseFloat(this.subTotal) + 
+                ( this.isTax ? (this.subTotal * tax) / 100  : 0) + 
+                ( this.isCharges ? (this.subTotal * charge) / 100 : 0)
                 
+        },
+        subtotal() {
+            let count = 0;
+            for(let i=0; i<this.data.length; i++) {
+                count += parseFloat(this.data[i].amount)
+            }
+            this.subTotal = count
+            return count
+        },
+        calculatedTax() {
+            if(!this.isTax) {
+                this.tax = 0
+                return 0
+            }else {
+                return  ( this.subTotal * this.tax ) / 100
+            }
+        },
+        calculatedCharges() {
+            if(!this.isCharges) {
+                this.charges = 0
+                return 0
+            }else {
+                return  ( this.subTotal * this.charges ) / 100
+            }
         }
     },
     watch: {
         show(val) {
             this.$emit('togglePopup', val)
-            if(val) {
+            if(val && this.isEdit) {
                 this.getInvoiceById()
             }
         },
         selectedSchool(val) {
             if(val) {
-                this.getCampusBySchoolId(val.id)
+                this.getCampusBySchoolId(val)
             }else {
                 this.selectedCampus = null
             }
         }
     },
     created() {
-        this.invoiceId = this.id
-        console.log('this.invoiceId', this.invoiceId)
-        console.log('this.id', this.id)
+
         this.getTerms()
+        this.getAllocations()
+        this.getFundSource()
+        this.getInvoiceStatus()
     }
 }
 </script>
+
 
 <style scoped>
 .w-80px {

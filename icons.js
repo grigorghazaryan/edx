@@ -40,6 +40,12 @@ const ICONS = {
 
     // Edit
     edit: 'edit',
+
+    // Invoice status
+    created: 'autorenew',
+    billed: 'delete_forever',
+    paid: 'menu_open',
+    
 }
 
 export default ICONS

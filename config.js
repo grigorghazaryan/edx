@@ -152,6 +152,18 @@ const config = {
 
     getBudgetItems: 'http://edxchange-invoice.aimtech.am/api/v1/get-budget-list/', // + id
     addSelected: 'http://edxchange-invoice.aimtech.am/api/v1/add-budget-items/', // + 1 title 1
+
+
+    // GET ALLOCATIONS
+    getAllocations: 'https://edxchange-allocation.aimtech.am/api/v1/get-allocation-type',
+    getFundSourceByTitleId: 'https://edxchange-activity.aimtech.am/api/v1/get-fund-source/', // + title id
+    getInvoiceStatus: 'http://edxchange-invoice.aimtech.am/api/v1/invoice-status',
+    deleteBudget: 'http://edxchange-invoice.aimtech.am/api/v1/remove-budget-item/', // + id
+
+    editInvoice: 'http://edxchange-invoice.aimtech.am/api/v1/edit-invoice/', 
+    addInvoice: 'http://edxchange-invoice.aimtech.am/api/v1/add-invoice/',
+    getInvoiceTotals: 'https://edxchange-statistic.aimtech.am/api/v1/get-invoice-totals',
+    filterInvoice: 'http://edxchange-invoice.aimtech.am/api/v1/filter-invoice',
 }
 
 export default config

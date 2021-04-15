@@ -62,9 +62,6 @@
                         }"
                     >
                     </q-icon>
-
-        
-                    
                 </q-td>
 
                 <q-td key="actions" :props="props">
@@ -193,4 +190,5 @@ export default {
     }
   }
 }
+
 </style>

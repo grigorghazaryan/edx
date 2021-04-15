@@ -12,16 +12,16 @@
 
                 </q-item-section>
                 <q-item-section class="q-ml-none">
-                    <q-item-label class="text-grey-7">Total Paid</q-item-label>
+                    <q-item-label class="text-grey-7">Total Invoice</q-item-label>
                     <q-item-label  class="text-dark text-h6 text-weight-bolder">
-                    <div >$ 6666</div>
+                    <div v-if="barInfo">$ {{ barInfo.totalInvoice }}</div>
                     </q-item-label>
-                    <q-item-label>
+                    <!-- <q-item-label>
                         <div>
                         <span class="edx-green q-mr-sm">+ 5.28 %</span>
                         Since last month
                         </div>
-                    </q-item-label>
+                    </q-item-label> -->
                 </q-item-section>
                 </q-item>
             </div>
@@ -34,14 +34,14 @@
                 <q-item-section class="q-ml-none">
                     <q-item-label class="text-grey-7">Total Paid</q-item-label>
                     <q-item-label  class="text-dark text-h6 text-weight-bolder">
-                    <div >$ 6666</div>
+                    <div v-if="barInfo">$ {{ barInfo.totalPaid }}</div>
                     </q-item-label>
-                    <q-item-label>
+                    <!-- <q-item-label>
                         <div>
                         <span class="edx-red q-mr-sm">- 8.28 %</span>
                         Since last month
                         </div>
-                    </q-item-label>
+                    </q-item-label> -->
                 </q-item-section>
                 </q-item>
             </div>
@@ -52,16 +52,16 @@
                 <q-icon name="monetization_on" class="edx-light-blue" size="35px"></q-icon>
                 </q-item-section>
                 <q-item-section class="q-ml-none">
-                    <q-item-label class="text-grey-7">Total Paid</q-item-label>
+                    <q-item-label class="text-grey-7">Remaining</q-item-label>
                     <q-item-label  class="text-dark text-h6 text-weight-bolder">
-                    <div >$ 6666</div>
+                    <div v-if="barInfo">$ {{ barInfo.remaining }}</div>
                     </q-item-label>
-                    <q-item-label>
+                    <!-- <q-item-label>
                         <div>
                         <span class="edx-red q-mr-sm">- 8.28 %</span>
                         Overdue
                         </div>
-                    </q-item-label>
+                    </q-item-label> -->
                 </q-item-section>
                 </q-item>
             </div>
@@ -72,9 +72,9 @@
                 <q-icon name="description" class="edx-light-blue" size="35px"></q-icon>
                 </q-item-section>
                 <q-item-section class="q-ml-none">
-                    <q-item-label class="text-grey-7">Total Invoices</q-item-label>
+                    <q-item-label class="text-grey-7">Count Invoices</q-item-label>
                     <q-item-label  class="text-dark text-h6 text-weight-bolder">
-                    <div>32</div>
+                    <div v-if="barInfo">{{ barInfo.invoiceCount }}</div>
                     </q-item-label>
                 </q-item-section>
                 </q-item>
@@ -88,31 +88,31 @@
 
 <script>
 
-    import axios from 'axios'
-    import config from '../../../config'
+import axios from 'axios'
+import config from '../../../config'
 
 export default {
-    // data() {
-    //     return {
-    //         barInfo: null,
-    //     }
-    // },
-    // methods: {
-    //     getAllocationBar() {
-    //         const conf = {
-    //             method: 'GET',
-    //             url: config.getAllocationBar + this.title,
-    //             headers: {
-    //                 Accept: 'application/json',
-    //             }
-    //         }
-    //         axios(conf).then(res => {
-    //             this.barInfo = res.data.totalAllocation
-    //         })
-    //     },
-    // },
-    // created() {
-    //     this.getAllocationBar()
-    // }
+    data() {
+        return {
+            barInfo: null,
+        }
+    },
+    methods: {
+        getInvoicingBar() {
+            const conf = {
+                method: 'GET',
+                url: config.getInvoiceTotals,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+            axios(conf).then(res => {
+                this.barInfo = res.data.invoiceTotals
+            })
+        },
+    },
+    created() {
+        this.getInvoicingBar()
+    }
 }
 </script>
