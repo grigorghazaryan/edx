@@ -5,7 +5,6 @@
             class="overflow-auto"
             :data="data" 
             :columns="columns"
-            :visible-columns="visibleColumns"
             :loading="loading"
             :pagination.sync="pagination"
         >
@@ -211,7 +210,7 @@
                 <q-tr :props="props" class="cursor-pointer" @click="openActivityPopup(props.row, props.rowIndex)">
                     
                     <q-td key="online" :props="props" v-if="props.row.online_uni">
-
+                       
                         <span :class="activityTypeIconColor(props.row.online_uni.id)" class="material-icons cursor-pointer">
                             {{ activityTypeIcon(props.row.online_uni.id) }}
                             <q-tooltip 
@@ -1535,20 +1534,6 @@ export default {
                     field: "actions"
                 }
             ],
-            visibleColumns: [
-                "toggle",
-                "online",
-                "provider", 
-                "status", 
-                "approvals",
-                "PDActivity", 
-                "dateOfActivity", 
-                "noAttending",
-                "amount",
-                "type",
-                "grossPD",
-                "actions"
-            ],
             //
             dateOfActivityTableData: [],
             //
@@ -1782,11 +1767,14 @@ export default {
                 charge = 0
             }
 
-            let isOnline;
-            if(data[i].is_online == 1) {
+            let isOnline, isOnlineId = null;
+
+            if(parseInt(data[i].is_online) == 1) {
                 isOnline = 'Online'
+                isOnlineId = 1
             }else {
                 isOnline = 'On Site'
+                isOnlineId = 0
             }
 
         
@@ -1815,7 +1803,7 @@ export default {
                 label: data[i].campus ? data[i].campus.name : 'N/A'
             },
             online_uni: {
-                id: data[i].details && data[i].is_online,
+                id: isOnlineId,
                 label: isOnline
             },
             provider: {
@@ -2150,29 +2138,29 @@ export default {
         },
 
         // Get School Years
-        getSchoolYears() {
-            const conf = {
-                method: 'GET',
-                url: config.getSchoolYears,
-                headers: {
-                Accept: 'application/json',
-                }
-            }
-            axios(conf).then(res => {
-                console.log('getSchoolYears',  res)
+        // getSchoolYears() {
+        //     const conf = {
+        //         method: 'GET',
+        //         url: config.getSchoolYears,
+        //         headers: {
+        //         Accept: 'application/json',
+        //         }
+        //     }
+        //     axios(conf).then(res => {
+        //         console.log('getSchoolYears',  res)
 
-                let data = res.data, schoolsArr = []
-                for(let i=0; i<data.length; i++) {
-                let obj = {
-                    id: data[i].id,
-                    label: data[i].year_name,
-                    value: data[i].year_name
-                }
-                schoolsArr.push(obj)
-                }
-                this.schoolYears = schoolsArr
-            })
-        },
+        //         let data = res.data, schoolsArr = []
+        //         for(let i=0; i<data.length; i++) {
+        //         let obj = {
+        //             id: data[i].id,
+        //             label: data[i].year_name,
+        //             value: data[i].year_name
+        //         }
+        //         schoolsArr.push(obj)
+        //         }
+        //         this.schoolYears = schoolsArr
+        //     })
+        // },
 
         // Get schedules by id
         getSchedules(id) {
@@ -3365,7 +3353,6 @@ export default {
         // this.getAtendeeTypes() 
         this.getApprovals()
         this.getRcurranceTypes()
-        this.getSchoolYears()
 
         this.getFunds(tab)
         // this.getAllocationFundId(tab, 1)

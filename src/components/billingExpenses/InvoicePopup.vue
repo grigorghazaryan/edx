@@ -310,12 +310,12 @@
                             </div>
                             <div class="col-md-2 text-left">
                                 <div>
-                                    <q-input prefix="$" outlined dense v-model="calculatedTax" />
-                                    <q-popup-edit v-model="tax" buttons>
+                                    <q-input :disable="!isTax" prefix="$" outlined dense v-model="calculatedTax" />
+                                    <q-popup-edit v-if="isTax" v-model="tax" buttons>
                                         <div class="row">
                                             <div class="col-md-12 q-mb-sm">
                                                 <div class="text-subtitle2 q-mb-sm">Tax Rate</div>
-                                                <q-input prefix="%" dense outlined v-model="tax" />
+                                                <q-input  prefix="%" dense outlined v-model="tax" />
                                             </div>
                                         </div>
                                     </q-popup-edit> 
@@ -332,12 +332,12 @@
                             </div>
                             <div class="col-md-2 text-left">
                                 <div>
-                                    <q-input prefix="$" outlined dense v-model="calculatedCharges" />
-                                    <q-popup-edit v-model="charges" buttons>
+                                    <q-input :disable="!isCharges" prefix="$" outlined dense v-model="calculatedCharges" />
+                                    <q-popup-edit v-if="isCharges" v-model="charges" buttons>
                                         <div class="row">
                                             <div class="col-md-12 q-mb-sm">
                                                 <div class="text-subtitle2 q-mb-sm">Charge Rate</div>
-                                                <q-input prefix="%" dense outlined v-model="charges" />
+                                                <q-input  prefix="%" dense outlined v-model="charges" />
                                             </div>
                                         </div>
                                     </q-popup-edit> 
@@ -659,6 +659,7 @@ export default {
                         label: campuses[i].name
                     })
                 }
+                arr.unshift({ id: null, label: 'N/A' })
                 this.campusOptions = arr
             })
         },
@@ -862,11 +863,11 @@ export default {
 
                 this.billTo = {
                     id: data.address?.id,
-                    address: data.address.address_line_1,
-                    city: data.address.city,
+                    address: data.address?.address_line_1,
+                    city: data.address?.city,
                     state: data.address?.state?.name,
-                    zip: data.address.postal_code,
-                    phone: data.address.phone,
+                    zip: data.address?.postal_code,
+                    phone: data.address?.phone,
                 }
 
             
@@ -900,15 +901,18 @@ export default {
 
                 let lineItems = res.data.item[0]?.line_item
 
+               
+
                 let arr = []
                 for(let i=0; i<lineItems.length; i++) {
+                     console.log('Rate',lineItems[i] )
                     arr.push({
                         id: lineItems[i].budget[0].id,
                         date: lineItems[i].budget[0].completed_date,
                         description: lineItems[i].budget[0].description,
                         type: lineItems[i].budget[0].category?.abbreviation,
                         qty: lineItems[i].budget[0].quantity,
-                        rate: 4200,
+                        rate: lineItems[i].budget[0].unit_cost,
                         amount: lineItems[i].budget[0].unit_total_cost
                     })
                 }
@@ -1104,9 +1108,9 @@ export default {
 
 
 
-            return parseFloat(this.subTotal) + 
+            return (parseFloat(this.subTotal) + 
                 ( this.isTax ? (this.subTotal * tax) / 100  : 0) + 
-                ( this.isCharges ? (this.subTotal * charge) / 100 : 0)
+                ( this.isCharges ? (this.subTotal * charge) / 100 : 0)).toFixed(2)
                 
         },
         subtotal() {
@@ -1115,14 +1119,14 @@ export default {
                 count += parseFloat(this.data[i].amount)
             }
             this.subTotal = count
-            return count
+            return count.toFixed(2)
         },
         calculatedTax() {
             if(!this.isTax) {
                 this.tax = 0
                 return 0
             }else {
-                return  ( this.subTotal * this.tax ) / 100
+                return  (( this.subTotal * this.tax ) / 100).toFixed(2)
             }
         },
         calculatedCharges() {
@@ -1130,7 +1134,7 @@ export default {
                 this.charges = 0
                 return 0
             }else {
-                return  ( this.subTotal * this.charges ) / 100
+                return  (( this.subTotal * this.charges ) / 100).toFixed(2)
             }
         }
     },

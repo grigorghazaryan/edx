@@ -64,7 +64,7 @@
         </q-table>
 
         <div class="q-mt-md q-ml-md q-mb-md">
-            <q-btn icon="add" size="sm" color="blue" class="q-mr-sm" round/>
+            <q-btn @click="openUploadModal" icon="add" size="sm" color="blue" class="q-mr-sm" round/>
             Add Document
         </div>
 
@@ -81,6 +81,11 @@
             </q-card>
         </q-dialog>
 
+        <UploadDocumentModal 
+            :show="openUploadDocumentModal"
+            @togglePopup="togglePopup"
+        />
+
     </div>
 </template>
 
@@ -90,8 +95,13 @@ import VTooltip from 'v-tooltip'
 Vue.use(VTooltip)
 
 import ICONS from '../../../icons'
+import UploadDocumentModal from './UploadDocumentModal'
 
 export default {
+
+    components: {
+        UploadDocumentModal
+    },
     
     data() {
         return {
@@ -158,17 +168,24 @@ export default {
                 },
             ],
             confirm: false,
+            openUploadDocumentModal: false,
         }
     },
     methods: {
         openDeleteModal() {
             this.confirm = true
+        },
+        openUploadModal() {
+            this.openUploadDocumentModal = true
+        },
+        togglePopup(val) {
+            this.openUploadDocumentModal = val
         }
     },
     computed: {
         deleteIcon() {
             return ICONS.delete
-        },
+        }
     }
 
 }

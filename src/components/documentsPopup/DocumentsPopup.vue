@@ -1,7 +1,7 @@
 <template>
     <div>
         <dialog-draggable 
-            :width="850" 
+            :width="800" 
             :modelDialog="showPopup" 
             :title="`Documents for: ${activity.activity}`" 
             :icon="'description'"
@@ -17,18 +17,25 @@
                                     <q-icon 
                                         name="description" 
                                         class="edx-blue" 
+                                        style="font-size: 2.5em;"
                                     ></q-icon>
-                                    <div class="w-100">S/E</div>
+                                    <div class="w-100">
+                                        
+                                        <q-chip square size="sm" class="m-0 bg-edx-pagination text-white">
+                                            <b>S/E</b>
+                                        </q-chip>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="col-md-12 q-mb-lg">
+                        <div class="col-md-12 q-mb-lg q-mt-md">
+                            <div class="text-subtitle2 q-mb-sm">Manage Documents</div>
                             <q-table
                                 :data="data" 
                                 :columns="columns"
                                 :loading="loading"
-                                class="no-shadow"
+                                class="no-shadow hidden-header"
                                 row-key="id"
                                 hide-bottom
                             >
@@ -116,9 +123,9 @@ export default {
                 {
                     name: "name",
                     align: "left",
-                    label: "",
+                    label: "Manage Documents",
                     field: "name",
-                    style: "padding-left: 0"
+                    style: "padding-left: 0;"
                 },
             ],
             showTrackingStatusModal: false,
@@ -149,3 +156,11 @@ export default {
     }
 }
 </script>
+
+<style>
+
+.hidden-header thead {
+    display: none !important;
+}
+
+</style>

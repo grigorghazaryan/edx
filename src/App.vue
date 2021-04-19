@@ -18,6 +18,8 @@ export default {
 
 <style lang="scss">
 
+@import url('https://cdnjs.cloudflare.com/ajax/libs/filepond/4.27.0/filepond.min.css');
+
   // Global colors
   .edx-q-chip-button {
     background-color: #e8f4ff;
@@ -27,7 +29,7 @@ export default {
 
   .tracking-icon-parent {
 
-    width: 30px;
+    width: 40px;
     display: flex;
     flex-wrap: wrap;
     margin: 0 3px;

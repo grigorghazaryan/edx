@@ -1,46 +1,53 @@
 <template>
-    <dialog-draggable 
-        :width="400" 
-        :modelDialog="showPopup" 
-        :title="''" 
-        :icon="''"
-    >  
+    <div>
 
-            <q-card-section style="max-height: 60vh" class="scroll q-pt-none q-pb-none q-pr-none q-pl-none">
-                <div class="q-pa-md">
-                    <div class="row">
+    <q-dialog v-model="showPopup">
+      <q-card>
 
-                        <div class="col-md-12 q-mb-md">
-                            <div class="row items-center">
-                                <div class="icon-parent">
-                                    <div><q-icon name="description" class="edx-blue" style="font-size: 5.5em" /></div>
-                                    <div class="text-center"><span>S/E</span></div>
+        <q-card-section style="max-width: 400px; max-height: 60vh" class="scroll q-pt-none q-pb-none q-pr-none q-pl-none">
+            <div class="q-pa-md">
+                <div class="row">
+
+                    <div class="col-md-12 q-mb-md">
+                        <div class="row justify-start ">
+                            <div class="icon-parent w-100">
+                                <div><q-icon name="description" class="edx-blue" style="font-size: 4em" /></div>
+                                <div class="text-center w-100">
+                                    <q-chip square size="sm" class="m-0 bg-edx-pagination text-white">
+                                        <b>S/E</b>
+                                    </q-chip>
                                 </div>
-                                <div class="text-h6 q-ml-md">Sign in and Evalution Forms</div>
+                            </div>
+                            <div class="text-h6 q-ml-md">
+                                <div class="q-mt-md">Sign in and Evalution Forms</div>
                             </div>
                         </div>
-
-                        <div class="col-md-12 q-mb-md">
-                            <q-checkbox v-model="isComplete" label="Complete" />
-                        </div>
-
-                        <div class="col-md-12">
-                            <div class="text-subtitle2 q-mb-sm">Note</div>
-                            <q-input dense outlined type="textarea"/>
-                        </div>
-
                     </div>
-                </div>
-            </q-card-section>
 
-            <q-card-actions class="row justify-end">
-                <div>
-                    <q-btn flat label="Cancel" color="primary" @click="emitClosePopup"></q-btn>
-                    <q-btn flat label="Save" color="primary"></q-btn>
-                </div>
-            </q-card-actions>
+                    <div class="col-md-12 q-mb-md">
+                        <q-checkbox v-model="isComplete" label="Complete" />
+                    </div>
 
-    </dialog-draggable>
+                    <div class="col-md-12">
+                        <div class="text-subtitle2 q-mb-sm">Note</div>
+                        <q-input dense outlined type="textarea"/>
+                    </div>
+
+                </div>
+            </div>
+        </q-card-section>
+
+        <q-card-actions class="row justify-end">
+            <div>
+                <q-btn flat label="Cancel" color="primary" @click="emitClosePopup"></q-btn>
+                <q-btn flat label="Save" color="primary"></q-btn>
+            </div>
+        </q-card-actions>
+
+      </q-card>
+    </q-dialog>
+
+    </div>
 </template>
 
 <script>
