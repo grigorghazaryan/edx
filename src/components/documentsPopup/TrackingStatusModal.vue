@@ -14,7 +14,7 @@
                                 <div><q-icon name="description" class="edx-blue" style="font-size: 4em" /></div>
                                 <div class="text-center w-100">
                                     <q-chip square size="sm" class="m-0 bg-edx-pagination text-white">
-                                        <b>S/E</b>
+                                        <b>{{ abbr }}</b>
                                     </q-chip>
                                 </div>
                             </div>
@@ -30,7 +30,7 @@
 
                     <div class="col-md-12">
                         <div class="text-subtitle2 q-mb-sm">Note</div>
-                        <q-input dense outlined type="textarea"/>
+                        <q-input v-model="note" dense outlined type="textarea"/>
                     </div>
 
                 </div>
@@ -40,7 +40,7 @@
         <q-card-actions class="row justify-end">
             <div>
                 <q-btn flat label="Cancel" color="primary" @click="emitClosePopup"></q-btn>
-                <q-btn flat label="Save" color="primary"></q-btn>
+                <q-btn flat label="Save"  @click="addTrackingStatus" :loading="loading" color="primary"></q-btn>
             </div>
         </q-card-actions>
 
@@ -53,6 +53,8 @@
 <script>
 
 import dialogDraggable from '../../components/DialogDraggable'
+import axios from 'axios'
+import config from '../../../config'
 
 export default {
     components: {
@@ -60,27 +62,68 @@ export default {
     },
     data() {
         return {
-            isComplete: false,
+            loading: false,
+            isComplete: null,
+            note: '',
         }
     },
     props: {
         show: {
+            required: true
+        },
+        data: {
+            required: true
+        },
+        activityId: {
             required: true
         }
     },
     methods: {
         emitClosePopup() {
             this.$emit('togglePopup', false)
+        },
+        addTrackingStatus() {
+
+            this.loading = true
+
+            const conf = {
+                method: 'POST',
+                url: config.addTrackingStatus + this.activityId,
+                headers: {
+                Accept: 'application/json',
+                },
+                data: {
+                    id: this.data.id,
+                    note: this.note,
+                    status: this.isComplete
+                }
+            }
+
+            axios(conf).then(res => {
+                console.log('addTrackingStatus', res.data)
+                this.loading = false
+            })
+            .catch(err => {
+                this.loading = false
+            })
+
         }
     },
     computed: {
         showPopup() {
             return this.show
+        },
+        abbr() {
+            return this.data.abbreviation
         }
     },
     watch: {
         show(val) {
             this.$emit('togglePopup', val)
+            if(val) {
+                this.isComplete = this.data.status === 1 ? true : false
+                this.note = this.data.note
+            }
         }
     }
 }

@@ -164,6 +164,17 @@ const config = {
     addInvoice: 'http://edxchange-invoice.aimtech.am/api/v1/add-invoice/',
     getInvoiceTotals: 'https://edxchange-statistic.aimtech.am/api/v1/get-invoice-totals',
     filterInvoice: 'http://edxchange-invoice.aimtech.am/api/v1/filter-invoice',
+
+
+    // Document
+    // Document trays
+    getDocumentTrays: 'https://edxchange-document.aimtech.am/api/v1/document-tray',
+    getTrackingStatus: 'http://edxchange-document.aimtech.am/api/v1/tracking-status/', // + id
+    documentsByTray: 'http://edxchange-document.aimtech.am/api/v1/documents-by-tray/', // + id + id
+    getDocumentCategory: 'https://edxchange-document.aimtech.am/api/v1/document-category',
+    addDocument: 'http://edxchange-document.aimtech.am/api/v1/add-document/', // + id + id
+    deleteDocument: 'https://edxchange-document.aimtech.am/api/v1/remove-document/', // + doc id
+    addTrackingStatus: 'http://edxchange-document.aimtech.am/api/v1/add-tracking-status/', // id
 }
 
 export default config

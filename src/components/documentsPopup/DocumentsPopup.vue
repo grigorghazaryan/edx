@@ -6,6 +6,7 @@
             :title="`Documents for: ${activity.activity}`" 
             :icon="'description'"
         >  
+
             <q-card-section style="max-height: 60vh" class="scroll q-pt-none q-pb-none q-pr-none q-pl-none">
                 <div class="q-pa-md">
                     <div class="row">
@@ -13,7 +14,7 @@
                         <div class="col-md-12">
                             <div class="text-subtitle2 q-mb-sm">Tracking Status</div>
                             <div class="row q-mt-md q-mb-md">
-                                <div @click="showTrackingStatusModal=true" v-for="i in 4" :key="i" class="cursor-pointer tracking-icon-parent">
+                                <div  v-for="status in trackingStatuses" :key="status.id" @click="showTrackingStatusModal=true, sendTrackingStatusToPopup(status)" class="cursor-pointer tracking-icon-parent">
                                     <q-icon 
                                         name="description" 
                                         class="edx-blue" 
@@ -22,7 +23,7 @@
                                     <div class="w-100">
                                         
                                         <q-chip square size="sm" class="m-0 bg-edx-pagination text-white">
-                                            <b>S/E</b>
+                                            <b>{{ status.abbreviation }}</b>
                                         </q-chip>
                                     </div>
                                 </div>
@@ -46,7 +47,7 @@
 
                                         <q-td @click="props.expand = !props.expand" class="cursor-pointer"  key="name" :props="props">
                                             <div>
-                                                <q-icon name="inventory" class="edx-folder" style="width: 2em"/>
+                                                <q-icon name="all_inbox" class="edx-folder" style="width: 2em"/>
                                                 {{ props.row.name }}
                                             </div>
                                         </q-td>
@@ -55,8 +56,8 @@
                                     <q-tr :props="props" v-show="props.expand">
                                         <q-td colspan="100%" class="p-0">
                                             <div class="row">
-                                                <div class="col-md-12">
-                                                    <ToggleTable />
+                                                <div class="col-md-12 child-table">
+                                                    <ToggleTable :trayId="activity.id" :id="props.row.id" />
                                                 </div>
                                             </div>
                                         </q-td>
@@ -72,6 +73,7 @@
                             <div class="text-subtitle2 q-mb-sm">Note</div>
                             <q-input type="textarea" outlined dense/>
                         </div>
+
                     </div>
                 </div>
             </q-card-section>
@@ -79,7 +81,7 @@
             <q-card-actions class="row justify-end">
                 <div>
                     <q-btn @click="closePopup" flat label="Cancel" color="primary"></q-btn>
-                    <q-btn flat label="done" color="primary"></q-btn>
+                    <q-btn @click="closePopup" flat label="done" color="primary"></q-btn>
                 </div>
             </q-card-actions>
 
@@ -88,7 +90,10 @@
         <TrackingStatusModal 
             :show="showTrackingStatusModal"
             @togglePopup="togglePopup"
+            :data="selectedTrackingStatus"
+            :activityId="activity.id"
         />
+
     </div>
 </template>
 
@@ -97,6 +102,9 @@
 import dialogDraggable from '../../components/DialogDraggable'
 import ToggleTable from './ToggleTable'
 import TrackingStatusModal from './TrackingStatusModal'
+
+import axios from 'axios'
+import config from '../../../config'
 
 export default {
     props: {
@@ -110,15 +118,7 @@ export default {
     data() {
         return {
             loading: false,
-            data: [
-                { id: 1, name: 'Sign Ins' },
-                { id: 2, name: 'Evals' },
-                { id: 3, name: 'Tax Document' },
-                { id: 4, name: 'Resumes' },
-                { id: 5, name: 'Background Check' },
-                { id: 6, name: 'Receipts' },
-                { id: 7, name: 'Travel' },
-            ],
+            data: [],
             columns: [
                 {
                     name: "name",
@@ -128,7 +128,9 @@ export default {
                     style: "padding-left: 0;"
                 },
             ],
+            trackingStatuses: [],
             showTrackingStatusModal: false,
+            selectedTrackingStatus: {},
         }
     },
     components: {
@@ -142,7 +144,53 @@ export default {
         },
         togglePopup(val) {
             this.showTrackingStatusModal = val
+        },
+        getDocumentTrays() {
+
+
+            const conf = {
+                method: 'GET',
+                url: config.getDocumentTrays,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+                console.log('getDocumentTrays = ', res.data.tray)
+                let trays = res.data.tray,
+                    arr = [];
+
+                for(let i=0; i<trays.length; i++) {
+                    arr.push({
+                        id: trays[i].id,
+                        name: trays[i].name
+                    })
+                }
+
+                this.data = arr
+            })
+        },
+        getTrackingStatus() {
+
+
+            const conf = {
+                method: 'GET',
+                url: config.getTrackingStatus + this.activity.id,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+                this.trackingStatuses = res.data.fields
+            })
+        },
+        sendTrackingStatusToPopup(trackingStatus) {
+            console.log('Tracking Status', trackingStatus)
+            this.selectedTrackingStatus = trackingStatus
         }
+
     },
     computed: {
         showPopup() {
@@ -152,6 +200,11 @@ export default {
     watch: {
         show(val) {
             this.$emit('togglePopup', val)
+
+            if(val) {
+                this.getDocumentTrays()
+                this.getTrackingStatus()
+            }
         }
     }
 }
@@ -161,6 +214,10 @@ export default {
 
 .hidden-header thead {
     display: none !important;
+}
+
+.child-table thead {
+    display: table-header-group !important;
 }
 
 </style>

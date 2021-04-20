@@ -17,7 +17,7 @@
   --orange: #ff943cee;
   --light-orange: #fd7d14c2;
   --light-orange-chip: #fd7d14c2;
-  --yellow: #e5a54b;
+  --yellow: #f5b04f;
   --green: #4bbf74c0;
   --light-green: #4bbf74d0;
   /*--green: #74b100;*/
@@ -184,7 +184,7 @@ span.edx-header-text {
 }
 
 .p-0 {
-  padding: 0 !important
+  padding: 0 !important;
 }
 .m-0 {
   margin: 0 !important;

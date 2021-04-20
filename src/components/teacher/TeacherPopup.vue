@@ -485,8 +485,10 @@
                                                 :disable="!props.row.isHourlyOverride" 
                                                 :filled="!props.row.isHourlyOverride" 
                                                 outlined
-                                                class="w-80px" prefix="$"  
-                                                dense v-model="props.row.hourlyOverride"/>
+                                                class="w-80px" 
+                                                prefix="$"  
+                                                dense 
+                                                v-model="props.row.hourlyOverride"/>
                                         </div>
                                     </q-td>
 
@@ -1396,11 +1398,10 @@ export default {
     },
     watch: {
         // scheduleWeekDays(val) {
-            // console.log('scheduleWeekDays', val)
-            // this.calculateBusinessDays()
+        //     console.log('scheduleWeekDays', val)
+        //     this.calculateBusinessDays()
         // },
         editedItem(val) {
-            console.log('edited item', val)
             this.calculateBusinessDays()
         },
         show(val) {
@@ -1438,10 +1439,20 @@ export default {
                     { id: 7, name: 'S', hours: null, checked: false }
                 ]
             }
+            
         },
         'editedItem.teacher'(val) {
             console.log('asdasd', val)
             // this.getTeacherBudgetById(val.id)
+        },
+        'editedItem.totalAmount'() {
+            this.calculateBusinessDays()
+        },
+        'editedItem.frienge'() {
+            this.calculateBusinessDays()
+        },
+        totalH() {
+            this.calculateBusinessDays()
         }
     },
     created() {
@@ -1547,6 +1558,7 @@ export default {
 
             console.log('calculateHouryFringe', calculateHouryFringe)
             this.hFringe = calculateHouryFringe
+
             return calculateHouryFringe.toFixed(2)
 
 
@@ -1611,6 +1623,7 @@ export default {
             return rate.toFixed(2)
         },
         assTotal() {
+
             if(this.monthlyDetails[0].isHourlyOverride) {
 
                 let total = (this.monthlyDetails[0].hourlyOverride * this.workHours)
@@ -1628,6 +1641,7 @@ export default {
                return total.toFixed(2)
                 
             }
+            
         },
 
         /////////

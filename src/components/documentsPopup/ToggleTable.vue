@@ -4,7 +4,7 @@
             :data="data" 
             :columns="columns"
             class="no-shadow"
-            hide-bottom
+            hide-pagination
         >
             <!-- Table Body -->
             <template v-slot:body="props">
@@ -47,7 +47,7 @@
                                 size=sm 
                                 no-caps
                                 round
-                                @click="openDeleteModal"
+                                @click="openDeleteModal( props.row.id )"
                             >
                                 <q-tooltip 
                                     content-class="edx-tooltip"
@@ -61,9 +61,10 @@
                     </q-td>
                 </q-tr>
             </template>
+
         </q-table>
 
-        <div class="q-mt-md q-ml-md q-mb-md">
+        <div class="q-mt-md q-ml-md q-mb-lg">
             <q-btn @click="openUploadModal" icon="add" size="sm" color="blue" class="q-mr-sm" round/>
             Add Document
         </div>
@@ -76,7 +77,7 @@
 
                 <q-card-actions align="right">
                 <q-btn flat label="No, thanks" color="primary" v-close-popup />
-                <q-btn label="Yes" color="edx-delete-btn" v-close-popup  />
+                <q-btn label="Yes" :loading="loading" @click="deleteDocument" color="edx-delete-btn"  />
                 </q-card-actions>
             </q-card>
         </q-dialog>
@@ -84,6 +85,9 @@
         <UploadDocumentModal 
             :show="openUploadDocumentModal"
             @togglePopup="togglePopup"
+            :trayId="trayId"
+            :id="id"
+            @newDocument="newDocument"
         />
 
     </div>
@@ -97,32 +101,28 @@ Vue.use(VTooltip)
 import ICONS from '../../../icons'
 import UploadDocumentModal from './UploadDocumentModal'
 
+import axios from 'axios'
+import config from '../../../config'
+
 export default {
 
     components: {
         UploadDocumentModal
     },
+
+    props: {
+        trayId: {
+            required: true
+        },
+        id: {
+            required: true
+        }
+    },
     
     data() {
         return {
-            data: [
-                {
-                    title: '-WEI 2020 W9',
-                    category: 'Tax',
-                    dateUploaded: '08/14/2020',
-                    uploadedBy: 'Luke Skywalker',
-                    size: '1.1 MB',
-                    note: 'Hello. I am test note.',
-                },
-                {
-                    title: '-WEI Star Wars',
-                    category: 'Tax',
-                    dateUploaded: '08/14/2020',
-                    uploadedBy: 'Leonel Messi',
-                    size: '35 Kb',
-                    note: 'Hello. I am test note.',
-                },
-            ],
+            loading: false,
+            data: [],
             columns: [
                 {
                     name: "title",
@@ -169,18 +169,81 @@ export default {
             ],
             confirm: false,
             openUploadDocumentModal: false,
+            documentId: null,
         }
     },
     methods: {
-        openDeleteModal() {
+        openDeleteModal(id) {
             this.confirm = true
+            this.documentId = id
+        },
+        deleteDocument() {
+            this.loading = true
+
+            const conf = {
+                method: 'DELETE',
+                url: config.deleteDocument + this.documentId,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+                this.loading = false
+                this.confirm = false
+                this.getDocuments()
+            })
+            .catch(err => {
+                this.loading = false
+                this.confirm = false
+            })
         },
         openUploadModal() {
             this.openUploadDocumentModal = true
         },
         togglePopup(val) {
             this.openUploadDocumentModal = val
+        },
+        bytesToSize(bytes) {
+            let sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+            if (bytes == 0) return '0 Byte';
+            let i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+            return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
+        },
+        getDocuments() {
+
+            const conf = {
+                method: 'GET',
+                url: `${config.documentsByTray}${this.trayId}/${this.id}`,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+                let data = res.data.file
+                let arr = [];
+
+                for(let i=0; i<data.length; i++) {
+                    arr.push({
+                        id: data[i].document.id,
+                        title: data[i].document.name,
+                        category: data[i].document.document_category?.name,
+                        dateUploaded: data[i].uploaded_date,
+                        uploadedBy: data[i].document.uploaded_by,
+                        size: this.bytesToSize(data[i].document.size),
+                        note: data[i].document.description,
+                    })
+                }
+                this.data = arr
+            })
+        },
+        newDocument(document) {
+            this.getDocuments()
         }
+    },
+    created() {
+        this.getDocuments()
     },
     computed: {
         deleteIcon() {

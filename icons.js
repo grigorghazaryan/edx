@@ -42,9 +42,9 @@ const ICONS = {
     edit: 'edit',
 
     // Invoice status
-    created: 'autorenew',
-    billed: 'delete_forever',
-    paid: 'menu_open',
+    created: 'drive_file_rename_outline',
+    billed: 'price_checkr',
+    paid: 'paid',
     
 }
 

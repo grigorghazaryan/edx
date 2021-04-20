@@ -207,8 +207,6 @@ span.edx-header-text {
   color: var(--secondary);
 }
 
-
-
 /* End of texts ################################################################################################################## */
 
 /* ICONS */
@@ -246,7 +244,7 @@ span.edx-header-text {
   color: var(--blue);
 }
 .edx-icon-billed {
-  color: var(--red);
+  color: var(--orange);
 }
 .edx-icon-paid {
   color: var(--green);
@@ -321,5 +319,3 @@ span.edx-header-text {
 .edx-folder {
   color: var(--yellow);
 }
-
-

@@ -210,7 +210,6 @@
                 <q-tr :props="props" class="cursor-pointer" @click="openActivityPopup(props.row, props.rowIndex)">
                     
                     <q-td key="online" :props="props" v-if="props.row.online_uni">
-                       
                         <span :class="activityTypeIconColor(props.row.online_uni.id)" class="material-icons cursor-pointer">
                             {{ activityTypeIcon(props.row.online_uni.id) }}
                             <q-tooltip 
@@ -1774,7 +1773,7 @@ export default {
                 isOnlineId = 1
             }else {
                 isOnline = 'On Site'
-                isOnlineId = 0
+                isOnlineId = 2
             }
 
         
