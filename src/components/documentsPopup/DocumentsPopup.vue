@@ -71,7 +71,7 @@
 
                         <div class="col-md-12">
                             <div class="text-subtitle2 q-mb-sm">Note</div>
-                            <q-input type="textarea" outlined dense/>
+                            <q-input v-model="note" type="textarea" outlined dense/>
                         </div>
 
                     </div>
@@ -81,7 +81,7 @@
             <q-card-actions class="row justify-end">
                 <div>
                     <q-btn @click="closePopup" flat label="Cancel" color="primary"></q-btn>
-                    <q-btn @click="closePopup" flat label="done" color="primary"></q-btn>
+                    <q-btn :loading="loading" @click="addTrackingNote" flat label="done" color="primary"></q-btn>
                 </div>
             </q-card-actions>
 
@@ -132,6 +132,8 @@ export default {
             trackingStatuses: [],
             showTrackingStatusModal: false,
             selectedTrackingStatus: null,
+
+            note: '',
         }
     },
     components: {
@@ -174,6 +176,7 @@ export default {
         },
         getTrackingStatus() {
 
+           
 
             const conf = {
                 method: 'GET',
@@ -185,13 +188,40 @@ export default {
 
             axios(conf).then(res => {
                 this.trackingStatuses = res.data.fields
+                this.note = res.data.note
+                
             })
+
         },
         sendTrackingStatusToPopup(trackingStatus) {
             this.selectedTrackingStatus = trackingStatus
         },
         updateTrackingStatus(val) {
             this.getTrackingStatus()
+        },
+        addTrackingNote() {
+
+             this.loading = true
+            
+            const conf = {
+                method: 'POST',
+                url: `${config.addTrackingNote}${this.activity.id}`,
+                headers: {
+                    Accept: 'application/json',
+                },
+                data: {
+                    note: this.note
+                }
+            }
+
+            axios(conf).then(res => {
+                this.closePopup()
+                this.loading = false
+            })
+            .catch(err => {
+                this.loading = false
+            })
+
         }
 
     },

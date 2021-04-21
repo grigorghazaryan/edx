@@ -222,9 +222,9 @@
         <q-td
           key="itemName"
           :props="props"
-          style="white-space: initial;width: 350px; max-width: 350px;"
+          style="width: 300px; min-width: 300px; max-width: 300px;"
         >
-          <span class="inline-span">{{ props.row.item_name }}</span>
+          <span class="inline-span table-text">{{ props.row.item_name }}</span>
 
           <q-popup-edit
             v-model="props.row.item_name"
@@ -1913,6 +1913,7 @@ export default {
     }
   },
   methods: {
+
     openDeleteModal(item) {
       this.item = item
       this.confirm = true
@@ -1984,21 +1985,6 @@ export default {
     },
     copyRow(row, index) {
       oldObject = JSON.stringify(this.tempDataX[index])
-      // oldObject = JSON.stringify(row)
-      // console.log('tempDataX', JSON.stringify(this.data[index]))
-      // let old = JSON.stringify(this.data[index])
-
-      // let newData = this.data[index]
-      // newData.id =  Math.floor(Math.random() * 50)
-      // newData.changed = true
-      // let ddd = JSON.stringify(newData)
-      // console.log('new data', JSON.stringify(newData))
-
-      // let i = index+1
-
-      // this.data.splice(i, 0, JSON.parse(ddd));
-
-      // Object.assign(this.data[index], JSON.parse(old));
     },
     detectChange(index) {
 
@@ -2231,20 +2217,26 @@ export default {
 
     filterCategory (val, update, abort) {
       update(() => {
-        const needle = val.toLowerCase()
-        this.optionsCategory = this.optionsCategoryForFilter.filter(v =>   v.label.toLowerCase().indexOf(needle) > -1)
+        if(val) { 
+          const needle = val.toLowerCase()
+          this.optionsCategory = this.optionsCategoryForFilter.filter(v =>   v.label.toLowerCase().indexOf(needle) > -1)
+        }
       })
     },
     filterSupplier (val, update, abort) {
       update(() => {
-        const needle = val.toLowerCase()
-        this.optionsSupplier = this.optionsSupplierForFilter.filter(v =>   v.label.toLowerCase().indexOf(needle) > -1)
+        if(val) {
+          const needle = val.toLowerCase()
+          this.optionsSupplier = this.optionsSupplierForFilter.filter(v =>   v.label.toLowerCase().indexOf(needle) > -1)
+        }
       })
     },
     filterSchool (val, update, abort) {
       update(() => {
-        const needle = val.toLowerCase()
-        this.optionsSchool = this.optionsSchoolForFilter.filter(v =>   v.label.toLowerCase().indexOf(needle) > -1)
+        if(val) {
+          const needle = val.toLowerCase()
+          this.optionsSchool = this.optionsSchoolForFilter.filter(v =>   v.label.toLowerCase().indexOf(needle) > -1)
+        }
       })
     },
 
@@ -2338,12 +2330,11 @@ export default {
 
         // Inventory
         if(data[i].inventory_category != null) {
-          let obj = {
-            id: data[i].inventory_category.id,
-            label: data[i].inventory_category.category_name,
-            value: data[i].inventory_category.id
+          data[i].inventory_category_uni = {
+            id: data[i].inventory_category?.id,
+            label: data[i].inventory_category?.name,
+            value: data[i].inventory_category?.id
           }
-          data[i].inventory_category_uni = obj
         }
         else {
           data[i].inventory_category_uni = {
@@ -2423,6 +2414,7 @@ export default {
 
         data[i].changed = false
         data[i].showEditButton = true
+
       }
 
       console.log('DATA ==============', data)
@@ -2512,9 +2504,9 @@ export default {
             let categoryArr = []
             for(let i=0; i<res.data.categories.length; i++) {
                 let obj = {
-                    id: res.data.categories[i].category.id,
-                    label: res.data.categories[i].category.category_name,
-                    value: res.data.categories[i].category.id
+                    id: res.data.categories[i].category?.id,
+                    label: res.data.categories[i].category?.name,
+                    value: res.data.categories[i].category?.id
                 }
                 categoryArr.push(obj)
             }
@@ -2526,9 +2518,9 @@ export default {
             let supplierArr = []
             for(let i=0; i<res.data.suppliers.length; i++) {
                 let obj = {
-                    id: res.data.suppliers[i].id,
-                    label: res.data.suppliers[i].short_name,
-                    value: res.data.suppliers[i].id
+                    id: res.data.suppliers[i]?.id,
+                    label: res.data.suppliers[i]?.short_name,
+                    value: res.data.suppliers[i]?.id
                 }
                 supplierArr.push(obj)
             }

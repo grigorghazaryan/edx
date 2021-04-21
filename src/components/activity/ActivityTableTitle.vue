@@ -221,7 +221,11 @@
                                 <strong>{{ props.row.online_uni.label }}</strong>
                             </q-tooltip>
 
+                            
+
                         </span> 
+
+                        {{props.row.id}}
 
                     </q-td>
 

@@ -29,10 +29,10 @@ export default {
 
   .tracking-icon-parent {
 
-    width: 40px;
+    width: 25px;
     display: flex;
     flex-wrap: wrap;
-    margin: 0 3px;
+    margin: 0 0;
 
     & div {
         text-align: center;

@@ -48,6 +48,7 @@ const config = {
     addVendorContact: 'https://edxchange-supplier.aimtech.am/api/v1/add-supplier-contacts/',
     editVendorContact: 'https://edxchange-supplier.aimtech.am/api/v1/edit-supplier-contacts/',
     deleteVendorContact: 'https://edxchange-supplier.aimtech.am/api/v1/remove-supplier-contact/',
+    filterVendor: 'https://edxchange-supplier.aimtech.am/api/v1/filter-supplier?search=',
 
     
     
@@ -147,34 +148,45 @@ const config = {
     paySchedule: 'https://edxchange-teacher.aimtech.am/api/v1/count-shceduled-pay/', // startDate / endDate / chargeRate / employeeType / weekHourse / billingCicle === 1 
     filterTeacher: 'https://edxchange-teacher.aimtech.am/api/v1/filter-teacher-assignment/', // 1/1001?search=Joelle&school_year=1015
 
-    getInvoices: 'http://edxchange-invoice.aimtech.am/api/v1/item',
-    getTerms: 'http://edxchange-invoice.aimtech.am/api/v1/invoice-term',
+    getInvoices: 'https://edxchange-invoice.aimtech.am/api/v1/item',
+    getTerms: 'https://edxchange-invoice.aimtech.am/api/v1/invoice-term',
 
-    getBudgetItems: 'http://edxchange-invoice.aimtech.am/api/v1/get-budget-list/', // + id
-    addSelected: 'http://edxchange-invoice.aimtech.am/api/v1/add-budget-items/', // + 1 title 1
+    getBudgetItems: 'https://edxchange-invoice.aimtech.am/api/v1/get-budget-list/', // + id
+    addSelected: 'https://edxchange-invoice.aimtech.am/api/v1/add-budget-items/', // + 1 title 1
 
 
     // GET ALLOCATIONS
     getAllocations: 'https://edxchange-allocation.aimtech.am/api/v1/get-allocation-type',
     getFundSourceByTitleId: 'https://edxchange-activity.aimtech.am/api/v1/get-fund-source/', // + title id
-    getInvoiceStatus: 'http://edxchange-invoice.aimtech.am/api/v1/invoice-status',
-    deleteBudget: 'http://edxchange-invoice.aimtech.am/api/v1/remove-budget-item/', // + id
+    getInvoiceStatus: 'https://edxchange-invoice.aimtech.am/api/v1/invoice-status',
+    deleteBudget: 'https://edxchange-invoice.aimtech.am/api/v1/remove-budget-item/', // + id
 
-    editInvoice: 'http://edxchange-invoice.aimtech.am/api/v1/edit-invoice/', 
-    addInvoice: 'http://edxchange-invoice.aimtech.am/api/v1/add-invoice/',
+    editInvoice: 'https://edxchange-invoice.aimtech.am/api/v1/edit-invoice/', 
+    addInvoice: 'https://edxchange-invoice.aimtech.am/api/v1/add-invoice/',
     getInvoiceTotals: 'https://edxchange-statistic.aimtech.am/api/v1/get-invoice-totals',
-    filterInvoice: 'http://edxchange-invoice.aimtech.am/api/v1/filter-invoice',
+    filterInvoice: 'https://edxchange-invoice.aimtech.am/api/v1/filter-invoice',
 
+    // Categories
+    getAllCategories: 'https://edxchange-activity.aimtech.am/api/v1/get-all-categories',
+    getAllSubcategories: 'https://edxchange-activity.aimtech.am/api/v1/get-all-subcategories',
+    getAllFunds: 'https://edxchange-activity.aimtech.am/api/v1/get-all-fundsources',
 
     // Document
     // Document trays
     getDocumentTrays: 'https://edxchange-document.aimtech.am/api/v1/document-tray',
-    getTrackingStatus: 'http://edxchange-document.aimtech.am/api/v1/tracking-status/', // + id
-    documentsByTray: 'http://edxchange-document.aimtech.am/api/v1/documents-by-tray/', // + id + id
+    getTrackingStatus: 'https://edxchange-document.aimtech.am/api/v1/tracking-status/', // + id
+    documentsByTray: 'https://edxchange-document.aimtech.am/api/v1/documents-by-tray/', // + id + id
     getDocumentCategory: 'https://edxchange-document.aimtech.am/api/v1/document-category',
-    addDocument: 'http://edxchange-document.aimtech.am/api/v1/add-document/', // + id + id
+    addDocument: 'https://edxchange-document.aimtech.am/api/v1/add-document/', // + id + id
     deleteDocument: 'https://edxchange-document.aimtech.am/api/v1/remove-document/', // + doc id
     addTrackingStatus: 'https://edxchange-document.aimtech.am/api/v1/add-tracking-status/', // id
+    addTrackingNote: 'https://edxchange-document.aimtech.am/api/v1/add-note/', 
+
+    // Activity Tracking
+    getActivityTrackings: 'https://edxchange-document.aimtech.am/api/v1/activity-tracking',
+    
+    // Get statuses
+    getStatuses: 'https://edxchange-activity.aimtech.am/api/v1/get-statuses?',
 }
 
 export default config
