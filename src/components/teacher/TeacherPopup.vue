@@ -1337,6 +1337,8 @@ export default {
                         type: 'positive',
                     })
 
+                    this.hidePopup()
+
             })
 
 
@@ -1389,6 +1391,8 @@ export default {
                         message: 'Teacher edited!',
                         type: 'positive',
                     })
+
+                    this.hidePopup()
             })
 
         },

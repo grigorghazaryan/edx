@@ -73,6 +73,9 @@
 .edx-bg-danger {
     background-color: var(--danger);
 }
+.edx-bg-red {
+    background-color: var(--red);
+}
 .edx-bg-light {
     background-color: var(--light);
 }

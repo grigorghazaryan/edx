@@ -45,7 +45,7 @@
             </q-item>
           </div>
 
-          <div class="col-md-2 col-sm-12 col-xs-12">
+          <!-- <div class="col-md-2 col-sm-12 col-xs-12">
             <q-item style="background-color: #fff" class="q-pa-none q-ml-xs">
               <q-item-section side style="background-color: #fff" class=" q-pa-lg q-mr-none text-white">
                 <q-icon name="monetization_on" class="edx-green" size="35px"></q-icon>
@@ -55,7 +55,7 @@
                 <q-item-label class="text-dark text-h6 text-weight-bolder">$ {{ barInfo.hourlyCharge }}</q-item-label>
               </q-item-section>
             </q-item>
-          </div>
+          </div> -->
 
         </div>
       </q-card-section>

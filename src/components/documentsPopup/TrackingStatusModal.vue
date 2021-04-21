@@ -11,9 +11,11 @@
                     <div class="col-md-12 q-mb-md">
                         <div class="row justify-start ">
                             <div class="icon-parent w-100">
-                                <div><q-icon name="description" class="edx-blue" style="font-size: 4em" /></div>
+                                <div><q-icon name="description" 
+                                :class="data.status === 1 ? 'edx-blue' : 'edx-red' "
+                                style="font-size: 4em" /></div>
                                 <div class="text-center w-100">
-                                    <q-chip square size="sm" class="m-0 bg-edx-pagination text-white">
+                                    <q-chip square size="sm"  :class="data.status === 1 ? 'edx-bg-blue' : 'edx-bg-red' " class="m-0 text-white">
                                         <b>{{ abbr }}</b>
                                     </q-chip>
                                 </div>
@@ -100,8 +102,9 @@ export default {
             }
 
             axios(conf).then(res => {
-                console.log('addTrackingStatus', res.data)
                 this.loading = false
+                this.$emit('updateTrackingStatus', res.data)
+                this.emitClosePopup()
             })
             .catch(err => {
                 this.loading = false

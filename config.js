@@ -174,7 +174,7 @@ const config = {
     getDocumentCategory: 'https://edxchange-document.aimtech.am/api/v1/document-category',
     addDocument: 'http://edxchange-document.aimtech.am/api/v1/add-document/', // + id + id
     deleteDocument: 'https://edxchange-document.aimtech.am/api/v1/remove-document/', // + doc id
-    addTrackingStatus: 'http://edxchange-document.aimtech.am/api/v1/add-tracking-status/', // id
+    addTrackingStatus: 'https://edxchange-document.aimtech.am/api/v1/add-tracking-status/', // id
 }
 
 export default config

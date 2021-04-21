@@ -17,12 +17,12 @@
                                 <div  v-for="status in trackingStatuses" :key="status.id" @click="showTrackingStatusModal=true, sendTrackingStatusToPopup(status)" class="cursor-pointer tracking-icon-parent">
                                     <q-icon 
                                         name="description" 
-                                        class="edx-blue" 
+                                        :class="status.status === 1 ? 'edx-blue' : 'edx-red' "
                                         style="font-size: 2.5em;"
                                     ></q-icon>
                                     <div class="w-100">
                                         
-                                        <q-chip square size="sm" class="m-0 bg-edx-pagination text-white">
+                                        <q-chip square size="sm" :class="status.status === 1 ? 'edx-bg-blue' : 'edx-bg-red' " class=" edx-white m-0 text-white">
                                             <b>{{ status.abbreviation }}</b>
                                         </q-chip>
                                     </div>
@@ -92,6 +92,7 @@
             @togglePopup="togglePopup"
             :data="selectedTrackingStatus"
             :activityId="activity.id"
+            @updateTrackingStatus="updateTrackingStatus"
         />
 
     </div>
@@ -130,7 +131,7 @@ export default {
             ],
             trackingStatuses: [],
             showTrackingStatusModal: false,
-            selectedTrackingStatus: {},
+            selectedTrackingStatus: null,
         }
     },
     components: {
@@ -187,8 +188,10 @@ export default {
             })
         },
         sendTrackingStatusToPopup(trackingStatus) {
-            console.log('Tracking Status', trackingStatus)
             this.selectedTrackingStatus = trackingStatus
+        },
+        updateTrackingStatus(val) {
+            this.getTrackingStatus()
         }
 
     },

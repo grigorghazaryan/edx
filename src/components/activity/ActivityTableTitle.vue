@@ -1521,12 +1521,6 @@ export default {
                     field: "grossPD"
                 },
                 {
-                    name: 'RemainingBalance',
-                    align: 'left',
-                    label: 'Remaining Balance',
-                    field: 'RemainingBalance'
-                },
-                {
                     name: "actions",
                     align: "right",
                     label: "Actions",
@@ -1694,7 +1688,7 @@ export default {
                     arr.push({ 
                         transaction: budgetInfo[i].name, 
                         date: budgetInfo[i].start_date + ' ' + budgetInfo[i].end_date,
-                        type: budgetInfo[i].category && budgetInfo[i].category.abbreviation,
+                        type: budgetInfo[i].category && budgetInfo[i].category?.abbreviation,
                         amount: budgetInfo[i].unit_total_cost,
                         balance: budgetInfo[i].balance,
                     })
@@ -1783,7 +1777,7 @@ export default {
             fund_source: {
                 id: data[i].fund_source ? data[i].fund_source.id : null,
                 label: data[i].fund_source ? data[i].fund_source.name : null,
-                abbr: data[i].fund_source ? data[i].fund_source.abbreviation : null,
+                abbr: data[i].fund_source ? data[i]?.fund_source?.abbreviation : null,
             },
             // data[i].category.id == 1 ? this.totalPDremainder : this.totalFEremainder,
             id: data[i].id,
@@ -1830,12 +1824,12 @@ export default {
             type_uni: {
                 id: data[i].category.id,
                 label: data[i].category.name,
-                name: data[i].category.abbreviation
+                name: data[i].category?.abbreviation
             },
             subcategory_uni: {
                 id: data[i].sub_category ? data[i].sub_category.id : null,
                 label: data[i].sub_category ? data[i].sub_category.name : 'NA',
-                name: data[i].sub_category ? data[i].sub_category.abbreviation : 'NA'
+                name: data[i].sub_category ? data[i].sub_category?.abbreviation : 'NA'
             },
             note: data[i].note,
             approver: data[i].approver,
