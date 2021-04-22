@@ -11,7 +11,8 @@
                     <div class="col-md-12 q-mb-md">
                         <div class="row justify-start ">
                             <div class="icon-parent w-100">
-                                <div><q-icon name="description" 
+                                <div><q-icon 
+                                :name="data.icon" 
                                 :class="data.status === 1 ? 'edx-blue' : 'edx-red' "
                                 style="font-size: 4em" /></div>
                                 <div class="text-center w-100">

@@ -28,11 +28,17 @@ export default {
   }
 
   .tracking-icon-parent {
-
     width: 25px;
     display: flex;
     flex-wrap: wrap;
     margin: 0 0;
+
+    &.document-popup {
+      width: 40px;
+      display: flex;
+      flex-wrap: wrap;
+      margin: 0 3px;
+    }
 
     & div {
         text-align: center;
@@ -41,6 +47,8 @@ export default {
     i {
         margin: 0 auto;
     }
-}
+  }
+
+
 
 </style>

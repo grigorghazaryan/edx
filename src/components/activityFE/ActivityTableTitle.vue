@@ -5,7 +5,6 @@
             class="overflow-auto"
             :data="data" 
             :columns="columns"
-            :visible-columns="visibleColumns"
             :loading="loading"
             :pagination.sync="pagination"
         >

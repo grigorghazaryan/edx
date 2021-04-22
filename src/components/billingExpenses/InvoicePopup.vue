@@ -240,7 +240,7 @@
                                             <q-td key="date" :props="props">
                                                 {{props.row.date}}
                                             </q-td>
-                                            <q-td key="description" :style="{maxWidth: '350px', width: '350px'}" :props="props">
+                                            <q-td key="description" :props="props">
                                                <span class="inline-span">
                                                     {{props.row.description}}
                                                </span>
@@ -260,8 +260,8 @@
                                             <q-td key="qty" :props="props">
                                                 {{props.row.qty}}
                                             </q-td>
-                                            <q-td key="rate" :props="props">
-                                                {{props.row.rate}}
+                                            <q-td key="cost" :props="props">
+                                                {{props.row.cost}}
                                             </q-td>
                                             <q-td key="amount" :props="props">
                                                 {{props.row.amount}}
@@ -444,6 +444,7 @@ export default {
     },
     data() {
         return {
+
             loading: false, 
             pagination: { rowsPerPage: 999 },
 
@@ -532,10 +533,10 @@ export default {
                     sortable: false
                 },
                 {
-                    name: "rate",
+                    name: "cost",
                     align: "left",
-                    label: "Rate",
-                    field: "rate",
+                    label: "Cost",
+                    field: "cost",
                     sortable: false
                 },
                 {
@@ -549,7 +550,7 @@ export default {
                     name: "actions",
                     align: "left",
                     label: "",
-                    field: "actions",
+              field: "actions",
                     sortable: false
                 },
             ],
@@ -908,11 +909,11 @@ export default {
                      console.log('Rate',lineItems[i] )
                     arr.push({
                         id: lineItems[i].budget[0].id,
-                        date: lineItems[i].budget[0].completed_date,
-                        description: lineItems[i].budget[0].description,
+                        date: `${lineItems[i].budget[0].start_date}-${lineItems[i].budget[0].end_date}`,
+                        description: lineItems[i].budget[0].name,
                         type: lineItems[i].budget[0].category?.abbreviation,
                         qty: lineItems[i].budget[0].quantity,
-                        rate: lineItems[i].budget[0].unit_cost,
+                        cost: lineItems[i].budget[0].unit_cost,
                         amount: lineItems[i].budget[0].unit_total_cost
                     })
                 }
@@ -1088,6 +1089,42 @@ export default {
             }
 
             return className
+        },
+
+        resetState() {
+            this.selectedSchool = null
+            this.internalInvoiceData = [
+                {
+                    internalInvoice: 0,
+                    invoiceDate: '',
+                    totalDue: 0,
+                    dueDate: '',
+                    terms: {
+                        id: null,
+                        label: 'N/A'
+                    }
+                }
+            ]
+            this.data = []
+            this.selectedCampus = null
+            this.title = {
+                id: null,
+                label: 'N/A'
+            }
+            this.fundSource = null
+            this.invoiceStatus = {
+                id: null,
+                label: 'N/A'
+            }
+            this.subTotal =  0
+            this.isTax = false
+            this.tax = null
+            this.charges = null,
+            this.isCharges = false
+            this.note = '',
+            this.invoiceMemo = ''
+            this.billTo = {}
+
         }
 
     },
@@ -1143,6 +1180,8 @@ export default {
             this.$emit('togglePopup', val)
             if(val && this.isEdit) {
                 this.getInvoiceById()
+            }else {
+                this.resetState()
             }
         },
         selectedSchool(val) {

@@ -150,6 +150,7 @@ const config = {
 
     getInvoices: 'https://edxchange-invoice.aimtech.am/api/v1/item',
     getTerms: 'https://edxchange-invoice.aimtech.am/api/v1/invoice-term',
+    deleteInvoice: 'https://edxchange-invoice.aimtech.am/api/v1/remove-invoice/',
 
     getBudgetItems: 'https://edxchange-invoice.aimtech.am/api/v1/get-budget-list/', // + id
     addSelected: 'https://edxchange-invoice.aimtech.am/api/v1/add-budget-items/', // + 1 title 1
@@ -175,6 +176,7 @@ const config = {
     // Document trays
     getDocumentTrays: 'https://edxchange-document.aimtech.am/api/v1/document-tray',
     getTrackingStatus: 'https://edxchange-document.aimtech.am/api/v1/tracking-status/', // + id
+    getTrackingStatusByCategory: 'https://edxchange-document.aimtech.am/api/v1/get-tracking-status/', // + category id
     documentsByTray: 'https://edxchange-document.aimtech.am/api/v1/documents-by-tray/', // + id + id
     getDocumentCategory: 'https://edxchange-document.aimtech.am/api/v1/document-category',
     addDocument: 'https://edxchange-document.aimtech.am/api/v1/add-document/', // + id + id

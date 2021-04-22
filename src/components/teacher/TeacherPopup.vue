@@ -247,9 +247,7 @@
 
                                         <div class="col-md-9 q-pr-md">
                                             <div class="text-subtitle2 q-mb-sm">Schedule</div>
-                                            <q-select dense outlined 
-                                            :options="hoursOption" 
-                                            v-model="editedItem.isHoursWeek" />
+                                            <q-select dense outlined :options="hoursOption" v-model="editedItem.isHoursWeek" />
                                         </div>
 
                                         <div class="col-md-3" v-if="editedItem.isHoursWeek && editedItem.isHoursWeek.id == 1">
@@ -264,7 +262,7 @@
                                         <div class="col-md-12 q-mt-md" v-if="editedItem.isHoursWeek && editedItem.isHoursWeek.id == 1">
                                             <div class="row justify-between items-center">                        
                                                 <div class="text-subtitle2">Work Days and Hours</div>
-                                                <q-checkbox label="Full Time" v-model="editedItem.fullTime" />
+                                                <q-checkbox @input="fullTimeInput" label="Full Time" v-model="editedItem.fullTime" />
                                             </div>
                                         </div>
                                         <div class="row w-100 q-mt-md q-mb-md" v-if="editedItem.isHoursWeek && editedItem.isHoursWeek.id == 1">
@@ -480,6 +478,7 @@
                                     
                                     <q-td key="hourlyOverride" :props="props">
                                         <div class="row justify-end">
+                                           
                                             <q-checkbox v-model="props.row.isHourlyOverride" />
                                             <q-input
                                                 :disable="!props.row.isHourlyOverride" 
@@ -676,13 +675,13 @@ export default {
                 { id: 1, label: 'Hours/Week'}
             ],
             scheduleWeekDays: [
-                { id: 1, name: 'M', hours: null, checked: false },
-                { id: 2, name: 'T', hours: null, checked: false },
-                { id: 3, name: 'W', hours: null, checked: false },
-                { id: 4, name: 'T', hours: null, checked: false },
-                { id: 5, name: 'F', hours: null, checked: false },
-                { id: 6, name: 'S', hours: null, checked: false },
-                { id: 7, name: 'S', hours: null, checked: false }
+                // { id: 1, name: 'M', hours: null, checked: false },
+                // { id: 2, name: 'T', hours: null, checked: false },
+                // { id: 3, name: 'W', hours: null, checked: false },
+                // { id: 4, name: 'T', hours: null, checked: false },
+                // { id: 5, name: 'F', hours: null, checked: false },
+                // { id: 6, name: 'S', hours: null, checked: false },
+                // { id: 7, name: 'S', hours: null, checked: false }
             ],
             workDays: 0,
             workHours: 0,
@@ -778,9 +777,12 @@ export default {
                     // hoursWeek: teacherInfo.teacher.assignment_compensation.hours_per_week,
                     isHoursWeek: { id: 1, label: 'Hours/Week'},
                     hoursWM: 0,
-                    frienge: { id: 5, label: "Monthly" },
+                    frienge: {
+                        id: teacherInfo.teacher.assignment_compensation.fringe_type ? teacherInfo.teacher.assignment_compensation.fringe_type.id : null,
+                        label: teacherInfo.teacher.assignment_compensation.fringe_type ?  teacherInfo.teacher.assignment_compensation.fringe_type.name : 'N/A'
+                    },
                     hourlyFrienge: 100,
-                    totalAmount: 0,
+                    totalAmount: parseFloat(teacherInfo.teacher.assignment_compensation.total_fringe),
                     assignmentStatus: {
                         id: teacherInfo.teacher.assignment_compensation ? teacherInfo.teacher.assignment_compensation.status.id : 1,
                         label: teacherInfo.teacher.assignment_compensation ? teacherInfo.teacher.assignment_compensation.status.name : 'Canceled',
@@ -789,30 +791,39 @@ export default {
                         id: teacherInfo.teacher?.assignment_compensation?.status?.id,
                         label: teacherInfo.teacher?.assignment_compensation?.status?.name,
                     },
-                    // billingStatus: {
-                    //     id: teacherInfo.teacher.assignment_compensation.billing_status.id,
-                    //     label: teacherInfo.teacher.assignment_compensation.billing_status.name,
-                    // },
                     note: teacherInfo.teacher.assignment_compensation?.note,
                     salary_pay: teacherInfo.salary_pay,
 
-                    adminMarkupFee: res.data.admin_markup_fee,
+                    adminMarkupFee: res.data?.admin_markup_fee,
                     allocationPercentage: parseFloat(teacherInfo?.teacher.assignment_compensation?.allocation_percentage),
                     markupFee: res.data?.markup_fee,
                     //
                     fullTime: false,
-
                 }
 
-                this.monthlyDetails[0].isHourlyOverride = teacherInfo.teacher.assignment_compensation && this.monthlyDetails[0].isHourlyOverride.is_override == '0' ? false : true
-                this.monthlyDetails[0].hourlyOverride = teacherInfo.teacher.assignment_compensation && teacherInfo.teacher.assignment_compensation.hourly_charge_override
-                // this.pages = res.data.pagesCount
-                // let data = res.data.items
+                this.monthlyDetails[0].isHourlyOverride = parseInt(teacherInfo?.teacher?.assignment_compensation?.is_override) == 0 ? false : true
+                // teacherInfo.teacher.assignment_compensation && this.monthlyDetails[0].isHourlyOverride == '0' ? false : true
+                this.monthlyDetails[0].hourlyOverride =  teacherInfo?.teacher?.assignment_compensation?.hourly_charge_override
 
-                // let finalResult = this.teachersParsing(data)
-                // console.log('Final result : ', finalResult)
-                // this.data = finalResult
+                if(parseInt(teacherInfo.teacher.assignment_compensation.work_week.is_full_time)) {
+                    this.editedItem.fullTime = true
+                }else {
+                    this.editedItem.fullTime = false
+                }
 
+                this.scheduleWeekDays = JSON.parse(teacherInfo.teacher.assignment_compensation.work_week.week_day_hour)
+                if(parseInt(teacherInfo.teacher.assignment_compensation.work_week.schedule)) {
+                    this.editedItem.isHoursWeek = { id: 1, label: 'Hours/Week'}
+                }else {
+                    this.editedItem.isHoursWeek = { id: 0, label: 'Hours/Day'}
+                    this.editedItem.hoursWM = parseInt(teacherInfo.teacher.assignment_compensation.work_week.total_hours)
+                }
+
+
+
+                
+                
+                
             })
 
         },
@@ -1303,13 +1314,22 @@ export default {
                 total_fringe: this.editedItem.totalAmount,
                 // teacher_type_id: 
                 status_id: this.editedItem.assignmentStatus.id,
+                work_hours: this.workHours,
 
                 is_override: this.monthlyDetails[0].isHourlyOverride,
                 hourly_charge_override: this.monthlyDetails[0].hourlyOverride,
                 
                 note: this.editedItem.note,
                 teacher_id: this.editedItem.teacher.id,
-                // is_client_agree
+                hours_week_schedule_type: this.editedItem.isHoursWeek.id,
+                week_total_hours: this.editedItem.isHoursWeek.id == 1 ? this.totalHours : this.editedItem.hoursWM,
+                week_day_hour: this.scheduleWeekDays,
+                is_full_time: this.editedItem.fullTime,
+                
+                total_fringe: this.editedItem.totalAmount,
+                fringe_type_id: this.editedItem.frienge.id,
+                hourly_fringe: this.calculateHouryFringe
+
             }
 
             if(this.editedItem.isHoursWeek.id == 1) {
@@ -1359,12 +1379,20 @@ export default {
                 total_fringe: this.editedItem.totalAmount,
                 // teacher_type_id: 
                 status_id: this.editedItem.assignmentStatus.id,
+                work_hours: this.workHours,
 
                 is_override: this.monthlyDetails[0].isHourlyOverride,
                 hourly_charge_override: this.monthlyDetails[0].hourlyOverride,
                 
                 note: this.editedItem.note,
-                // is_client_agree
+                hours_week_schedule_type: this.editedItem.isHoursWeek.id,
+                week_total_hours: this.editedItem.isHoursWeek.id == 1 ? this.totalHours : this.editedItem.hoursWM,
+                week_day_hour: this.scheduleWeekDays,
+                is_full_time: this.editedItem.fullTime,
+
+                total_fringe: this.editedItem.totalAmount,
+                fringe_type_id: this.editedItem.frienge.id,
+                hourly_fringe: this.calculateHouryFringe
             }
 
             if(this.editedItem.isHoursWeek.id == 1) {
@@ -1398,31 +1426,9 @@ export default {
         },
         duplicateTeacher() {
             alert('duplicate')
-        }
-    },
-    watch: {
-        // scheduleWeekDays(val) {
-        //     console.log('scheduleWeekDays', val)
-        //     this.calculateBusinessDays()
-        // },
-        editedItem(val) {
-            this.calculateBusinessDays()
         },
-        show(val) {
-            if(val && this.isEdit) {
-                this.getTeacherBudgetById(this.id)
-            }
-        },
-        'editedItem.startDate'(){
-            //to work with changes in "myArray"
-            this.calculateBusinessDays()
-        },
-        'editedItem.endDate'(){
-            //to work with changes in "myArray"
-            this.calculateBusinessDays()
-        },
-        'editedItem.fullTime'(val) {
-            if(val) {
+        fullTimeInput() {     
+            if(this.editedItem.fullTime){
                 this.scheduleWeekDays = [
                     { id: 1, name: 'M', hours: 8, checked: true },
                     { id: 2, name: 'T', hours: 8, checked: true },
@@ -1443,6 +1449,27 @@ export default {
                     { id: 7, name: 'S', hours: null, checked: false }
                 ]
             }
+        }
+    },
+    watch: {
+        editedItem(val) {
+            this.calculateBusinessDays()
+        },
+        show(val) {
+            if(val && this.isEdit) {
+                this.getTeacherBudgetById(this.id)
+            }
+        },
+        'editedItem.startDate'(){
+            //to work with changes in "myArray"
+            this.calculateBusinessDays()
+        },
+        'editedItem.endDate'(){
+            //to work with changes in "myArray"
+            this.calculateBusinessDays()
+        },
+        'editedItem.fullTime'(val) {
+
             
         },
         'editedItem.teacher'(val) {

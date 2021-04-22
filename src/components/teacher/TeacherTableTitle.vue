@@ -770,7 +770,7 @@ export default {
                     },
                     teacherName: data[i].teacher.first_name + ' ' + data[i].teacher.last_name,
                     activity_date: data[i].start_date + '-' + data[i].end_date,
-                    cost: data[i].cost,
+                    cost: data[i].total_cost,
                     type_uni: {
                         id: data[i].category.id,
                         label: data[i].category.name,

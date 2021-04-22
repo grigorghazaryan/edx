@@ -220,13 +220,7 @@
                             >
                                 <strong>{{ props.row.online_uni.label }}</strong>
                             </q-tooltip>
-
-                            
-
-                        </span> 
-
-                        {{props.row.id}}
-
+                        </span>
                     </q-td>
 
                     <q-td key="provider" :props="props">
@@ -1344,6 +1338,8 @@
             :show="showDocumentPopup" 
             @togglePopup="togglePopup"
             :activity="editedItem"
+            :isEdit="isEdit"
+            :categoryId="categoryId"
         />
 
     </div>
@@ -1433,6 +1429,7 @@ export default {
             //
             mode: 'list',
             tab: '1',
+            categoryId: 1, // pd == 1 
             //
             pages: 1,
             current: 1,

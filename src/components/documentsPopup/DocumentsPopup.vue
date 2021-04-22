@@ -5,7 +5,7 @@
             :modelDialog="showPopup" 
             :title="`Documents for: ${activity.activity}`" 
             :icon="'description'"
-        >  
+        > 
 
             <q-card-section style="max-height: 60vh" class="scroll q-pt-none q-pb-none q-pr-none q-pl-none">
                 <div class="q-pa-md">
@@ -14,14 +14,14 @@
                         <div class="col-md-12">
                             <div class="text-subtitle2 q-mb-sm">Tracking Status</div>
                             <div class="row q-mt-md q-mb-md">
-                                <div  v-for="status in trackingStatuses" :key="status.id" @click="showTrackingStatusModal=true, sendTrackingStatusToPopup(status)" class="cursor-pointer tracking-icon-parent">
+                                <div  v-for="status in trackingStatuses" :key="status.id" 
+                                @click="showTrackingStatusModal=true, sendTrackingStatusToPopup(status)" class="cursor-pointer tracking-icon-parent document-popup">
                                     <q-icon 
-                                        name="description" 
+                                        :name="status.icon" 
                                         :class="status.status === 1 ? 'edx-blue' : 'edx-red' "
                                         style="font-size: 2.5em;"
                                     ></q-icon>
                                     <div class="w-100">
-                                        
                                         <q-chip square size="sm" :class="status.status === 1 ? 'edx-bg-blue' : 'edx-bg-red' " class=" edx-white m-0 text-white">
                                             <b>{{ status.abbreviation }}</b>
                                         </q-chip>
@@ -114,6 +114,12 @@ export default {
         },
         activity: {
             required: true
+        },
+        isEdit: {
+            required: true
+        },
+        categoryId: {
+            required: true
         }
     },
     data() {
@@ -176,8 +182,6 @@ export default {
         },
         getTrackingStatus() {
 
-           
-
             const conf = {
                 method: 'GET',
                 url: config.getTrackingStatus + this.activity.id,
@@ -190,6 +194,21 @@ export default {
                 this.trackingStatuses = res.data.fields
                 this.note = res.data.note
                 
+            })
+
+        },
+        getTrackingStatusByCategory() {
+
+            const conf = {
+                method: 'GET',
+                url: config.getTrackingStatusByCategory + this.categoryId,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+                this.trackingStatuses = res.data.fields
             })
 
         },
@@ -236,7 +255,12 @@ export default {
 
             if(val) {
                 this.getDocumentTrays()
-                this.getTrackingStatus()
+                if(this.isEdit) {
+                    this.getTrackingStatus()
+                }else {
+                    this.getTrackingStatusByCategory()
+                }
+                
             }
         }
     }

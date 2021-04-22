@@ -231,7 +231,7 @@
 
             <q-card-actions align="right">
             <q-btn flat label="No, thanks" color="primary" v-close-popup />
-            <q-btn label="Yes" color="edx-delete-btn" v-close-popup @click="deleteItem" />
+            <q-btn label="Yes" :loading="deleteLoading" color="edx-delete-btn" @click="deleteItem" />
             </q-card-actions>
         </q-card>
     </q-dialog>
@@ -262,6 +262,7 @@ export default {
     data () {
         return {
             loading: false,
+            deleteLoading: false,
             mode: 'list',
             columns: [
             {
@@ -631,7 +632,35 @@ export default {
             this.id = row.id
         },
         deleteItem() {
-            alert(this.id)
+
+            this.deleteLoading = true
+
+            const conf = {
+                method: 'DELETE',
+                url: config.deleteInvoice + this.id,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+
+                let index = this.data.findIndex( item => item.id === this.id )
+                this.data.splice(index, 1)
+
+                    this.$q.notify({
+                        message: 'Invoice deleted!',
+                        type: 'positive',
+                    })
+
+                this.deleteLoading = false
+                 this.confirm = false
+
+                })
+                .catch(err=> {
+                    this.deleteLoading = false
+                    this.confirm = false
+                })
         }
     },
     created() {
