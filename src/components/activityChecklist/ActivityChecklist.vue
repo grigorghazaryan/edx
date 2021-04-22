@@ -3,7 +3,7 @@
         <div class="q-mt-lg">
             <q-table
                 class="overflow-auto"
-                :data="data" 
+                :data="data"
                 :columns="columns"
                 :loading="loading"
                 :pagination.sync="pagination"
@@ -121,11 +121,11 @@
                     </div>
                 </div>
 
-                <q-btn 
+                <q-btn
                     square
                     size="13px"
                     class="q-mr-md edx-add-btn" text-color="white"
-                    icon="search" 
+                    icon="search"
                     no-caps
                     @click="search"
                 >
@@ -145,7 +145,7 @@
                     dense
                     :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
                     @click="props.toggleFullscreen"
-                    v-if="mode === 'list'" 
+                    v-if="mode === 'list'"
                     class="q-ml-md"
                 >
                     <q-tooltip content-class="edx-tooltip" :disable="$q.platform.is.mobile">
@@ -171,12 +171,12 @@
                         <span> {{ props.row.school }} </span>
                     </q-td>
                     <q-td key="allocation" :props="props">
-                        <q-chip 
-                            square 
+                        <q-chip
+                            square
                             color="edx-bg-pd"
                         >
                             <span>{{ props.row.allocation.abbr }}</span>
-                            <q-tooltip 
+                            <q-tooltip
                                 content-class="edx-tooltip"
                                 anchor="top middle" self="bottom middle" :offset="[10, 10]"
                                 transition-show="flip-right"
@@ -188,11 +188,11 @@
                     </q-td>
                     <q-td key="approval" :props="props">
 
-                        <q-icon 
-                            :name="approvalStatusIcon(props.row.approval.status.id)" 
+                        <q-icon
+                            :name="approvalStatusIcon(props.row.approval.status.id)"
                             :class="approvalStatusIconColor(props.row.approval.status.id)"
                         >
-                            <q-tooltip 
+                            <q-tooltip
                                 content-class="edx-tooltip"
                                 anchor="top middle" self="bottom middle" :offset="[10, 10]"
                                 transition-show="flip-right"
@@ -204,11 +204,11 @@
                             </q-tooltip>
                         </q-icon>
 
-                        <q-icon 
-                            :name="approvalTypeIcon(props.row.approval.type.id)" 
-                            :class="approvalTypeIconColor(props.row.approval.type.id)" 
+                        <q-icon
+                            :name="approvalTypeIcon(props.row.approval.type.id)"
+                            :class="approvalTypeIconColor(props.row.approval.type.id)"
                         >
-                            <q-tooltip 
+                            <q-tooltip
                                 content-class="edx-tooltip"
                                 anchor="top middle" self="bottom middle" :offset="[10, 10]"
                                 transition-show="flip-right"
@@ -223,25 +223,27 @@
 
                         <div class="row">
                             <div v-for="tracking in props.row.trackingList" :key="tracking.id" class="tracking-icon-parent">
-                                <q-icon 
-                                    :name="tracking.icon" 
+                                <q-icon
+                                    :name="tracking.icon"
                                     :class="tracking.status === 1 ? 'edx-blue' : 'edx-red' "
-                                ></q-icon>
+                                >
+                                  <q-tooltip>{{ tracking.note }}</q-tooltip>
+                                </q-icon>
                                 <div class="w-100">
                                     <q-chip square size="sm" :class="tracking.status === 1 ? 'edx-bg-blue' : 'edx-bg-red' " class="m-0 small-chip text-white">
                                         <b>{{ tracking.abbreviation }}</b>
                                     </q-chip>
                                 </div>
-                                
+
                             </div>
                         </div>
 
                     </q-td>
                     <q-td key="note" :props="props">
-                        <q-icon 
-                            name="sticky_note_2" 
-                            color="orange" 
-                            style="font-size: 2em;" 
+                        <q-icon
+                            name="sticky_note_2"
+                            color="orange"
+                            style="font-size: 2em;"
                             class="cursor-pointer"
                             v-tooltip="{
                                 content: props.row.note,
@@ -274,13 +276,13 @@
 
                 <div class="row justify-center items-center">
                     <span class="q-mr-md">Rows Per page</span>
-                    <q-select dense outlined 
+                    <q-select dense outlined
                     @input="changeRowsPerPage"
-                    v-model="pagination.rowsPerPage" 
-                    :options="rowsPerPageArr" 
+                    v-model="pagination.rowsPerPage"
+                    :options="rowsPerPageArr"
                     />
                 </div>
-                
+
                 </div>
             </template>
 
@@ -377,12 +379,12 @@ export default {
             ],
             loading: false,
             mode: 'list',
-            
+
             pages: 1,
             current: 1,
             count: 10,
             pagination: { rowsPerPage: 10 },
-            rowsPerPageArr: ['5', '10', '25', '50', '75', '100'], 
+            rowsPerPageArr: ['5', '10', '25', '50', '75', '100'],
 
             // search fields
             allocationOptions: [],
@@ -390,7 +392,7 @@ export default {
 
             // categories
             catagoryOptions: [],
-            selectedCategory: null, 
+            selectedCategory: null,
 
             // subcategories
             subcatagoryOptions: [],
@@ -427,7 +429,7 @@ export default {
         search() {
 
             this.loading = true
-            
+
             let uri = '';
 
             if(this.selectedAllocation != null) {
@@ -507,7 +509,7 @@ export default {
             // id: 3 : Pending
 
             if(id) {
-                
+
                 const iconId = id
                 let icon = null;
 
@@ -559,7 +561,7 @@ export default {
             // id: 4 : Pre approval
 
             if(id) {
-                
+
                 const iconId = id
                 let icon = null;
 
@@ -590,7 +592,7 @@ export default {
             // id: 4 : Pre approval
 
             if(id) {
-                
+
                 const iconId = id
                 let color = null;
 
@@ -669,7 +671,7 @@ export default {
             })
         },
         //
-        
+
         // Get titles
         getAllocations() {
 
@@ -764,14 +766,14 @@ export default {
                 Accept: 'application/json',
                 }
             }
-            
+
             axios(conf).then(res => {
 
                 let fundSource = res.data.fundSource;
                 let fundSourceArr = [];
 
                 for(let i=0; i<fundSource.length; i++) {
-                    
+
                     let obj = {
                         id: fundSource[i].id,
                         label: fundSource[i].name,
@@ -786,7 +788,7 @@ export default {
 
         // Approvals
         getApprovals() {
-      
+
             const conf = {
                 method: 'GET',
                 url: config.getApprovals,
@@ -799,7 +801,7 @@ export default {
 
                 let approvalStatus = res.data.activityApprovalStatus
                 let approvalTypes = res.data.activityApprovalTypes
-                
+
                 let statusArr = [], typesArr = [];
 
                 for(let i=0; i<approvalStatus.length; i++) {
@@ -809,7 +811,7 @@ export default {
                     }
                     statusArr.push(obj)
                 }
-                
+
                 this.optionsApproval = statusArr
 
             })
