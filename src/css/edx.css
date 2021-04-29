@@ -57,6 +57,16 @@
   color: var(--white) !important;
 }
 
+/* CALENDAR */
+.edx-calendar {
+  background: var(--white) !important;
+  color: var(--blue) !important;
+}
+
+.edx-calendar-icon-color {
+  color: var(--blue) !important;
+}
+
 /* BUTTONS */
 
 /* ADD BUTTON */
@@ -113,6 +123,15 @@
 }
 .edx-modal-header-color {
   color: var(--white);
+}
+
+/* chip */
+.edx-chip-pd {
+  background-color: var(--blue);
+}
+.edx-chip-fe {
+  background-color: var(--lighter-green);
+  color: var(--dark-green);
 }
 
 /* STATUS CHIPS */
@@ -209,22 +228,63 @@ span.edx-header-text {
 
 /* End of texts ################################################################################################################## */
 
-/* ICONS */
+/* Inventory ICONS */
+.edx-icon-excellent {
+  color: var(--dark-blue);
+}
+.edx-icon-verygood {
+  color: var(--dark-green);
+}
+.edx-icon-good {
+  color: var(--dark-yellow);
+}
+.edx-icon-fair {
+  color: var(--dark-orange);
+}
+.edx-icon-poor {
+  color: var(--red);
+}
+
+.edx-icon-onpremise {
+  color: var(--green);
+}
+.edx-icon-offpremise {
+  color: var(--green);
+}
+.edx-icon-disposed {
+  color: var(--green);
+}
+.edx-icon-lost {
+  color: var(--green);
+}
+.edx-icon-stolen {
+  color: var(--green);
+}
+.edx-icon-transfered {
+  color: var(--green);
+}
+.edx-icon-stored {
+  color: var(--green);
+}
 
 /* Budget  */
 /* Activity Status */
 
 .edx-icon-canceled {
   color: var(--red);
+  font-size: 2em;
 }
 .edx-icon-budgeted {
   color: var(--blue);
+  font-size: 2em;
 }
 .edx-icon-gathering-documents {
   color: var(--orange);
+  font-size: 2em;
 }
 .edx-icon-ready-for-billing {
   color: var(--green);
+  font-size: 2em;
 }
 /* N/A */
 .edx-icon-no-answer {

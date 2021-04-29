@@ -217,23 +217,17 @@
 
                     <q-td key="status" :props="props">
 
-                        <q-icon v-if="props.row.status_uni.id == 1 " name="done" class="edx-green" style="font-size: 1.5em">
+                        <q-icon
+                            :name="activityStatusIcon(props.row.status_uni.id)" 
+                            :class="activityStatusIconColor(props.row.status_uni.id)"
+                        >
                             <q-tooltip 
+                                content-class="edx-tooltip"
                                 anchor="top middle" self="bottom middle" :offset="[10, 10]"
                                 transition-show="flip-right"
                                 transition-hide="flip-left"
                             >
-                                <strong>Active</strong>
-                            </q-tooltip>
-                        </q-icon>
-
-                        <q-icon v-else name="cancel_schedule_send" class="edx-red" style="font-size: 2em">
-                            <q-tooltip 
-                                anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                                transition-show="flip-right"
-                                transition-hide="flip-left"
-                            >
-                                <strong>Canceled</strong>
+                                <strong>{{ props.row.status_uni.label }}</strong>
                             </q-tooltip>
                         </q-icon>
 
@@ -241,77 +235,34 @@
 
                     <q-td key="approvals" :props="props">
 
-                        <q-icon v-if="props.row.approval_status_uni.label == 'Approved'" 
-                        name="approval" class="edx-green" style="font-size: 1.5em">
+                        <q-icon 
+                            :name="approvalStatusIcon(props.row.approval_status_uni.id)" 
+                            :class="approvalStatusIconColor(props.row.approval_status_uni.id)"
+                        >
                             <q-tooltip 
+                                content-class="edx-tooltip"
                                 anchor="top middle" self="bottom middle" :offset="[10, 10]"
                                 transition-show="flip-right"
                                 transition-hide="flip-left"
                             >
-                                <strong>Approved</strong>
+                                <strong>
+                                    {{props.row.approval_status_uni.label}}
+                                </strong>
                             </q-tooltip>
                         </q-icon>
-
-                        <q-icon v-else-if="props.row.approval_status_uni.label == 'Pending'" 
-                        name="av_timer" class="edx-orange" style="font-size: 1.5em">
-                        <q-tooltip 
-                            anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                            transition-show="flip-right"
-                            transition-hide="flip-left"
+                        
+                        <q-icon 
+                            :name="approvalTypeIcon(props.row.approval_type_uni.id)" 
+                            :class="approvalTypeIconColor(props.row.approval_type_uni.id)" 
                         >
-                            <strong>Pending</strong>
-                        </q-tooltip>
-                        </q-icon>
-
-                        <q-icon v-else name="thumb_down_alt" class="edx-red" style="font-size: 2em">
-                        <q-tooltip 
-                            anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                            transition-show="flip-right"
-                            transition-hide="flip-left"
-                        >
-                            <strong>Declined</strong>
-                        </q-tooltip>
-                        </q-icon>
-
-                        <q-icon v-if="props.row.approval_type_uni.label == 'Needs Assessment'"
-                        name="psychology" class="edx-blue" style="font-size: 1.5em">
-                        <q-tooltip 
-                            anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                            transition-show="flip-right"
-                            transition-hide="flip-left"
-                        >
-                            <strong>{{props.row.approval_type_uni.label}}</strong>
-                        </q-tooltip>
-                        </q-icon>
-
-                        <q-icon v-else-if="props.row.approval_type_uni.label == 'Catalog'" name="category" class="edx-blue" style="font-size: 1.5em">
-                        <q-tooltip 
-                            anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                            transition-show="flip-right"
-                            transition-hide="flip-left"
-                        >
-                            <strong>{{props.row.approval_type_uni.label}}</strong>
-                        </q-tooltip>
-                        </q-icon>
-
-                        <q-icon v-else-if="props.row.approval_type_uni.label == 'Blanket Approval'" name="touch_app" class="edx-blue" style="font-size: 1.5em">
-                        <q-tooltip 
-                            anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                            transition-show="flip-right"
-                            transition-hide="flip-left"
-                        >
-                            <strong>{{props.row.approval_type_uni.label}}</strong>
-                        </q-tooltip>
-                        </q-icon>
-
-                        <q-icon v-else-if="props.row.approval_type_uni.label == 'Pre Approval'" name="how_to_reg" class="edx-blue" style="font-size: 1.5em">
-                        <q-tooltip 
-                            anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                            transition-show="flip-right"
-                            transition-hide="flip-left"
-                        >
-                            <strong>{{props.row.approval_type_uni.label}}</strong>
-                        </q-tooltip>
+                            <q-tooltip 
+                                content-class="edx-tooltip"
+                                anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                                transition-show="flip-right"
+                                transition-hide="flip-left"
+                            >
+                                <strong>{{props.row.approval_type_uni.label}}</strong>
+                            </q-tooltip>
                         </q-icon>
 
                     </q-td>
@@ -521,13 +472,15 @@
                         <div class="q-mb-md">
                             <div class="text-subtitle2 q-mb-sm">Provider</div>
                             <q-select  
-                                use-input
-                                outlined
                                 dense
+                                outlined
+                                use-input
+                                hide-selected
+                                fill-input
                                 input-debounce="0"
                                 v-model="editedItem.provider" 
                                 :options="optionsSupplier"
-                                
+                                @filter="filterSupplier"
                             >
                                 <template v-slot:no-option>
                                     <q-item>
@@ -536,6 +489,7 @@
                                         </q-item-section>
                                     </q-item>
                                 </template>
+
                             </q-select>
                         </div>
 
@@ -561,25 +515,41 @@
                     <div class="col-md-6 q-pl-md">
 
                         <div class="row">
-                            <div class="col-md-12 q-pr-sm q-mb-md">
-                                <div class="text-subtitle2 q-mb-sm">Allocation Category</div>
+
+                            <div class="col-md-3 q-pr-sm q-mb-md">
+                                <div class="text-subtitle2 q-mb-sm">Category</div>
                                 <div class="row cursor-pointer h-popup">
 
                                     <div>
                                         <q-chip 
-                                            square color="edx-bg-i" 
+                                            square 
+                                            color="edx-bg-m"
                                         >
-                                            <span>I</span>
+                                            <span>M</span>
                                         </q-chip>
                                     </div>
 
-                                    <q-popup-edit v-model="editedItem.type_uni" buttons>
-                                        <div class="row q-mb-lg q-mt-lg">
+                                </div>
+                            </div>
+
+                            <div class="col-md-3 q-pr-sm q-mb-md">
+                                <div class="text-subtitle2 q-mb-sm">Subcategory</div>
+                                <div class="row cursor-pointer h-popup">
+
+                                    <div v-if="editedItem.subcategory_uni">
+                                        <q-chip square color="edx-bg-m">
+                                            <span>{{ editedItem.subcategory_uni.abbr }}</span>
+                                        </q-chip>
+                                    </div>
+
+                                    <q-popup-edit v-model="editedItem.subcategory_uni" buttons>
+                                        <div class="row  w-100 q-mb-lg q-mt-lg">
+                                            
                                             <div class="col-md-12 q-pr-sm q-mb-md">
-                                                <div class="text-subtitle2 q-mb-sm">Allocation Subcategory</div>
+                                                <div class="text-subtitle2 q-mb-sm">Subcategory</div>
                                                 <div class="row cursor-pointer h-popup">
                                                     <q-select 
-                                                    class="w-100"
+                                                        class="w-100"
                                                         v-model="editedItem.subcategory_uni" 
                                                         :options="optionsSubcategory"
                                                     />
@@ -590,6 +560,48 @@
 
                                 </div>
                             </div>
+
+                            <div v-if="optionsFundSource.length" class="col-md-6 q-pr-sm q-mb-md">
+                                <div class="text-subtitle2 q-mb-sm">Fund Source</div>
+                                <div class="row cursor-pointer h-popup">
+
+                                    <div v-if="editedItem.fund_source">
+                                        <q-chip 
+                                            square 
+                                            :class="fundSourceColor(editedItem.fund_source.abbr)"
+                                        >
+                                            <span>{{ editedItem.fund_source.abbr }}</span>
+                                            <q-tooltip 
+                                                anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                                                transition-show="flip-right"
+                                                transition-hide="flip-left"
+                                            >
+                                                <strong>{{ editedItem.fund_source.label }}</strong>
+                                            </q-tooltip>
+                                        </q-chip>
+                                    </div>
+
+                                    <q-popup-edit  v-model="editedItem.fund_source" buttons>
+                                        <div class="text-subtitle2">Fund Source</div>
+                                        <div class="row q-mb-sm q-mt-sm">
+                                            <div class="col-md-12 q-pr-sm q-mb-md">
+                                                <div class="text-subtitle2 q-mb-sm"></div>
+                                                <div class="row cursor-pointer h-popup">
+                                                    <q-select 
+                                                        class="w-100"
+                                                        v-model="editedItem.fund_source" 
+                                                        :options="optionsFundSource"
+                                                        outlined
+                                                        dense
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </q-popup-edit>  
+
+                                </div>
+                            </div>
+
                         </div>
                         
                         <div class="q-mb-md">
@@ -621,23 +633,34 @@
                                     <div class="text-subtitle2 q-mb-sm">Approval Status</div>
                                     <div v-if="editedItem.approval_status_uni" class="row h-popup">
 
-                                        <div>
-                                            <!-- Approval status  -->
-                                            <div v-if="editedItem.approval_status_uni.label == 'Approved'" class="q-mr-md">
-                                                <q-icon name="approval" color="green" style="font-size: 1.5em"></q-icon>
-                                                <span>Approved</span>
-                                            </div>
-                                            <div v-else-if="editedItem.approval_status_uni.label == 'Pending'" class="q-mr-md">
-                                                <q-icon name="av_timer" color="amber-7" style="font-size: 1.5em"></q-icon>
-                                                <span>Pending</span>
-                                            </div>
-                                            <div v-else class="q-mr-md">
-                                                <q-icon name="thumb_down_alt" class="edx-red" style="font-size: 1.5em"></q-icon>
-                                                <span>Declined</span>
-                                            </div>
-                                            
+                                        <div class="row">
 
-                                            <q-popup-edit v-model="editedItem.approval_status_uni" title="Approvals" buttons >
+                                            <!-- Approval status  -->
+                                            <div class="q-mr-md cursor-pointer">
+
+                                                <q-icon
+                                                    class="q-mr-sm" 
+                                                    :name="approvalStatusIcon(editedItem.approval_status_uni.id)" 
+                                                    :class="approvalStatusIconColor(editedItem.approval_status_uni.id)"
+                                                >
+                                                </q-icon>
+                                                <span>{{ editedItem.approval_status_uni.label }}</span>
+
+                                            </div>
+                                            <!-- End of Approval status  -->
+
+                                            <!-- Approval type -->
+                                            <div class="cursor-pointer">
+                                                <q-icon 
+                                                class="q-mr-sm" 
+                                                :name="approvalTypeIcon(editedItem.approval_type_uni.id)" 
+                                                :class="approvalTypeIconColor(editedItem.approval_type_uni.id)"></q-icon>
+                                                <span>{{ approvalType(editedItem.approval_type_uni.id) }}</span>
+                                            </div>
+                                            <!-- End of Approval type -->
+                                                
+
+                                            <q-popup-edit v-model="editedItem.approval_status_uni"  title="Approvals" buttons >
                                                 <div style="width: 450px !important;max-width: 450px !important;">
                                                     <div class="row">
                                                         <div class="col-md-4">
@@ -649,17 +672,17 @@
                                                             />
                                                         </div>
 
-                                                        <div class="col-md-7 q-ml-md">
-                                                            
+                                                        <div class="col-md-7 q-ml-md" v-if="editedItem.approval_type_uni">
+
                                                             <q-option-group
                                                                 :options="optionsApp"
                                                                 label="Notifications"
                                                                 type="radio"
-                                                                v-model="editedItem.approval_type_uni.value"
+                                                                v-model="editedItem.approval_type_uni.id"
                                                             />
 
                                                             <q-input 
-                                                                :disable="editedItem.approval_type_uni.value !== 4" 
+                                                                :disable="editedItem.approval_type_uni.id !== 4" 
                                                                 class="q-mt-md q-mb-lg" dense outlined v-model="editedItem.approver" 
                                                                 label="Approver Name" 
                                                             />
@@ -670,67 +693,67 @@
                                                 </div>
                                             </q-popup-edit>
                                             <!-- End of approval status -->
-                                        </div>
 
-                                        <!-- Approval type -->
-                                        <div v-if="editedItem.approval_type_uni.value == 1">
-                                            <q-icon name="psychology" color="blue" style="font-size: 1.5em"></q-icon>
-                                            <span>Needs Assessment</span>
                                         </div>
-                                        <div v-else-if="editedItem.approval_type_uni.value == 2">
-                                            <q-icon name="category" color="blue" style="font-size: 1.5em"></q-icon>
-                                            <span>Catalog</span>
-                                        </div>
-                                        <div v-else-if="editedItem.approval_type_uni.value == 3">
-                                            <q-icon name="touch_app" color="blue" style="font-size: 1.5em"></q-icon>
-                                            <span>Blanket Approval</span>
-                                        </div>
-                                        <div v-else-if="editedItem.approval_type_uni.value == 4">
-                                            <q-icon name="how_to_reg" color="blue" style="font-size: 1.5em"></q-icon>
-                                            <span>Pre Approval</span>
-                                        </div>
-                                        <!-- End of Approval type -->
-
-                                        
 
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="q-mb-md" v-if="editedItem.status_uni">
-                            <div class="text-subtitle2 q-mb-sm">Service Status</div>
+                        <div class="q-mb-md" >
                             <div class="row">
-                                <div class="col-md-6">
+                                <div v-if="editedItem.status_uni" class="col-md-5">
+                                    <div class="text-subtitle2 q-mb-sm">Service Status</div>
+                                    <div class="row">
+                                        <div class="col-md-12">
 
-                                    <div class="h-popup cursor-pointer">
-                                        <q-icon 
-                                            :name="activityStatusIcon" 
-                                            :class="activityStatusIconColor" 
-                                            class="q-mr-sm"
-                                            style="font-size: 1.5em"
-                                        ></q-icon>
-                                        <span>{{ editedItem.status_uni.label }}</span>
+                                            <div class="h-popup cursor-pointer">
+                                                <q-icon 
+                                                    :name="activityStatusIcon(editedItem.status_uni.id)" 
+                                                    :class="activityStatusIconColor(editedItem.status_uni.id)" 
+                                                    class="q-mr-sm"
+                                                    style="font-size: 1.5em"
+                                                ></q-icon>
+                                                <span>{{ editedItem.status_uni.label }}</span>
+                                            </div>
+
+                                            <q-popup-edit v-model="editedItem.status_uni" 
+                                            title="Service Status" buttons >
+                                                <q-select  
+                                                    outlined
+                                                    dense
+                                                    input-debounce="0"
+                                                    v-model="editedItem.status_uni" 
+                                                    :options="optionsStatus"
+                                                >
+                                                    <template v-slot:no-option>
+                                                        <q-item>
+                                                            <q-item-section class="text-grey">
+                                                            No results
+                                                            </q-item-section>
+                                                        </q-item>
+                                                    </template>
+                                                </q-select>
+                                            </q-popup-edit>
+                                            
+                                        </div>
                                     </div>
-
-                                    <q-popup-edit v-model="editedItem.status_uni" title="Billing Status" buttons >
-                                        <q-select  
-                                            outlined
-                                            dense
-                                            input-debounce="0"
-                                            v-model="editedItem.status_uni" 
-                                            :options="optionsStatus"
-                                        >
-                                            <template v-slot:no-option>
-                                                <q-item>
-                                                    <q-item-section class="text-grey">
-                                                    No results
-                                                    </q-item-section>
-                                                </q-item>
-                                            </template>
-                                        </q-select>
-                                    </q-popup-edit>
-                                    
+                                </div>
+                                <div class="col-md-5"> 
+                                    <div class="text-subtitle2 q-mb-sm">Documents and Tasks</div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="h-popup cursor-pointer">
+                                                <q-icon 
+                                                    @click="openDocumentsModal"
+                                                    name="folder"
+                                                    class="edx-folder q-mr-sm"
+                                                    style="font-size: 2em"
+                                                ></q-icon>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -748,7 +771,7 @@
                                             <template v-slot:append>
                                                 <q-icon name="event" class="cursor-pointer">
                                                 <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                                    <q-date v-model="editedItem.completed_date">
+                                                    <q-date color="edx-pagination" v-model="editedItem.completed_date">
                                                     <div class="row items-center justify-end">
                                                         <q-btn v-close-popup label="Close" color="primary" flat />
                                                     </div>
@@ -1026,7 +1049,7 @@
                                     <template v-slot:append>
                                     <q-icon name="event" class="cursor-pointer">
                                         <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                        <q-date 
+                                        <q-date color="edx-pagination" 
                                         :disabled="tempDateOfActivity.is_full_day" 
                                         :readonly="tempDateOfActivity.is_full_day" 
                                         v-model="tempDateOfActivity.startdate" 
@@ -1047,7 +1070,7 @@
                                     <template v-slot:append>
                                     <q-icon name="event" class="cursor-pointer">
                                         <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                        <q-date 
+                                        <q-date color="edx-pagination" 
                                             :disabled="tempDateOfActivity.is_full_day" 
                                             :readonly="tempDateOfActivity.is_full_day" 
                                             v-model="tempDateOfActivity.endDate" 
@@ -1443,6 +1466,14 @@
 
         </dialog-draggable>
 
+        <DocumentsPopup 
+            :show="showDocumentPopup" 
+            @togglePopup="togglePopup"
+            :activity="editedItem"
+            :isEdit="isEdit"
+            :categoryId="categoryId"
+        />
+
     </div>
 </template>
 
@@ -1455,6 +1486,7 @@ import axios from 'axios'
 import config from '../../../config'
 import ICONS from '../../../icons'
 import DialogDraggable from '../DialogDraggable.vue';
+import DocumentsPopup from '../documentsPopup/DocumentsPopup';
 
 let typingTimer
 let doneTypingInterval = 500
@@ -1466,7 +1498,8 @@ export default {
     components: {
         dialogDraggable,
         DateOfActivityTable,
-        DialogDraggable
+        DialogDraggable,
+        DocumentsPopup
     },
     props: {
         barInfo: {
@@ -1478,6 +1511,11 @@ export default {
     },
     data() {
         return {
+
+            showDocumentPopup: false,
+            categoryId: 5,
+
+
             mode: 'list',
             tab: '1',
             //
@@ -1724,9 +1762,32 @@ export default {
                 { label: 'Saturday', checked: false}
             ],
             selectOptionsDayWeekMonth: [],
+            optionsFundSource: [],
         }
     },
     methods: {
+        
+        filterSupplier (val, update) {
+
+            if (val === '') {
+                update(() => {
+                    this.optionsSupplier = this.optionsSupplier
+                })
+                return
+            }
+
+            update(() => {
+                const needle = val.toLowerCase()
+                this.optionsSupplier = this.optionsSupplierForFilter.filter(v => v.label != null && v.label.toLowerCase().indexOf(needle) > -1)
+            })
+
+        },
+        togglePopup(val) {
+            this.showDocumentPopup = val
+        },
+        openDocumentsModal() {
+            this.showDocumentPopup = true
+        },
 
         getBudgetBalance( tab, categoryId, schoolId, limit, page) {
             
@@ -1899,7 +1960,7 @@ export default {
             subcategory_uni: {
                 id: data[i].sub_category ? data[i].sub_category.id : null,
                 label: data[i].sub_category ? data[i].sub_category.name : 'NA',
-                name: data[i].sub_category ? data[i].sub_category.abbreviation : 'NA'
+                abbr: data[i].sub_category ? data[i].sub_category.abbreviation : 'NA'
             },
             note: data[i].note,
             approver: data[i].approver,
@@ -1972,7 +2033,11 @@ export default {
                     id: null, 
                     label: "N/A" 
                 },
-                subcategory_uni: this.optionsSubcategory[0],
+                subcategory_uni: {
+                    id: null, 
+                    label: 'N/A',
+                    abbr: 'N/A'
+                },
                 approval_status_uni: {
                     id: 1,
                     label: 'Approved'
@@ -1985,6 +2050,11 @@ export default {
                     id: 3,
                     label: 'I',
                     name: 'I',
+                },
+                fund_source: {
+                    id: null,
+                    label: 'N/A',
+                    abbr: 'N/A'
                 },
                 billing: {
                     id: 4,
@@ -2342,7 +2412,7 @@ export default {
                 for(let i=0; i<subcategories.length; i++) {
                     let obj = {
                         id: subcategories[i].id,
-                        name: subcategories[i].abbreviation,
+                        abbr: subcategories[i].abbreviation,
                         label: subcategories[i].name
                     }
                     subcategoriesArr.push(obj)
@@ -2379,12 +2449,6 @@ export default {
             this.optionsSupplierForFilter = supplierArr
         })
 
-        },
-        filterSupplier (val, update, abort) {
-            // update(() => {
-            //     const needle = val.toLowerCase()
-            //     this.optionsSupplier = this.optionsSupplierForFilter.filter(v =>   v.label.toLowerCase().indexOf(needle) > -1)
-            // })
         },
         // Get category types
         getCategoryTypes(id) {
@@ -2552,6 +2616,36 @@ export default {
             this.teachersTypeArr[typeIndex].disable = false
 
 
+        },
+        // FUNDS
+        getFunds(title) {
+
+            const conf = {
+                method: 'GET',
+                url: config.getFunds + title,
+                headers: {
+                Accept: 'application/json',
+                }
+            }
+            
+            axios(conf).then(res => {
+                console.log('funds', res.data)
+
+                let fundSource = res.data.fundSource;
+                let fundSourceArr = [];
+
+                for(let i=0; i<fundSource.length; i++) {
+                    
+                    let obj = {
+                        id: fundSource[i].id,
+                        label: fundSource[i].name,
+                        abbr: fundSource[i].abbreviation
+                    }
+                    fundSourceArr.push(obj)
+                }
+
+                this.optionsFundSource = fundSourceArr;
+            })
         },
         // PARTICIPANTS
         getParticipiant(value) {
@@ -2945,7 +3039,7 @@ export default {
                 console.log('get campuses',  res.data[0].campus)
                 
                 const campuses = res.data[0].campus;
-                let campusesArr = [];
+                let campusesArr = [{ id: null, label: 'N/A'  }];
 
                 for(let i=0; i<campuses.length; i++) {
                     campusesArr.push({
@@ -3033,7 +3127,8 @@ export default {
             })
         },
 
-                // Budget 
+        //////////////
+        // Budget 
         changeBudgetRowsPerPage(){
 
             this.budgetCount = this.tpagination.rowsPerPage
@@ -3054,7 +3149,260 @@ export default {
             const allocationFundId = this.allocationFundId
 
             this.getBudgetBalance(tab, 3, schoolId, this.count, val)
+        },
+
+        ////////
+        approvalType(id) {
+            // if(id) {
+            //     for(let i=0; i<this.optionsApp.length; i++) {
+            //         if(this.optionsApp[i].id === id) {
+            //             console.log('doc doc doc ', this.optionsApp[i].label)
+            //             return this.optionsApp[i].label
+            //         }
+            //     }
+            // }
+        },
+        ////////////////////////////////////////////////
+        activityStatusIcon(id) {
+
+            // id: 1 : Canceled
+            // id: 2 : Budgeted
+            // id: 3 : Gathering Documents
+            // id: 4 : Ready for billing
+
+            const iconId = id
+            let icon = null;
+
+            switch(iconId) {
+                case 1:
+                    icon = ICONS.canceled
+                    break;
+                case 2:
+                    icon = ICONS.budgeted
+                    break;
+                case 3:
+                    icon = ICONS.gatheringDocuments
+                    break;
+                case 4:
+                    icon = ICONS.eeadyForBilling
+                    break;
+                case null:
+                    icon = ICONS.noAnswer
+                    break;
+            }
+
+            return icon
+        },
+        activityStatusIconColor(id) {
+
+            const iconId = id
+            let color = null;
+
+            switch(iconId) {
+                case 1:
+                    color = 'edx-icon-canceled'
+                    break;
+                case 2:
+                    color = 'edx-icon-budgeted'
+                    break;
+                case 3:
+                    color = 'edx-icon-gathering-documents'
+                    break;
+                case 4:
+                    color = 'edx-icon-ready-for-billing'
+                    break;
+                case null:
+                    color = 'edx-icon-no-answer'
+                    break
+            }
+
+            return color
+        },
+        ////////////////////////////////////////////////
+        activityTypeIcon(id) {
+
+            console.log(id)
+            
+            const iconId = id
+            let icon = null
+
+            switch(iconId) {
+                case 1:
+                    icon = ICONS.online
+                    break;
+                case 2:
+                    icon = ICONS.onSite
+                    break;
+            }
+
+            return icon
+
+        },
+        activityTypeIconColor(id) {
+
+            // id: 1 : Online
+            // id: 2 : On site
+
+            if(id) {
+
+                const iconId = id
+                let color = null;
+
+                switch(iconId) {
+                    case 1:
+                        color = 'edx-icon-online'
+                        break;
+                    case 2:
+                        color = 'edx-icon-on-site'
+                        break;
+                }
+
+                return color
+
+            }
+
+        },
+        ///////////////////////////////////////////////
+        approvalStatusIcon(id) {
+
+            // id: 1 : Approved
+            // id: 2 : Declined
+            // id: 3 : Pending
+
+            if(id) {
+                
+                const iconId = id
+                let icon = null;
+
+                switch(iconId) {
+                    case 1:
+                        icon = ICONS.approved
+                        break;
+                    case 2:
+                        icon = ICONS.declined
+                        break;
+                    case 3:
+                        icon = ICONS.pending
+                        break;
+                }
+
+                return icon
+
+            }
+        },
+        approvalStatusIconColor(id) {
+
+            if(id) {
+
+                const iconId = id
+                let icon = null;
+
+                switch(iconId) {
+                    case 1:
+                        icon = 'edx-icon-approved'
+                        break;
+                    case 2:
+                        icon = 'edx-icon-declined'
+                        break;
+                    case 3:
+                        icon = 'edx-icon-pending'
+                        break;
+                }
+
+                return icon
+
+            }
+        },
+        ///////////////////////////////////////////////
+        approvalTypeIcon(id) {
+
+            // id: 1 : Needs assassment
+            // id: 2 : Catalog
+            // id: 3 : Blanket approval
+            // id: 4 : Pre approval
+
+            if(id) {
+                
+                const iconId = id
+                let icon = null;
+
+                switch(iconId) {
+                    case 1:
+                        icon = ICONS.needsAssessment
+                        break;
+                    case 2:
+                        icon = ICONS.catalog
+                        break;
+                    case 3:
+                        icon = ICONS.blanketApproval
+                        break;
+                    case 4:
+                        icon = ICONS.preApproval
+                        break;
+                }
+
+                return icon
+
+            }
+        },
+        approvalTypeIconColor(id) {
+
+            // id: 1 : Needs assassment
+            // id: 2 : Catalog
+            // id: 3 : Blanket approval
+            // id: 4 : Pre approval
+
+            if(id) {
+                
+                const iconId = id
+                let color = null;
+
+                switch(iconId) {
+                    case 1:
+                        color = 'edx-icon-needs-assassment'
+                        break;
+                    case 2:
+                        color = 'edx-icon-catalog'
+                        break;
+                    case 3:
+                        color = 'edx-icon-blanket-approval'
+                        break;
+                    case 4:
+                        color = 'edx-icon-pre-approval'
+                        break;
+                }
+
+                return color
+
+            }
+
+        },
+        /////////////
+        fundSourceColor(fundName) {
+            
+            let className = null;
+
+            switch(fundName) {
+                case 'WR':
+                    className = 'bg-edx-bg-wr'
+                    break;
+                case 'SH':
+                    className = 'bg-edx-bg-sh'
+                    break;
+                case 'TPD':
+                    className = 'bg-edx-bg-tpd'
+                    break;
+                case 'TI':
+                    className = 'bg-edx-bg-ti'
+                    break;
+                    
+            }
+
+            return className
         }
+
+
+
     },
     watch: {
         showRemainingBalance(val) {
@@ -3103,6 +3451,7 @@ export default {
         this.getSubcategories(3)
 
         this.getAllocationFundId(tab, 3)
+        this.getFunds(tab)
     },
     computed: {
         totalMarkup() {
@@ -3113,58 +3462,6 @@ export default {
                 return 0
             }
         },
-        activityStatusIcon() {
-            // id: 1 : Canceled
-            // id: 2 : Budgeted
-            // id: 3 : Gathering Documents
-            // id: 4 : Ready for billing
-            const iconId = this.editedItem.status_uni.id;
-            let icon = null;
-
-            switch(iconId) {
-                case 1:
-                    icon = ICONS.canceled
-                    break;
-                case 2:
-                    icon = ICONS.budgeted
-                    break;
-                case 3:
-                    icon = ICONS.gatheringDocuments
-                    break;
-                case 4:
-                    icon = ICONS.eeadyForBilling
-                    break;
-                case null:
-                    icon = ICONS.noAnswer
-                    break;
-            }
-
-            return icon
-        },
-        activityStatusIconColor() {
-            const iconId = this.editedItem.status_uni.id;
-            let color = null;
-
-            switch(iconId) {
-                case 1:
-                    color = 'edx-icon-canceled'
-                    break;
-                case 2:
-                    color = 'edx-icon-budgeted'
-                    break;
-                case 3:
-                    color = 'edx-icon-gathering-documents'
-                    break;
-                case 4:
-                    color = 'edx-icon-ready-for-billing'
-                    break;
-                case null:
-                    color = 'edx-icon-no-answer'
-                    break
-            }
-
-            return color
-        }
     },
 }
 </script>

@@ -1,6 +1,4 @@
 <template>
-
-
     <div class="q-gutter-sm">
       <q-card>
         <q-table
@@ -23,11 +21,12 @@
               @click="addNew = true, addNewRow()" no-caps>Add</q-btn>
 
               <q-btn
-                icon-right="archive"
-                label="Export to Excel"
+                round 
+                icon="mdi-file-excel-box"
+                size="10px"
                 class="edx-excel-btn" text-color="white"
                 no-caps
-                @click="exportTable"
+                @click="exportTable" 
               />
 
                 <q-btn
@@ -200,7 +199,7 @@
                 <q-td key="purchaseDate" :props="props">
                     <div>{{ props.row.purchase_date }}</div>
                     <q-popup-proxy transition-show="scale" transition-hide="scale">
-                        <q-date v-model="props.row.purchase_date" mask="MM-DD-YYYY" @input="detectChange(props.rowIndex)">
+                        <q-date color="edx-pagination" v-model="props.row.purchase_date" mask="MM-DD-YYYY" @input="detectChange(props.rowIndex)">
                         <div class="row items-center justify-end q-gutter-sm">
                             <q-btn label="Cancel" color="primary" flat v-close-popup />
                             <q-btn label="OK" color="primary" flat v-close-popup />
@@ -212,7 +211,7 @@
                 <q-td key="expirationDate" :props="props">
                     <div>{{ props.row.expiration_date }}</div>
                     <q-popup-proxy transition-show="scale" transition-hide="scale">
-                        <q-date v-model="props.row.expiration_date" mask="MM-DD-YYYY" @input="detectChange(props.rowIndex)">
+                        <q-date color="edx-pagination" v-model="props.row.expiration_date" mask="MM-DD-YYYY" @input="detectChange(props.rowIndex)">
                         <div class="row items-center justify-end q-gutter-sm">
                             <q-btn label="Cancel" color="primary" flat v-close-popup />
                             <q-btn label="OK" color="primary" flat v-close-popup />
@@ -403,6 +402,13 @@ export default {
           field: "qty",
           sortable: true
         },
+                {
+          name: "name",
+          align: "left",
+          label: "Name",
+          field: "name",
+          sortable: true
+        },
         {
           name: "vendor",
           align: "left",
@@ -410,13 +416,7 @@ export default {
           field: "vendor",
           sortable: true
         },
-        {
-          name: "name",
-          align: "left",
-          label: "Name",
-          field: "name",
-          sortable: true
-        },
+
         {
           name: "costPerLicense",
           align: "left",
@@ -738,8 +738,10 @@ export default {
     },
     filterSupplier (val, update, abort) {
       update(() => {
-        const needle = val.toLowerCase()
+        if(val) {
+                  const needle = val.toLowerCase()
         this.optionsSupplier = this.optionsSupplierForFilter.filter(v =>   v.label.toLowerCase().indexOf(needle) > -1)
+        }
       })
     },
     getAdditionalInfo(type) {
@@ -757,7 +759,7 @@ export default {
             for(let i=0; i<res.data.suppliers.length; i++) {
                 let obj = {
                     id: res.data.suppliers[i].id,
-                    label: res.data.suppliers[i].short_name,
+                    label: res.data.suppliers[i].company_name,
                     value: res.data.suppliers[i].id
                 }
                 supplierArr.push(obj)

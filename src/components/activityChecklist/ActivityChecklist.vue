@@ -3,7 +3,7 @@
         <div class="q-mt-lg">
             <q-table
                 class="overflow-auto"
-                :data="data"
+                :data="data" 
                 :columns="columns"
                 :loading="loading"
                 :pagination.sync="pagination"
@@ -17,7 +17,7 @@
             <!-- Table Header -->
             <template v-slot:top-right="props">
 
-                <div class="row filter-parent">
+                <div v-show="filter" class="row filter-parent">
                     <div class="filter-child">
                         <div>
                             <div class="text-subtitle2 edx-label  q-mb-sm">Allocation</div>
@@ -25,15 +25,15 @@
                         </div>
                         <div>
                             <div class="text-subtitle2 edx-label  q-mb-sm">Category</div>
-                            <q-select :options="catagoryOptions" v-model="selectedCategory" class="q-mr-md" dense outlined style="min-width: 160px; max-width: 160px"></q-select>
+                            <q-select :disable="!selectedAllocation" :options="catagoryOptions" v-model="selectedCategory" class="q-mr-md" dense outlined style="min-width: 160px; max-width: 160px"></q-select>
                         </div>
                         <div>
                             <div class="text-subtitle2 edx-label  q-mb-sm">Subcategory</div>
-                            <q-select :options="subcatagoryOptions" v-model="selectedSubcategories" class="q-mr-md" dense outlined style="min-width: 160px; max-width: 160px"></q-select>
+                            <q-select :disable="!selectedCategory" :options="subcatagoryOptions" v-model="selectedSubcategories" class="q-mr-md" dense outlined style="min-width: 160px; max-width: 160px"></q-select>
                         </div>
                         <div>
                             <div class="text-subtitle2 edx-label  q-mb-sm">Fund Source</div>
-                            <q-select :options="optionsFundSource" v-model="selectedFunds" class="q-mr-md" dense outlined style="min-width: 250px; max-width: 250px"></q-select>
+                            <q-select :disable="!selectedAllocation" :options="optionsFundSource" v-model="selectedFunds" class="q-mr-md" dense outlined style="min-width: 250px; max-width: 250px"></q-select>
                         </div>
                         <div>
                             <div class="text-subtitle2 edx-label  q-mb-sm">Stard date</div>
@@ -41,7 +41,7 @@
                                 <template v-slot:append>
                                 <q-icon name="event" class="cursor-pointer">
                                     <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                    <q-date v-model="startDate">
+                                    <q-date color="edx-pagination" v-model="startDate">
                                         <div class="row items-center justify-end">
                                         <q-btn v-close-popup label="Close" color="primary" flat />
                                         </div>
@@ -57,7 +57,7 @@
                                 <template v-slot:append>
                                 <q-icon name="event" class="cursor-pointer">
                                     <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                    <q-date v-model="endDate">
+                                    <q-date color="edx-pagination" v-model="endDate">
                                         <div class="row items-center justify-end">
                                         <q-btn v-close-popup label="Close" color="primary" flat />
                                         </div>
@@ -71,7 +71,7 @@
                     <div class="filter-child">
                         <div>
                             <div class="text-subtitle2 edx-label  q-mb-sm">Approval</div>
-                            <q-select class="q-mr-md" :options="optionsApproval" v-model="selectedApproval" dense outlined style="min-width: 170px; max-width: 170px"></q-select>
+                            <q-select class="q-mr-md" :options="optionsApproval" v-model="selectedApproval" dense outlined style="min-width: 280px; max-width: 280px"></q-select>
                         </div>
                         <div>
                             <div class="text-subtitle2 edx-label  q-mb-sm">School</div>
@@ -121,11 +121,22 @@
                     </div>
                 </div>
 
-                <q-btn
+                <q-btn 
                     square
                     size="13px"
                     class="q-mr-md edx-add-btn" text-color="white"
-                    icon="search"
+                    icon="tune" 
+                    no-caps
+                    @click="filter=!filter"
+                >
+                    Filter
+                </q-btn>
+
+                <q-btn 
+                    square
+                    size="13px"
+                    class="q-mr-md edx-add-btn" text-color="white"
+                    icon="search" 
                     no-caps
                     @click="search"
                 >
@@ -133,11 +144,15 @@
                 </q-btn>
 
                 <q-btn
-                    icon-right="archive"
-                    label="Export to Excel"
+                    round 
+                    icon="mdi-file-excel-box"
+                    size="10px"
                     class="edx-excel-btn" text-color="white"
                     no-caps
-                />
+                    @click="exportTable"
+                >
+                    <q-tooltip content-class="edx-tooltip">Export to Excel</q-tooltip>
+                </q-btn>
 
                 <q-btn
                     flat
@@ -145,7 +160,7 @@
                     dense
                     :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
                     @click="props.toggleFullscreen"
-                    v-if="mode === 'list'"
+                    v-if="mode === 'list'" 
                     class="q-ml-md"
                 >
                     <q-tooltip content-class="edx-tooltip" :disable="$q.platform.is.mobile">
@@ -171,12 +186,12 @@
                         <span> {{ props.row.school }} </span>
                     </q-td>
                     <q-td key="allocation" :props="props">
-                        <q-chip
-                            square
+                        <q-chip 
+                            square 
                             color="edx-bg-pd"
                         >
                             <span>{{ props.row.allocation.abbr }}</span>
-                            <q-tooltip
+                            <q-tooltip 
                                 content-class="edx-tooltip"
                                 anchor="top middle" self="bottom middle" :offset="[10, 10]"
                                 transition-show="flip-right"
@@ -188,11 +203,11 @@
                     </q-td>
                     <q-td key="approval" :props="props">
 
-                        <q-icon
-                            :name="approvalStatusIcon(props.row.approval.status.id)"
+                        <q-icon 
+                            :name="approvalStatusIcon(props.row.approval.status.id)" 
                             :class="approvalStatusIconColor(props.row.approval.status.id)"
                         >
-                            <q-tooltip
+                            <q-tooltip 
                                 content-class="edx-tooltip"
                                 anchor="top middle" self="bottom middle" :offset="[10, 10]"
                                 transition-show="flip-right"
@@ -204,11 +219,11 @@
                             </q-tooltip>
                         </q-icon>
 
-                        <q-icon
-                            :name="approvalTypeIcon(props.row.approval.type.id)"
-                            :class="approvalTypeIconColor(props.row.approval.type.id)"
+                        <q-icon 
+                            :name="approvalTypeIcon(props.row.approval.type.id)" 
+                            :class="approvalTypeIconColor(props.row.approval.type.id)" 
                         >
-                            <q-tooltip
+                            <q-tooltip 
                                 content-class="edx-tooltip"
                                 anchor="top middle" self="bottom middle" :offset="[10, 10]"
                                 transition-show="flip-right"
@@ -223,11 +238,11 @@
 
                         <div class="row">
                             <div v-for="tracking in props.row.trackingList" :key="tracking.id" class="tracking-icon-parent">
-                                <q-icon
-                                    :name="tracking.icon"
+                                <q-icon 
+                                    :name="tracking.icon" 
                                     :class="tracking.status === 1 ? 'edx-blue' : 'edx-red' "
                                 >
-                                  <q-tooltip>{{ tracking.note }}</q-tooltip>
+                                   
                                 </q-icon>
                                 <div class="w-100">
                                     <q-chip square size="sm" :class="tracking.status === 1 ? 'edx-bg-blue' : 'edx-bg-red' " class="m-0 small-chip text-white">
@@ -235,15 +250,17 @@
                                     </q-chip>
                                 </div>
 
+                                 <q-tooltip>{{ tracking.note }}</q-tooltip>
+                                
                             </div>
                         </div>
 
                     </q-td>
                     <q-td key="note" :props="props">
-                        <q-icon
-                            name="sticky_note_2"
-                            color="orange"
-                            style="font-size: 2em;"
+                        <q-icon 
+                            name="sticky_note_2" 
+                            color="orange" 
+                            style="font-size: 2em;" 
                             class="cursor-pointer"
                             v-tooltip="{
                                 content: props.row.note,
@@ -256,13 +273,27 @@
                         </q-icon>
                     </q-td>
                     <q-td key="status" :props="props">
-                        <span> {{ props.row.status }} </span>
+
+                        <q-icon
+                            :name="activityStatusIcon(props.row.status.id)" 
+                            :class="activityStatusIconColor(props.row.status.id)"
+                        >
+                            <q-tooltip 
+                                content-class="edx-tooltip"
+                                anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                                transition-show="flip-right"
+                                transition-hide="flip-left"
+                            >
+                                <strong>{{ props.row.status.name }}</strong>
+                            </q-tooltip>
+                        </q-icon>
+
                     </q-td>
                 </q-tr>
             </template>
 
             <!-- Pagination -->
-            <template v-slot:bottom class="justify-end">
+            <!-- <template v-slot:bottom class="justify-end">
                 <div class="q-pa-md flex flex-center">
                 <q-pagination
                     v-model="current"
@@ -276,15 +307,15 @@
 
                 <div class="row justify-center items-center">
                     <span class="q-mr-md">Rows Per page</span>
-                    <q-select dense outlined
+                    <q-select dense outlined 
                     @input="changeRowsPerPage"
-                    v-model="pagination.rowsPerPage"
-                    :options="rowsPerPageArr"
+                    v-model="pagination.rowsPerPage" 
+                    :options="rowsPerPageArr" 
                     />
                 </div>
-
+                
                 </div>
-            </template>
+            </template> -->
 
             </q-table>
         </div>
@@ -305,6 +336,8 @@ import config from '../../../config'
 export default {
     data() {
         return {
+
+            filter: false,
 
             data: [],
             columns: [
@@ -379,12 +412,12 @@ export default {
             ],
             loading: false,
             mode: 'list',
-
+            
             pages: 1,
             current: 1,
             count: 10,
             pagination: { rowsPerPage: 10 },
-            rowsPerPageArr: ['5', '10', '25', '50', '75', '100'],
+            rowsPerPageArr: ['5', '10', '25', '50', '75', '100'], 
 
             // search fields
             allocationOptions: [],
@@ -392,7 +425,7 @@ export default {
 
             // categories
             catagoryOptions: [],
-            selectedCategory: null,
+            selectedCategory: null, 
 
             // subcategories
             subcatagoryOptions: [],
@@ -426,48 +459,129 @@ export default {
         }
     },
     methods: {
+        changePagination() {
+            this.current = val
+            this.getLicense( this.$route.params.id, this.count, val )
+        },
+        changeRowsPerPage() {
+
+        },
+        exportTable() {
+      // naive encoding to csv format
+      const content = [this.columns.map(col => wrapCsvValue(col.label))].concat(
+          this.data.map(row => this.columns.map(col => wrapCsvValue(
+              typeof col.field === 'function'
+                  ? col.field(row)
+                  : row[col.field === void 0 ? col.name : col.field],
+              col.format
+          )).join(','))
+      ).join('\r\n')
+
+      const status = exportFile(
+          'table-export.csv',
+          content,
+          'text/csv'
+      )
+
+      if (status !== true) {
+          this.$q.notify({
+              message: 'Browser denied file download...',
+              color: 'negative',
+              icon: 'warning'
+          })
+      }
+        },
         search() {
 
-            this.loading = true
-
+            // this.loading = true
+            
             let uri = '';
 
             if(this.selectedAllocation != null) {
-                uri += '&allocation=' + this.selectedAllocation
+                uri += 'allocation=' + this.selectedAllocation.id + '&'
             }
             if(this.selectedSchool != null) {
-                uri += '&school=' + this.selectedSchool
+                uri += 'school=' + this.selectedSchool.id+ '&'
             }
             if(this.selectedCategory != null) {
-                uri += '&category=' + this.selectedCategory
+                uri += 'category=' + this.selectedCategory.id+ '&'
             }
             if(this.selectedSubcategories != null) {
-                uri += '&subcategory=' + this.selectedSubcategories
+                uri += 'subcategory=' + this.selectedSubcategories.id+ '&'
             }
             if(this.selectedFunds != null) {
-                uri += '&fundSource=' + this.selectedFunds
+                uri += 'fundSource=' + this.selectedFunds.id+ '&'
             }
             if(this.selectedApproval != null) {
-                uri += '&approvalStatus=' + this.selectedApproval
-            }
-            if(this.selectedApproval != null) {
-                uri += '&approvalStatus=' + this.selectedApproval
+                uri += 'approvalStatus=' + this.selectedApproval.id+ '&'
             }
             if(this.selectedProvider != null) {
-                uri += '&supplier=' + this.selectedProvider
+                uri += 'supplier=' + this.selectedProvider.id+ '&'
             }
             if(this.selectedStatuses != null) {
-                uri += '&status=' + this.selectedStatuses
+                uri += 'status=' + this.selectedStatuses.id+ '&'
+            }
+            if(this.startDate != null) {
+                uri += 'start_date=' + this.startDate+ '&'
+            }
+            if(this.endDate != null) {
+                uri += 'end_date=' + this.endDate+ '&'
             }
 
+            console.log(uri, 'askdjlnaslkdjhasdjkhasd')
 
-            // const conf = {
-            //     method: 'GET',
-            //     url: config.getActivityTrackings,
-            //     headers: {
-            //         Accept: 'application/json',
-            //     }
-            // }
+
+            const conf = {
+                method: 'GET',
+                url: config.getActivityTrackings + uri,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+                this.pages = res.data.pagesCount
+                let activities = res.data.activity
+                let arr = []
+
+                for(let i=0; i<activities.length; i++) {
+
+                    let start = activities[i].start_date, end = activities[i].end_date;
+
+                    start == null ? start = 'TBD' : start
+                    end == null ? end = 'TBD' : end
+
+                    arr.push({
+                        provider: activities[i].supplier?.company_name,
+                        activity: activities[i].name,
+                        dateOfActivity: `${start} - ${end}`,
+                        school: activities[i].school?.name,
+                        allocation: {
+                            id: activities[i].category?.id,
+                            label: activities[i].category?.name,
+                            abbr: activities[i].category?.abbreviation,
+                        },
+                        approval: {
+                            status: {
+                                id: activities[i].approval_status?.id,
+                                label: activities[i].approval_status?.name
+                            },
+                            type: {
+                                id: activities[i].approval_types?.id,
+                                label: activities[i].approval_types?.name
+                            }
+                        },
+                        trackingList: activities[i].fields,
+                        note: activities[i].note,
+                        status: activities[i].status
+                    })
+                }
+
+                this.data = arr
+
+            })
+
+
 
 
             // getActivityTrackings
@@ -509,7 +623,7 @@ export default {
             // id: 3 : Pending
 
             if(id) {
-
+                
                 const iconId = id
                 let icon = null;
 
@@ -561,7 +675,7 @@ export default {
             // id: 4 : Pre approval
 
             if(id) {
-
+                
                 const iconId = id
                 let icon = null;
 
@@ -592,7 +706,7 @@ export default {
             // id: 4 : Pre approval
 
             if(id) {
-
+                
                 const iconId = id
                 let color = null;
 
@@ -617,6 +731,62 @@ export default {
 
         },
         /////////////
+        activityStatusIcon(id) {
+
+            // id: 1 : Canceled
+            // id: 2 : Budgeted
+            // id: 3 : Gathering Documents
+            // id: 4 : Ready for billing
+
+            const iconId = id
+            let icon = null;
+
+            switch(iconId) {
+                case 1:
+                    icon = ICONS.canceled
+                    break;
+                case 2:
+                    icon = ICONS.budgeted
+                    break;
+                case 3:
+                    icon = ICONS.gatheringDocuments
+                    break;
+                case 4:
+                    icon = ICONS.eeadyForBilling
+                    break;
+                case null:
+                    icon = ICONS.noAnswer
+                    break;
+            }
+
+            return icon
+        },
+        activityStatusIconColor(id) {
+
+            const iconId = id
+            let color = null;
+
+            switch(iconId) {
+                case 1:
+                    color = 'edx-icon-canceled'
+                    break;
+                case 2:
+                    color = 'edx-icon-budgeted'
+                    break;
+                case 3:
+                    color = 'edx-icon-gathering-documents'
+                    break;
+                case 4:
+                    color = 'edx-icon-ready-for-billing'
+                    break;
+                case null:
+                    color = 'edx-icon-no-answer'
+                    break
+            }
+
+            return color
+        },
+        //////////////////////////////////////////////////
 
         getActivityTrackings(limit, page) {
 
@@ -662,7 +832,7 @@ export default {
                         },
                         trackingList: activities[i].fields,
                         note: activities[i].note,
-                        status: activities[i].status?.name
+                        status: activities[i].status
                     })
                 }
 
@@ -671,7 +841,7 @@ export default {
             })
         },
         //
-
+        
         // Get titles
         getAllocations() {
 
@@ -698,82 +868,81 @@ export default {
 
         },
         // Get categories
-        getCategories() {
+        getCategoryTypes(id) {
 
             const conf = {
                 method: 'GET',
-                url: config.getAllCategories,
+                url: config.getCategoryTypes + id + '/1',
+                headers: {
+                Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+
+            let types = res.data.typesCategories;
+            let typesArray = []
+
+            for(let i=0; i<types.length; i++) {
+            let obj = {
+                id: types[i].id,
+                label: types[i].name,
+                name: types[i].abbreviation
+            }
+            typesArray.push(obj)
+            }
+
+            this.catagoryOptions = typesArray
+
+        })
+        },
+        // Get subcategories
+        getSubcategoryTypes(id) {
+
+            const conf = {
+                method: 'GET',
+                url: config.getSubcategories + id,
                 headers: {
                     Accept: 'application/json',
                 }
             }
 
             axios(conf).then(res => {
-
-                let types = res.data.categories;
-                let typesArray = []
-
-                for(let i=0; i<types.length; i++) {
+                console.log('res subcategories', res)
+                const subcategoriesArr = []
+                const subcategories = res.data.typesCategories
+                for(let i=0; i<subcategories.length; i++) {
                     let obj = {
-                        id: types[i].id,
-                        label: types[i].name,
-                        name: types[i].abbreviation
+                        id: subcategories[i].id,
+                        name: subcategories[i].abbreviation,
+                        label: subcategories[i].name
                     }
-                    typesArray.push(obj)
+                    subcategoriesArr.push(obj)
                 }
-
-                this.catagoryOptions = typesArray
-
-            })
-        },
-        // Get subcategories
-        getSubcategories() {
-
-            const conf = {
-                method: 'GET',
-                url: config.getAllSubcategories,
-                headers: {
-                Accept: 'application/json',
-                }
-            }
-
-            axios(conf).then(res => {
-
-                let types = res.data.subcategories;
-                let typesArray = []
-
-                for(let i=0; i<types.length; i++) {
-                    let obj = {
-                        id: types[i].id,
-                        label: types[i].name,
-                        name: types[i].abbreviation
-                    }
-                    typesArray.push(obj)
-                }
-
-                this.subcatagoryOptions = typesArray
-
+                this.subcatagoryOptions = subcategoriesArr
             })
         },
 
         // Get funds
-        getFunds() {
+        getFunds(title) {
 
             const conf = {
                 method: 'GET',
-                url: config.getAllFunds,
+                url: config.getFunds + title,
                 headers: {
                 Accept: 'application/json',
                 }
             }
-
+            
             axios(conf).then(res => {
+
+                console.log('funds ======', res.data)
 
                 let fundSource = res.data.fundSource;
                 let fundSourceArr = [];
 
                 for(let i=0; i<fundSource.length; i++) {
-
+                    
                     let obj = {
                         id: fundSource[i].id,
                         label: fundSource[i].name,
@@ -788,7 +957,7 @@ export default {
 
         // Approvals
         getApprovals() {
-
+      
             const conf = {
                 method: 'GET',
                 url: config.getApprovals,
@@ -801,7 +970,7 @@ export default {
 
                 let approvalStatus = res.data.activityApprovalStatus
                 let approvalTypes = res.data.activityApprovalTypes
-
+                
                 let statusArr = [], typesArr = [];
 
                 for(let i=0; i<approvalStatus.length; i++) {
@@ -811,7 +980,7 @@ export default {
                     }
                     statusArr.push(obj)
                 }
-
+                
                 this.optionsApproval = statusArr
 
             })
@@ -910,11 +1079,18 @@ export default {
     created() {
         this.getActivityTrackings(this.count, this.current)
         this.getAllocations()
-        this.getCategories()
-        this.getSubcategories()
-        this.getFunds()
         this.getApprovals()
         this.getStatuses()
+    },
+    watch: {
+        selectedAllocation(val) {
+            this.getCategoryTypes(val.id)
+            this.getFunds(val.id)
+        },
+        selectedCategory(val) {
+            console.log(val.id)
+            this.getSubcategoryTypes(val.id)
+        }
     }
 }
 </script>
@@ -947,7 +1123,7 @@ export default {
 .filter-parent {
     flex-wrap: wrap;
     height: 155px;
-    width: 85%;
+    width: 78%;
 }
 
 .filter-child {

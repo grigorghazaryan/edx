@@ -72,13 +72,14 @@
                     Add
                 </q-btn>
 
-                <q-btn
-                    icon-right="archive"
-                    label="Export to Excel"
-                    class="edx-excel-btn" text-color="white"
-                    no-caps
-                    @click="exportTable"
-                />
+                      <q-btn
+        round 
+        icon="mdi-file-excel-box"
+        size="10px"
+        class="edx-excel-btn" text-color="white"
+        no-caps
+        @click="exportTable" 
+      />
 
                 <q-btn
                     flat
@@ -573,7 +574,7 @@
                                     <template v-slot:append>
                                         <q-icon name="event" class="cursor-pointer">
                                         <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                            <q-date v-model="editedItem.start_date">
+                                            <q-date color="edx-pagination" v-model="editedItem.start_date">
                                             <div class="row items-center justify-end">
                                                 <q-btn v-close-popup label="Close" color="primary" flat />
                                             </div>
@@ -589,7 +590,7 @@
                                     <template v-slot:append>
                                         <q-icon name="event" class="cursor-pointer">
                                         <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                            <q-date v-model="editedItem.end_date">
+                                            <q-date color="edx-pagination" v-model="editedItem.end_date">
                                             <div class="row items-center justify-end">
                                                 <q-btn v-close-popup label="Close" color="primary" flat />
                                             </div>
@@ -827,7 +828,7 @@
                                             <template v-slot:append>
                                                 <q-icon name="event" class="cursor-pointer">
                                                 <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                                    <q-date v-model="editedItem.completed_date">
+                                                    <q-date color="edx-pagination" v-model="editedItem.completed_date">
                                                     <div class="row items-center justify-end">
                                                         <q-btn v-close-popup label="Close" color="primary" flat />
                                                     </div>

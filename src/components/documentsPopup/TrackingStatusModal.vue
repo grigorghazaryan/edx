@@ -9,12 +9,15 @@
                 <div class="row">
 
                     <div class="col-md-12 q-mb-md">
-                        <div class="row justify-start ">
+                        <div v-if="data" class="row justify-start ">
                             <div class="icon-parent w-100">
-                                <div><q-icon 
-                                :name="data.icon" 
-                                :class="data.status === 1 ? 'edx-blue' : 'edx-red' "
-                                style="font-size: 4em" /></div>
+                                <div v-if="data.status">
+                                    <q-icon 
+                                        :name="data.icon" 
+                                        :class="data.status == 1 ? 'edx-blue' : 'edx-red' "
+                                        style="font-size: 4em" 
+                                    />
+                                </div>
                                 <div class="text-center w-100">
                                     <q-chip square size="sm"  :class="data.status === 1 ? 'edx-bg-blue' : 'edx-bg-red' " class="m-0 text-white">
                                         <b>{{ abbr }}</b>
@@ -22,7 +25,7 @@
                                 </div>
                             </div>
                             <div class="text-h6 q-ml-md">
-                                <div class="q-mt-md">Sign in and Evalution Forms</div>
+                                <div class="q-mt-md">{{ data.name }}</div>
                             </div>
                         </div>
                     </div>

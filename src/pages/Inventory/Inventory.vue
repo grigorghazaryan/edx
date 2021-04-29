@@ -1,14 +1,6 @@
 <template>
   <q-page class="q-pa-sm edx-background">
 
-    <!-- <div class="q-pa-md q-gutter-sm">
-      <q-breadcrumbs>
-        <q-breadcrumbs-el icon="dashboard" label="Dashboard" to="/" />
-        <q-breadcrumbs-el label="Inventory" to="/Inventory" />
-        <q-breadcrumbs-el :label="schoolName" />
-      </q-breadcrumbs>
-    </div> -->
-
     <q-card class="bg-transparent no-shadow no-border">
       <q-card-section class="q-pa-none">
         <div class="row q-col-gutter-sm">
@@ -64,27 +56,27 @@
         <q-tab-panels v-model="tab" animated class="tab-panels-parent">
 
           <q-tab-panel name="1" class="q-p-sm">
-            <InventoryTable1 />
+            <InventoryTable :type="1" />
           </q-tab-panel>
 
           <q-tab-panel name="2" class="q-p-sm">
-            <InventoryTable2 />
+            <InventoryTable :type="2" />
           </q-tab-panel>
 
           <q-tab-panel name="3" class="q-p-sm">
-            <InventoryTable3 />
+            <InventoryTable :type="3" />
           </q-tab-panel>
 
           <q-tab-panel name="4" class="q-p-sm">
-            <InventoryTable4 />
+            <InventoryTable :type="4" />
           </q-tab-panel>
 
           <q-tab-panel name="5" class="q-p-sm">
-            <InventoryEsser />
+            <InventoryTable :type="5" />
           </q-tab-panel>
 
           <q-tab-panel name="6" class="q-p-sm">
-            <InventoryGeer />
+            <InventoryTable :type="6" />
           </q-tab-panel>
 
         </q-tab-panels>
@@ -101,6 +93,9 @@ import {exportFile} from 'quasar'
 import axios from 'axios'
 import config from '../../../config'
 
+import InventoryTable from '../../components/inventory/InventoryTable'
+
+
 import InventoryTable1 from '../../components/inventory/InventoryTable1'
 import InventoryTable2 from '../../components/inventory/InventoryTable2'
 import InventoryTable3 from '../../components/inventory/InventoryTable3'
@@ -115,6 +110,8 @@ import InventoryGeer from '../../components/inventory/InventoryTableGeer'
 export default {
   name: 'Inventory',
   components: {
+    InventoryTable,
+
     InventoryTable1, 
     InventoryTable2, 
     InventoryTable3, 

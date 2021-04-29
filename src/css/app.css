@@ -7,20 +7,28 @@
 :root {
   --blue: #3f80ea;
   --light-blue: #538dead7;
+  --lighter-blue: #538dea49;
+  --dark-blue: #2977ff;
   --light-blue-chip: #538dea49;
   --indigo: #6610f2;
-  --purple: #6f42c1;
+  --purple: #6e42c1b5;
   --pink: #e83e8c;
   --red: #d9534f;
   --light-red: #d9544fc5;
-  --light-red-chip: #d9544f81;
+  --lighter-red: #d9544f30;
+  --dark-red: #d7403b;
   --orange: #ff943cee;
   --light-orange: #fd7d14c2;
+  --lighter-orange: #fd7d1425;
   --light-orange-chip: #fd7d14c2;
-  --yellow: #f5b04f;
+  --dark-orange: #e46802;
+  --yellow: #f5d44f;
+  --lighter-yellow: #f5d44f7b;
+  --dark-yellow: #dfb300;
   --green: #4bbf74c0;
   --light-green: #4bbf74d0;
-  /*--green: #74b100;*/
+  --lighter-green: #4bbf7433;
+  --dark-green: #1ca54c;
   --excel-green: #147c44;
   --teal: #67981a;
   --cyan: #0583c5;
@@ -40,7 +48,6 @@
   --white: #fff;
   --gray: #999999;
   --darker-light: #cccccc;
-  --dark-red: #cc0000;
   --lighter-dark: #262626;
   --gray-01: #e8edef;
   --gray-02: #f5f5f5;
@@ -161,6 +168,9 @@ span.edx-header-text {
   max-height: 40px;
   height: 40px;
 }
+
+
+
 
 .w-100 {
   width: 100%;

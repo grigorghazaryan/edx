@@ -23,12 +23,13 @@
               @click="addNew = true, addNewRow()" no-caps>Add</q-btn>
 
               <q-btn
-                icon-right="archive"
-                label="Export to Excel"
-                class="edx-excel-btn" text-color="white"
-                no-caps
-                @click="exportTable"
-              />
+                      round 
+                      icon="mdi-file-excel-box"
+                      size="10px"
+                      class="edx-excel-btn" text-color="white"
+                      no-caps
+                      @click="exportTable" 
+                    />
 
                 <q-btn
                     flat
@@ -200,7 +201,7 @@
                 <q-td key="purchaseDate" :props="props">
                     <div>{{ props.row.purchase_date }}</div>
                     <q-popup-proxy transition-show="scale" transition-hide="scale">
-                        <q-date v-model="props.row.purchase_date" mask="MM-DD-YYYY" @input="detectChange(props.rowIndex)">
+                        <q-date color="edx-pagination" v-model="props.row.purchase_date" mask="MM-DD-YYYY" @input="detectChange(props.rowIndex)">
                         <div class="row items-center justify-end q-gutter-sm">
                             <q-btn label="Cancel" color="primary" flat v-close-popup />
                             <q-btn label="OK" color="primary" flat v-close-popup />
@@ -212,7 +213,7 @@
                 <q-td key="expirationDate" :props="props">
                     <div>{{ props.row.expiration_date }}</div>
                     <q-popup-proxy transition-show="scale" transition-hide="scale">
-                        <q-date v-model="props.row.expiration_date" mask="MM-DD-YYYY" @input="detectChange(props.rowIndex)">
+                        <q-date color="edx-pagination" v-model="props.row.expiration_date" mask="MM-DD-YYYY" @input="detectChange(props.rowIndex)">
                         <div class="row items-center justify-end q-gutter-sm">
                             <q-btn label="Cancel" color="primary" flat v-close-popup />
                             <q-btn label="OK" color="primary" flat v-close-popup />
@@ -226,7 +227,7 @@
                     <div v-if="props.row.changed">
 
                     <q-btn
-                        @click="cancellChange(props.rowIndex)"
+                       @click="cancellChange(props.rowIndex)"
                 icon="cancel"
                 text-color="white" 
                 class="q-mr-sm edx-bg-orange"
@@ -265,7 +266,7 @@
 
                     <div v-if="props.row.showEditButton && !props.row.changed">
                     <q-btn 
-                     icon="delete_forever"
+                        icon="delete_forever"
                     text-color="white" 
                     class="q-mr-sm edx-delete-btn"
                     @click="openDeleteModal(props.row)" 
@@ -404,19 +405,20 @@ export default {
           sortable: true
         },
         {
-          name: "vendor",
-          align: "left",
-          label: "Vendor",
-          field: "vendor",
-          sortable: true
-        },
-        {
           name: "name",
           align: "left",
           label: "Name",
           field: "name",
           sortable: true
         },
+        {
+          name: "vendor",
+          align: "left",
+          label: "Vendor",
+          field: "vendor",
+          sortable: true
+        },
+        
         {
           name: "costPerLicense",
           align: "left",
@@ -738,8 +740,10 @@ export default {
     },
     filterSupplier (val, update, abort) {
       update(() => {
-        const needle = val.toLowerCase()
+        if(val) {
+                  const needle = val.toLowerCase()
         this.optionsSupplier = this.optionsSupplierForFilter.filter(v =>   v.label.toLowerCase().indexOf(needle) > -1)
+        }
       })
     },
     getAdditionalInfo(type) {
@@ -757,7 +761,7 @@ export default {
             for(let i=0; i<res.data.suppliers.length; i++) {
                 let obj = {
                     id: res.data.suppliers[i].id,
-                    label: res.data.suppliers[i].short_name,
+                    label: res.data.suppliers[i].company_name,
                     value: res.data.suppliers[i].id
                 }
                 supplierArr.push(obj)

@@ -192,7 +192,7 @@
                                                         <template v-slot:append>
                                                             <q-icon name="event" class="cursor-pointer">
                                                                 <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                                                <q-date v-model="props.row.invoiceDate">
+                                                                <q-date color="edx-pagination" v-model="props.row.invoiceDate">
                                                                     <div class="row items-center justify-end">
                                                                     <q-btn v-close-popup label="Close" color="primary" flat />
                                                                     </div>
@@ -210,7 +210,7 @@
                                                         <template v-slot:append>
                                                             <q-icon name="event" class="cursor-pointer">
                                                                 <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                                                <q-date v-model="props.row.dueDate">
+                                                                <q-date color="edx-pagination" v-model="props.row.dueDate">
                                                                     <div class="row items-center justify-end">
                                                                     <q-btn v-close-popup label="Close" color="primary" flat />
                                                                     </div>
@@ -332,12 +332,12 @@
                             </div>
                             <div class="col-md-2 text-left">
                                 <div>
-                                    <q-input :disable="!isCharges" prefix="$" outlined dense v-model="calculatedCharges" />
+                                    <q-input :disable="!isCharges" prefix="$" outlined dense v-model="charges" />
                                     <q-popup-edit v-if="isCharges" v-model="charges" buttons>
                                         <div class="row">
                                             <div class="col-md-12 q-mb-sm">
-                                                <div class="text-subtitle2 q-mb-sm">Charge Rate</div>
-                                                <q-input  prefix="%" dense outlined v-model="charges" />
+                                                <div class="text-subtitle2 q-mb-sm">Shipping Amount</div>
+                                                <q-input  prefix="$" dense outlined v-model="charges" />
                                             </div>
                                         </div>
                                     </q-popup-edit> 
@@ -1145,9 +1145,7 @@ export default {
 
 
 
-            return (parseFloat(this.subTotal) + 
-                ( this.isTax ? (this.subTotal * tax) / 100  : 0) + 
-                ( this.isCharges ? (this.subTotal * charge) / 100 : 0)).toFixed(2)
+            return ( parseFloat(this.subTotal) + ( this.isTax ? (this.subTotal * tax) / 100  : 0) + ( this.isCharges ? charge : 0)).toFixed(2)
                 
         },
         subtotal() {
@@ -1164,14 +1162,6 @@ export default {
                 return 0
             }else {
                 return  (( this.subTotal * this.tax ) / 100).toFixed(2)
-            }
-        },
-        calculatedCharges() {
-            if(!this.isCharges) {
-                this.charges = 0
-                return 0
-            }else {
-                return  (( this.subTotal * this.charges ) / 100).toFixed(2)
             }
         }
     },

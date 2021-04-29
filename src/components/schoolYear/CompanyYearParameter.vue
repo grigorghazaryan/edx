@@ -14,7 +14,7 @@
                                 <template v-slot:append>
                                     <q-icon name="event" class="cursor-pointer">
                                         <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                        <q-date v-model="startDate">
+                                        <q-date color="edx-pagination" v-model="startDate">
                                             <div class="row items-center justify-end">
                                                 <q-btn v-close-popup label="Close" color="primary" flat />
                                             </div>
@@ -31,7 +31,7 @@
                                 <template v-slot:append>
                                     <q-icon name="event" class="cursor-pointer">
                                         <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                        <q-date v-model="endDate">
+                                        <q-date color="edx-pagination" v-model="endDate">
                                             <div class="row items-center justify-end">
                                                 <q-btn v-close-popup label="Close" color="primary" flat />
                                             </div>

@@ -89,6 +89,7 @@ const config = {
     getActivity: 'https://edxchange-activity.aimtech.am/api/v1/item/', // + 1/1001/ if activity : 1 , if material : 2, ...,
     getAttendeesById: 'https://edxchange-activity.aimtech.am/api/v1/get-atendee/', // + id
     getCategoryTypes: 'https://edxchange-activity.aimtech.am/api/v1/get-types-categories/', // + 1 ? Title 1
+    getAllCategories: 'https://edxchange-activity.aimtech.am/api/v1/get-all-categories', 
     editActivity: 'https://edxchange-activity.aimtech.am/api/v1/item/', // + id
     // editActivity: 'https://edxchange-activity.aimtech.am/api/v1/activity/', // + id
     // addActivity: 'https://edxchange-activity.aimtech.am/api/v1/activity',
@@ -184,7 +185,7 @@ const config = {
     addTrackingNote: 'https://edxchange-document.aimtech.am/api/v1/add-note/', 
 
     // Activity Tracking
-    getActivityTrackings: 'https://edxchange-document.aimtech.am/api/v1/activity-tracking',
+    getActivityTrackings: 'https://edxchange-document.aimtech.am/api/v1/activity-tracking?',
     
     // Get statuses
     getStatuses: 'https://edxchange-activity.aimtech.am/api/v1/get-statuses?',

@@ -95,11 +95,12 @@
       @click="addNew = true, addNewRow()" no-caps>Add</q-btn>
 
       <q-btn
-        icon-right="archive"
-        label="Export to Excel"
+        round 
+        icon="mdi-file-excel-box"
+        size="10px"
         class="edx-excel-btn" text-color="white"
         no-caps
-        @click="exportTable"
+        @click="exportTable" 
       />
 
       <q-btn
@@ -309,7 +310,7 @@
         <q-td key="dateOfPurchase" :props="props">
           <div>{{ props.row.purchase_date }}</div>
           <q-popup-proxy transition-show="scale" transition-hide="scale">
-            <q-date v-model="props.row.purchase_date" mask="MM-DD-YYYY" @input="detectChange(props.rowIndex)">
+            <q-date color="edx-pagination" v-model="props.row.purchase_date" mask="MM-DD-YYYY" @input="detectChange(props.rowIndex)">
               <div class="row items-center justify-end q-gutter-sm">
                 <q-btn label="Cancel" color="primary" flat v-close-popup />
                 <q-btn label="OK" color="primary" flat v-close-popup />
@@ -321,73 +322,28 @@
         <q-td key="condition" :props="props">
 
           <div v-if="props.row.condition.label == 'Excelent'">
-            <span class="mdi mdi-circle-slice-7 mdi-24px edx-blue">
-              <q-tooltip
-                anchor="top middle"
-                self="bottom middle"
-                :offset="[10, 10]"
-                transition-show="flip-right"
-                transition-hide="flip-left"
-              >
-                <strong>Excellent</strong>
-              </q-tooltip>
-            </span>
+            <q-tooltip content-class="edx-tooltip">Excellent</q-tooltip>
+            <q-chip dense square clickable class="edx-icon-excellent" text-color="white" icon-right="sellr" size="12px">Excellent</q-chip>   
           </div>
 
           <div v-else-if="props.row.condition.label == 'Very Good'">
-            <span class="mdi mdi-circle-slice-6 mdi-24px edx-green">
-              <q-tooltip
-                anchor="top middle"
-                self="bottom middle"
-                :offset="[10, 10]"
-                transition-show="flip-right"
-                transition-hide="flip-left"
-              >
-                <strong>Very Good</strong>
-              </q-tooltip>
-            </span>
+            <q-tooltip content-class="edx-tooltip">Very Good</q-tooltip> 
+            <q-chip dense square clickable class="edx-icon-verygood" text-color="white" icon-right="sell" size="12px">Very Good</q-chip> 
           </div>
 
           <div v-else-if="props.row.condition.label == 'Good'">
-            <span class="mdi mdi-circle-slice-5 mdi-24px edx-warning">
-              <q-tooltip
-                anchor="top middle"
-                self="bottom middle"
-                :offset="[10, 10]"
-                transition-show="flip-right"
-                transition-hide="flip-left"
-              >
-                <strong>Good</strong>
-              </q-tooltip>
-            </span>
+            <q-tooltip content-class="edx-tooltip">Good</q-tooltip>
+            <q-chip dense square clickable class="edx-icon-good" text-color="white" icon-right="sell" size="12px">Good</q-chip>  
           </div>
 
           <div v-else-if="props.row.condition.label == 'Fair'">
-            <span class="mdi mdi-circle-slice-4 mdi-24px edx-warning">
-              <q-tooltip
-                anchor="top middle"
-                self="bottom middle"
-                :offset="[10, 10]"
-                transition-show="flip-right"
-                transition-hide="flip-left"
-              >
-                <strong>Fair</strong>
-              </q-tooltip>
-            </span>
+            <q-tooltip content-class="edx-tooltip">Fair</q-tooltip>
+            <q-chip dense square clickable class="edx-icon-fair" text-color="white" icon-right="sell" size="12px">Fair</q-chip> 
           </div>
 
           <div v-else>
-            <span class="mdi mdi-circle-slice-2 mdi-24px edx-red">
-              <q-tooltip
-                anchor="top middle"
-                self="bottom middle"
-                :offset="[10, 10]"
-                transition-show="flip-right"
-                transition-hide="flip-left"
-              >
-                <strong>Poor</strong>
-              </q-tooltip>
-            </span>
+            <q-tooltip content-class="edx-tooltip">Poor</q-tooltip>
+            <q-chip dense square clickable class="edx-icon-poor" text-color="white" icon-right="sell" size="12px">Poor</q-chip>  
           </div>
 
           <q-popup-edit
@@ -408,108 +364,38 @@
 
         <q-td key="status" :props="props">
           <div v-if="props.row.status_uni.label == 'On Premise'">
-            <span class="mdi mdi-school mdi-24px edx-blue">
-              <q-tooltip
-                anchor="top middle"
-                self="bottom middle"
-                :offset="[10, 10]"
-                transition-show="flip-right"
-                transition-hide="flip-left"
-              >
-                <strong>On Premise</strong>
-              </q-tooltip>
-            </span>
-            
+            <q-tooltip content-class="edx-tooltip">On Premise</q-tooltip>
+            <q-btn square class="edx-icon-onpremise" icon="emoji_transportation" text-color="white" size="11px" style="width: 40px"/>
           </div>
 
           <div v-else-if="props.row.status_uni.label == 'Off Premise'">
-            <span class="mdi mdi-home mdi-24px edx-orange">
-              <q-tooltip
-                anchor="top middle"
-                self="bottom middle"
-                :offset="[10, 10]"
-                transition-show="flip-right"
-                transition-hide="flip-left"
-              >
-                <strong>Off Premise</strong>
-              </q-tooltip>
-            </span>
-            
+            <q-tooltip content-class="edx-tooltip">Off Premise</q-tooltip>
+            <q-btn square class="edx-icon-offpremise" icon="domain_disabled" text-color="white" size="11px" style="width: 40px"/>
           </div>
 
           <div v-else-if="props.row.status_uni.label == 'Disposed'">
-            <span class="mdi mdi-recycle mdi-24px edx-green">
-              <q-tooltip
-                anchor="top middle"
-                self="bottom middle"
-                :offset="[10, 10]"
-                transition-show="flip-right"
-                transition-hide="flip-left"
-              >
-                <strong>Disposed</strong>
-              </q-tooltip>
-            </span>
-            
+            <q-tooltip content-class="edx-tooltip">Disposede</q-tooltip>
+            <q-btn square class="edx-icon-disposed" icon="recyclingd" text-color="white" size="11px" style="width: 40px"/>   
           </div>
 
           <div v-else-if="props.row.status_uni.label == 'Lost'">
-            <span class="mdi mdi-map-marker-question mdi-red mdi-24px edx-red" >
-              <q-tooltip
-                anchor="top middle"
-                self="bottom middle"
-                :offset="[10, 10]"
-                transition-show="flip-right"
-                transition-hide="flip-left"
-              >
-                <strong>Lost</strong>
-              </q-tooltip>
-            </span>
-            
+            <q-tooltip content-class="edx-tooltip">Lost</q-tooltip>
+            <q-btn square class="edx-icon-lost" icon="wrong_location" text-color="white" size="11px" style="width: 40px"/>
           </div>
 
           <div v-else-if="props.row.status_uni.label == 'Stolen'">
-            <span class="mdi mdi-robber mdi-red mdi-24px edx-dark">
-              <q-tooltip
-                anchor="top middle"
-                self="bottom middle"
-                :offset="[10, 10]"
-                transition-show="flip-right"
-                transition-hide="flip-left"
-              >
-                <strong>Stolen</strong>
-              </q-tooltip>
-            </span>
-            
+            <q-tooltip content-class="edx-tooltip">Stolen</q-tooltip> 
+            <q-btn square class="edx-icon-stolen" icon="person_search" text-color="white" size="11px" style="width: 40px"/>
           </div>
 
           <div v-else-if="props.row.status_uni.label == 'Transfered'">
-            <span class="mdi mdi-truck-delivery mdi-24px edx-orange">
-              <q-tooltip
-                anchor="top middle"
-                self="bottom middle"
-                :offset="[10, 10]"
-                transition-show="flip-right"
-                transition-hide="flip-left"
-              >
-                <strong>Transferred</strong>
-              </q-tooltip>
-            </span>
-            
+            <q-tooltip content-class="edx-tooltip">Transfered</q-tooltip> 
+            <q-btn square class="edx-icon-transfered" icon="local_shipping" text-color="white" size="11px" style="width: 40px"/>
           </div>
 
           <div v-else>
-            <span class="mdi mdi-dolly mdi-red mdi-24px edx-blue">
-              <q-tooltip
-                anchor="top middle"
-                self="bottom middle"
-                :offset="[10, 10]"
-                transition-show="flip-right"
-                transition-hide="flip-left"
-              >
-                <strong>Stored</strong>
-              </q-tooltip>
-            </span>
-            
+            <q-tooltip content-class="edx-tooltip">Stored</q-tooltip>
+            <q-btn square class="edx-icon-stored" icon="inventory" text-color="white" size="11px" style="width: 40px"/> 
           </div>
 
           <q-popup-edit
@@ -584,7 +470,7 @@
                     transition-show="flip-right"
                     transition-hide="flip-left"
                 >
-                  <strong>Delete</strong>
+                  <strong>Delete fff</strong>
                 </q-tooltip>
               </q-btn>
             </div>
@@ -751,7 +637,7 @@
                 />
 
                 <q-popup-proxy>
-                  <q-date :disabled="props.row.status_uni.label == 'On Premise'" v-model="props.row.relocation_date" mask="YYYY-MM-DD" @input="detectChange(props.rowIndex)">
+                  <q-date color="edx-pagination" :disabled="props.row.status_uni.label == 'On Premise'" v-model="props.row.relocation_date" mask="YYYY-MM-DD" @input="detectChange(props.rowIndex)">
                     <div class="row items-center justify-end q-gutter-sm">
                       <q-btn label="Cancel" color="primary" flat v-close-popup />
                       <q-btn label="OK" color="primary" flat v-close-popup />
@@ -799,7 +685,7 @@
                 />
 
                 <q-popup-proxy transition-show="scale" transition-hide="scale">
-                  <q-date v-model="props.row.visibility_date" mask="YYYY-MM-DD" @input="detectChange(props.rowIndex)">
+                  <q-date color="edx-pagination" v-model="props.row.visibility_date" mask="YYYY-MM-DD" @input="detectChange(props.rowIndex)">
                     <div class="row items-center justify-end q-gutter-sm">
                       <q-btn label="Cancel" color="primary" flat v-close-popup />
                       <q-btn label="OK" color="primary" flat v-close-popup />
@@ -1144,7 +1030,7 @@
                   <template v-slot:append>
                     <q-icon name="event" class="cursor-pointer">
                       <q-popup-proxy transition-show="scale" transition-hide="scale">
-                      <q-date v-model="statusChangeObject.showUntil" mask="YYYY-MM-DD">
+                      <q-date color="edx-pagination" v-model="statusChangeObject.showUntil" mask="YYYY-MM-DD">
                         <div class="row items-center justify-end q-gutter-sm">
                           <q-btn label="Cancel" color="primary" flat v-close-popup />
                           <q-btn label="OK" color="primary" flat v-close-popup />
@@ -1269,7 +1155,7 @@
                   <template v-slot:append>
                     <q-icon name="event" class="cursor-pointer">
                       <q-popup-proxy transition-show="scale" transition-hide="scale">
-                      <q-date v-model="statusChangeObject.showUntil" mask="YYYY-MM-DD">
+                      <q-date color="edx-pagination" v-model="statusChangeObject.showUntil" mask="YYYY-MM-DD">
                         <div class="row items-center justify-end q-gutter-sm">
                           <q-btn label="Cancel" color="primary" flat v-close-popup />
                           <q-btn label="OK" color="primary" flat v-close-popup />
@@ -1398,7 +1284,7 @@
                   <template v-slot:append>
                     <q-icon name="event" class="cursor-pointer">
                       <q-popup-proxy transition-show="scale" transition-hide="scale">
-                      <q-date v-model="statusChangeObject.showUntil" mask="YYYY-MM-DD">
+                      <q-date color="edx-pagination" v-model="statusChangeObject.showUntil" mask="YYYY-MM-DD">
                         <div class="row items-center justify-end q-gutter-sm">
                           <q-btn label="Cancel" color="primary" flat v-close-popup />
                           <q-btn label="OK" color="primary" flat v-close-popup />
@@ -1548,7 +1434,7 @@
                 <template v-slot:append>
                   <q-icon name="event" class="cursor-pointer">
                     <q-popup-proxy transition-show="scale" transition-hide="scale">
-                    <q-date v-model="statusChangeObject.showUntil" mask="YYYY-MM-DD">
+                    <q-date color="edx-pagination" v-model="statusChangeObject.showUntil" mask="YYYY-MM-DD">
                       <div class="row items-center justify-end q-gutter-sm">
                         <q-btn label="Cancel" color="primary" flat v-close-popup />
                         <q-btn label="OK" color="primary" flat v-close-popup />
@@ -1675,7 +1561,7 @@
                   <template v-slot:append>
                     <q-icon name="event" class="cursor-pointer">
                       <q-popup-proxy transition-show="scale" transition-hide="scale">
-                      <q-date v-model="statusChangeObject.showUntil" mask="YYYY-MM-DD">
+                      <q-date color="edx-pagination" v-model="statusChangeObject.showUntil" mask="YYYY-MM-DD">
                         <div class="row items-center justify-end q-gutter-sm">
                           <q-btn label="Cancel" color="primary" flat v-close-popup />
                           <q-btn label="OK" color="primary" flat v-close-popup />

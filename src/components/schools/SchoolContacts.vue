@@ -319,14 +319,13 @@ export default {
             }
 
             axios(conf).then(res => {
-                console.log('axios(conf).then(res => {', )
                 let contacts = res.data.contactsInfo
 
                 let contactsArr = []
                 for(let i=0; i<contacts.length; i++) {
                     contacts[i].state = {
-                        id: contacts[i].state.id,
-                        label: contacts[i].state.name
+                        id: contacts[i].state?.id,
+                        label: contacts[i].state?.name
                     }
                     contactsArr.push(contacts[i])
                 }

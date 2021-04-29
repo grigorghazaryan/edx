@@ -474,7 +474,7 @@
                                       <template v-slot:append>
                                         <q-icon name="event" class="cursor-pointer">
                                           <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                            <q-date :disabled="allDayEvent" :readonly="allDayEvent" v-model="editedItem.dateOfActivityArr[0].startdate" mask="MM/DD/YYYY">
+                                            <q-date color="edx-pagination" :disabled="allDayEvent" :readonly="allDayEvent" v-model="editedItem.dateOfActivityArr[0].startdate" mask="MM/DD/YYYY">
                                               <div class="row items-center justify-end">
                                                 <q-btn v-close-popup label="Close" color="primary" flat />
                                               </div>
@@ -491,7 +491,7 @@
                                       <template v-slot:append>
                                         <q-icon name="event" class="cursor-pointer">
                                           <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                            <q-date :disabled="allDayEvent" :readonly="allDayEvent" v-model="editedItem.dateOfActivityArr[0].endDate" mask="MM/DD/YYYY">
+                                            <q-date color="edx-pagination" :disabled="allDayEvent" :readonly="allDayEvent" v-model="editedItem.dateOfActivityArr[0].endDate" mask="MM/DD/YYYY">
                                               <div class="row items-center justify-end">
                                                 <q-btn v-close-popup label="Close" color="primary" flat />
                                               </div>
@@ -774,7 +774,7 @@
                                     <template v-slot:append>
                                       <q-icon name="event" class="cursor-pointer">
                                         <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                          <q-date :disabled="allDayEvent" :readonly="allDayEvent" v-model="tempDateOfActivity.startdate" :options="optionsFn">
+                                          <q-date color="edx-pagination" :disabled="allDayEvent" :readonly="allDayEvent" v-model="tempDateOfActivity.startdate" :options="optionsFn">
                                             <div class="row items-center justify-end">
                                               <q-btn v-close-popup label="Close" color="primary" flat />
                                             </div>
@@ -791,7 +791,7 @@
                                     <template v-slot:append>
                                       <q-icon name="event" class="cursor-pointer">
                                         <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                          <q-date :disabled="allDayEvent" :readonly="allDayEvent" v-model="tempDateOfActivity.endDate" :options="optionsFn">
+                                          <q-date color="edx-pagination" :disabled="allDayEvent" :readonly="allDayEvent" v-model="tempDateOfActivity.endDate" :options="optionsFn">
                                             <div class="row items-center justify-end">
                                               <q-btn v-close-popup label="Close" color="primary" flat />
                                             </div>

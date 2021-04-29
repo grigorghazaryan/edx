@@ -484,13 +484,15 @@
                         <div class="q-mb-md">
                             <div class="text-subtitle2 q-mb-sm">Provider</div>
                             <q-select  
-                                use-input
-                                outlined
                                 dense
+                                outlined
+                                use-input
+                                hide-selected
+                                fill-input
                                 input-debounce="0"
                                 v-model="editedItem.provider" 
                                 :options="optionsSupplier"
-                                
+                                @filter="filterSupplier"
                             >
                                 <template v-slot:no-option>
                                     <q-item>
@@ -499,6 +501,7 @@
                                         </q-item-section>
                                     </q-item>
                                 </template>
+
                             </q-select>
                         </div>
 
@@ -544,7 +547,7 @@
                                 </div>
                             </div>
                             
-                            <div v-if="optionsFundSource.length" class="col-md-3 q-pr-sm q-mb-md">
+                            <div v-if="optionsFundSource.length" class="col-md-6 q-pr-sm q-mb-md">
                                 <div class="text-subtitle2 q-mb-sm">Fund Source</div>
                                 <div class="row cursor-pointer h-popup">
 
@@ -565,7 +568,8 @@
                                     </div>
 
                                     <q-popup-edit  v-model="editedItem.fund_source" buttons>
-                                        <div class="row q-mb-lg q-mt-lg">
+                                        <div class="text-subtitle2">Fund Source</div>
+                                        <div class="row q-mb-sm q-mt-sm">
                                             <div class="col-md-12 q-pr-sm q-mb-md">
                                                 <div class="text-subtitle2 q-mb-sm"></div>
                                                 <div class="row cursor-pointer h-popup">
@@ -770,7 +774,7 @@
                                             <template v-slot:append>
                                                 <q-icon name="event" class="cursor-pointer">
                                                 <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                                    <q-date v-model="editedItem.completed_date">
+                                                    <q-date color="edx-pagination" v-model="editedItem.completed_date">
                                                     <div class="row items-center justify-end">
                                                         <q-btn v-close-popup label="Close" color="primary" flat />
                                                     </div>
@@ -884,7 +888,6 @@
             :title="'Activity Attendees'" 
             @onHide="isShowAttendingDialog=false"
             :icon="'people_alt'"
-            
         >    
 
             <q-card-section>
@@ -1052,7 +1055,7 @@
                                     <template v-slot:append>
                                     <q-icon name="event" class="cursor-pointer">
                                         <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                        <q-date 
+                                        <q-date color="edx-pagination" 
                                         :disabled="tempDateOfActivity.is_full_day" 
                                         :readonly="tempDateOfActivity.is_full_day" 
                                         v-model="tempDateOfActivity.startdate" 
@@ -1073,7 +1076,7 @@
                                     <template v-slot:append>
                                     <q-icon name="event" class="cursor-pointer">
                                         <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                        <q-date 
+                                        <q-date color="edx-pagination" 
                                             :disabled="tempDateOfActivity.is_full_day" 
                                             :readonly="tempDateOfActivity.is_full_day" 
                                             v-model="tempDateOfActivity.endDate" 
@@ -1224,16 +1227,6 @@
         <q-card-section style="max-height: 60vh" class="scroll q-pt-none q-pb-none q-pr-none q-pl-none">
             <div class="row q-mr-lg q-ml-lg q-mb-lg q-mt-lg">
                 <div class="col-md-6 q-pr-sm q-mb-md">
-                    <!-- <div class="text-subtitle2 q-mb-sm">Allocation Funds</div>
-                    <div class="row cursor-pointer h-popup">
-                        <q-select 
-                            class="full-width"
-                            v-model="testCategory" 
-                            :options="typeArr"
-                            outlined
-                            dense
-                        />
-                    </div> -->
                 </div>
                 <div class="col-md-6 q-pr-sm q-mb-md">
                     <div class="row q-mt-lg">
@@ -1360,6 +1353,16 @@ let typingTimer
 let doneTypingInterval = 500
 
 
+const stringOptions = [
+  'Google', 'Facebook', 'Twitter', 'Apple', 'Oracle'
+].reduce((acc, opt) => {
+  for (let i = 1; i <= 5; i++) {
+    acc.push(opt + ' ' + i)
+  }
+  return acc
+}, [])
+
+
 export default {
     
     name: 'ActivityTable',
@@ -1370,15 +1373,15 @@ export default {
         DocumentsPopup
     },
     props: {
-        // barInfo: {
-        //     required: true
-        // },
         title: {
             required: true
         }
     },
     data() {
         return {
+
+            model: null,
+            options: stringOptions,
 
             showDocumentPopup: false,
 
@@ -1652,6 +1655,7 @@ export default {
         }
     },
     methods: {
+        
         togglePopup(val) {
             this.showDocumentPopup = val
         },
@@ -1718,6 +1722,22 @@ export default {
 
         },
 
+        filterSupplier (val, update) {
+
+            if (val === '') {
+                update(() => {
+                    this.optionsSupplier = this.optionsSupplier
+                })
+                return
+            }
+
+            update(() => {
+                const needle = val.toLowerCase()
+                this.optionsSupplier = this.optionsSupplierForFilter.filter(v => v.label != null && v.label.toLowerCase().indexOf(needle) > -1)
+            })
+
+        },
+
         exportTable() {
             // naive encoding to csv format
             const content = [this.columns.map(col => wrapCsvValue(col.label))].concat(
@@ -1744,7 +1764,7 @@ export default {
             }
         },
         // Parsing activity
-        activityParsing(data, final) {
+        activityParsing(data) {
 
         let arr = []
         for(let i=0; i<data.length; i++) {
@@ -2293,6 +2313,7 @@ export default {
         },
         // Get subcategories
         getSubcategories(id) {
+
             const conf = {
                 method: 'GET',
                 url: config.getSubcategories + id,
@@ -2302,19 +2323,22 @@ export default {
             }
 
             axios(conf).then(res => {
-                console.log('res subcategories', res)
+
                 const subcategoriesArr = []
                 const subcategories = res.data.typesCategories
+
                 for(let i=0; i<subcategories.length; i++) {
                     let obj = {
                         id: subcategories[i].id,
                         name: subcategories[i].abbreviation,
-                        label: subcategories[i].name
+                        label: subcategories[i].name != null ? subcategories[i].name : ''
                     }
                     subcategoriesArr.push(obj)
                 }
                 this.optionsSubcategory = subcategoriesArr
+
             })
+
         },
         // Get additional Info
         getAdditionalInfo(type) {
@@ -2343,14 +2367,9 @@ export default {
 
             this.optionsSupplier = supplierArr
             this.optionsSupplierForFilter = supplierArr
+            console.log('SUPPLIER',supplierArr )
         })
 
-        },
-        filterSupplier (val, update, abort) {
-            // update(() => {
-            //     const needle = val.toLowerCase()
-            //     this.optionsSupplier = this.optionsSupplierForFilter.filter(v =>   v.label.toLowerCase().indexOf(needle) > -1)
-            // })
         },
         // Get category types
         getCategoryTypes(id) {
@@ -2939,10 +2958,9 @@ export default {
                 }
             }
             axios(conf).then(res => {
-                console.log('get campuses',  res.data[0].campus)
                 
                 const campuses = res.data[0].campus;
-                let campusesArr = [];
+                let campusesArr = [{ id: null, label: 'N/A'  }];
 
                 for(let i=0; i<campuses.length; i++) {
                     campusesArr.push({
@@ -3300,7 +3318,6 @@ export default {
 
     },
     watch: {
-
         showRemainingBalance(val) {
             if(val) {
 

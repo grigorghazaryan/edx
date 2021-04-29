@@ -21,7 +21,7 @@
                                             <template v-slot:append>
                                                 <q-icon name="event" class="cursor-pointer">
                                                     <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                                    <q-date mask="DD/MM/YYYY" @input="filterBudgetItems" v-model="start">
+                                                    <q-date color="edx-pagination" mask="DD/MM/YYYY" @input="filterBudgetItems" v-model="start">
                                                         <div class="row items-center justify-end">
                                                         <q-btn v-close-popup label="Close" color="primary" flat />
                                                         </div>
@@ -39,7 +39,7 @@
                                             <template v-slot:append>
                                                 <q-icon name="event" class="cursor-pointer">
                                                     <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                                    <q-date mask="DD/MM/YYYY" @input="filterBudgetItems" v-model="end">
+                                                    <q-date color="edx-pagination" mask="DD/MM/YYYY" @input="filterBudgetItems" v-model="end">
                                                         <div class="row items-center justify-end">
                                                         <q-btn v-close-popup label="Close" color="primary" flat />
                                                         </div>

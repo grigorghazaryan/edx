@@ -197,7 +197,7 @@
                                     <template v-slot:append>
                                     <q-icon name="event" class="cursor-pointer">
                                         <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                        <q-date v-model="editedItem.startDate">
+                                        <q-date color="edx-pagination" v-model="editedItem.startDate">
                                             <div class="row items-center justify-end">
                                             <q-btn v-close-popup label="Close" color="primary" flat />
                                             </div>
@@ -214,7 +214,7 @@
                                     <template v-slot:append>
                                     <q-icon name="event" class="cursor-pointer">
                                         <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                        <q-date v-model="editedItem.endDate">
+                                        <q-date color="edx-pagination" v-model="editedItem.endDate">
                                             <div class="row items-center justify-end">
                                             <q-btn v-close-popup label="Close" color="primary" flat />
                                             </div>
@@ -696,8 +696,7 @@ export default {
 
         getEmployeeInfo() {
             let id = this.editedItem.teacher.id ? this.editedItem.teacher.id : 0
-
-           this.getTeacherBudgetById(id)
+            this.getTeacherBudgetById(id)
         },
 
         paySchedule() {
@@ -723,7 +722,6 @@ export default {
 
                 
                 let teacherInfo = res.data.teachersCompensation[0]
-                console.log('Techer info', teacherInfo)
 
                 this.editedItem = {
 
@@ -778,11 +776,11 @@ export default {
                     isHoursWeek: { id: 1, label: 'Hours/Week'},
                     hoursWM: 0,
                     frienge: {
-                        id: teacherInfo.teacher.assignment_compensation.fringe_type ? teacherInfo.teacher.assignment_compensation.fringe_type.id : null,
-                        label: teacherInfo.teacher.assignment_compensation.fringe_type ?  teacherInfo.teacher.assignment_compensation.fringe_type.name : 'N/A'
+                        id: teacherInfo.teacher.assignment_compensation?.fringe_type ? teacherInfo.teacher.assignment_compensation.fringe_type.id : null,
+                        label: teacherInfo.teacher.assignment_compensation?.fringe_type ?  teacherInfo.teacher.assignment_compensation.fringe_type.name : 'N/A'
                     },
                     hourlyFrienge: 100,
-                    totalAmount: parseFloat(teacherInfo.teacher.assignment_compensation.total_fringe),
+                    totalAmount: parseFloat(teacherInfo.teacher?.assignment_compensation?.total_fringe),
                     assignmentStatus: {
                         id: teacherInfo.teacher.assignment_compensation ? teacherInfo.teacher.assignment_compensation.status.id : 1,
                         label: teacherInfo.teacher.assignment_compensation ? teacherInfo.teacher.assignment_compensation.status.name : 'Canceled',
@@ -805,13 +803,13 @@ export default {
                 // teacherInfo.teacher.assignment_compensation && this.monthlyDetails[0].isHourlyOverride == '0' ? false : true
                 this.monthlyDetails[0].hourlyOverride =  teacherInfo?.teacher?.assignment_compensation?.hourly_charge_override
 
-                if(parseInt(teacherInfo.teacher.assignment_compensation.work_week.is_full_time)) {
+                if(parseInt(teacherInfo?.teacher?.assignment_compensation?.work_week?.is_full_time)) {
                     this.editedItem.fullTime = true
                 }else {
                     this.editedItem.fullTime = false
                 }
 
-                this.scheduleWeekDays = JSON.parse(teacherInfo.teacher.assignment_compensation.work_week.week_day_hour)
+                this.scheduleWeekDays = JSON.parse(teacherInfo?.teacher?.assignment_compensation?.work_week?.week_day_hour)
                 if(parseInt(teacherInfo.teacher.assignment_compensation.work_week.schedule)) {
                     this.editedItem.isHoursWeek = { id: 1, label: 'Hours/Week'}
                 }else {
@@ -819,11 +817,6 @@ export default {
                     this.editedItem.hoursWM = parseInt(teacherInfo.teacher.assignment_compensation.work_week.total_hours)
                 }
 
-
-
-                
-                
-                
             })
 
         },
@@ -841,13 +834,16 @@ export default {
 
                 let data = res.data.teachers, arr = [];
 
-                for(let i=0; i<data.length; i++) {
-                    arr.push({
-                        id: data[i].teacherId,
-                        value: data[i].teacherId,
-                        label: data[i].teacherName
-                    })
-                } 
+                if(data.length) {
+                    for(let i=0; i<data.length; i++) {
+                        arr.push({
+                            id: data[i].teacherId,
+                            value: data[i].teacherId,
+                            label: data[i].teacherName
+                        })
+                    } 
+                }
+                
 
                 this.optionsTeachers = arr;
                 this.optionsTeachersForFilter = arr;
@@ -871,11 +867,13 @@ export default {
                 const fringe = res.data.fringType;
                 let fringeArr = [];
 
-                for(let i=0; i<fringe.length; i++) {
-                    fringeArr.push({
-                        id: fringe[i].id,
-                        label: fringe[i].name
-                    })
+                if(fringe.length) {
+                    for(let i=0; i<fringe.length; i++) {
+                        fringeArr.push({
+                            id: fringe[i].id,
+                            label: fringe[i].name
+                        })
+                    }
                 }
 
                 this.optionsFringe = fringeArr
@@ -895,13 +893,15 @@ export default {
                 console.log('get campuses',  res.data[0].campus)
                 
                 const campuses = res.data[0].campus;
-                let campusesArr = [];
+                let campusesArr = [{ id: null, label: 'N/A'  }];
 
+                if(campuses.length) {
                 for(let i=0; i<campuses.length; i++) {
                     campusesArr.push({
                         id: campuses[i].id,
                         label: campuses[i].name
                     })
+                }
                 }
 
                 this.optionsCampus = campusesArr
@@ -923,14 +923,14 @@ export default {
             let types = res.data.typesCategories;
             let typesArray = []
 
-            for(let i=0; i<types.length; i++) {
-            let obj = {
-                id: types[i].id,
-                label: types[i].name,
-                name: types[i].abbreviation
-            }
-            typesArray.push(obj)
-            }
+            if(types.length) {
+                for(let i=0; i<types.length; i++) {
+                    typesArray.push({
+                        id: types[i].id,
+                        label: types[i].name
+                    })
+                }
+            } 
 
             this.typeArr = typesArray
 
@@ -950,14 +950,17 @@ export default {
                 console.log('res subcategories', res)
                 const subcategoriesArr = []
                 const subcategories = res.data.typesCategories
-                for(let i=0; i<subcategories.length; i++) {
-                    let obj = {
-                        id: subcategories[i].id,
-                        name: subcategories[i].abbreviation,
-                        label: subcategories[i].name
+                if(subcategories.length) {
+                    for(let i=0; i<subcategories.length; i++) {
+                        let obj = {
+                            id: subcategories[i].id,
+                            name: subcategories[i].abbreviation,
+                            label: subcategories[i].name
+                        }
+                        subcategoriesArr.push(obj)
                     }
-                    subcategoriesArr.push(obj)
                 }
+                
                 this.optionsSubcategory = subcategoriesArr
             })
         },
@@ -982,12 +985,16 @@ export default {
                     label: 'N/A'
                 })
 
-                for(let i=0; i<categoryTracking.length; i++) {
-                    categoryTrackingArr.push({
-                        id: categoryTracking[i].id,
-                        label: categoryTracking[i].name
-                    })
+                if(categoryTracking.length) {
+                    for(let i=0; i<categoryTracking.length; i++) {
+                        categoryTrackingArr.push({
+                            id: categoryTracking[i].id,
+                            label: categoryTracking[i].name
+                        })
+                    }
                 }
+
+         
                 this.optionsCategoryTracking = categoryTrackingArr
                 console.log('TRACKING CATEGORY', this.optionsCategoryTracking)
             })
@@ -1006,11 +1013,14 @@ export default {
                 const teacherRoleTypes = res.data.teacherRoleTypes
                 let teacherRoleTypesArr = [];
 
+                if(teacherRoleTypes.length) {
+
                 for(let i=0; i<teacherRoleTypes.length; i++) {
                     teacherRoleTypesArr.push({
                         id: teacherRoleTypes[i].id,
                         label: teacherRoleTypes[i].name
                     })
+                }
                 }
                 this.optionsRoleTypes = teacherRoleTypesArr
             })
@@ -1029,12 +1039,15 @@ export default {
                 const teacherEmpTypes = res.data.teacherEmpTypes
                 let teacherEmpTypesArr = [];
 
-                for(let i=0; i<teacherEmpTypes.length; i++) {
-                    teacherEmpTypesArr.push({
-                        id: teacherEmpTypes[i].id,
-                        label: teacherEmpTypes[i].name
-                    })
+                if(teacherEmpTypes.length) {
+                    for(let i=0; i<teacherEmpTypes.length; i++) {
+                            teacherEmpTypesArr.push({
+                                id: teacherEmpTypes[i].id,
+                                label: teacherEmpTypes[i].name
+                            })
+                        }
                 }
+ 
                 this.optionsEmployementTypes = teacherEmpTypesArr
                 console.log('optionsEmployementTypes', res)
             })
@@ -1058,12 +1071,16 @@ export default {
                 const billingStatus = res.data.billingStatus;
                 let billingStatusArr = [];
 
+                if(billingStatus.length) {
                 for(let i=0; i<billingStatus.length; i++) {
                     billingStatusArr.push({
                         id: billingStatus[i].id,
                         label: billingStatus[i].name
                     })
                 }
+                }
+
+              
                 this.optionsBilling = billingStatusArr
 
                 // **********************************************
@@ -1071,12 +1088,15 @@ export default {
                 const itemStatus = res.data.itemStatus;
                 let itemStatusArr = [];
 
+                if(itemStatus.length) {
                 for(let i=0; i<itemStatus.length; i++) {
                     itemStatusArr.push({
                         id: itemStatus[i].id,
                         label: itemStatus[i].name
                     })
                 }
+                }
+
                 this.optionsStatus = itemStatusArr
             });
 
@@ -1194,7 +1214,8 @@ export default {
             let dates = this.dateRange(this.editedItem.startDate && this.editedItem.startDate.substring(0, 10), this.editedItem.endDate && this.editedItem.endDate.substring(0, 10))
             let scheduleWeekDays = this.scheduleWeekDays
 
-            for(let i=0; i<dates.length; i++) {
+            if(dates.length) {
+           for(let i=0; i<dates.length; i++) {
 
                 let splittedDate = dates[i].split('-');
                 
@@ -1242,6 +1263,8 @@ export default {
                 this.testDay = dayArr
                 
             } 
+            }
+ 
 
         },
         calculateBusinessDays() {
@@ -1452,9 +1475,9 @@ export default {
         }
     },
     watch: {
-        editedItem(val) {
-            this.calculateBusinessDays()
-        },
+        // editedItem(val) {
+        //     this.calculateBusinessDays()
+        // },
         show(val) {
             if(val && this.isEdit) {
                 this.getTeacherBudgetById(this.id)
@@ -1468,20 +1491,12 @@ export default {
             //to work with changes in "myArray"
             this.calculateBusinessDays()
         },
-        'editedItem.fullTime'(val) {
-
-            
-        },
-        'editedItem.teacher'(val) {
-            console.log('asdasd', val)
-            // this.getTeacherBudgetById(val.id)
-        },
-        'editedItem.totalAmount'() {
-            this.calculateBusinessDays()
-        },
-        'editedItem.frienge'() {
-            this.calculateBusinessDays()
-        },
+        // 'editedItem.totalAmount'() {
+        //     this.calculateBusinessDays()
+        // },
+        // 'editedItem.frienge'() {
+        //     this.calculateBusinessDays()
+        // },
         totalH() {
             this.calculateBusinessDays()
         }

@@ -829,7 +829,7 @@
                                             <template v-slot:append>
                                                 <q-icon name="event" class="cursor-pointer">
                                                 <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                                    <q-date v-model="editedItem.completed_date">
+                                                    <q-date color="edx-pagination" v-model="editedItem.completed_date">
                                                     <div class="row items-center justify-end">
                                                         <q-btn v-close-popup label="Close" color="primary" flat />
                                                     </div>
@@ -1202,12 +1202,12 @@ export default {
                     label: "Charge",
                     field: "grossPD"
                 },
-                {
-                    name: 'RemainingBalance',
-                    align: 'left',
-                    label: 'Remaining Balance',
-                    field: 'RemainingBalance'
-                },
+                // {
+                //     name: 'RemainingBalance',
+                //     align: 'left',
+                //     label: 'Remaining Balance',
+                //     field: 'RemainingBalance'
+                // },
                 {
                     name: "actions",
                     align: "right",

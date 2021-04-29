@@ -1,32 +1,29 @@
 <template>
-    <div class="q-pa-sm q-mt-sm q-gutter-sm">
+  <div class="q-pa-sm q-mt-sm q-gutter-sm">
+    <div class="edx-header-parent">
+      <span class="edx-header-text">{{ titleHeader }}</span>
+    </div>
 
-      <div class="edx-header-parent">
-        <span class="edx-header-text">{{ titleHeader }}</span>
-      </div>
+    <q-table
+      :data="data"
+      :columns="columns"
+      row-key="id"
+      :loading="loading"
+      binary-state-sort
+      :pagination.sync="pagination"
+    >
+      <!-- Loading -->
+      <template v-slot:loading>
+        <q-inner-loading showing color="primary" />
+      </template>
 
-      <q-table
-        :data="data"
-        :columns="columns"
-        row-key="id"
-        :loading="loading"
-        binary-state-sort
-        :pagination.sync="pagination"
-      >
-
-        <!-- Loading -->
-        <template v-slot:loading>
-          <q-inner-loading showing color="primary" />
-        </template>
-
-        <!-- Table Header -->
-        <template v-slot:top-right="props">
-
-          <!-- <q-select class="q-mr-md" style="min-width: 200px; max-width: 200px"
-            dense outlines
-            v-model="schoolYear"
-            :options="schoolYears"
-            label="School year"
+      <!-- Table Header -->
+      <template v-slot:top-right="props">
+        <!-- <q-select class="q-mr-md" style="min-width: 200px; max-width: 200px" 
+            dense outlines 
+            v-model="schoolYear" 
+            :options="schoolYears" 
+            label="School year" 
             @input="filterAllocation"
           >
             <template v-if="schoolYear" v-slot:append>
@@ -35,362 +32,391 @@
 
           </q-select> -->
 
-          <q-input label="Search" class="q-mr-md" outlines dense
-          v-model="filter" @keyup="keyUpFilter" @keydown="keyDownFilter">
-            <template v-slot:prepend>
-              <q-icon name="search" />
-            </template>
-          </q-input>
+        <q-input
+          label="Search"
+          class="q-mr-md"
+          outlines
+          dense
+          v-model="filter"
+          @keyup="keyUpFilter"
+          @keydown="keyDownFilter"
+        >
+          <template v-slot:prepend>
+            <q-icon name="search" />
+          </template>
+        </q-input>
 
-          <q-select class="q-mr-md" style="min-width: 200px; max-width: 200px"
-            dense outlines v-model="model" :options="options" label="Status"
-            @input="filterAllocation"
-          >
-            <template v-if="model" v-slot:append>
-              <q-icon name="cancel" @click.stop="model = '', filterAllocation()" class="cursor-pointer" />
-            </template>
+        <q-select
+          class="q-mr-md"
+          style="min-width: 200px; max-width: 200px"
+          dense
+          outlines
+          v-model="model"
+          :options="options"
+          label="Status"
+          @input="filterAllocation"
+        >
+          <template v-if="model" v-slot:append>
+            <q-icon
+              name="cancel"
+              @click.stop="model = '', filterAllocation()"
+              class="cursor-pointer"
+            />
+          </template>
+        </q-select>
 
-          </q-select>
+        <q-btn
+          square
+          class="q-mr-md edx-add-btn"
+          text-color="white"
+          icon="add"
+          @click="openAllocationModal(data[0], 0)"
+          no-caps
+          >Add</q-btn
+        >
 
-          <q-btn square class="q-mr-md edx-add-btn" text-color="white" icon="add"
-          @click="openAllocationModal(data[0], 0)" no-caps>Add</q-btn>
+        <q-btn
+          icon-right="archive"
+          label="Export to Excel"
+          class="edx-excel-btn"
+          text-color="white"
+          no-caps
+          @click="exportTable"
+        />
 
-          <q-btn
-            icon-right="archive"
-            label="Export to Excel"
-            class="edx-excel-btn" text-color="white"
-            no-caps
-            @click="exportTable"
-          />
-
-          <q-btn
-            flat
-            round
-            dense
-            :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-            @click="props.toggleFullscreen"
-            v-if="mode === 'list'" class="q-px-sm"
-          >
-            <q-tooltip
-              :disable="$q.platform.is.mobile"
-              v-close-popup
+        <q-btn
+          flat
+          round
+          dense
+          :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+          @click="props.toggleFullscreen"
+          v-if="mode === 'list'"
+          class="q-px-sm"
+        >
+          <q-tooltip :disable="$q.platform.is.mobile" v-close-popup
             >{{props.inFullscreen ? 'Exit Fullscreen' : 'Toggle Fullscreen'}}
-            </q-tooltip>
-          </q-btn>
+          </q-tooltip>
+        </q-btn>
 
-          <div class="q-pa-sm q-gutter-sm">
+        <div class="q-pa-sm q-gutter-sm">
+          <q-dialog v-model="confirm" persistent>
+            <q-card>
+              <q-card-section class="row items-center">
+                <span class="q-ml-sm">Are you sure to delete this item?</span>
+              </q-card-section>
 
-            <q-dialog v-model="confirm" persistent>
-              <q-card>
-                <q-card-section class="row items-center">
-                  <span class="q-ml-sm">Are you sure to delete this item?</span>
-                </q-card-section>
+              <q-card-actions align="right">
+                <q-btn flat label="No, thanks" color="primary" v-close-popup />
+                <q-btn
+                  label="Yes"
+                  color="edx-delete-btn"
+                  v-close-popup
+                  @click="deleteItem"
+                />
+              </q-card-actions>
+            </q-card>
+          </q-dialog>
+        </div>
+      </template>
 
-                <q-card-actions align="right">
-                  <q-btn flat label="No, thanks" color="primary" v-close-popup />
-                  <q-btn label="Yes" color="edx-delete-btn" v-close-popup @click="deleteItem" />
-                </q-card-actions>
-              </q-card>
-            </q-dialog>
+      <!-- Table Body -->
+      <template v-slot:body="props">
+        <q-tr
+          @click="isEditAllocation=true, openAllocationModal(props.row, props.rowIndex)"
+          :props="props"
+          class="cursor-pointer"
+        >
+          <q-td key="creation_date" :props="props">
+            <div class="cursor-pointer">
+              {{ props.row[0].creation_date }}
+            </div>
+          </q-td>
 
-          </div>
+          <q-td key="school" :props="props">
+            <div class="text-pre-wrap cursor-pointer">
+              {{ props.row.school.label }}
+            </div>
+          </q-td>
 
-        </template>
+          <!-- ########## -->
 
-        <!-- Table Body -->
-        <template v-slot:body="props">
+          <q-td v-for="i in props.row" :key="i.edxName" :props="props">
+            <div>
+              {{i.amount}}
+            </div>
+          </q-td>
 
-            <q-tr @click="isEditAllocation=true, openAllocationModal(props.row, props.rowIndex)" :props="props" class="cursor-pointer">
+          <!-- ########## -->
 
-              <q-td key="creation_date" :props="props">
+          <q-td key="status" :props="props">
+            <q-chip square class="cursor-pointer edx-bg-final">
+              {{props.row.final.shortName}}
 
-                <div class="cursor-pointer">
-                  {{ props.row[0].creation_date }}
-                </div>
+              <q-tooltip
+                anchor="top middle"
+                self="bottom middle"
+                :offset="[10, 10]"
+                transition-show="flip-right"
+                transition-hide="flip-left"
+              >
+                <strong>{{props.row.final.label}}</strong>
+              </q-tooltip>
+            </q-chip>
+          </q-td>
 
-              </q-td>
+          <q-td key="actions" :props="props" style="min-width: 132px">
+            <div v-if="props.row.changed">
+              <q-btn
+                @click="cancellChange(props.rowIndex)"
+                icon="cancel"
+                text-color="white"
+                class="q-mr-sm edx-bg-orange"
+                size="sm"
+                no-caps
+                round
+              >
+                <q-tooltip
+                  anchor="top middle"
+                  self="bottom middle"
+                  :offset="[10, 10]"
+                  transition-show="flip-right"
+                  transition-hide="flip-left"
+                >
+                  <strong>Cancel</strong>
+                </q-tooltip>
+              </q-btn>
 
-              <q-td key="school" :props="props">
-
-                <div class="text-pre-wrap cursor-pointer">
-                  {{ props.row.school.label }}
-                </div>
-
-              </q-td>
-
-              <!-- ########## -->
-
-              <q-td v-for="i in props.row" :key="i.edxName" :props="props">
-
-                <div v-if="i.percentage == null">
-                  {{i.amount}}
-                  <!-- <div>{{ allocationCalculation(i.rule_input, props.rowIndex) }}</div> -->
-                </div>
-
-                <div v-else-if="i.anotherPercentage">
-                  {{i.amount}}
-                  <!-- <div>{{ allocationAnotherPercentageCalculation(i.rule_input, i.percentage, props.rowIndex, true) }}</div> -->
-                </div>
-
-                <div v-else>
-                  else
-                  <!-- <div>{{ (i.amount * i.percentage) / 100 }}</div> -->
-                </div>
-
-              </q-td>
-
-              <!-- ########## -->
-
-              <q-td key="status" :props="props">
-
-                <q-chip square class="cursor-pointer edx-bg-final">
-
-                  {{props.row.final.shortName}}
-
-                  <q-tooltip
-                      anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                      transition-show="flip-right"
-                      transition-hide="flip-left"
-                  >
-                    <strong>{{props.row.final.label}}</strong>
-                  </q-tooltip>
-
-                </q-chip>
-
-              </q-td>
-
-              <q-td key="actions" :props="props" style="min-width: 132px">
-
-                  <div v-if="props.row.changed">
-                    <q-btn
-                      @click="cancellChange(props.rowIndex)"
-                      icon="cancel"
-                      text-color="white"
-                      class="q-mr-sm edx-bg-orange"
-                      size=sm
-                      no-caps
-                      round
-                    >
-                      <q-tooltip
-                          anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                          transition-show="flip-right"
-                          transition-hide="flip-left"
-                      >
-                        <strong>Cancel</strong>
-                      </q-tooltip>
-                    </q-btn>
-
-                    <q-btn
-                      @click="editAllocation(props.rowIndex)"
-                      text-color="white"
-                      class="q-mr-sm edx-bg-green"
-                      icon="save"
-                      size=sm
-                      no-caps
-                      round
-                    >
-                      <q-tooltip
-                          anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                          transition-show="flip-right"
-                          transition-hide="flip-left"
-                      >
-                        <strong>Save</strong>
-                      </q-tooltip>
-                    </q-btn>
-                  </div>
-
-                  <div v-if="props.row.showEditButton && !props.row.changed">
-                    <q-btn
-                      icon="delete_forever"
-                      text-color="white"
-                      class="q-mr-sm edx-delete-btn"
-                      @click="openDeleteModal(props.row)"
-                      size=sm
-                      no-caps
-                      round
-                    >
-                      <q-tooltip
-                          anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                          transition-show="flip-right"
-                          transition-hide="flip-left"
-                      >
-                        <strong>Delete</strong>
-                      </q-tooltip>
-                    </q-btn>
-                  </div>
-
-              </q-td>
-
-            </q-tr>
-
-        </template>
-
-        <template v-slot:bottom class="justify-end">
-          <div class="q-pa-md flex flex-center">
-
-            <q-pagination
-              v-model="current"
-              :max="pages"
-              :direction-links="true"
-              @click="changePagination(current)"
-              color="edx-pagination"
-            >
-            </q-pagination>
-
-            <div class="row justify-center items-center">
-              <span class="q-mr-md">Rows Per page</span>
-              <q-select dense outlined
-                @input="changeRowsPerPage"
-                v-model="pagination.rowsPerPage"
-                :options="rowsPerPageArr"
-              />
+              <q-btn
+                @click="editAllocation(props.rowIndex)"
+                text-color="white"
+                class="q-mr-sm edx-bg-green"
+                icon="save"
+                size="sm"
+                no-caps
+                round
+              >
+                <q-tooltip
+                  anchor="top middle"
+                  self="bottom middle"
+                  :offset="[10, 10]"
+                  transition-show="flip-right"
+                  transition-hide="flip-left"
+                >
+                  <strong>Save</strong>
+                </q-tooltip>
+              </q-btn>
             </div>
 
+            <div v-if="props.row.showEditButton && !props.row.changed">
+              <q-btn
+                icon="delete_forever"
+                text-color="white"
+                class="q-mr-sm edx-delete-btn"
+                @click="openDeleteModal(props.row)"
+                size="sm"
+                no-caps
+                round
+              >
+                <q-tooltip
+                  anchor="top middle"
+                  self="bottom middle"
+                  :offset="[10, 10]"
+                  transition-show="flip-right"
+                  transition-hide="flip-left"
+                >
+                  <strong>Delete</strong>
+                </q-tooltip>
+              </q-btn>
+            </div>
+          </q-td>
+        </q-tr>
+      </template>
+
+      <template v-slot:bottom class="justify-end">
+        <div class="q-pa-md flex flex-center">
+          <q-pagination
+            v-model="current"
+            :max="pages"
+            :direction-links="true"
+            @click="changePagination(current)"
+            color="edx-pagination"
+          >
+          </q-pagination>
+
+          <div class="row justify-center items-center">
+            <span class="q-mr-md">Rows Per page</span>
+            <q-select
+              dense
+              outlined
+              @input="changeRowsPerPage"
+              v-model="pagination.rowsPerPage"
+              :options="rowsPerPageArr"
+            />
           </div>
-        </template>
+        </div>
+      </template>
+    </q-table>
 
-      </q-table>
+    <dialog-draggable
+      :width="800"
+      :modelDialog="showAllocationModal"
+      :title="'Allocation'"
+      @onHide="showAllocationModal=false"
+      :icon="'text_format'"
+      :color="'green'"
+    >
+      <q-card-section style="max-height: 70vh" class="scroll">
+        <div class="row">
+          <div class="col-6">
+            <div class="q-mb-md">
+              <div class="text-subtitle2 q-mb-sm">School</div>
+              <q-select
+                outlined
+                dense
+                v-model="editedItem.school"
+                :options="schools"
+              />
+            </div>
+          </div>
 
-        <dialog-draggable
-            :width="800"
-            :modelDialog="showAllocationModal"
-            :title="'Allocation'"
-            @onHide="showAllocationModal=false"
-            :icon="'text_format'"
-            :color="'green'"
-        >
-            <q-card-section
-                style="max-height: 70vh"
-                class="scroll"
-            >
-                <div class="row">
+          <div class="col-md-6 q-pl-lg">
+            <div class="q-mb-md">
+              <div class="text-subtitle2 q-mb-sm">Status</div>
+              <q-select
+                v-if="editedItem.final"
+                outlined
+                dense
+                v-model="editedItem.final"
+                :options="options"
+              />
+            </div>
+          </div>
 
-                    <div class="col-6">
+          <div
+            v-for="i in editedItem"
+            :key="i.edxName"
+            class="q-mb-md col-md-4 q-pr-lg"
+          >
+            <div v-if="i.allocationFundTemplateId">
+              <div class="text-subtitle2 q-mb-sm">{{ i.edxName }}</div>
 
-                      <div class="q-mb-md">
-                        <div class="text-subtitle2 q-mb-sm">School</div>
-                        <q-select
-                          outlined
-                          dense
-                          v-model="editedItem.school"
-                          :options="schools"
-                        />
-                      </div>
+              <div v-if="i.percentage == null">
+                <q-input
+                  readonly
+                  prefix="$"
+                  :value="allocationCalculation(i.rule_input, index, true)"
+                  outlined
+                  dense
+                />
+              </div>
 
-                    </div>
+              <div v-else-if="i.anotherPercentage">
+                <q-input
+                  prefix="$"
+                  class="q-mb-sm"
+                  readonly
+                  :value="allocationAnotherPercentageCalculation(i.rule_input, i.percentage, index, true)"
+                  outlined
+                  dense
+                />
 
-                    <div class="col-md-6 q-pl-lg">
+                <q-input
+                  prefix="%"
+                  class="q-mb-md"
+                  outlined
+                  type="number"
+                  v-model="i.percentage"
+                  @input="d(i.percentage)"
+                  dense
+                  autofocus
+                />
+              </div>
 
-                      <div class="q-mb-md">
-                        <div class="text-subtitle2 q-mb-sm">Status</div>
-                        <q-select
-                          v-if="editedItem.final"
-                          outlined
-                          dense
-                          v-model="editedItem.final"
-                          :options="options"
-                        />
-                      </div>
+              <div v-else>
+                <q-input
+                  prefix="$"
+                  class="q-mb-sm"
+                  readonly
+                  outlined
+                  type="text"
+                  :value="(i.amount * i.percentage) / 100"
+                  dense
+                  autofocus
+                />
+                <q-input
+                  prefix="%"
+                  class="q-mb-md"
+                  outlined
+                  type="text"
+                  v-model="i.percentage"
+                  dense
+                  autofocus
+                />
+              </div>
+            </div>
+          </div>
 
+          <div class="col-md-12">
+            <div class="text-subtitle2 q-mb-sm">Note</div>
+            <q-input outlined v-model="editedItem.note" dense type="textarea" />
+          </div>
+        </div>
+      </q-card-section>
 
-
-                    </div>
-
-                    <div v-for="i in editedItem" :key="i.edxName" class="q-mb-md col-md-4 q-pr-lg">
-                      <div v-if="i.allocationFundTemplateId">
-                        <div class="text-subtitle2 q-mb-sm">{{ i.edxName }}</div>
-
-                        <div v-if="i.percentage == null">
-                          <q-input
-                            readonly
-                            prefix="$"
-                            :value="allocationCalculation(i.rule_input, index, true)"
-                            outlined
-                            dense
-                          />
-                        </div>
-
-                        <div v-else-if="i.anotherPercentage">
-                          <q-input
-                            prefix="$"
-                            class="q-mb-sm"
-                            readonly
-                            :value="allocationAnotherPercentageCalculation(i.rule_input, i.percentage, index, true)"
-                            outlined
-                            dense
-                          />
-
-                          <q-input
-                            prefix="%"
-                            class="q-mb-md"
-                            outlined
-                            type="number"
-                            v-model="i.percentage"
-                            @input="d(i.percentage)"
-                            dense
-                            autofocus
-                          />
-                        </div>
-
-                        <div v-else>
-                          <q-input prefix="$" class="q-mb-sm" readonly outlined type="text" :value="(i.amount * i.percentage) / 100" dense autofocus />
-                          <q-input prefix="%" class="q-mb-md" outlined type="text" v-model="i.percentage" dense autofocus />
-                        </div>
-
-                      </div>
-                    </div>
-
-                    <div class="col-md-12">
-                      <div class="text-subtitle2 q-mb-sm">Note</div>
-                      <q-input outlined v-model="editedItem.note"  dense type="textarea" />
-                    </div>
-
-
-
-                </div>
-            </q-card-section>
-
-            <q-card-actions class="row justify-end">
-                <div>
-                    <q-btn flat label="Cancel" color="primary" v-close-popup></q-btn>
-                    <q-btn v-if="!isEditAllocation" flat label="Confirm" color="primary" @click="editAllocation"></q-btn>
-                    <q-btn v-else flat label="Save" color="primary"  @click="editAllocation"></q-btn>
-                </div>
-            </q-card-actions>
-
-        </dialog-draggable>
-    </div>
+      <q-card-actions class="row justify-end">
+        <div>
+          <q-btn flat label="Cancel" color="primary" v-close-popup></q-btn>
+          <q-btn
+            v-if="!isEditAllocation"
+            flat
+            label="Confirm"
+            color="primary"
+            @click="editAllocation"
+          ></q-btn>
+          <q-btn
+            v-else
+            flat
+            label="Save"
+            color="primary"
+            @click="editAllocation"
+          ></q-btn>
+        </div>
+      </q-card-actions>
+    </dialog-draggable>
+  </div>
 </template>
 
 <script>
 
-    import {exportFile} from 'quasar'
-    import axios from 'axios'
-    import config from '../../../config'
-    import DialogDraggable from '../../components/DialogDraggable.vue';
+import {exportFile} from 'quasar'
+import axios from 'axios'
+import config from '../../../config'
+import DialogDraggable from '../../components/DialogDraggable.vue';
 
-    function wrapCsvValue(val, formatFn) {
-        let formatted = formatFn !== void 0
-            ? formatFn(val)
-            : val
+function wrapCsvValue(val, formatFn) {
+    let formatted = formatFn !== void 0
+        ? formatFn(val)
+        : val
 
-        formatted = formatted === void 0 || formatted === null
-            ? ''
-            : String(formatted)
+    formatted = formatted === void 0 || formatted === null
+        ? ''
+        : String(formatted)
 
-        formatted = formatted.split('"').join('""')
-        /**
-         * Excel accepts \n and \r in strings, but some other CSV parsers do not
-         * Uncomment the next two lines to escape new lines
-         */
-        // .split('\n').join('\\n')
-        // .split('\r').join('\\r')
+    formatted = formatted.split('"').join('""')
+    /**
+     * Excel accepts \n and \r in strings, but some other CSV parsers do not
+     * Uncomment the next two lines to escape new lines
+     */
+    // .split('\n').join('\\n')
+    // .split('\r').join('\\r')
 
-        return `"${formatted}"`
-    }
+    return `"${formatted}"`
+}
 
-    let typingTimer
-    let doneTypingInterval = 500
+let typingTimer
+let doneTypingInterval = 500
+
+const matrix = require("matrix-js")
 
 export default {
     components: {
@@ -591,10 +617,10 @@ export default {
             this.editedItem = Object.assign({}, item);
         },
         close () {
-        setTimeout(() => {
-            this.editedItem = Object.assign({}, this.defaultItem)
-            this.editedIndex = -1
-        }, 300)
+          setTimeout(() => {
+              this.editedItem = Object.assign({}, this.defaultItem)
+              this.editedIndex = -1
+          }, 300)
         },
         exportTable() {
             // naive encoding to csv format
@@ -623,157 +649,257 @@ export default {
         },
         changePagination (val) {
 
-        console.log('change pagination')
-        this.current = val
-        this.getAllocationByType(1, this.count, val)
+          console.log('change pagination')
+          this.current = val
+          this.getAllocationByType(1, this.count, val)
 
         },
         changeRowsPerPage() {
 
-        console.log('changeRowsPerPage')
+          console.log('changeRowsPerPage')
 
-        this.count = this.pagination.rowsPerPage
-        this.current = 1
+          this.count = this.pagination.rowsPerPage
+          this.current = 1
 
-        this.getAllocationByType(1, this.count, this.current)
+          this.getAllocationByType(1, this.count, this.current)
 
         },
         copyRowData(index) {
-        oldObject = JSON.stringify(this.tempData[index])
+          oldObject = JSON.stringify(this.tempData[index])
         },
         detectChange(index) {
 
-        this.editedItem = this.tempData[index]
-        console.log(this.editedItem)
+          this.editedItem = this.tempData[index]
+          console.log(this.editedItem)
 
-        let d = JSON.parse(oldObject)
-        let f = JSON.stringify(this.data[index])
-            f = JSON.parse(f)
+          let d = JSON.parse(oldObject)
+          let f = JSON.stringify(this.data[index])
+              f = JSON.parse(f)
 
-        let status = _.isEqual(d, f)
-        console.log(status)
+          let status = _.isEqual(d, f)
+          console.log(status)
 
-        if(status) {
-            this.data[index].changed = false
-        }else {
-            this.data[index].changed = true
-        }
+          if(status) {
+              this.data[index].changed = false
+          }else {
+              this.data[index].changed = true
+          }
 
         },
         getToday() {
-        let dateObj = new Date();
-        let month = dateObj.getUTCMonth() + 1; //months from 1-12
-        let day = dateObj.getUTCDate();
-        let year = dateObj.getUTCFullYear();
+          let dateObj = new Date();
+          let month = dateObj.getUTCMonth() + 1; //months from 1-12
+          let day = dateObj.getUTCDate();
+          let year = dateObj.getUTCFullYear();
 
-        return year + "-" + month + "-" + day;
+          return year + "-" + month + "-" + day;
         },
 
         // Add new Row
         addNewRow() {
 
-        let date = this.getToday()
+          let date = this.getToday()
 
-        const obj  = {
-            creation_date: date,
-            school: '',
-            total_instruction: 0,
-            total_instruction: 0,
-            professional_development_percentage: 0,
-            family_engagement: 0,
-            total: 0,
-            status_string: 'Final',
-            changed: true,
-            showEditButton: false,
-            allocation_type: 1,
-            note: '',
-            add: true,
-        }
+          const obj  = {
+              creation_date: date,
+              school: '',
+              total_instruction: 0,
+              total_instruction: 0,
+              professional_development_percentage: 0,
+              family_engagement: 0,
+              total: 0,
+              status_string: 'Final',
+              changed: true,
+              showEditButton: false,
+              allocation_type: 1,
+              note: '',
+              add: true,
+          }
 
-        this.data.unshift(obj)
-        this.editedItem = obj
+          this.data.unshift(obj)
+          this.editedItem = obj
 
         },
 
         // Filter key events
         keyUpFilter() {
-        console.log('Key up')
-        clearTimeout(typingTimer);
-        typingTimer = setTimeout(this.doneTyping, doneTypingInterval);
+          console.log('Key up')
+          clearTimeout(typingTimer);
+          typingTimer = setTimeout(this.doneTyping, doneTypingInterval);
         },
         keyDownFilter() {
-        console.log('Key down')
-        clearTimeout(typingTimer);
+          console.log('Key down')
+          clearTimeout(typingTimer);
         },
         doneTyping() {
-        console.log('Typing done!')
-        if(this.filter.length > 1 || this.filter.length == 0) {
-            console.log('Send Request...')
-            this.filterAllocation()
-        }
+          console.log('Typing done!')
+          if(this.filter.length > 1 || this.filter.length == 0) {
+              console.log('Send Request...')
+              this.filterAllocation()
+          }
         },
 
         // Filter Allocation
         filterAllocation() {
 
-        this.loading = true
+          this.loading = true
 
-        let model = '', url = '';
+          let model = '', url = '';
 
-        if(this.filter != '') {
-            url += '&search=' + this.filter
-        }
+          if(this.filter != '') {
+              url += '&search=' + this.filter
+          }
 
-        if(this.schoolYear) {
-            url += '&year=' + this.schoolYear.id
-        }
+          if(this.schoolYear) {
+              url += '&year=' + this.schoolYear.id
+          }
 
-        if(this.model != '') {
-            this.model == 'Preliminary' ? model = 'pr' : model = 'fn'
-            url += '&status=' + model
-        }
+          if(this.model != '') {
+              this.model == 'Preliminary' ? model = 'pr' : model = 'fn'
+              url += '&status=' + model
+          }
 
 
-        // 1?search=St&status=fn&year=21
+          // 1?search=St&status=fn&year=21
 
-        const conf = {
-        method: 'GET',
-        url: config.filterAllocation + '1?' + url,
-        headers: {
-            Accept: 'application/json',
-        }
-        }
+          const conf = {
+          method: 'GET',
+          url: config.filterAllocation + '1?' + url,
+          headers: {
+              Accept: 'application/json',
+          }
+          }
 
-        console.log(conf.url)
+          console.log(conf.url)
 
-        axios(conf).then(res => {
+          axios(conf).then(res => {
 
-        this.loading = false
+          this.loading = false
 
-        let data = res.data.allocations
-        this.pages = res.data.pagesCount
+          let data = res.data.allocations
+          this.pages = res.data.pagesCount
 
-        for(let i=0; i<data.length; i++) {
+          for(let i=0; i<data.length; i++) {
 
-            data[i].changed = false
-            data[i].showEditButton = true
+              data[i].changed = false
+              data[i].showEditButton = true
 
-            if(data[i].is_final) {
-            data[i].status_string = 'Final'
-            }
-            else {
-            data[i].status_string = 'Preliminary'
-            }
+              if(data[i].is_final) {
+              data[i].status_string = 'Final'
+              }
+              else {
+              data[i].status_string = 'Preliminary'
+              }
 
-        }
+          }
 
-        // this.data = data
-        // this.tempData = data
+          // this.data = data
+          // this.tempData = data
 
-        // console.log('Filter result: ', res.data)
-        })
+          // console.log('Filter result: ', res.data)
+          })
 
         },
+
+    // ##############################
+    // ##############################
+    // ##############################
+    // ##############################
+    // ##############################
+    getRuleInputs(arr) {
+      let res = []
+      for (let i = 0; i < arr.length; i++) {
+        if(arr[i]["rule_input"]) {
+          res.push(arr[i]["rule_input"].split(","))
+          res[i].unshift(arr[i]["allocationFundTemplateId"])
+          res[i].sort()
+        }
+      }
+      return res
+    },
+    getPercentage(arr) {
+        let res = []
+        for (let i = 0; i < arr.length; i++) {
+          if(arr[i]["percentage"]) {
+            res.push(arr[i]["percentage"])
+          }
+        }
+        return res
+    },
+    generateMatrix(allocationRow) {
+
+        let x = this.getRuleInputs(allocationRow)
+        console.log('x = ', x)
+        const minId = x[0][0]
+        const maxId = x[x.length - 1][x[x.length - 1].length - 1]
+
+        console.log(minId, maxId, 'Min Max')
+
+        for (let i = 0; i <= maxId - minId; i++) {
+          if(x[i]) {
+            for (let j = 0; j < x[i].length; j++) {
+              x[i][j] -= minId
+              console.log(`${x[i][j]}-=${minId}`)
+            }
+          }  
+        }
+
+        const m = []
+        for (let i = 0; i <= maxId - minId; i++) {
+            m.push([])
+            for (let j = 0; j <= maxId - minId; j++) {
+              m[i].push(0)
+              console.log('m', m[i])
+            }
+        }
+        for (let i = 0; i <= maxId - minId; i++) {
+          if(x[i]) {
+            for (let j = 0; j < x[i].length; j++) {
+              m[i][x[i][j]] = -1
+            }
+            m[i][i] = 1
+          }
+        }
+
+        let pcntg = this.getPercentage(allocationRow)
+        for (let i = 0; i < m.length; i++) {
+          for (let j = 0; j < m[0].length; j++) {
+            if (pcntg[i] && m[i][j] != 1) {
+              m[i][j] *= (pcntg[i]/100)
+            }
+          }
+        }
+        console.log('mmmmmmmmm', m)
+        // let M = matrix(m);
+        return m
+    },
+    calculateAmounts(allocationRow) {
+
+      console.log('allocationRow', allocationRow)
+
+      const M = this.generateMatrix(allocationRow)
+      let U = matrix(M)
+      console.log( 'MMMMMMMMMMMMMMMMMMMMMMMMMMMMMM = ', U )
+
+      // let U = matrix([[1, 3, 3], [1, 4, 3], [1, 3 ,4]]);
+      // console.log('U = ', U.inv())
+      // M.inv()
+      // console.log( 'M = ', M )
+
+      // let IM = M.inv()
+      // console.log(IM, 'IM IM IM IM IM')
+
+      // M = matrix([[1, 3, 3], [1, 4, 3], [1, 3 ,4]]);
+      // M.inv();
+
+      // console.log('IM = ',IM())
+      // const B = matrix([[0], [0], [0], [0], [0]])
+      // // console.log('B = ',B())
+      // console.log('IM prod B = ', IM.prod(B))
+      // return IM.prod(B)
+      // return 0
+
+    },
 
     // Requests
     getAllocationByType(type, limit, page) {
@@ -781,11 +907,11 @@ export default {
         this.loading = true
 
         const conf = {
-        method: 'GET',
-        url: config.getAllocationByTitle + type + '?limit=' + limit + '&page=' + page,
-        headers: {
-            Accept: 'application/json',
-        }
+          method: 'GET',
+          url: config.getAllocationByTitle + type + '?limit=' + limit + '&page=' + page,
+          headers: {
+              Accept: 'application/json',
+          }
         }
 
         axios(conf).then(res => {
@@ -796,88 +922,98 @@ export default {
 
             for(let i=0; i<data.length; i++) {
 
-            let parentObj = {}, startNumber = 2;
+              let parentObj = {}, startNumber = 2;
 
-            for(let j=0; j<data[i].length; j++) {
+              let C = this.calculateAmounts(data[i])
 
-                // Spliced Name
-                const edxName = data[i][j].templateName;
-                data[i][j].edxName = edxName
+              console.log( 'DOC DOC DOC ', C );
 
-                // If another allocation percenatage count needed
-                if(data[i][j].rule_input) {
-                  const ruleInput = data[i][j].rule_input.split(',')
+            
+              for(let j=0; j<data[i].length; j++) {
 
-                  if(ruleInput.length == 1 && data[i][j].percentage != null) {
+                  // Spliced Name
+                  const edxName = data[i][j].templateName;
+                  data[i][j].edxName = edxName
 
-                    data[i][j].anotherPercentage = true
+                  
 
-                    for (const t in data[i]) {
-                        if(ruleInput[0] == data[i][t]['allocationFundTemplateId']) {
-                        data[i][j].amount = (data[i][t]['amount'] * data[i][j].percentage) / 100
-                        }
+                  // If another allocation percenatage count needed
+                  // if(data[i][j].rule_input) {
+
+                  //   const ruleInput = data[i][j].rule_input.split(',')
+
+                  //   if(ruleInput.length == 1 && data[i][j].percentage != null) {
+
+                  //     data[i][j].anotherPercentage = true
+
+                  //     for (const t in data[i]) {
+                  //         if(ruleInput[0] == data[i][t]['allocationFundTemplateId']) {
+                  //         // data[i][j].amount = (data[i][t]['amount'] * data[i][j].percentage) / 100
+                  //           data[i][j].amount = 'DOC 2'
+                  //         }
+                  //     }
+
+                  //   }
+
+                  //   if(ruleInput.length > 1 && data[i][j].percentage == null) {
+                  //     let c = 0;
+                  //     for (const t in data[i]) {
+                  //         if(ruleInput.includes(data[i][t]['allocationFundTemplateId'])) {
+                  //           c += parseFloat(data[i][t]['amount'])
+                  //         }
+                  //     }
+                  //     // data[i][j].amount = c.toFixed(2)
+                  //     data[i][j].amount = 'DOC'
+                  //   }
+                  // }
+
+
+                  parentObj[j] = data[i][j]
+
+                  if(i == 0 && this.oneTime) {
+
+                    let obj = {
+                        name: edxName,
+                        align: "left",
+                        label: data[i][j].edxName,
+                        field: edxName,
+                        sortable: true
                     }
+
+                    this.columns.splice(startNumber, 0, obj);
+                    startNumber++
 
                   }
 
-                  if(ruleInput.length > 1 && data[i][j].percentage == null) {
-                    let c = 0;
-                    for (const t in data[i]) {
-                        if(ruleInput.includes(data[i][t]['allocationFundTemplateId'])) {
-                        c += parseFloat(data[i][t]['amount'])
-                        }
-                    }
-                    data[i][j].amount = c.toFixed(2)
+              }
+
+              parentObj.id=i+1
+              parentObj.changed = false
+              parentObj.add = false
+              parentObj.showEditButton = true
+
+              if(data[i][0].final) {
+                  parentObj.final = {
+                    id: 1,
+                    label: 'Final',
+                    shortName: 'FN'
                   }
-                }
+              }else {
+                  parentObj.final = {
+                  id: 0,
+                  label: 'Preliminary',
+                  shortName: 'PR'
+                  }
+              }
 
+              parentObj.school = {
+                  id: data[i][0].schoolId,
+                  label: data[i][0].schoolName
+              }
 
-                parentObj[j] = data[i][j]
+              parentObj.note = data[i][0].note || ''
 
-                if(i == 0 && this.oneTime) {
-
-                let obj = {
-                    name: edxName,
-                    align: "left",
-                    label: data[i][j].edxName,
-                    field: edxName,
-                    sortable: true
-                }
-
-                this.columns.splice(startNumber, 0, obj);
-                startNumber++
-
-                }
-
-            }
-
-            parentObj.id=i+1
-            parentObj.changed = false
-            parentObj.add = false
-            parentObj.showEditButton = true
-
-            if(data[i][0].final) {
-                parentObj.final = {
-                id: 1,
-                label: 'Final',
-                shortName: 'FN',
-                }
-            }else {
-                parentObj.final = {
-                id: 0,
-                label: 'Preliminary',
-                shortName: 'PR'
-                }
-            }
-
-            parentObj.school = {
-                id: data[i][0].schoolId,
-                label: data[i][0].schoolName
-            }
-
-            parentObj.note = data[i][0].note || ''
-
-            fArr.push(parentObj)
+              fArr.push(parentObj)
 
             }
             this.oneTime = false
@@ -1159,15 +1295,13 @@ export default {
 </script>
 
 <style lang="scss">
-
 .q-pr-sm {
   @media (max-width: 599px) {
-    padding-right: 0
+    padding-right: 0;
   }
 }
 
 .hidden {
-  display: none !important
+  display: none !important;
 }
-
 </style>

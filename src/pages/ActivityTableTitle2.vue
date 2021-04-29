@@ -158,7 +158,7 @@
                               <template v-slot:append>
                                 <q-icon name="event" class="cursor-pointer">
                                   <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                    <q-date 
+                                    <q-date color="edx-pagination" 
                                     :disabled="tempDateOfActivity.is_full_day" 
                                     :readonly="tempDateOfActivity.is_full_day" 
                                     v-model="tempDateOfActivity.startdate" 
@@ -180,7 +180,7 @@
                               <template v-slot:append>
                                 <q-icon name="event" class="cursor-pointer">
                                   <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                    <q-date 
+                                    <q-date color="edx-pagination" 
                                       :disabled="tempDateOfActivity.is_full_day" 
                                       :readonly="tempDateOfActivity.is_full_day" 
                                       v-model="tempDateOfActivity.endDate" 
