@@ -99,7 +99,7 @@ import VTooltip from 'v-tooltip'
 Vue.use(VTooltip)
 
 import ICONS from '../../../icons'
-import UploadDocumentModal from './UploadDocumentModal'
+import UploadDocumentModal from '../documentsPopup/UploadDocumentModal'
 
 import axios from 'axios'
 import config from '../../../config'

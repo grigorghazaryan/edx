@@ -17,7 +17,7 @@
             </template>
 
             <!-- Table Header -->
-            <template v-slot:top-right="props"> 
+            <template> 
                 <div class="q-pa-sm q-gutter-sm">
                     
                     <q-dialog v-model="deleteDocumentPopup" persistent>

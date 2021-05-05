@@ -44,6 +44,7 @@
                         :columns="columns"
                         hide-bottom
                         :pagination.sync="pagination"
+                        class="overflow-auto my-sticky-column-table"
                     >
                         <!-- Table Body -->
                         <template v-slot:body="props">
@@ -59,13 +60,13 @@
                                     <q-chip 
                                         square class="bg-edx-bg-i"
                                     >
-                                        <span>{{props.row.category}}</span>
+                                        <span>I</span>
                                         <q-tooltip 
                                             anchor="top middle" self="bottom middle" :offset="[10, 10]"
                                             transition-show="flip-right"
                                             transition-hide="flip-left"
                                         >
-                                            <strong>{{ props.row.category }}</strong>
+                                            <strong>Instruction</strong>
                                         </q-tooltip>
                                     </q-chip>
 

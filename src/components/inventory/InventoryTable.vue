@@ -5,9 +5,9 @@
     :data="data"
     :columns="columns"
     :loading="loading"
-    class="no-shadow"
-    row-key="id"
+    class="no-shadow overflow-auto my-sticky-column-table"
     :pagination.sync="pagination"
+    row-key="actions"
   >
 
     <!-- Loading -->
@@ -1616,6 +1616,8 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
+
+
 
 </style>

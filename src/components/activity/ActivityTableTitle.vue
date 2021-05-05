@@ -2,7 +2,7 @@
     <div>
 
         <q-table
-            class="overflow-auto"
+            class="overflow-auto my-sticky-column-table"
             :data="data" 
             :columns="columns"
             :loading="loading"
@@ -894,6 +894,7 @@
                 <div>
 
                     <q-table
+                        class="overflow-auto my-sticky-column-table"
                         :data="editedItem.noAttendingArr && editedItem.noAttendingArr.attendeesData"
                         :columns="attendeesColumn"
                         row-key="id"
@@ -1241,7 +1242,7 @@
 
                 <div class="col-md-12 q-mt-md">
                     <q-table
-                        class="overflow-auto"
+                        class="overflow-auto my-sticky-column-table"
                         :data="tdata" 
                         :columns="tcolumns"
                         :loading="tloading"

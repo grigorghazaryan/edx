@@ -365,9 +365,10 @@
                         </div>
 
                         <div class="q-mb-md">
-                                <div class="text-subtitle2 q-mb-sm">Assignment Status</div>
+                                
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-5">
+                                        <div class="text-subtitle2 q-mb-sm">Assignment Status</div>
 
                                         <!-- <div v-if="editedItem.assignmentStatus" class="h-popup cursor-pointer">
                                             <span>{{ editedItem.assignmentStatus.label }}</span>
@@ -401,6 +402,21 @@
                                             </q-select>
                                         </q-popup-edit>
                                         
+                                    </div>
+                                    <div class="col-md-5"> 
+                                        <div class="text-subtitle2 q-mb-sm">Documents and Tasks</div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="h-popup cursor-pointer">
+                                                    <q-icon 
+                                                        @click="openDocumentsModal"
+                                                        name="folder"
+                                                        class="edx-folder q-mr-sm"
+                                                        style="font-size: 2em"
+                                                    ></q-icon>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                         </div>
@@ -441,7 +457,7 @@
                         </div>
 
                         <q-table
-                            class="q-mt-md q-mb-md border"
+                            class="q-mt-md q-mb-md border overflow-auto my-sticky-column-table"
                             :data="monthlyDetails"
                             :columns="teacherSubColumns"
                             hide-bottom
@@ -550,6 +566,14 @@
 
         />
 
+        <DocumentsPopup 
+            :show="showDocumentPopup" 
+            @togglePopup="togglePopup"
+            :activity="editedItem"
+            :isEdit="isEdit"
+            :categoryId="3"
+        />
+
 
     </div>
 </template>
@@ -561,6 +585,8 @@ import config from '../../../config'
 import ICONS from '../../../icons'
 import DialogDraggable from '../DialogDraggable'
 import PaySchedule from './PaySchedule'
+import DocumentsPopup from '../documentsPopupTeachers/DocumentsPopup';
+import HOLIDAYS from '../../../customHolidays'
 import { format } from 'quasar'
 let moment = require('moment-business-days');
 
@@ -569,7 +595,8 @@ export default {
     name: 'TeacherPopup',
     components: {
         DialogDraggable,
-        PaySchedule
+        PaySchedule,
+        DocumentsPopup
     },
     props: {
         show: {
@@ -590,6 +617,8 @@ export default {
     },
     data() {
         return {
+            showDocumentPopup: false,
+
             test: null,
             testDay: null,
             //
@@ -693,6 +722,15 @@ export default {
         }
     },
     methods: {
+
+        togglePopup(val) {
+            this.showDocumentPopup = val
+        },
+
+        openDocumentsModal() {
+            console.log(this.editedItem, 'pppppppp')
+            this.showDocumentPopup = true
+        },
 
         getEmployeeInfo() {
             let id = this.editedItem.teacher.id ? this.editedItem.teacher.id : 0
@@ -1215,54 +1253,60 @@ export default {
             let scheduleWeekDays = this.scheduleWeekDays
 
             if(dates.length) {
-           for(let i=0; i<dates.length; i++) {
+                for(let i=0; i<dates.length; i++) {
 
-                let splittedDate = dates[i].split('-');
-                
-                let date1 = splittedDate[0].split('/')
-                let date2 = splittedDate[1].split('/')
-
-                console.log('dates', date1, date2)
-                
-                let month = date1[1]
-                let startDay = parseInt(date1[2])
-                let endDay = parseInt(date2[2])
-                
-                let count = 0;
-                let dayCount = 0;
-                
-                console.log('#######################')
-                console.log('lklklklk', startDay, endDay)
-
-                
-                for(let j=startDay; j<=endDay; j++) {
-
-                    let fullMonth = date1[0] + '/' + month + '/' + j
-                    let nd = new Date(fullMonth).getDay()
+                    let splittedDate = dates[i].split('-');
                     
-                    for(let t=0; t<=scheduleWeekDays.length; t++) {
-                        if(scheduleWeekDays[t]) {
-                            if(scheduleWeekDays[t].checked && scheduleWeekDays[t].id == nd) {
-                                
-                                console.log('scheduleWeekDays[t].hours', scheduleWeekDays[t].hours)
-                                count += parseFloat(scheduleWeekDays[t].hours)
-                                dayCount++
-                                break
-                            }
-                        }
-                    }
+                    let date1 = splittedDate[0].split('/')
+                    let date2 = splittedDate[1].split('/')
+                    
+                    let month = date1[1]
+                    let startDay = parseInt(date1[2])
+                    let endDay = parseInt(date2[2])
+                    
+                    let count = 0;
+                    let dayCount = 0;
+                    
+                    for(let j=startDay; j<=endDay; j++) {
+
+                        let fullMonth = date1[0] + '/' + month + '/' + j
+                        let nd = new Date(fullMonth).getDay()
+
+                        // for(let k=0; k<HOLIDAYS.length; k++) {
+
+                        //     console.log('K = ', HOLIDAYS[k])
+
+                            // if(HOLIDAYS[k] !== fullMonth) {
+
+                            
+                                for(let t=0; t<=scheduleWeekDays.length; t++) {
+                                    if(scheduleWeekDays[t]) {
+                                        if(scheduleWeekDays[t].checked && scheduleWeekDays[t].id == nd) {
+
+                                            count += parseFloat(scheduleWeekDays[t].hours)
+                                            dayCount++
+                                            break
+
+                                        }
+                                    }
+                                }
+
+
+                            // }
+                        // }
+
+                    } 
+
+                    arr.push({ 
+                        time: count
+                    })
+
+                    dayArr.push(dayCount)
+                    
+                    this.test = arr
+                    this.testDay = dayArr
+                    
                 } 
-
-                arr.push({ 
-                    time: count
-                })
-
-                dayArr.push(dayCount)
-                
-                this.test = arr
-                this.testDay = dayArr
-                
-            } 
             }
  
 
@@ -1276,7 +1320,6 @@ export default {
             // console.log('end', end)
 
             this.getPayScheduleInfo()
-            console.log('oioioi', this.test)
 
             let count = 0;
             for(let i=0; i<this.test.length; i++) {
@@ -1288,8 +1331,8 @@ export default {
                 dCount += this.testDay[i]
             }
 
-            console.log(count, 'countcountcount')
-            console.log(dCount, 'testDaytestDaytestDay')
+            // console.log(count, 'countcountcount')
+            // console.log(dCount, 'testDaytestDaytestDay')
             // let isWorkingDay = moment(end, 'YYYY-MM-DD').isBusinessDay()
 
             this.monthDiff(startBilling, endBilling)

@@ -5,6 +5,7 @@
             :columns="columns"
             :loading="loading"
             :pagination.sync="pagination"
+            class="overflow-auto my-sticky-column-table"
         >
             <!-- Loading -->
             <template v-slot:loading>

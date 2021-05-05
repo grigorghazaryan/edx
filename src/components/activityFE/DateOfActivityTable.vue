@@ -1,6 +1,6 @@
 <template>         
     <q-table
-        class="q-mb-md no-shadow border"
+        class="q-mb-md no-shadow border overflow-auto my-sticky-column-table"
         :data="dateOfActivity"
         :columns="tableColumns"
         row-key="id"

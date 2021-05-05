@@ -2,7 +2,7 @@
     <div>
         <div class="q-mt-lg">
             <q-table
-                class="overflow-auto"
+                class="overflow-auto my-sticky-column-table"
                 :data="data" 
                 :columns="columns"
                 :loading="loading"
@@ -24,8 +24,10 @@
                             <q-select :options="allocationOptions" v-model="selectedAllocation" class="q-mr-md" dense outlined style="min-width: 160px; max-width: 160px"></q-select>
                         </div>
                         <div>
+
                             <div class="text-subtitle2 edx-label  q-mb-sm">Category</div>
                             <q-select :disable="!selectedAllocation" :options="catagoryOptions" v-model="selectedCategory" class="q-mr-md" dense outlined style="min-width: 160px; max-width: 160px"></q-select>
+                        
                         </div>
                         <div>
                             <div class="text-subtitle2 edx-label  q-mb-sm">Subcategory</div>
@@ -75,7 +77,7 @@
                         </div>
                         <div>
                             <div class="text-subtitle2 edx-label  q-mb-sm">School</div>
-                            <!-- <q-select class="q-mr-md" dense outlined style="min-width: 200px; max-width: 200px"></q-select> -->
+                            
                             <q-select
                             style="min-width: 280px; max-width: 280px"
                             class="q-mr-md"
@@ -121,7 +123,150 @@
                     </div>
                 </div>
 
-                <q-btn 
+                <!-- RTS BEGIN Test -->
+                <q-btn-dropdown
+                icon="search"
+                class="bg-edx-pagination q-mr-sm"
+                label="Search"
+                dropdown-icon="tune"
+                square
+                >
+                    <!-- <q-form class="q-gutter-md"> -->
+                        <div class="q-pa-md" style="width: 850px">
+                            <div class="row">
+                                <div class="col-md-12 bordered-box">
+
+                                <div class="row q-mb-sm">
+                                    <div class="col-md-2 q-mr-sm">
+                                        <div class="text-subtitle2 edx-label  q-mb-sm">Stard date</div>
+                                        <q-input style="min-width: 130px; max-width: 130px" class="q-mr-md" outlined dense v-model="startDate">
+                                            <template v-slot:append>
+                                            <q-icon name="event" class="cursor-pointer">
+                                                <q-popup-proxy transition-show="scale" transition-hide="scale">
+                                                <q-date color="edx-pagination" v-model="startDate">
+                                                    <div class="row items-center justify-end">
+                                                    <q-btn v-close-popup label="Close" color="primary" flat />
+                                                    </div>
+                                                </q-date>
+                                                </q-popup-proxy>
+                                            </q-icon>
+                                            </template>
+                                        </q-input>
+                                    </div>
+                                    <div class="col-md-2 q-mr-sm">
+                                        <div class="text-subtitle2 edx-label  q-mb-sm">End date</div>
+                                        <q-input style="min-width: 130px; max-width: 130px" class="q-mr-md" outlined dense v-model="endDate">
+                                            <template v-slot:append>
+                                            <q-icon name="event" class="cursor-pointer">
+                                                <q-popup-proxy transition-show="scale" transition-hide="scale">
+                                                <q-date color="edx-pagination" v-model="endDate">
+                                                    <div class="row items-center justify-end">
+                                                    <q-btn v-close-popup label="Close" color="primary" flat />
+                                                    </div>
+                                                </q-date>
+                                                </q-popup-proxy>
+                                            </q-icon>
+                                            </template>
+                                        </q-input>
+                                    </div>
+                                </div>
+
+                                <div class="row q-mb-sm">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-3 q-pr-sm">
+                                                <div class="text-subtitle2 edx-label  q-mb-sm">Allocation</div>
+                                                <q-select :options="allocationOptions" v-model="selectedAllocation" class="q-mr-md" dense outlined ></q-select>
+                                            </div>
+                                            <div class="col-md-3 q-pr-sm">
+                                                <div class="text-subtitle2 edx-label  q-mb-sm">Category</div>
+                                                <q-select :disable="!selectedAllocation" :options="catagoryOptions" v-model="selectedCategory" class="q-mr-md" dense outlined ></q-select>
+                                            </div>
+                                            <div class="col-md-3 q-pr-sm">
+                                                <div class="text-subtitle2 edx-label  q-mb-sm">Subcategory</div>
+                                                <q-select :disable="!selectedCategory" :options="subcatagoryOptions" v-model="selectedSubcategories" class="q-mr-md" dense outlined></q-select>
+                                            </div>
+                                            <div class="col-md-3 q-pr-sm">
+                                                <div class="text-subtitle2 edx-label  q-mb-sm">Fund Source</div>
+                                                <q-select :disable="!selectedAllocation" :options="optionsFundSource" v-model="selectedFunds" class="q-mr-md" dense outlined></q-select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row q-mb-sm">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-5 q-pr-sm">
+                                                <div class="text-subtitle2 edx-label  q-mb-sm">School</div>
+                                                <q-select
+                                                    class="q-mr-md"
+                                                    outlined
+                                                    dense
+                                                    v-model="selectedSchool"
+                                                    use-input
+                                                    @filter="filterFn"
+                                                    :options="schoolsOptions"
+                                                    option-value="id"
+                                                    option-label="label"
+                                                    input-debounce="0"
+                                                    map-options
+                                                    emit-value
+                                                    stack-label
+                                                >
+                                                </q-select>
+                                            </div>
+                                            <div class="col-md-5 q-pr-sm">
+                                                <div class="text-subtitle2 edx-label  q-mb-sm">Provider</div>
+                                                <q-select
+                                                    style="min-width: 280px; max-width: 280px"
+                                                    class="q-mr-md"
+                                                    outlined
+                                                    dense
+                                                    v-model="selectedProvider"
+                                                    use-input
+                                                    @filter="filterFnProvider"
+                                                    :options="providerOptions"
+                                                    option-value="id"
+                                                    option-label="label"
+                                                    input-debounce="0"
+                                                    map-options
+                                                    emit-value
+                                                    stack-label
+                                                >
+                                                </q-select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row q-mb-sm">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-3 q-pr-sm">
+                                                <div class="text-subtitle2 edx-label  q-mb-sm">Approval</div>
+                                                <q-select class="q-mr-md" :options="optionsApproval" v-model="selectedApproval" dense outlined></q-select>
+                                            </div>
+                                            <div class="col-md-3 q-pr-sm">
+                                                <div class="text-subtitle2 edx-label  q-mb-sm">Status</div>
+                                                <q-select :options="statusOptions" v-model="selectedStatuses" class="q-mr-md" dense outlined></q-select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                        <q-card-actions align="right">
+                            <q-btn flat label="Search" class="edx-calendar" @click="search"/>
+                        </q-card-actions>
+                    <!-- </q-form> -->
+                </q-btn-dropdown>
+                <!-- RTS END TEST -->
+
+
+                <!-- <q-btn 
                     square
                     size="13px"
                     class="q-mr-md edx-add-btn" text-color="white"
@@ -130,9 +275,9 @@
                     @click="filter=!filter"
                 >
                     Filter
-                </q-btn>
+                </q-btn> -->
 
-                <q-btn 
+                <!-- <q-btn 
                     square
                     size="13px"
                     class="q-mr-md edx-add-btn" text-color="white"
@@ -141,7 +286,7 @@
                     @click="search"
                 >
                     Search
-                </q-btn>
+                </q-btn> -->
 
                 <q-btn
                     round 

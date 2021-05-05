@@ -103,7 +103,7 @@
                 icon="add" 
                 no-caps
             >
-                Invoice
+                Reconciliation
             </q-btn>
 
             <q-btn
@@ -238,7 +238,7 @@
     <q-dialog v-model="confirm" persistent>
         <q-card>
             <q-card-section class="row items-center">
-            <span class="q-ml-sm">Are you sure to delete this invoice?</span>
+            <span class="q-ml-sm">Are you sure to delete this reconciliation?</span>
             </q-card-section>
 
             <q-card-actions align="right">
@@ -248,9 +248,9 @@
         </q-card>
     </q-dialog>
 
-    <InvoicePopup 
-        @editInvoice="editInvoice"
-        @addInvoice="addInvoice"
+    <ReconciliationsPopup 
+        @editReconciliation="editReconciliation"
+        @addReconciliation="addReconciliation"
         @togglePopup="togglePopup" 
         :id="id" 
         :show="newInvoice" 
@@ -262,14 +262,14 @@
 
 <script>
 
-import InvoicePopup from '../../components/billingExpenses/InvoicePopup'
+import ReconciliationsPopup from '../../components/reconciliations/ReconciliationsPopup'
 import axios from 'axios'
 import config from '../../../config'
 import ICONS from '../../../icons'
 
 export default {
     components: {
-        InvoicePopup
+        ReconciliationsPopup
     },
     data () {
         return {
@@ -395,7 +395,7 @@ export default {
 
             const conf = {
                 method: 'GET',
-                url: config.filterInvoice + uri,
+                url: config.filterReconciliation + uri,
                 headers: {
                     Accept: 'application/json',
                 }
@@ -509,12 +509,12 @@ export default {
                 })
             }
         },
-        addInvoice(newInvoice) {
-            this.getInvoices(this.count, this.current)
+        addReconciliation(newReconciliation) {
+            this.getReconciliation(this.count, this.current)
         },
-        editInvoice(editedInvoice) {
+        editReconciliation(editedReconciliation) {
 
-             this.getInvoices(this.count, this.current)
+             this.getReconciliation(this.count, this.current)
 
             // console.log('Child to parent: ', editedInvoice )
             // console.log('Child to parent: ', typeof editedInvoice )
@@ -530,12 +530,12 @@ export default {
         changePagination (val) {
             this.current = val
             // function
-            this.getInvoices(this.count, this.current)
+            this.getReconciliation(this.count, this.current)
         },
         changeRowsPerPage() {
             this.count = this.pagination.rowsPerPage
             this.current = 1
-            this.getInvoices(this.count, this.current)
+            this.getReconciliation(this.count, this.current)
             // function
         },
         openInvoicePopup(id) {
@@ -550,11 +550,11 @@ export default {
             this.isEdit = false
             this.newInvoice = true
         },
-        getInvoices(limit, page) {
+        getReconciliation(limit, page) {
 
             const conf = {
                 method: 'GET',
-                url: config.getInvoices + '?limit=' + limit + '&page=' + page,
+                url: config.getReconciliation + '?limit=' + limit + '&page=' + page,
                 headers: {
                     Accept: 'application/json',
                 }
@@ -630,7 +630,7 @@ export default {
 
             const conf = {
                 method: 'DELETE',
-                url: config.deleteInvoice + this.id,
+                url: config.deleteReconciliation + this.id,
                 headers: {
                     Accept: 'application/json',
                 }
@@ -642,7 +642,7 @@ export default {
                 this.data.splice(index, 1)
 
                     this.$q.notify({
-                        message: 'Invoice deleted!',
+                        message: 'Reconciliation deleted!',
                         type: 'positive',
                     })
 
@@ -696,7 +696,7 @@ export default {
 
     },
     created() {
-        this.getInvoices(this.count, this.current)
+        this.getReconciliation(this.count, this.current)
         this.getInvoiceStatus()
         this.getAllocations()
     },

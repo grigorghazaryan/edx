@@ -148,12 +148,31 @@ const config = {
     paySchedule: 'https://edxchange-teacher.aimtech.am/api/v1/count-shceduled-pay/', // startDate / endDate / chargeRate / employeeType / weekHourse / billingCicle === 1 
     filterTeacher: 'https://edxchange-teacher.aimtech.am/api/v1/filter-teacher-assignment/', // 1/1001?search=Joelle&school_year=1015
 
+
+    // INVOICE
+    
     getInvoices: 'https://edxchange-invoice.aimtech.am/api/v1/item',
     getTerms: 'https://edxchange-invoice.aimtech.am/api/v1/invoice-term',
     deleteInvoice: 'https://edxchange-invoice.aimtech.am/api/v1/remove-invoice/',
+    editInvoice: 'https://edxchange-invoice.aimtech.am/api/v1/edit-invoice/', 
+    addInvoice: 'https://edxchange-invoice.aimtech.am/api/v1/add-invoice/',
+    getInvoiceTotals: 'https://edxchange-statistic.aimtech.am/api/v1/get-invoice-totals',
+    filterInvoice: 'https://edxchange-invoice.aimtech.am/api/v1/filter-invoice',
+
+    // Reconciliation
+    getReconciliation: 'https://edxchange-invoice.aimtech.am/api/v1/reconciliation-item',
+    deleteReconciliation: 'https://edxchange-invoice.aimtech.am/api/v1/remove-reconciliation/',
+    editReconciliation: 'https://edxchange-invoice.aimtech.am/api/v1/edit-reconciliation/', 
+    addReconciliation: 'https://edxchange-invoice.aimtech.am/api/v1/add-reconciliation/',
+
+    filterReconciliation: 'https://edxchange-invoice.aimtech.am/api/v1/filter-reconciliation',
+    getReconciliationBudgetItems: 'https://edxchange-invoice.aimtech.am/api/v1/get-reconciliation-budget-list/',
+    addReconciliationBudgetItems: 'https://edxchange-invoice.aimtech.am/api/v1/add-reconciliation-budget-items/',
+    
 
     getBudgetItems: 'https://edxchange-invoice.aimtech.am/api/v1/get-budget-list/', // + id
     addSelected: 'https://edxchange-invoice.aimtech.am/api/v1/add-budget-items/', // + 1 title 1
+    
 
 
     // GET ALLOCATIONS
@@ -162,10 +181,7 @@ const config = {
     getInvoiceStatus: 'https://edxchange-invoice.aimtech.am/api/v1/invoice-status',
     deleteBudget: 'https://edxchange-invoice.aimtech.am/api/v1/remove-budget-item/', // + id
 
-    editInvoice: 'https://edxchange-invoice.aimtech.am/api/v1/edit-invoice/', 
-    addInvoice: 'https://edxchange-invoice.aimtech.am/api/v1/add-invoice/',
-    getInvoiceTotals: 'https://edxchange-statistic.aimtech.am/api/v1/get-invoice-totals',
-    filterInvoice: 'https://edxchange-invoice.aimtech.am/api/v1/filter-invoice',
+    
 
     // Categories
     getAllCategories: 'https://edxchange-activity.aimtech.am/api/v1/get-all-categories',

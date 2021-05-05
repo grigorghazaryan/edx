@@ -5,6 +5,7 @@
     </div>
 
     <q-table
+      class="overflow-auto my-sticky-column-table"
       :data="data"
       :columns="columns"
       row-key="id"
@@ -76,13 +77,15 @@
         >
 
         <q-btn
-          icon-right="archive"
-          label="Export to Excel"
-          class="edx-excel-btn"
-          text-color="white"
-          no-caps
-          @click="exportTable"
-        />
+            round 
+            icon="mdi-file-excel-box"
+            size="10px"
+            class="edx-excel-btn" text-color="white"
+            no-caps
+            @click="exportTable"
+        >
+            <q-tooltip content-class="edx-tooltip">Export to Excel</q-tooltip>
+        </q-btn>
 
         <q-btn
           flat
@@ -121,13 +124,14 @@
 
       <!-- Table Body -->
       <template v-slot:body="props">
+
         <q-tr
           @click="isEditAllocation=true, openAllocationModal(props.row, props.rowIndex)"
           :props="props"
           class="cursor-pointer"
         >
           <q-td key="creation_date" :props="props">
-            <div class="cursor-pointer">
+            <div v-if="props.row[0]" class="cursor-pointer">
               {{ props.row[0].creation_date }}
             </div>
           </q-td>
@@ -165,69 +169,26 @@
           </q-td>
 
           <q-td key="actions" :props="props" style="min-width: 132px">
-            <div v-if="props.row.changed">
-              <q-btn
-                @click="cancellChange(props.rowIndex)"
-                icon="cancel"
-                text-color="white"
-                class="q-mr-sm edx-bg-orange"
-                size="sm"
-                no-caps
-                round
-              >
-                <q-tooltip
-                  anchor="top middle"
-                  self="bottom middle"
-                  :offset="[10, 10]"
-                  transition-show="flip-right"
-                  transition-hide="flip-left"
+            <q-fab padding="xs" @click.stop color="edx-action-btn" icon="toc" active-icon="menu_open"  direction="left">
+                            
+                <q-fab-action
+                    icon="delete_forever"
+                    color="edx-delete-btn" 
+                    size=sm 
+                    no-caps
+                    round
+                    @click="openDeleteModal(props.row)" 
                 >
-                  <strong>Cancel</strong>
-                </q-tooltip>
-              </q-btn>
+                    <q-tooltip 
+                        anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                        transition-show="flip-right"
+                        transition-hide="flip-left"
+                    >
+                        <strong>Delete</strong>
+                    </q-tooltip>
+                </q-fab-action>
 
-              <q-btn
-                @click="editAllocation(props.rowIndex)"
-                text-color="white"
-                class="q-mr-sm edx-bg-green"
-                icon="save"
-                size="sm"
-                no-caps
-                round
-              >
-                <q-tooltip
-                  anchor="top middle"
-                  self="bottom middle"
-                  :offset="[10, 10]"
-                  transition-show="flip-right"
-                  transition-hide="flip-left"
-                >
-                  <strong>Save</strong>
-                </q-tooltip>
-              </q-btn>
-            </div>
-
-            <div v-if="props.row.showEditButton && !props.row.changed">
-              <q-btn
-                icon="delete_forever"
-                text-color="white"
-                class="q-mr-sm edx-delete-btn"
-                @click="openDeleteModal(props.row)"
-                size="sm"
-                no-caps
-                round
-              >
-                <q-tooltip
-                  anchor="top middle"
-                  self="bottom middle"
-                  :offset="[10, 10]"
-                  transition-show="flip-right"
-                  transition-hide="flip-left"
-                >
-                  <strong>Delete</strong>
-                </q-tooltip>
-              </q-btn>
-            </div>
+            </q-fab>
           </q-td>
         </q-tr>
       </template>
@@ -806,100 +767,6 @@ export default {
     // ##############################
     // ##############################
     // ##############################
-    getRuleInputs(arr) {
-      let res = []
-      for (let i = 0; i < arr.length; i++) {
-        if(arr[i]["rule_input"]) {
-          res.push(arr[i]["rule_input"].split(","))
-          res[i].unshift(arr[i]["allocationFundTemplateId"])
-          res[i].sort()
-        }
-      }
-      return res
-    },
-    getPercentage(arr) {
-        let res = []
-        for (let i = 0; i < arr.length; i++) {
-          if(arr[i]["percentage"]) {
-            res.push(arr[i]["percentage"])
-          }
-        }
-        return res
-    },
-    generateMatrix(allocationRow) {
-
-        let x = this.getRuleInputs(allocationRow)
-        console.log('x = ', x)
-        const minId = x[0][0]
-        const maxId = x[x.length - 1][x[x.length - 1].length - 1]
-
-        console.log(minId, maxId, 'Min Max')
-
-        for (let i = 0; i <= maxId - minId; i++) {
-          if(x[i]) {
-            for (let j = 0; j < x[i].length; j++) {
-              x[i][j] -= minId
-              console.log(`${x[i][j]}-=${minId}`)
-            }
-          }  
-        }
-
-        const m = []
-        for (let i = 0; i <= maxId - minId; i++) {
-            m.push([])
-            for (let j = 0; j <= maxId - minId; j++) {
-              m[i].push(0)
-              console.log('m', m[i])
-            }
-        }
-        for (let i = 0; i <= maxId - minId; i++) {
-          if(x[i]) {
-            for (let j = 0; j < x[i].length; j++) {
-              m[i][x[i][j]] = -1
-            }
-            m[i][i] = 1
-          }
-        }
-
-        let pcntg = this.getPercentage(allocationRow)
-        for (let i = 0; i < m.length; i++) {
-          for (let j = 0; j < m[0].length; j++) {
-            if (pcntg[i] && m[i][j] != 1) {
-              m[i][j] *= (pcntg[i]/100)
-            }
-          }
-        }
-        console.log('mmmmmmmmm', m)
-        // let M = matrix(m);
-        return m
-    },
-    calculateAmounts(allocationRow) {
-
-      console.log('allocationRow', allocationRow)
-
-      const M = this.generateMatrix(allocationRow)
-      let U = matrix(M)
-      console.log( 'MMMMMMMMMMMMMMMMMMMMMMMMMMMMMM = ', U )
-
-      // let U = matrix([[1, 3, 3], [1, 4, 3], [1, 3 ,4]]);
-      // console.log('U = ', U.inv())
-      // M.inv()
-      // console.log( 'M = ', M )
-
-      // let IM = M.inv()
-      // console.log(IM, 'IM IM IM IM IM')
-
-      // M = matrix([[1, 3, 3], [1, 4, 3], [1, 3 ,4]]);
-      // M.inv();
-
-      // console.log('IM = ',IM())
-      // const B = matrix([[0], [0], [0], [0], [0]])
-      // // console.log('B = ',B())
-      // console.log('IM prod B = ', IM.prod(B))
-      // return IM.prod(B)
-      // return 0
-
-    },
 
     // Requests
     getAllocationByType(type, limit, page) {
@@ -924,9 +791,7 @@ export default {
 
               let parentObj = {}, startNumber = 2;
 
-              let C = this.calculateAmounts(data[i])
-
-              console.log( 'DOC DOC DOC ', C );
+              
 
             
               for(let j=0; j<data[i].length; j++) {
@@ -934,6 +799,52 @@ export default {
                   // Spliced Name
                   const edxName = data[i][j].templateName;
                   data[i][j].edxName = edxName
+
+
+                  // console.log(j, data[i][j])
+
+                  if(parseInt(data[i][j].hasRule) == 1 ) {
+
+                    
+
+                    const ruleInput = data[i][j].rule_input.split(',')
+
+                    console.log('gogogogogogogogogogogog', ruleInput.length)
+
+                    if(data[i][j].rule_input.length == 1) {
+
+                      let count = 0;
+                      for (let g=0; g<data[i].length; g++) {
+                        for(let k = 0; k<ruleInput.length; k++) {
+                          if(parseInt(data[i][g].allocationFundTemplateId) == parseInt(ruleInput[k])) {
+                            count = parseFloat(data[i][g].amount) *  data[i][g].percentage
+                          }
+                        }
+                        data[i][j].amount = count
+                        console.log('Percentage = ', count)
+                      }
+
+                    }
+                    else {
+
+                      let count = 0;
+                      for (let g=0; g<data[i].length; g++) {
+                        for(let k = 0; k<ruleInput.length; k++) {
+                          if(parseInt(data[i][g].allocationFundTemplateId) == parseInt(ruleInput[k])) {
+                            count += parseFloat(data[i][g].amount)
+                          }
+                        }
+                        data[i][j].amount = count
+                        console.log('Count = ', count)
+                      }
+
+                    }
+                    
+                    // console.log( ruleInput, data[i][j] )
+                    // console.log('Has rule : ', ruleInput,  data[i][j],   data[i][j].allocationFundTemplateId)
+                  }else {
+                    // console.log('Not Has rule : ', data[i][j].allocationFundTemplateId)
+                  }
 
                   
 
@@ -952,7 +863,6 @@ export default {
                   //           data[i][j].amount = 'DOC 2'
                   //         }
                   //     }
-
                   //   }
 
                   //   if(ruleInput.length > 1 && data[i][j].percentage == null) {

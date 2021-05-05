@@ -5,7 +5,7 @@
         <dialog-draggable 
             :width="900" 
             :modelDialog="showPopup" 
-            :title=" isEdit ? 'Edit Invoice' : 'New Invoice'" 
+            :title=" isEdit ? 'Edit Reconciliation' : 'New Reconciliation'" 
             :icon="'description'"
         >  
             <q-card-section style="max-height: 60vh" class="scroll q-pt-none q-pb-none q-pr-none q-pl-none">
@@ -14,7 +14,7 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="q-mb-sm">
-                                <div class="text-subtitle2 q-mb-sm">School</div>
+                                <div class="text-subtitle2 q-mb-sm">Schools</div>
                                 <q-select 
                                     v-model="selectedSchool" 
                                     :options="schoolsOptions"
@@ -152,7 +152,7 @@
                         </div>
                     </div>
 
-                    <div class="row">
+                    <!-- <div class="row">
                         <div class="col-md-4 q-mt-lg">
                             <div class="text-subtitle2 q-mb-sm">Bill to</div>
                             <div class="row justify-between">
@@ -167,7 +167,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
 
                     <div class="row">
                         <div class="col-md-11">
@@ -369,8 +369,8 @@
             <q-card-actions class="row justify-end">
                 <div>
                     <q-btn flat label="Cancel" color="primary" @click="emitClosePopup"></q-btn>
-                    <q-btn v-if="!isEdit" @click="addInvoice" flat label="Add" color="primary"></q-btn>
-                    <q-btn v-else @click="editInvoice" flat label="Save" color="primary"></q-btn>
+                    <q-btn v-if="!isEdit" @click="addReconciliation" flat label="Add" color="primary"></q-btn>
+                    <q-btn v-else @click="editReconciliation" flat label="Save" color="primary"></q-btn>
                 </div>
             </q-card-actions>
 
@@ -441,7 +441,7 @@ export default {
             loading: false, 
             pagination: { rowsPerPage: 999 },
 
-            selectedSchool: '',
+            selectedSchool: null,
             schoolsOptions: [],
             schoolsOptionsForFilter: [],
 
@@ -592,11 +592,12 @@ export default {
             this.$emit('togglePopup', false)
         },
         toggleBudgetItemsPopup(bool) {
+
             this.showBudgetItemsPopup = bool
-            if(!bool) { this.getInvoiceById() } 
+            if(!bool) { this.getReconciliationById() } 
+            
         },
         receiveAddress(info) {
-            console.log("NEW ADDRESS", info)
             this.billTo = info
         },
         openDeleteModal(row) {
@@ -695,14 +696,14 @@ export default {
                     this.loading = false
                 })
         },
-        addInvoice() {
+        addReconciliation() {
             
             const data = {
 
                 number: this.internalInvoiceData[0].internalInvoice,
                 
                 invoice_term_id: this.internalInvoiceData[0].terms?.id,
-                bill_to_id: this.billTo?.id,
+                bill_to_id: this.billTo.id,
                 ship_to_id: this.selectedSchool?.id,
                 subtotal: this.subtotal,
 
@@ -727,7 +728,7 @@ export default {
 
             const conf = {
                 method: 'POST',
-                url: config.addInvoice + this.title.id,
+                url: config.addReconciliation + this.title.id,
                 headers: {
                     Accept: 'application/json',
                 },
@@ -737,7 +738,7 @@ export default {
             axios(conf).then(res => {
 
                 let invoice = res.data.invoice[0]
-                this.$emit('addInvoice', invoice)
+                this.$emit('addReconciliation', invoice)
 
                 this.$q.notify({
                     message: 'Invoice Added!',
@@ -750,7 +751,7 @@ export default {
 
 
         },
-        editInvoice() {
+        editReconciliation() {
 
             const data = {
 
@@ -780,7 +781,7 @@ export default {
 
             const conf = {
                 method: 'PUT',
-                url: config.editInvoice + this.id,
+                url: config.editReconciliation + this.id,
                 headers: {
                     Accept: 'application/json',
                 },
@@ -790,7 +791,7 @@ export default {
             axios(conf).then(res => {
 
                 let invoice = res.data.invoice[0]
-                this.$emit('editInvoice', invoice)
+                this.$emit('editReconciliation', invoice)
 
                 this.$q.notify({
                     message: 'Invoice Edited!',
@@ -803,11 +804,11 @@ export default {
 
 
         },
-        getInvoiceById() {
+        getReconciliationById() {
 
             const conf = {
                 method: 'GET',
-                url: config.getInvoices + '/' + this.id,
+                url: config.getReconciliation + '/' + this.id,
                 headers: {
                     Accept: 'application/json',
                 }
@@ -888,9 +889,11 @@ export default {
                 }
 
 
-                let lineItems = res.data.item[0]?.line_item
+                let lineItems = res.data.item[0]?.reconciliation_item
 
-               this.getCampusBySchoolId( res.data.item[0].school_id )
+                this.getCampusBySchoolId( res.data.item[0].school_id )
+
+               
 
                 let arr = []
                 for(let i=0; i<lineItems.length; i++) {
@@ -1185,9 +1188,11 @@ export default {
     },
     watch: {
         show(val) {
+
             this.$emit('togglePopup', val)
+
             if(val && this.isEdit) {
-                this.getInvoiceById()
+                this.getReconciliationById()
             }else {
                 this.resetState()
             }
@@ -1195,11 +1200,15 @@ export default {
             val && this.getSchools()
         },
         selectedSchool(val) {
+
+            console.log(val, 'vvvvv----------')
+
             if(val) {
                 this.getCampusBySchoolId(val.id)
             }else {
                 this.selectedCampus = null
             }
+
         }
     },
     created() {

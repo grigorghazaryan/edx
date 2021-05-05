@@ -5,6 +5,7 @@
             :columns="columns"
             :loading="loading"
             :pagination.sync="pagination"
+            class="overflow-auto my-sticky-column-table"
         >
             <!-- Loading -->
             <template v-slot:loading>
@@ -656,7 +657,7 @@
 
                         <div class="q-mb-md">
                             <div class="row">
-                                <div class="col-md-12">
+                                <div class="col-md-10">
                                     <div class="text-subtitle2 q-mb-sm">Inventory Category</div>
                                     <q-select  
                                         outlined
@@ -673,6 +674,9 @@
                                             </q-item>
                                         </template>
                                     </q-select>
+                                </div>
+                                <div class="col-md-2 inventory-icon-parent">
+                                    <q-icon @click="openInventoryModal" class="cursor-pointer edx-blue" name="description" />
                                 </div>
                             </div>
                         </div>
@@ -940,6 +944,7 @@
                 <div>
 
                     <q-table
+                        class="overflow-auto my-sticky-column-table"
                         :data="editedItem.noAttendingArr && editedItem.noAttendingArr.attendeesData"
                         :columns="attendeesColumn"
                         row-key="id"
@@ -1205,6 +1210,17 @@
             :categoryId="categoryId"
         />
 
+        <InventoryPopup 
+        
+            :data="{}" 
+            :show="inventoryModal" 
+            :isEdit="true" 
+            :tab="1"
+            @togglePopup="toggleInventoryModal"
+            @updateTableList="updateTableList"
+
+        />
+
 
     </div>
 </template>
@@ -1218,6 +1234,7 @@ import config from '../../../config'
 import ICONS from '../../../icons'
 import DialogDraggable from '../DialogDraggable.vue';
 import DocumentsPopup from '../documentsPopup/DocumentsPopup';
+import InventoryPopup from '../inventory/InventoryPopup';
 
 let typingTimer
 let doneTypingInterval = 500
@@ -1229,7 +1246,8 @@ export default {
     components: {
         dialogDraggable,
         DialogDraggable,
-        DocumentsPopup
+        DocumentsPopup,
+        InventoryPopup
     },
     props: {
         title: {
@@ -1240,6 +1258,8 @@ export default {
         return {
             
             showDocumentPopup: false,
+            inventoryModal: false,
+
             //
             mode: 'list',
             tab: '1',
@@ -1494,6 +1514,13 @@ export default {
     },
     methods: {
 
+        openInventoryModal() {
+            this.inventoryModal = true
+        },
+        updateTableList() {
+
+        },
+
         filterSupplier (val, update) {
 
             if (val === '') {
@@ -1512,6 +1539,9 @@ export default {
 
         togglePopup(val) {
             this.showDocumentPopup = val
+        },
+        toggleInventoryModal(val) {
+            this.inventoryModal = val
         },
         openDocumentsModal() {
             this.showDocumentPopup = true
@@ -3262,6 +3292,11 @@ export default {
     height: 40px;
     align-items: center;
     display: flex;
+}
+
+.inventory-icon-parent {
+    padding-top: 37px;
+    padding-left: 14px;
 }
 
 

@@ -652,6 +652,7 @@
             icon="monetization_on"
             label="Billing & Expenses"
           >
+
             <q-list class="bg-sidebar-opened edx-menu-toggle">
               <q-item to="/Billing Invoices" 
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
@@ -663,6 +664,19 @@
                 </q-item-section>
               </q-item>
             </q-list>
+
+            <q-list class="bg-sidebar-opened edx-menu-toggle">
+              <q-item to="/Reconciliations" 
+              active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
+                <q-item-section avatar>
+                  <q-icon name="price_check"/>
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label>Reconciliations</q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-list>
+
           </q-expansion-item>
 
           <q-item v-else active-class="q-item-no-link-highlighting">
@@ -672,6 +686,7 @@
             <q-item-section>
               <q-item-label>Billing & Expenses</q-item-label>
             </q-item-section>
+
             <q-menu
               anchor="top right"
               self="top left"
@@ -683,6 +698,16 @@
                   </q-item-section>
                   <q-item-section>
                     <q-item-label>Billing Invoices</q-item-label>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+              <q-list class="edx-sidebar-background edx-sidebar-menu-text" style="min-width: 100px">
+                <q-item clickable  v-close-popup to="/Reconciliations" active-class="q-item-no-link-highlighting">
+                  <q-item-section avatar>
+                    <q-icon name="price_check"/>
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>Reconciliations</q-item-label>
                   </q-item-section>
                 </q-item>
               </q-list>

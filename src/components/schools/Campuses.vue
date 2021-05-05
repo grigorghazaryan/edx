@@ -15,7 +15,7 @@
             :data="data" 
             :columns="columns"
             :loading="loading"
-            class="no-shadow"
+            class="no-shadow overflow-auto my-sticky-column-table"
             row-key="id"
             hide-bottom
             :pagination.sync="pagination"

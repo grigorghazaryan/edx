@@ -2,7 +2,7 @@
     <div>
 
         <q-table
-            class="overflow-auto"
+            class="overflow-auto my-sticky-column-table"
             :data="data" 
             :columns="columns"
             :loading="loading"

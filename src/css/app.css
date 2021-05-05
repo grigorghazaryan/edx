@@ -169,9 +169,6 @@ span.edx-header-text {
   height: 40px;
 }
 
-
-
-
 .w-100 {
   width: 100%;
 }
@@ -199,3 +196,28 @@ span.edx-header-text {
 .m-0 {
   margin: 0 !important;
 }
+
+
+.my-sticky-column-table thead tr:last-child,
+.my-sticky-column-table th:last-child {
+  background-color: #fff;
+  opacity: 1;
+}
+
+.my-sticky-column-table td:last-child {
+  background-color: #fff;
+  color: #fff;
+}
+
+
+
+  
+
+.my-sticky-column-table thead tr:last-child th:last-child,
+.my-sticky-column-table td:last-child {
+      position: sticky;
+      -webkit-position: sticky; /* add this line */
+      right: 0;
+      z-index: 1;
+  }
+  

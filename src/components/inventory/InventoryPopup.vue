@@ -480,7 +480,7 @@
             <q-card-actions class="row justify-end">
                 <div>
                     <q-btn @click="closePopup" flat label="Cancel" color="primary"></q-btn>
-                    <q-btn :loading="loading" @click="editInventory" v-if="isEdit" flat label="Edit" color="primary"></q-btn>
+                    <q-btn :loading="loading" @click="editInventory" v-if="isEdit" flat label="Save" color="primary"></q-btn>
                     <q-btn :loading="loading" @click="editInventory" v-else flat label="Add" color="primary"></q-btn>
                 </div>
             </q-card-actions>

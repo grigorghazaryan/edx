@@ -4,7 +4,7 @@
       <InvoicingBar />
 
       <div class="q-mt-lg"> 
-        <InvoicingTable />
+        <ReconciliationsTable />
       </div>
 
 
@@ -15,12 +15,12 @@
 <script>
 
 import InvoicingBar from '../../components/billingExpenses/InvoicingBar'
-import InvoicingTable from '../../components/billingExpenses/InvoicingTable'
+import ReconciliationsTable from '../../components/reconciliations/ReconciliationsTable'
 
 export default {
   components: {
     InvoicingBar,
-    InvoicingTable
+    ReconciliationsTable
   }
 }
 

@@ -18,6 +18,35 @@
                         <q-input outlined v-model="title" dense />
                     </div>
                     <div class="col-md-12 q-mt-md">
+                        <div class="text-subtitle2 q-mb-sm">Tags</div>
+                        <q-select
+                            outlined
+                            dense
+                            ref="myChipInput"
+                            v-model="modelMultiple"
+                            multiple
+                            use-chips
+                            use-input
+                            new-value-mode="add"
+                            stack-label
+                            :options="options"
+                            @input.native="doStuff($event.target.value)"
+                            @new-value="createValue"
+                            @keyup.tab.native="doOtherStuff"
+                            @filter="filterFn"
+                        >
+                            <!-- <template v-if="showOk" v-slot:append>
+                            <q-icon
+                                color="primary"
+                                name="check_circle_outline"
+                                class="cursor-pointer"
+                                @click="doOtherStuff"
+                            ></q-icon>
+                            
+                            </template> -->
+                        </q-select>
+                    </div>
+                    <div class="col-md-12 q-mt-md">
                         <file-pond
                             name="document"
                             ref="pond"
@@ -97,9 +126,43 @@ export default {
             myFiles: [],
             note: '',
 
+                modelMultiple: [],
+                inputValue: '',
+                showOk: false,
+                options: ['Luke Skywalker', 'James Bond', 'JoJo', 'BoBo'],
+                options2: ['Luke Skywalker', 'James Bond', 'JoJo', 'BoBo'],
+
         }
     },
     methods: {
+        filterFn(val, update, abort) {
+            update(() => {
+                if(val) { 
+                const needle = val.toLowerCase()
+                this.options = this.options2.filter(v =>   v.toLowerCase().indexOf(needle) > -1)
+                }
+            })
+        },
+        
+            createValue (val, done) {
+      this.showOk = false
+      console.log(val)
+      if(done) {
+        done(val)
+      } 
+    },
+    doStuff (val) {
+      this.showOk = true
+      this.inputValue = val
+      
+    },
+    doOtherStuff () {
+      this.showOk = false
+      this.$refs.myChipInput.add(this.inputValue)
+      this.$refs.myChipInput.updateInputValue('')
+      this.inputValue = ''
+    },
+        /////
         emitClosePopup() {
             this.$emit('togglePopup', false)
         },

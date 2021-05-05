@@ -3,7 +3,7 @@
         <dialog-draggable 
             :width="800" 
             :modelDialog="showPopup" 
-            :title="`Documents for: ${activity.activity}`" 
+            :title="`Documents`" 
             :icon="'description'"
         > 
 
@@ -11,32 +11,13 @@
                 <div class="q-pa-md">
                     <div class="row">
 
-                        <div class="col-md-12">
-                            <div class="text-subtitle2 q-mb-sm">Tracking Status</div>
-                            <div class="row q-mt-md q-mb-md">
-                                <div  v-for="status in trackingStatuses" :key="status.id" 
-                                @click="showTrackingStatusModal=true, sendTrackingStatusToPopup(status)" class="cursor-pointer tracking-icon-parent document-popup">
-                                    <q-icon 
-                                        :name="status.icon" 
-                                        :class="status.status === 1 ? 'edx-blue' : 'edx-red' "
-                                        style="font-size: 2.5em;"
-                                    ></q-icon>
-                                    <div class="w-100">
-                                        <q-chip square size="sm" :class="status.status === 1 ? 'edx-bg-blue' : 'edx-bg-red' " class=" edx-white m-0 text-white">
-                                            <b>{{ status.abbreviation }}</b>
-                                        </q-chip>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
                         <div class="col-md-12 q-mb-lg q-mt-md">
                             <div class="text-subtitle2 q-mb-sm">Manage Documents</div>
                             <q-table
                                 :data="data" 
                                 :columns="columns"
                                 :loading="loading"
-                                class="no-shadow hidden-header overflow-auto my-sticky-column-table"
+                                class="no-shadow hidden-header overflow-auto"
                                 row-key="id"
                                 hide-bottom
                             >
@@ -120,6 +101,10 @@ export default {
         },
         categoryId: {
             required: true
+        },
+        teachers: {
+            required: false,
+            default: false,
         }
     },
     data() {
@@ -166,51 +151,24 @@ export default {
             }
 
             axios(conf).then(res => {
-                console.log('getDocumentTrays = ', res.data.tray)
+
+                console.log('getDocumentTrays', res.data)
+
                 let trays = res.data.tray,
                     arr = [];
 
                 for(let i=0; i<trays.length; i++) {
-                    arr.push({
-                        id: trays[i].id,
-                        name: trays[i].name
-                    })
+                    if(trays[i].id == 4) {
+                        arr.push({
+                            id: trays[i].id,
+                            name: trays[i].name
+                        })
+                    }
+                    
                 }
 
                 this.data = arr
             })
-        },
-        getTrackingStatus() {
-
-            const conf = {
-                method: 'GET',
-                url: config.getTrackingStatus + this.activity.id,
-                headers: {
-                    Accept: 'application/json',
-                }
-            }
-
-            axios(conf).then(res => {
-                this.trackingStatuses = res.data.fields
-                this.note = res.data.note
-                
-            })
-
-        },
-        getTrackingStatusByCategory() {
-
-            const conf = {
-                method: 'GET',
-                url: config.getTrackingStatusByCategory + this.categoryId,
-                headers: {
-                    Accept: 'application/json',
-                }
-            }
-
-            axios(conf).then(res => {
-                this.trackingStatuses = res.data.fields
-            })
-
         },
         sendTrackingStatusToPopup(trackingStatus) {
             this.selectedTrackingStatus = trackingStatus
@@ -254,15 +212,8 @@ export default {
             this.$emit('togglePopup', val)
 
             if(val) {
-
-                this.getDocumentTrays()
-
-                if(this.isEdit) {
-                    this.getTrackingStatus()
-                }else {
-                    this.getTrackingStatusByCategory()
-                }
-                
+                this.note = this.activity.note
+                this.getDocumentTrays()                
             }
         }
     }

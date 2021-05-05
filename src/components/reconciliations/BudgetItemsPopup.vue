@@ -108,7 +108,7 @@
                                         {{props.row.allocation}}
                                     </q-td>
                                     <q-td key="type" :props="props">
-                                        <q-chip square :class="checkType(props.row.type.abbreviation)">
+                                        <q-chip v-if="props.row.type" square :class="checkType(props.row.type.abbreviation)">
                                             <span> {{props.row.type.abbreviation}}</span>
                                             <q-tooltip 
                                                 anchor="top middle" self="bottom middle" :offset="[10, 10]"
@@ -244,12 +244,13 @@ export default {
             this.$emit('toggleBudgetItemsPopup', false)
         },
         addSelected() {
+            
             this.loading = true
             let budgetIds = Array.from(this.selectedTransactions);
 
             const conf = {
                 method: 'POST',
-                url: config.addSelected + this.invoiceId,
+                url: config.addReconciliationBudgetItems + this.invoiceId,
                 headers: {
                     Accept: 'application/json',
                 },
@@ -298,7 +299,7 @@ export default {
 
             const conf = {
                 method: 'GET',
-                url: config.getBudgetItems + id + uri,
+                url: config.getReconciliationBudgetItems + id + uri,
                 headers: {
                     Accept: 'application/json',
                 }
@@ -312,12 +313,12 @@ export default {
 
                 for(let i=0; i<budgetItems.length; i++) {
                     arr.push({
-                        id: budgetItems[i].id,
+                        id: budgetItems[i]?.id,
                         transaction: budgetItems[i].name,
-                        date: budgetItems[i].completed_date,
-                        type: budgetItems[i].category,
-                        qty: budgetItems[i].quantity,
-                        balance: budgetItems[i].unit_total_cost,
+                        date: budgetItems[i]?.completed_date,
+                        type: budgetItems[i].category ? budgetItems[i].category : { abbreviation: 'N/A' },
+                        qty: budgetItems[i]?.quantity,
+                        balance: budgetItems[i]?.unit_total_cost,
                         select: false
                     })
                 }
@@ -453,9 +454,6 @@ export default {
     components: {
         dialogDraggable
     },
-    created() {
-        
-    },
     computed: {
         showPopup() {
             return this.show
@@ -464,7 +462,6 @@ export default {
             let count = 0;
             for(let i=0; i<this.data.length; i++) {
                 if(this.data[i].select) {
-                    console.log(parseFloat(this.data[i].balance))
                     count += parseFloat(this.data[i].balance)
                 }
             }

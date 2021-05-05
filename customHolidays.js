@@ -1,6 +1,7 @@
 const HOLIDAYS = [
-    '01/02/2021',
-    '01/03/2021',
+    '2021/05/03',
+    '2021/05/06',
+    // YYYY/MM/DD
 ]
 
 export default HOLIDAYS

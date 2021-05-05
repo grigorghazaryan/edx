@@ -13,7 +13,7 @@
             :columns="columns"
             row-key="id"
             hide-bottom
-            class="no-shadow"
+            class="no-shadow overflow-auto my-sticky-column-table"
         >
             <template v-slot:body="props">
 

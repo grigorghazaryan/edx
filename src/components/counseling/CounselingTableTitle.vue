@@ -1,6 +1,7 @@
 <template>
     <div>
         <q-table
+        class="overflow-auto my-sticky-column-table"
             :data="data" 
             :columns="columns"
             :visible-columns="visibleColumns"
