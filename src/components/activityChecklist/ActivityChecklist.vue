@@ -1039,7 +1039,7 @@ export default {
 
             this.catagoryOptions = typesArray
 
-        })
+            })
         },
         // Get subcategories
         getSubcategoryTypes(id) {

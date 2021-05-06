@@ -56,6 +56,7 @@ const config = {
     getStates: 'https://edxchange-school.aimtech.am/api/v1/get-states-list',
 
     // Supplier
+    getAllSuppliers: 'https://edxchange-supplier.aimtech.am/api/v1/all-suppliers',
     getSuppliers: 'https://edxchange-supplier.aimtech.am/api/v1/supplier',
     filterSupplier: 'https://edxchange-supplier.aimtech.am/api/v1/filter-supplier?search=',
 
@@ -172,7 +173,7 @@ const config = {
 
     getBudgetItems: 'https://edxchange-invoice.aimtech.am/api/v1/get-budget-list/', // + id
     addSelected: 'https://edxchange-invoice.aimtech.am/api/v1/add-budget-items/', // + 1 title 1
-    
+
 
 
     // GET ALLOCATIONS
@@ -205,6 +206,10 @@ const config = {
     
     // Get statuses
     getStatuses: 'https://edxchange-activity.aimtech.am/api/v1/get-statuses?',
+
+    // Tag
+    searchTag: 'https://edxchange-document.aimtech.am/api/v1/find-tag?name=',
+    documentByTagId: 'https://edxchange-document.aimtech.am/api/v1/get-document-by-tag?tagIds=', // 1,2,3,4
 }
 
 export default config

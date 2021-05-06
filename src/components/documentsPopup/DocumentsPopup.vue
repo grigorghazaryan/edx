@@ -36,7 +36,7 @@
                                 :data="data" 
                                 :columns="columns"
                                 :loading="loading"
-                                class="no-shadow hidden-header overflow-auto my-sticky-column-table"
+                                class="no-shadow hidden-header overflow-auto"
                                 row-key="id"
                                 hide-bottom
                             >

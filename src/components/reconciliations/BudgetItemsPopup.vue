@@ -56,35 +56,6 @@
                             <b>Total selected: $ <span>{{ totalSelected }}</span> </b>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-3 q-pr-sm">
-                            <div class="q-mb-md">
-                                <div class="text-subtitle2 q-mb-sm">Category</div>
-                                <q-select outlined dense 
-                                v-model="selectedCategory" 
-                                :options="optionsCategory"
-                                @input="filterBudgetItems" />
-                            </div>
-                        </div>
-                        <div v-if="optionsSubcategory.length" class="col-md-3 q-pr-sm">
-                            <div class="q-mb-md">
-                                <div class="text-subtitle2 q-mb-sm">Subcategory</div>
-                                <q-select outlined dense 
-                                v-model="selectedSubcategory" 
-                                :options="optionsSubcategory"
-                                @input="filterBudgetItems" />
-                            </div>
-                        </div>
-                        <div v-if="optionsFundSource.length" class="col-md-3 q-pr-sm">
-                            <div class="q-mb-md">
-                                <div class="text-subtitle2 q-mb-sm">Funding source</div>
-                                <q-select outlined dense 
-                                v-model="selectedFundSource" 
-                                :options="optionsFundSource"
-                                @input="filterBudgetItems" />
-                            </div>
-                        </div>
-                    </div>
                     <div class="row q-mt-md">
                         <q-table
                             class="overflow-auto my-sticky-column-table"
@@ -169,6 +140,9 @@ export default {
         },
         allocation: {
             required: true
+        },
+        category: {
+            required: true
         }
 
     },
@@ -210,7 +184,7 @@ export default {
                 {
                     name: "balance",
                     align: "left",
-                    label: "Balance",
+                    label: "Amount",
                     field: "balance",
                     sortable: true
                 },
@@ -226,16 +200,7 @@ export default {
             selectedTransactions: null,
             pagination: { rowsPerPage: 999 },
             start: null,
-            end: null,
-
-            selectedCategory: null,
-            optionsCategory: [],
-
-            selectedSubcategory: null,
-            optionsSubcategory: [],
-
-            selectedFundSource: null,
-            optionsFundSource: [],
+            end: null
 
         }
     },
@@ -286,16 +251,8 @@ export default {
                 uri += `end_date=${this.end}&`
             }
             
-            if(this.selectedCategory && this.selectedCategory.id) {
-                uri += `category=${this.selectedCategory.id}&`
-            }
-            if(this.selectedSubcategory && this.selectedSubcategory.id) {
-                uri += `subcategory=${this.selectedSubcategory.id}&`
-            }
-            if(this.selectedFundSource && this.selectedFundSource.id) {
-                uri += `fundSource=${this.selectedFundSource.id}&`
-            }
-
+            uri += `category=${this.category.id}&`
+            
 
             const conf = {
                 method: 'GET',
