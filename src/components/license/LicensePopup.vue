@@ -183,6 +183,8 @@ export default {
         },
         addLicense() {
 
+            
+
             let data = {
                 school_id: this.$route.params.id,
                 allocation_type_id: this.tab,
@@ -195,10 +197,10 @@ export default {
                 expiration_date: this.editedData.purchase_date
             }
 
-            console.log(this.editedData)
+            // console.log(this.editedData)
 
 
-            if(this.isEdit) {
+            if(!this.isEdit) {
 
                 let id = this.editedData.id
 
