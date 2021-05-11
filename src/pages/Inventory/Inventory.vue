@@ -96,13 +96,6 @@ import config from '../../../config'
 import InventoryTable from '../../components/inventory/InventoryTable'
 
 
-import InventoryTable1 from '../../components/inventory/InventoryTable1'
-import InventoryTable2 from '../../components/inventory/InventoryTable2'
-import InventoryTable3 from '../../components/inventory/InventoryTable3'
-import InventoryTable4 from '../../components/inventory/InventoryTable4'
-import InventoryEsser from '../../components/inventory/InventoryTableEsser'
-import InventoryGeer from '../../components/inventory/InventoryTableGeer'
-
 // let oldObject = {}
 // let typingTimer
 // let doneTypingInterval = 500
@@ -110,14 +103,7 @@ import InventoryGeer from '../../components/inventory/InventoryTableGeer'
 export default {
   name: 'Inventory',
   components: {
-    InventoryTable,
-
-    InventoryTable1, 
-    InventoryTable2, 
-    InventoryTable3, 
-    InventoryTable4, 
-    InventoryEsser, 
-    InventoryGeer
+    InventoryTable
   },
   data() {
     return {

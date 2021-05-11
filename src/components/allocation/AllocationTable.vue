@@ -130,6 +130,7 @@
           :props="props"
           class="cursor-pointer"
         >
+        
           <q-td key="creation_date" :props="props">
             <div v-if="props.row[0]" class="cursor-pointer">
               {{ props.row[0].creation_date }}
@@ -258,10 +259,29 @@
             :key="i.edxName"
             class="q-mb-md col-md-4 q-pr-lg"
           >
-            <div v-if="i.allocationFundTemplateId">
-              <div class="text-subtitle2 q-mb-sm">{{ i.edxName }}</div>
 
-              <div v-if="i.percentage == null">
+            <div v-if="i.allocationFundTemplateId">
+              <div class="text-subtitle2 q-mb-sm">{{ i.edxName }} </div>
+
+              <!-- <div v-if=" i.isInput == '1' ">
+                <q-input
+                  prefix="$"
+                  v-model="i.amount"
+                  outlined
+                  dense
+                />
+              </div>
+
+              <div v-if=" i.isInput == '1' ">
+                <q-input
+                  prefix="$"
+                  v-model="i.amount"
+                  outlined
+                  dense
+                />
+              </div> -->
+
+              <!-- <div v-if="i.percentage == null">
                 <q-input
                   readonly
                   prefix="$"
@@ -313,7 +333,8 @@
                   dense
                   autofocus
                 />
-              </div>
+              </div> -->
+
             </div>
           </div>
 
@@ -804,79 +825,8 @@ export default {
                   // console.log(j, data[i][j])
 
                   if(parseInt(data[i][j].hasRule) == 1 ) {
-
-                    
-
                     const ruleInput = data[i][j].rule_input.split(',')
-
-                    console.log('gogogogogogogogogogogog', ruleInput.length)
-
-                    if(data[i][j].rule_input.length == 1) {
-
-                      let count = 0;
-                      for (let g=0; g<data[i].length; g++) {
-                        for(let k = 0; k<ruleInput.length; k++) {
-                          if(parseInt(data[i][g].allocationFundTemplateId) == parseInt(ruleInput[k])) {
-                            count = parseFloat(data[i][g].amount) *  data[i][g].percentage
-                          }
-                        }
-                        data[i][j].amount = count
-                        console.log('Percentage = ', count)
-                      }
-
-                    }
-                    else {
-
-                      let count = 0;
-                      for (let g=0; g<data[i].length; g++) {
-                        for(let k = 0; k<ruleInput.length; k++) {
-                          if(parseInt(data[i][g].allocationFundTemplateId) == parseInt(ruleInput[k])) {
-                            count += parseFloat(data[i][g].amount)
-                          }
-                        }
-                        data[i][j].amount = count
-                        console.log('Count = ', count)
-                      }
-
-                    }
-                    
-                    // console.log( ruleInput, data[i][j] )
-                    // console.log('Has rule : ', ruleInput,  data[i][j],   data[i][j].allocationFundTemplateId)
-                  }else {
-                    // console.log('Not Has rule : ', data[i][j].allocationFundTemplateId)
                   }
-
-                  
-
-                  // If another allocation percenatage count needed
-                  // if(data[i][j].rule_input) {
-
-                  //   const ruleInput = data[i][j].rule_input.split(',')
-
-                  //   if(ruleInput.length == 1 && data[i][j].percentage != null) {
-
-                  //     data[i][j].anotherPercentage = true
-
-                  //     for (const t in data[i]) {
-                  //         if(ruleInput[0] == data[i][t]['allocationFundTemplateId']) {
-                  //         // data[i][j].amount = (data[i][t]['amount'] * data[i][j].percentage) / 100
-                  //           data[i][j].amount = 'DOC 2'
-                  //         }
-                  //     }
-                  //   }
-
-                  //   if(ruleInput.length > 1 && data[i][j].percentage == null) {
-                  //     let c = 0;
-                  //     for (const t in data[i]) {
-                  //         if(ruleInput.includes(data[i][t]['allocationFundTemplateId'])) {
-                  //           c += parseFloat(data[i][t]['amount'])
-                  //         }
-                  //     }
-                  //     // data[i][j].amount = c.toFixed(2)
-                  //     data[i][j].amount = 'DOC'
-                  //   }
-                  // }
-
 
                   parentObj[j] = data[i][j]
 
@@ -936,6 +886,9 @@ export default {
 
         })
     },
+
+
+
     getSchools() {
 
         const conf = {

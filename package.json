@@ -25,6 +25,7 @@
     "quasar": "^1.0.0",
     "v-tooltip": "^2.1.2",
     "vue-apexcharts": "^1.5.2",
+    "vue-doc-preview": "^0.3.2",
     "vue-drag-resize": "^1.4.2",
     "vue-echarts-v3": "^2.0.1",
     "vue-filepond": "^6.0.3",

@@ -116,6 +116,9 @@ export default {
         },
         id: {
             required: true
+        },
+        update: {
+            required: true
         }
     },
     
@@ -214,7 +217,7 @@ export default {
 
             const conf = {
                 method: 'GET',
-                url: `${config.documentsByTray}${this.trayId}/${this.id}`,
+                url: `${config.documentsByTray}${this.trayId}/${this.id}/budget`,
                 headers: {
                     Accept: 'application/json',
                 }
@@ -240,7 +243,7 @@ export default {
         },
         newDocument(document) {
             this.getDocuments()
-        }
+        },
     },
     created() {
         this.getDocuments()
@@ -248,6 +251,13 @@ export default {
     computed: {
         deleteIcon() {
             return ICONS.delete
+        }
+    },
+    watch: {
+        update(val) {
+            if(val) {
+                this.getDocuments()
+            }
         }
     }
 

@@ -18,6 +18,8 @@
               v-model="selectedCategory"
               :options="categories"
               dense
+              disabled
+              readonly
             />
           </div>
           <div class="col-md-8 q-pl-md">
@@ -235,10 +237,19 @@ export default {
                     arr = [];
 
                 for(let i=0; i<categories.length; i++) {
+
                     arr.push({
                         id: categories[i].id,
                         label: categories[i].name
                     })
+
+                    if(categories[i].name == 'Resume') {
+                      this.selectedCategory = {
+                        id: categories[i].id,
+                        label: categories[i].name
+                      }
+                    }
+
                 }
 
                 this.categories = arr
@@ -258,7 +269,7 @@ export default {
             formData.append('document', file[0].file);
             formData.append('tags', this.modelMultiple)
 
-            axios.post(`${config.addDocument}${this.trayId}/${this.id}/budget`, formData)
+            axios.post(`${config.addDocument}${this.trayId}/${this.id}/teacher`, formData)
             .then(res => {
                 this.loading = false
                 console.log('Add document: ', res.data)

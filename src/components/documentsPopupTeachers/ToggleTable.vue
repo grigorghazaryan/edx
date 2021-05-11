@@ -99,7 +99,7 @@ import VTooltip from 'v-tooltip'
 Vue.use(VTooltip)
 
 import ICONS from '../../../icons'
-import UploadDocumentModal from '../documentsPopup/UploadDocumentModal'
+import UploadDocumentModal from './UploadDocumentModal'
 
 import axios from 'axios'
 import config from '../../../config'
@@ -115,6 +115,9 @@ export default {
             required: true
         },
         id: {
+            required: true
+        },
+        update: {
             required: true
         }
     },
@@ -214,7 +217,7 @@ export default {
 
             const conf = {
                 method: 'GET',
-                url: `${config.documentsByTray}${this.trayId}/${this.id}`,
+                url: `${config.documentsByTray}${this.trayId}/${this.id}/teacher`,
                 headers: {
                     Accept: 'application/json',
                 }
@@ -248,6 +251,13 @@ export default {
     computed: {
         deleteIcon() {
             return ICONS.delete
+        }
+    },
+    watch: {
+        update(val) {
+            if(val) {
+                this.getDocuments()
+            }
         }
     }
 

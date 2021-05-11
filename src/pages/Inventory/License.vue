@@ -65,27 +65,27 @@
         <q-tab-panels v-model="tab" animated class="tab-panels-parent">
 
           <q-tab-panel name="1" class="q-p-sm">
-            <LicenseTableTitle1/>
+            <LicenseTableTitle :barInfo="barInfo" type="1" />
           </q-tab-panel>
 
           <q-tab-panel name="2" class="q-p-sm">
-            <LicenseTableTitle2 />
+            <LicenseTableTitle :barInfo="barInfo" type="2" />
           </q-tab-panel>
 
           <q-tab-panel name="3" class="q-p-sm">
-            <LicenseTableTitle3 />
+            <LicenseTableTitle :barInfo="barInfo" type="3" />
           </q-tab-panel>
 
           <q-tab-panel name="4" class="q-p-sm">
-            <LicenseTableTitle4 />
+            <LicenseTableTitle :barInfo="barInfo" type="4" />
           </q-tab-panel>
 
           <q-tab-panel name="5" class="q-p-sm">
-            <LicenseTableTitle5 />
+            <LicenseTableTitle :barInfo="barInfo" type="5"/>
           </q-tab-panel>
 
           <q-tab-panel name="6" class="q-p-sm">
-            <LicenseTableTitle6 />
+            <LicenseTableTitle :barInfo="barInfo" type="6" />
           </q-tab-panel>
 
 
@@ -103,21 +103,17 @@
 // import axios from 'axios'
 // import config from '../../../config'
 
-import LicenseTableTitle1 from '../../components/license/LicenseTableTitle1'
-import LicenseTableTitle2 from '../../components/license/LicenseTableTitle2'
-import LicenseTableTitle3 from '../../components/license/LicenseTableTitle3'
-import LicenseTableTitle4 from '../../components/license/LicenseTableTitle4'
-import LicenseTableTitle5 from '../../components/license/LicenseTableTitle5'
-import LicenseTableTitle6 from '../../components/license/LicenseTableTitle6'
+import LicenseTableTitle from '../../components/license/LicenseTableTitle'
 
 export default {
   components: {
-    LicenseTableTitle1,
-    LicenseTableTitle2,
-    LicenseTableTitle3,
-    LicenseTableTitle4,
-    LicenseTableTitle5,
-    LicenseTableTitle6
+    LicenseTableTitle
+    // LicenseTableTitle1,
+    // LicenseTableTitle2,
+    // LicenseTableTitle3,
+    // LicenseTableTitle4,
+    // LicenseTableTitle5,
+    // LicenseTableTitle6
   },
   data () {
     return {

@@ -30,6 +30,7 @@
                                             <div>
                                                 <q-icon name="all_inbox" class="edx-folder" style="width: 2em"/>
                                                 {{ props.row.name }}
+                                                <q-icon @click.stop.prevent="openSearchModal(props.row)" name="search" class="q-ml-sm edx-green" style="width: 2em"/>
                                             </div>
                                         </q-td>
 
@@ -38,7 +39,7 @@
                                         <q-td colspan="100%" class="p-0">
                                             <div class="row">
                                                 <div class="col-md-12 child-table">
-                                                    <ToggleTable :trayId="activity.id" :id="props.row.id" />
+                                                    <ToggleTable :update="updateToggleTable" :trayId="activity.teacher.id" :id="props.row.id" />
                                                 </div>
                                             </div>
                                         </q-td>
@@ -69,11 +70,21 @@
         </dialog-draggable>
 
         <TrackingStatusModal 
+            v-if="activity.teacher"
             :show="showTrackingStatusModal"
             @togglePopup="togglePopup"
             :data="selectedTrackingStatus"
-            :activityId="activity.id"
+            :activityId="activity.teacher.id"
             @updateTrackingStatus="updateTrackingStatus"
+        />
+
+        <SearchModal 
+            v-if="data && activity.teacher"
+            :categories="data"
+            :selectedDocumentType="selectedDocumentType"
+            :show="searchModal"
+            :id="activity.teacher.id"
+            @toggleSearchPopup="toggleSearchPopup"
         />
 
     </div>
@@ -84,6 +95,7 @@
 import dialogDraggable from '../../components/DialogDraggable'
 import ToggleTable from './ToggleTable'
 import TrackingStatusModal from './TrackingStatusModal'
+import SearchModal from './SearchModal'
 
 import axios from 'axios'
 import config from '../../../config'
@@ -101,10 +113,6 @@ export default {
         },
         categoryId: {
             required: true
-        },
-        teachers: {
-            required: false,
-            default: false,
         }
     },
     data() {
@@ -125,14 +133,31 @@ export default {
             selectedTrackingStatus: null,
 
             note: '',
+
+            updateToggleTable: false,
+            //
+            searchModal: false,
+            selectedDocumentType: null,
         }
     },
     components: {
         dialogDraggable,
         ToggleTable,
-        TrackingStatusModal
+        TrackingStatusModal,
+        SearchModal
     },
     methods: {
+        openSearchModal(props) {
+            console.log(props, 'props row')
+            this.selectedDocumentType = props
+            this.searchModal = true
+        },
+        toggleSearchPopup(val) {
+            if(!val) {
+                this.updateToggleTable = true
+            }
+            this.searchModal = val
+        },
         closePopup() {
             this.$emit('togglePopup', false)
         },
@@ -158,12 +183,13 @@ export default {
                     arr = [];
 
                 for(let i=0; i<trays.length; i++) {
-                    if(trays[i].id == 4) {
+                    // if(trays[i].id == 4) {
                         arr.push({
                             id: trays[i].id,
-                            name: trays[i].name
+                            name: trays[i].name,
+                            label: trays[i].name,
                         })
-                    }
+                    // }
                     
                 }
 

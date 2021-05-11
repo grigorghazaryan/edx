@@ -197,12 +197,13 @@ const config = {
     documentsByTray: 'https://edxchange-document.aimtech.am/api/v1/documents-by-tray/', // + id + id
     getDocumentCategory: 'https://edxchange-document.aimtech.am/api/v1/document-category',
     addDocument: 'https://edxchange-document.aimtech.am/api/v1/add-document/', // + id + id
+    addDocumentToExistingItem: 'https://edxchange-document.aimtech.am/api/v1/add-document-to-existing-item/',
     deleteDocument: 'https://edxchange-document.aimtech.am/api/v1/remove-document/', // + doc id
     addTrackingStatus: 'https://edxchange-document.aimtech.am/api/v1/add-tracking-status/', // id
     addTrackingNote: 'https://edxchange-document.aimtech.am/api/v1/add-note/', 
 
     // Activity Tracking
-    getActivityTrackings: 'https://edxchange-document.aimtech.am/api/v1/activity-tracking?',
+    getActivityTrackings: 'https://edxchange-document.aimtech.am/api/v1/activity-tracking',
     
     // Get statuses
     getStatuses: 'https://edxchange-activity.aimtech.am/api/v1/get-statuses?',

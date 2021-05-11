@@ -425,7 +425,7 @@
             <div class="q-pa-md">
                 <div class="row">
 
-                    <div class="col-md-6 q-pr-lg">
+                    <div class="col-md-7 q-pr-lg">
 
                         <div class="q-mb-md">
                             <div class="text-subtitle2 q-mb-sm">Material Name</div>
@@ -493,14 +493,14 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-md-3 q-pr-sm">
+                            <div class="col-md-2 q-pr-sm">
                                 <div class="text-subtitle2 q-mb-sm">Qty</div>
                                 <q-input class="q-mb-md" outlined type="text" v-model="editedItem.quantity" dense autofocus />
                                 <q-popup-edit v-model="editedItem.quantity" title="Update qty" buttons>
                                     <q-input class="q-mb-sm" type="text" v-model="editedItem.quantity" dense outlined autofocus />
                                 </q-popup-edit>
                             </div>
-                            <div class="col-md-4 q-pr-sm">
+                            <div class="col-md-3 q-pr-sm">
                                 <div class="text-subtitle2 q-mb-sm">Amount</div>
                                 <q-input prefix="$" class="q-mb-md" outlined type="text" v-model="editedItem.amount" dense autofocus />
                                 <q-popup-edit v-model="editedItem.amount" title="Update amount" buttons>
@@ -509,8 +509,8 @@
                                     :label="editedItem.type_uni && (editedItem.type_uni.label + ' Percentage') " dense autofocus/>
                                 </q-popup-edit>
                             </div>
-                            <div class="col-md-5">
-                                <div class="text-subtitle2 q-mb-sm">Total with markup</div>
+                            <div class="col-md-2 q-pr-sm">
+                                <div class="text-subtitle2 q-mb-sm">Total</div>
                                 <q-input 
                                     prefix="$" 
                                     standout 
@@ -520,6 +520,31 @@
                                     v-model="totalMarkup" 
                                     dense autofocus 
                                 />
+                            </div>
+                            <div class="col-md-2 q-pr-sm">
+                                <div class="text-subtitle2 q-mb-sm">w/Markup</div>
+                                <q-input 
+                                    prefix="$" 
+                                    standout 
+                                    readonly  
+                                    class="q-mb-md" 
+                                    type="text" 
+                                    v-model="totalMarkup" 
+                                    dense autofocus 
+                                />
+                            </div>
+                            <div class="col-md-1 q-pr-sm">
+                                <div class="itemize-order-parent">
+                                    <q-tooltip 
+                                        anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                                        transition-show="flip-right"
+                                        transition-hide="flip-left"
+                                    >
+                                        Itemize Order
+                                    </q-tooltip>
+                                    <q-btn @click="openItemizationModal" round class="edx-header edx-white" icon="format_list_numbered" />
+                                </div>
+                                
                             </div>
                         </div>
 
@@ -563,7 +588,7 @@
 
                     </div>
 
-                    <div class="col-md-6 q-pl-md">
+                    <div class="col-md-5 q-pl-md">
 
                         <div class="row">
 
@@ -676,7 +701,16 @@
                                     </q-select>
                                 </div>
                                 <div class="col-md-2 inventory-icon-parent">
-                                    <q-icon @click="openInventoryModal" class="cursor-pointer edx-blue" name="description" />
+                                    <div>
+                                        <q-tooltip 
+                                            anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                                            transition-show="flip-right"
+                                            transition-hide="flip-left"
+                                        >
+                                            Add to Inventory
+                                        </q-tooltip>
+                                        <q-btn @click="openInventoryModal" round class="edx-header edx-white" icon="inventory" />
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1210,15 +1244,16 @@
             :categoryId="categoryId"
         />
 
-        <InventoryPopup 
-        
-            :data="{}" 
-            :show="inventoryModal" 
-            :isEdit="true" 
-            :tab="1"
-            @togglePopup="toggleInventoryModal"
-            @updateTableList="updateTableList"
+        <AddToInventory 
 
+            :show="inventoryModal"
+            @togglePopup="toggleInventoryModal"
+
+        />
+
+        <ItemizationModal
+            :show="showItemizationModal" 
+            @togglePopup="toggleItemizationModal"
         />
 
 
@@ -1234,7 +1269,8 @@ import config from '../../../config'
 import ICONS from '../../../icons'
 import DialogDraggable from '../DialogDraggable.vue';
 import DocumentsPopup from '../documentsPopup/DocumentsPopup';
-import InventoryPopup from '../inventory/InventoryPopup';
+import AddToInventory from './AddToInventory';
+import ItemizationModal from './ItemizationListModal';
 
 let typingTimer
 let doneTypingInterval = 500
@@ -1247,7 +1283,8 @@ export default {
         dialogDraggable,
         DialogDraggable,
         DocumentsPopup,
-        InventoryPopup
+        AddToInventory,
+        ItemizationModal,
     },
     props: {
         title: {
@@ -1259,6 +1296,8 @@ export default {
             
             showDocumentPopup: false,
             inventoryModal: false,
+            //
+            showItemizationModal: false,
 
             //
             mode: 'list',
@@ -1542,6 +1581,9 @@ export default {
         },
         toggleInventoryModal(val) {
             this.inventoryModal = val
+        },
+        toggleItemizationModal(val) {
+            this.showItemizationModal = val
         },
         openDocumentsModal() {
             this.showDocumentPopup = true
@@ -2965,6 +3007,9 @@ export default {
 
             this.getBudgetBalance( tab, 4, schoolId, this.count, val)
         },
+        openItemizationModal() {
+            this.showItemizationModal = true
+        },
 
         ////////
         approvalType(id) {
@@ -3295,7 +3340,12 @@ export default {
 }
 
 .inventory-icon-parent {
-    padding-top: 37px;
+    padding-top: 28px;
+    padding-left: 14px;
+}
+
+.itemize-order-parent {
+    margin-top: 28px;
     padding-left: 14px;
 }
 
