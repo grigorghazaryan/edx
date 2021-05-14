@@ -1,5 +1,6 @@
 <template>
   <div class="q-pa-sm q-mt-sm q-gutter-sm">
+
     <div class="edx-header-parent">
       <span class="edx-header-text">{{ titleHeader }}</span>
     </div>
@@ -254,6 +255,11 @@
             </div>
           </div>
 
+
+          <!-- ##### -->
+          <!-- ##### -->
+          <!-- ##### -->
+
           <div
             v-for="i in editedItem"
             :key="i.edxName"
@@ -261,7 +267,47 @@
           >
 
             <div v-if="i.allocationFundTemplateId">
+
               <div class="text-subtitle2 q-mb-sm">{{ i.edxName }} </div>
+
+              <div v-if=" i.isInput == '1' ">
+                <q-input
+                  prefix="$"
+                  v-model="i.amount"
+                  @input="calculateAllocations(i, editedItem)"
+                  outlined
+                  dense
+                />
+              </div>
+
+              <div v-if=" i.is_percentage == '1' ">
+                <q-input
+                  prefix="$"
+                  v-model="i.amount"
+                  outlined
+                  dense
+                  readonly
+                  class="q-mb-sm"
+                />
+                <q-input
+                  prefix="%"
+                  v-model="i.percentage"
+                  outlined
+                  dense
+                  @input="calculateAllocations(i, editedItem)"
+                />
+              </div>
+
+              <div v-if="i.rule_input && i.rule_input.length > 1">
+                <q-input
+                  prefix="$"
+                  v-model="i.amount"
+                  outlined
+                  dense
+                  readonly
+                />
+              </div>
+              
 
               <!-- <div v-if=" i.isInput == '1' ">
                 <q-input
@@ -365,6 +411,7 @@
         </div>
       </q-card-actions>
     </dialog-draggable>
+
   </div>
 </template>
 
@@ -397,8 +444,6 @@ function wrapCsvValue(val, formatFn) {
 
 let typingTimer
 let doneTypingInterval = 500
-
-const matrix = require("matrix-js")
 
 export default {
     components: {
@@ -528,266 +573,266 @@ export default {
         };
     },
     methods: {
-        addRow() {
+      addRow() {
 
-            let pdPercentage = this.editedItem.pdPercentage,
-                totalInstruction = this.editedItem.totalInstruction,
-                totalInstructionFinal = this.editedItem.totalInstructionFinal,
-                instruction,
-                profDev,
-                total,
-                familyEngagemenetEstimated = this.editedItem.familyEngagemenet,
-                familyEngagemenetFinal = this.editedItem.familyEngagemenetFinal;
+          let pdPercentage = this.editedItem.pdPercentage,
+              totalInstruction = this.editedItem.totalInstruction,
+              totalInstructionFinal = this.editedItem.totalInstructionFinal,
+              instruction,
+              profDev,
+              total,
+              familyEngagemenetEstimated = this.editedItem.familyEngagemenet,
+              familyEngagemenetFinal = this.editedItem.familyEngagemenetFinal;
 
-                // Professional development
-                let p_percentage = parseFloat(pdPercentage) / 100;
-                if (this.editedItem.allocation) {
-                profDev = (parseFloat(totalInstructionFinal) * p_percentage).toFixed(2);
-                } else {
-                profDev = (parseFloat(totalInstruction) * p_percentage).toFixed(2);
-                }
+              // Professional development
+              let p_percentage = parseFloat(pdPercentage) / 100;
+              if (this.editedItem.allocation) {
+              profDev = (parseFloat(totalInstructionFinal) * p_percentage).toFixed(2);
+              } else {
+              profDev = (parseFloat(totalInstruction) * p_percentage).toFixed(2);
+              }
 
-                // instruction
-                let i_percentage = ( 100 - parseFloat(pdPercentage) ) / 100
-                if (this.editedItem.allocation) {
-                instruction = ( parseFloat(totalInstructionFinal) * i_percentage ).toFixed(2);
-                } else {
-                instruction = ( parseFloat(totalInstruction) * i_percentage ).toFixed(2);
-                }
+              // instruction
+              let i_percentage = ( 100 - parseFloat(pdPercentage) ) / 100
+              if (this.editedItem.allocation) {
+              instruction = ( parseFloat(totalInstructionFinal) * i_percentage ).toFixed(2);
+              } else {
+              instruction = ( parseFloat(totalInstruction) * i_percentage ).toFixed(2);
+              }
 
-                // Total
-                if (this.editedItem.allocation) {
-                total = ( parseFloat(totalInstructionFinal) + parseFloat(familyEngagemenetFinal)  ).toFixed(2);
-                } else {
-                total = ( parseFloat(totalInstruction) + parseFloat(familyEngagemenetEstimated)   ).toFixed(2);
-                }
+              // Total
+              if (this.editedItem.allocation) {
+              total = ( parseFloat(totalInstructionFinal) + parseFloat(familyEngagemenetFinal)  ).toFixed(2);
+              } else {
+              total = ( parseFloat(totalInstruction) + parseFloat(familyEngagemenetEstimated)   ).toFixed(2);
+              }
 
-            let obj = {
-            date: this.editedItem.date,
-            school: this.editedItem.school,
-            instruction: instruction,
-            profDev: profDev,
+          let obj = {
+          date: this.editedItem.date,
+          school: this.editedItem.school,
+          instruction: instruction,
+          profDev: profDev,
 
-            totalInstruction: totalInstruction,
-            familyEngagemenet: familyEngagemenetEstimated,
+          totalInstruction: totalInstruction,
+          familyEngagemenet: familyEngagemenetEstimated,
 
-            totalInstructionFinal: totalInstructionFinal,
-            familyEngagemenetFinal: familyEngagemenetFinal,
+          totalInstructionFinal: totalInstructionFinal,
+          familyEngagemenetFinal: familyEngagemenetFinal,
 
-            allocation: this.editedItem.allocation,
-            pdPercentage: pdPercentage,
-            total: total,
-            totalPercent: 9,
-            notes: this.editedItem.notes,
-            }
+          allocation: this.editedItem.allocation,
+          pdPercentage: pdPercentage,
+          total: total,
+          totalPercent: 9,
+          notes: this.editedItem.notes,
+          }
 
 
-        if (this.editedIndex > -1) {
-            Object.assign(this.data[this.editedIndex], obj);
-        } else {
-            this.data.unshift(obj);
+      if (this.editedIndex > -1) {
+          Object.assign(this.data[this.editedIndex], obj);
+      } else {
+          this.data.unshift(obj);
+      }
+
+      this.close()
+      },
+      openDeleteModal(item) {
+        this.confirm = true
+        this.item = item
+      },
+      editItem(item) {
+          this.editedIndex = this.data.indexOf(item);
+          this.editedItem = Object.assign({}, item);
+      },
+      close () {
+        setTimeout(() => {
+            this.editedItem = Object.assign({}, this.defaultItem)
+            this.editedIndex = -1
+        }, 300)
+      },
+      exportTable() {
+          // naive encoding to csv format
+          const content = [this.columns.map(col => wrapCsvValue(col.label))].concat(
+              this.data.map(row => this.columns.map(col => wrapCsvValue(
+                  typeof col.field === 'function'
+                      ? col.field(row)
+                      : row[col.field === void 0 ? col.name : col.field],
+                  col.format
+              )).join(','))
+          ).join('\r\n')
+
+          const status = exportFile(
+              'table-export.csv',
+              content,
+              'text/csv'
+          )
+
+          if (status !== true) {
+              this.$q.notify({
+                  message: 'Browser denied file download...',
+                  color: 'negative',
+                  icon: 'warning'
+              })
+          }
+      },
+      changePagination (val) {
+
+        console.log('change pagination')
+        this.current = val
+        this.getAllocationByType(1, this.count, val)
+
+      },
+      changeRowsPerPage() {
+
+        console.log('changeRowsPerPage')
+
+        this.count = this.pagination.rowsPerPage
+        this.current = 1
+
+        this.getAllocationByType(1, this.count, this.current)
+
+      },
+      copyRowData(index) {
+        oldObject = JSON.stringify(this.tempData[index])
+      },
+      detectChange(index) {
+
+        this.editedItem = this.tempData[index]
+        console.log(this.editedItem)
+
+        let d = JSON.parse(oldObject)
+        let f = JSON.stringify(this.data[index])
+            f = JSON.parse(f)
+
+        let status = _.isEqual(d, f)
+        console.log(status)
+
+        if(status) {
+            this.data[index].changed = false
+        }else {
+            this.data[index].changed = true
         }
 
-        this.close()
-        },
-        openDeleteModal(item) {
-          this.confirm = true
-          this.item = item
-        },
-        editItem(item) {
-            this.editedIndex = this.data.indexOf(item);
-            this.editedItem = Object.assign({}, item);
-        },
-        close () {
-          setTimeout(() => {
-              this.editedItem = Object.assign({}, this.defaultItem)
-              this.editedIndex = -1
-          }, 300)
-        },
-        exportTable() {
-            // naive encoding to csv format
-            const content = [this.columns.map(col => wrapCsvValue(col.label))].concat(
-                this.data.map(row => this.columns.map(col => wrapCsvValue(
-                    typeof col.field === 'function'
-                        ? col.field(row)
-                        : row[col.field === void 0 ? col.name : col.field],
-                    col.format
-                )).join(','))
-            ).join('\r\n')
+      },
+      getToday() {
+        let dateObj = new Date();
+        let month = dateObj.getUTCMonth() + 1; //months from 1-12
+        let day = dateObj.getUTCDate();
+        let year = dateObj.getUTCFullYear();
 
-            const status = exportFile(
-                'table-export.csv',
-                content,
-                'text/csv'
-            )
+        return year + "-" + month + "-" + day;
+      },
 
-            if (status !== true) {
-                this.$q.notify({
-                    message: 'Browser denied file download...',
-                    color: 'negative',
-                    icon: 'warning'
-                })
+      // Add new Row
+      addNewRow() {
+
+        let date = this.getToday()
+
+        const obj  = {
+            creation_date: date,
+            school: '',
+            total_instruction: 0,
+            total_instruction: 0,
+            professional_development_percentage: 0,
+            family_engagement: 0,
+            total: 0,
+            status_string: 'Final',
+            changed: true,
+            showEditButton: false,
+            allocation_type: 1,
+            note: '',
+            add: true,
+        }
+
+        this.data.unshift(obj)
+        this.editedItem = obj
+
+      },
+
+      // Filter key events
+      keyUpFilter() {
+        console.log('Key up')
+        clearTimeout(typingTimer);
+        typingTimer = setTimeout(this.doneTyping, doneTypingInterval);
+      },
+      keyDownFilter() {
+        console.log('Key down')
+        clearTimeout(typingTimer);
+      },
+      doneTyping() {
+        console.log('Typing done!')
+        if(this.filter.length > 1 || this.filter.length == 0) {
+            console.log('Send Request...')
+            this.filterAllocation()
+        }
+      },
+
+      // Filter Allocation
+      filterAllocation() {
+
+        this.loading = true
+
+        let model = '', url = '';
+
+        if(this.filter != '') {
+            url += '&search=' + this.filter
+        }
+
+        if(this.schoolYear) {
+            url += '&year=' + this.schoolYear.id
+        }
+
+        if(this.model != '') {
+            this.model == 'Preliminary' ? model = 'pr' : model = 'fn'
+            url += '&status=' + model
+        }
+
+
+        // 1?search=St&status=fn&year=21
+
+        const conf = {
+        method: 'GET',
+        url: config.filterAllocation + '1?' + url,
+        headers: {
+            Accept: 'application/json',
+        }
+        }
+
+        console.log(conf.url)
+
+        axios(conf).then(res => {
+
+        this.loading = false
+
+        let data = res.data.allocations
+        this.pages = res.data.pagesCount
+
+        for(let i=0; i<data.length; i++) {
+
+            data[i].changed = false
+            data[i].showEditButton = true
+
+            if(data[i].is_final) {
+            data[i].status_string = 'Final'
             }
-        },
-        changePagination (val) {
+            else {
+            data[i].status_string = 'Preliminary'
+            }
 
-          console.log('change pagination')
-          this.current = val
-          this.getAllocationByType(1, this.count, val)
+        }
 
-        },
-        changeRowsPerPage() {
+        // this.data = data
+        // this.tempData = data
 
-          console.log('changeRowsPerPage')
+        // console.log('Filter result: ', res.data)
+        })
 
-          this.count = this.pagination.rowsPerPage
-          this.current = 1
+      },
 
-          this.getAllocationByType(1, this.count, this.current)
-
-        },
-        copyRowData(index) {
-          oldObject = JSON.stringify(this.tempData[index])
-        },
-        detectChange(index) {
-
-          this.editedItem = this.tempData[index]
-          console.log(this.editedItem)
-
-          let d = JSON.parse(oldObject)
-          let f = JSON.stringify(this.data[index])
-              f = JSON.parse(f)
-
-          let status = _.isEqual(d, f)
-          console.log(status)
-
-          if(status) {
-              this.data[index].changed = false
-          }else {
-              this.data[index].changed = true
-          }
-
-        },
-        getToday() {
-          let dateObj = new Date();
-          let month = dateObj.getUTCMonth() + 1; //months from 1-12
-          let day = dateObj.getUTCDate();
-          let year = dateObj.getUTCFullYear();
-
-          return year + "-" + month + "-" + day;
-        },
-
-        // Add new Row
-        addNewRow() {
-
-          let date = this.getToday()
-
-          const obj  = {
-              creation_date: date,
-              school: '',
-              total_instruction: 0,
-              total_instruction: 0,
-              professional_development_percentage: 0,
-              family_engagement: 0,
-              total: 0,
-              status_string: 'Final',
-              changed: true,
-              showEditButton: false,
-              allocation_type: 1,
-              note: '',
-              add: true,
-          }
-
-          this.data.unshift(obj)
-          this.editedItem = obj
-
-        },
-
-        // Filter key events
-        keyUpFilter() {
-          console.log('Key up')
-          clearTimeout(typingTimer);
-          typingTimer = setTimeout(this.doneTyping, doneTypingInterval);
-        },
-        keyDownFilter() {
-          console.log('Key down')
-          clearTimeout(typingTimer);
-        },
-        doneTyping() {
-          console.log('Typing done!')
-          if(this.filter.length > 1 || this.filter.length == 0) {
-              console.log('Send Request...')
-              this.filterAllocation()
-          }
-        },
-
-        // Filter Allocation
-        filterAllocation() {
-
-          this.loading = true
-
-          let model = '', url = '';
-
-          if(this.filter != '') {
-              url += '&search=' + this.filter
-          }
-
-          if(this.schoolYear) {
-              url += '&year=' + this.schoolYear.id
-          }
-
-          if(this.model != '') {
-              this.model == 'Preliminary' ? model = 'pr' : model = 'fn'
-              url += '&status=' + model
-          }
-
-
-          // 1?search=St&status=fn&year=21
-
-          const conf = {
-          method: 'GET',
-          url: config.filterAllocation + '1?' + url,
-          headers: {
-              Accept: 'application/json',
-          }
-          }
-
-          console.log(conf.url)
-
-          axios(conf).then(res => {
-
-          this.loading = false
-
-          let data = res.data.allocations
-          this.pages = res.data.pagesCount
-
-          for(let i=0; i<data.length; i++) {
-
-              data[i].changed = false
-              data[i].showEditButton = true
-
-              if(data[i].is_final) {
-              data[i].status_string = 'Final'
-              }
-              else {
-              data[i].status_string = 'Preliminary'
-              }
-
-          }
-
-          // this.data = data
-          // this.tempData = data
-
-          // console.log('Filter result: ', res.data)
-          })
-
-        },
-
-    // ##############################
-    // ##############################
-    // ##############################
-    // ##############################
-    // ##############################
+      // ##############################
+      // ##############################
+      // ##############################
+      // ##############################
+      // ##############################
 
     // Requests
     getAllocationByType(type, limit, page) {
@@ -812,20 +857,19 @@ export default {
 
               let parentObj = {}, startNumber = 2;
 
-              
+              data[i] = data[i].sort((a, b) => (a.order > b.order) ? 1 : -1)
 
-            
               for(let j=0; j<data[i].length; j++) {
 
                   // Spliced Name
                   const edxName = data[i][j].templateName;
                   data[i][j].edxName = edxName
 
-
-                  // console.log(j, data[i][j])
-
                   if(parseInt(data[i][j].hasRule) == 1 ) {
-                    const ruleInput = data[i][j].rule_input.split(',')
+                    // if(data[i][j].rule_input) {
+                      const ruleInput = data[i][j].rule_input.split(',')
+                      data[i][j].rule_input = ruleInput
+                    // }
                   }
 
                   parentObj[j] = data[i][j]
@@ -847,6 +891,18 @@ export default {
 
               }
 
+              // data[i].sort(function(a, b) { 
+
+              //   console.log(a, 'aaaaa')
+              //   console.log(b, 'bbbbb')
+
+              //   return parseInt(a.order) - parseInt(b.order)
+              // });
+
+              
+
+              
+
               parentObj.id=i+1
               parentObj.changed = false
               parentObj.add = false
@@ -860,9 +916,9 @@ export default {
                   }
               }else {
                   parentObj.final = {
-                  id: 0,
-                  label: 'Preliminary',
-                  shortName: 'PR'
+                    id: 0,
+                    label: 'Preliminary',
+                    shortName: 'PR'
                   }
               }
 
@@ -882,9 +938,98 @@ export default {
             this.tempData = fArr
 
             this.loading = false
-            console.log('fArr', fArr)
+            console.log('fArr=======', fArr)
 
         })
+    },
+
+    calculateAllocations(i, arr) {
+
+      console.log(i)
+
+      let isInputArr = [],
+          ruleInputArr = [],
+          isPercentageArr = [];
+
+      for(const i in arr) {
+        if(arr[i].allocationFundTemplateId) {
+
+          if(arr[i].isInput == '1') {
+            isInputArr.push(arr[i])
+          }
+
+          if(arr[i].is_percentage == '1') {
+            isPercentageArr.push(arr[i])
+          }
+
+          if(arr[i].rule_input && arr[i].rule_input.length > 1) {
+            ruleInputArr.push(arr[i])
+          }
+
+        }
+      }
+
+      let finalArr = [isInputArr, ruleInputArr, isPercentageArr]
+      finalArr = finalArr.flat(Infinity)
+
+
+
+      for(let i=0; i<finalArr.length; i++) {
+
+        if(finalArr[i].isInput == '0') {
+
+          if(finalArr[i].is_percentage == '1') {
+
+            console.log('self', finalArr[i])
+            console.log('Percentage: ', finalArr[i].percentage)
+
+            let count = 0;
+            let id = finalArr[i].rule_input[0]
+            let item = finalArr.filter(x => x.allocationFundTemplateId == id);
+
+            count =  ( item[0].amount * finalArr[i].percentage ) / 100
+            finalArr[i].amount = count
+
+          }
+
+          setTimeout(()=>{
+            if(finalArr[i].rule_input && finalArr[i].rule_input.length > 1) {
+
+            console.log('Rule input : ', finalArr[i].rule_input)
+
+            let amountArr = [];
+            let count = 0;
+
+            for(let j=0; j<finalArr[i].rule_input.length; j++) {
+              let item = finalArr.filter(x => x.allocationFundTemplateId == finalArr[i].rule_input[j]);
+              console.log(item[0], parseFloat(item[0].amount), 'itemsssssss=======')
+              amountArr.push( parseFloat(item[0].amount) )
+            }
+
+            if(finalArr[i].is_addition == '1') {
+              // ++++ is_addition
+              count = amountArr.reduce((a, b) => parseFloat(a) + parseFloat(b), 0)
+              console.log('+++++', amountArr, count)
+            }
+
+            if(finalArr[i].is_subtraction == '1') {
+              // ----  is_subtraction
+              count = amountArr.reduce((a, b) => parseFloat(a) - parseFloat(b))
+              console.log('-----', amountArr, count)
+            }
+
+            finalArr[i].amount = count
+
+          }
+          }, 100)
+
+        }
+
+      }
+
+      console.log(finalArr, 'FINAL ARR===============')
+
+      // this.data[this.index] = arr 
     },
 
 
@@ -1128,12 +1273,12 @@ export default {
 
     },
     watch: {
-    showAllocationModal() {
-        console.log(this.editedItem)
-    },
-    editedItem() {
-        console.log(this.editedItem)
-    }
+      showAllocationModal() {
+          console.log(this.editedItem)
+      },
+      editedItem() {
+          console.log(this.editedItem)
+      }
     },
     created() {
       this.titleId = this.title
@@ -1145,14 +1290,14 @@ export default {
       // this.getTemplate()
     },
     computed: {
-    titleHeader() {
-        let title = '';
+      titleHeader() {
+          let title = '';
 
-        this.schoolYear == ''
-        ? title = this.schoolYears[0] && this.schoolYears[0].value
-        : title = this.schoolYear.value
-        return 'Title I - ' + title
-    },
+          this.schoolYear == ''
+          ? title = this.schoolYears[0] && this.schoolYears[0].value
+          : title = this.schoolYear.value
+          return 'Title I - ' + title
+      },
     }
 }
 </script>

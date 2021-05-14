@@ -211,6 +211,14 @@ const config = {
     // Tag
     searchTag: 'https://edxchange-document.aimtech.am/api/v1/find-tag?name=',
     documentByTagId: 'https://edxchange-document.aimtech.am/api/v1/get-document-by-tag?tagIds=', // 1,2,3,4
+
+
+    // GET UNITS
+    getUnits: 'https://edxchange-activity.aimtech.am/api/v1/get-unity',
+    
+    // ITEMIZATION
+    getItemizationLists: 'https://edxchange-activity.aimtech.am/api/v1/get-breakdown/', // + id
+    addItemizationItem: 'https://edxchange-activity.aimtech.am/api/v1/add-budget-breakdown/', // + id
 }
 
 export default config

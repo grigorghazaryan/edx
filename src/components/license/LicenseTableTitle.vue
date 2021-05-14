@@ -83,6 +83,7 @@
             
             <q-tr
                 :props="props"
+                class="cursor-pointer"
                 @click="openEditLicensePopup(props.row)"
             >
 
@@ -345,10 +346,6 @@ export default {
       tempDataX: [],
       columns: [
         {
-          name: "toggle",
-          style: 'width: 30px'
-        },
-        {
           name: "qty",
           align: "left",
           label: "Qty",
@@ -564,6 +561,7 @@ export default {
       return year + "-" + month + "-" + day;
     },
     openEditLicensePopup(data) {
+      console.log(data, 'asdasdasdasdasd gridsdfsdfsdfsd')
         this.addNew = false
         this.editedItem = data
         this.licensePopup = true

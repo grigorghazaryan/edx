@@ -128,7 +128,7 @@
             <q-card-actions class="row justify-end">
                 <div>
                     <q-btn @click="closePopup" flat label="Cancel" color="primary"></q-btn>
-                    <q-btn :loading="loading" @click="addLicense" v-if="isEdit" flat label="Save" color="primary"></q-btn>
+                    <q-btn :loading="loading" @click="addLicense" v-if="!isEdit" flat label="Save" color="primary"></q-btn>
                     <q-btn :loading="loading" @click="addLicense" v-else flat label="Add" color="primary"></q-btn>
                 </div>
             </q-card-actions>
@@ -183,8 +183,7 @@ export default {
         },
         addLicense() {
 
-            
-
+        
             let data = {
                 school_id: this.$route.params.id,
                 allocation_type_id: this.tab,
@@ -194,10 +193,8 @@ export default {
                 purchase_date: this.editedData.purchase_date,
                 supplier_id: this.editedData.suplier_uni?.id,
                 note: this.editedData.note,
-                expiration_date: this.editedData.purchase_date
+                expiration_date: this.editedData.expiration_date
             }
-
-            // console.log(this.editedData)
 
 
             if(!this.isEdit) {
@@ -301,7 +298,24 @@ export default {
             this.$emit('togglePopup', val)
 
             if(val) {
+
+                
                 this.getAdditionalInfo(this.tab)
+
+                if(this.isEdit) {
+                    this.editedData = {
+                        quantity: '',
+                        item_cost: '',
+                        Item_name: '',
+                        Supplier: { id: null, label: null },
+                        purchase_date: '',
+                        expiration_date: '',
+                        note: ''
+                    }
+                }else {
+                    this.editedData = this.data
+                }
+                
             }
         }
     }
