@@ -11,15 +11,15 @@
                     <div class="col-md-12 q-mb-md">
                         <div v-if="data" class="row justify-start ">
                             <div class="icon-parent w-100">
-                                <div v-if="data.status">
+                                <div>
                                     <q-icon 
                                         :name="data.icon" 
-                                        :class="data.status == 1 ? 'edx-blue' : 'edx-red' "
                                         style="font-size: 4em" 
+                                        :class="color()"
                                     />
                                 </div>
                                 <div class="text-center w-100">
-                                    <q-chip square size="sm"  :class="data.status === 1 ? 'edx-bg-blue' : 'edx-bg-red' " class="m-0 text-white">
+                                    <q-chip square size="sm"  :class="bgcolor()" class="m-0 text-white">
                                         <b>{{ abbr }}</b>
                                     </q-chip>
                                 </div>
@@ -31,7 +31,8 @@
                     </div>
 
                     <div class="col-md-12 q-mb-md">
-                        <q-checkbox v-model="isComplete" label="Complete" />
+                        <div class="text-subtitle2 q-mb-sm">Status</div>
+                        <q-select v-model="selectedStatus" :options="documentsStatusOptions" dense outlined />
                     </div>
 
                     <div class="col-md-12">
@@ -69,8 +70,9 @@ export default {
     data() {
         return {
             loading: false,
-            isComplete: null,
             note: '',
+            documentsStatusOptions: [],
+            selectedStatus: null,
         }
     },
     props: {
@@ -101,7 +103,7 @@ export default {
                 data: {
                     id: this.data.id,
                     note: this.note,
-                    status: this.isComplete
+                    status: this.selectedStatus.id
                 }
             }
 
@@ -114,6 +116,84 @@ export default {
                 this.loading = false
             })
 
+        },
+        getDocumentsStatus() {
+
+            const conf = {
+                method: 'GET',
+                url: config.getDocumentsStatus,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+                let arr = []
+                let documentStatus = res.data.documentStatus
+                for(let i=0; i<documentStatus.length; i++) {
+                    arr.push({
+                        id: documentStatus[i].id,
+                        label: documentStatus[i].name
+                    })
+                }
+                this.documentsStatusOptions = arr
+            })
+
+        },
+        color() {
+            // Not started : 1
+            // On File : 2
+            // Pending : 4
+            // Not Required : 4
+
+            let color = ''
+
+            switch(this.selectedStatus.id) {
+                case 1:
+                    color = 'edx-red'
+                    break;
+                case 2:
+                    color = 'edx-green'
+                    break;
+                case 3:
+                    color = 'edx-yellow'
+                    break;
+                case 4:
+                    color = 'edx-gray'
+                    break;
+                default: 
+                    color = 'edx-gray';
+                    break;
+            }
+
+            return color
+        },
+        bgcolor() {
+                        // On File : 2
+            // Pending : 4
+            // Not Required : 4
+
+            let color = ''
+
+            switch(this.selectedStatus.id) {
+                case 1:
+                    color = 'edx-bg-red'
+                    break;
+                case 2:
+                    color = 'edx-bg-green'
+                    break;
+                case 3:
+                    color = 'edx-bg-yellow'
+                    break;
+                case 4:
+                    color = 'edx-bg-gray'
+                    break;
+                default:
+                    color = 'edx-bg-gray'
+                    break;
+            }
+
+            return color
         }
     },
     computed: {
@@ -128,10 +208,22 @@ export default {
         show(val) {
             this.$emit('togglePopup', val)
             if(val) {
-                this.isComplete = this.data.status === 1 ? true : false
+                this.getDocumentsStatus()
                 this.note = this.data.note
+                if(this.data.status) {
+                    this.selectedStatus = {
+                        id: this.data.status.id,
+                        label: this.data.status.name
+                    }
+                }else {
+                    this.selectedStatus = {
+                        id: null,
+                        label: null
+                    }
+                }
             }
-        }
+        },
+
     }
 }
 </script>

@@ -512,7 +512,7 @@
 
                                     <div class="row">
                                         <div class="col-md-8">
-                                            <q-input prefix="$" type="number" class="q-mb-sm q-pr-sm" v-model="editedItem.total" dense autofocus outlined />
+                                            <q-input prefix="$" type="number" class="q-mb-sm q-pr-sm" v-model="editedItem.amount" dense autofocus outlined />
                                         </div>
                                         <div class="col-md-4">
                                             <q-input prefix="%" type="number" class="q-mb-sm" v-model="editedItem.percentage" dense autofocus outlined />
@@ -538,7 +538,7 @@
 
                                     <div class="row">
                                         <div class="col-md-8">
-                                            <q-input prefix="$" type="number" class="q-mb-sm q-pr-sm" v-model="editedItem.total" dense autofocus outlined />
+                                            <q-input prefix="$" type="number" class="q-mb-sm q-pr-sm" v-model="editedItem.amount" dense autofocus outlined />
                                         </div>
                                         <div class="col-md-4">
                                             <q-input prefix="%" type="number" class="q-mb-sm" v-model="editedItem.percentage" dense autofocus outlined />
@@ -747,7 +747,7 @@
                                         >
                                             Add to Inventory
                                         </q-tooltip>
-                                        <q-btn @click="openInventoryModal" round class="edx-bg-gray edx-white" icon="inventory" />
+                                        <q-btn @click="openInventoryModal" :class="isInventoryLength ? 'edx-bg-green' : 'edx-bg-gray' " round class="edx-white" icon="inventory" />
                                     </div>
                                 </div>
                             </div>
@@ -1286,6 +1286,7 @@
 
             :show="inventoryModal"
             @togglePopup="toggleInventoryModal"
+            :id="editedItem.id"
 
         />
 
@@ -1336,6 +1337,7 @@ export default {
 
             options: [],
             isOptimizeOrders: false,
+            isInventoryLength: false,
             
             showDocumentPopup: false,
             inventoryModal: false,
@@ -1611,9 +1613,33 @@ export default {
                 if(res.data.breakdown.length) {
                     this.isOptimizeOrders = true
                 }else {
-                     this.isOptimizeOrders = false
+                    this.isOptimizeOrders = false
                 }
                 
+            })
+            
+        },
+        getItemizationListsForInventory() {
+
+            const conf = {
+                method: 'GET',
+                url: `${config.getItemizationListsForInventory}${this.editedItem.id}`,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+                let breakdowns = res.data.inventoryItems
+
+                for(let i=0; i<breakdowns.length; i++){
+                    if(breakdowns[i].inventory != null) {
+                        this.isInventoryLength = true
+                        break
+                    }else {
+                        this.isInventoryLength = false
+                    }
+                }
             })
             
         },
@@ -1670,9 +1696,18 @@ export default {
         },
         toggleInventoryModal(val) {
             this.inventoryModal = val
+            
+            if(!val) {
+                this.getItemizationListsForInventory()
+            }
         },
         toggleItemizationModal(val) {
             this.showItemizationModal = val
+
+            if(!val) {
+                this.getItemizationLists()
+            }
+            
         },
         openDocumentsModal() {
             this.showDocumentPopup = true
@@ -1813,7 +1848,9 @@ export default {
         let activityObj = {
             // remainingBalance: charge,
             remainingBalance: 0,
-            qtyOptions: { id: 1, label: 'Qty' },
+            qtyOptions: { 
+                id: data[i].unit ? data[i].unit.id : 1, 
+                label: data[i].unit ? data[i].unit.abbreviation : 'Qty' },
             // data[i].category.id == 1 ? this.totalPDremainder : this.totalFEremainder,
             id: data[i].id,
             description: data[i].description,
@@ -1938,7 +1975,21 @@ export default {
 
             this.isEdit = false
             this.isShowActivityPopup = true
+
+            this.isOptimizeOrders = false
+            this.isInventoryLength = false
+
+
             this.editedItem = {
+                qtyOptions: {
+                    id: 1,
+                    label: 'Qty'
+                },
+                amount: 0,
+                quantity: 0,
+                percentage: 0,
+
+
                 status_uni: { 
                     id: null, 
                     label: "N/A" 
@@ -1995,7 +2046,7 @@ export default {
 
             const editData = {
 
-                qtyOptions: { id: 1, label: 'Qty' },
+                budget_unit_id: this.editedItem.qtyOptions?.id,
 
                 supplier_id: this.editedItem.provider && this.editedItem.provider.id,
                 status_id: this.editedItem.status_uni && this.editedItem.status_uni.id,
@@ -2065,7 +2116,11 @@ export default {
 
             const editData = {
 
-                qtyOptions: { id: 1, label: 'Qty' },
+                
+
+                budget_unit_id: this.editedItem?.id,
+                quantity: this.editedItem.quantity,
+                
 
                 supplier_id: this.editedItem.provider && this.editedItem.provider.id,
                 status_id: this.editedItem.status_uni && this.editedItem.status_uni.id,
@@ -2089,7 +2144,7 @@ export default {
                 is_in_inventory: this.editedItem.is_in_inventory,
                 start_date: this.editedItem.start_date,
                 end_date: this.editedItem.end_date,
-                quantity: this.editedItem.quantity,
+                
                 inventory_category_type_id: this.editedItem.invenotry_category_type.id,
 
             }
@@ -2322,10 +2377,12 @@ export default {
             this.isShowActivityPopup=true 
             this.editedItem = row
             this.index = index
+
             this.getSchedules(row.id)
             this.getAttdeesById(row.id)
 
-             this.getItemizationLists()
+            this.getItemizationLists()
+            this.getItemizationListsForInventory()
 
         },
         // Get subcategories

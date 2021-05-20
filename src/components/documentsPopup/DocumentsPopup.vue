@@ -16,13 +16,14 @@
                             <div class="row q-mt-md q-mb-md">
                                 <div  v-for="status in trackingStatuses" :key="status.id" 
                                 @click="showTrackingStatusModal=true, sendTrackingStatusToPopup(status)" class="cursor-pointer tracking-icon-parent document-popup">
+                                    
                                     <q-icon 
                                         :name="status.icon" 
-                                        :class="status.status === 1 ? 'edx-blue' : 'edx-red' "
+                                        :class="status.status ? color(status.status.id) : color(0)"
                                         style="font-size: 2.5em;"
                                     ></q-icon>
                                     <div class="w-100">
-                                        <q-chip square size="sm" :class="status.status === 1 ? 'edx-bg-blue' : 'edx-bg-red' " class=" edx-white m-0 text-white">
+                                        <q-chip square size="sm" :class="status.status ? bgcolor(status.status.id) : bgcolor(0)" class="m-0 text-white">
                                             <b>{{ status.abbreviation }}</b>
                                         </q-chip>
                                     </div>
@@ -156,6 +157,8 @@ export default {
             //
             searchModal: false,
             selectedDocumentType: null,
+            //
+            
         }
     },
     components: {
@@ -220,6 +223,7 @@ export default {
             }
 
             axios(conf).then(res => {
+                
                 this.trackingStatuses = res.data.fields
                 this.note = res.data.note
                 
@@ -270,7 +274,63 @@ export default {
                 this.loading = false
             })
 
+        },
+
+
+
+        color(id) {
+            // Not started : 1
+            // On File : 2
+            // Pending : 4
+            // Not Required : 4
+
+            let color = ''
+
+            switch(id) {
+                case 1:
+                    color = 'edx-red'
+                    break;
+                case 2:
+                    color = 'edx-green'
+                    break;
+                case 3:
+                    color = 'edx-yellow'
+                    break;
+                case 4:
+                    color = 'edx-gray'
+                    break;
+                default:
+                    color = 'edx-gray';
+                    break;
+            }
+
+            return color
+        },
+        bgcolor(id) {
+
+            let color = ''
+
+            switch(id) {
+                case 1:
+                    color = 'edx-bg-red'
+                    break;
+                case 2:
+                    color = 'edx-bg-green'
+                    break;
+                case 3:
+                    color = 'edx-bg-yellow'
+                    break;
+                case 4:
+                    color = 'edx-bg-gray'
+                    break;
+                default:
+                    color = 'edx-bg-gray'
+                    break;
+            }
+
+            return color
         }
+
 
     },
     computed: {
@@ -285,6 +345,7 @@ export default {
             if(val) {
 
                 this.getDocumentTrays()
+                
 
                 if(this.isEdit) {
                     this.getTrackingStatus()

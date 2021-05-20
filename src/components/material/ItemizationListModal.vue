@@ -98,14 +98,15 @@
                                                 size=sm 
                                                 no-caps
                                                 round 
+                                                @click="openDeleteModal(props.row)"
                                             >
-                                            <q-tooltip 
-                                                anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                                                transition-show="flip-right"
-                                                transition-hide="flip-left"
-                                            >
-                                                <strong>Delete</strong>
-                                            </q-tooltip>
+                                                <q-tooltip 
+                                                    anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                                                    transition-show="flip-right"
+                                                    transition-hide="flip-left"
+                                                >
+                                                    <strong>Delete</strong>
+                                                </q-tooltip>
                                             </q-btn>
                                         </q-td>
                                     </q-tr>
@@ -129,6 +130,19 @@
             </q-card-actions>
 
         </dialog-draggable>
+
+        <q-dialog v-model="confirm" persistent>
+            <q-card>
+                <q-card-section class="row items-center">
+                <span class="q-ml-sm">Are you sure to delete this item?</span>
+                </q-card-section>
+
+                <q-card-actions align="right">
+                <q-btn flat label="No, thanks" color="primary" v-close-popup />
+                <q-btn label="Yes" color="edx-delete-btn" v-close-popup @click="deleteItem" />
+                </q-card-actions>
+            </q-card>
+        </q-dialog>
     </div>
 </template>
 
@@ -265,6 +279,9 @@ export default {
                     sortable: true
                 }
             ],
+
+            confirm: false,
+            deletedId: null,
         }
     },
     methods: {
@@ -332,6 +349,7 @@ export default {
                 let breakdowns = res.data.breakdown
                 for(let i=0; i<breakdowns.length; i++) {
                     breakdownsArr.push({
+                        id: breakdowns[i].id,
                         materialName: breakdowns[i].name,
                         description: breakdowns[i].description,
                         inventoryCategory: {
@@ -390,6 +408,31 @@ export default {
                 })
         
         },
+        openDeleteModal(row) {
+            this.confirm = true
+            this.deletedId = row.id
+        },
+        deleteItem() {
+            
+            const conf = {
+                method: 'DELETE',
+                url: config.deleteItemizationItem + this.deletedId,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+                // const index = this.data.indexOf(this.editedItem)
+                // this.data.splice(index, 1)
+                    this.$q.notify({
+                        message: 'Deleted!',
+                        type: 'positive',
+                    })
+
+                    this.getItemizationLists()
+                })
+        }
     },
     computed: {
         showPopup() {

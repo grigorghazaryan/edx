@@ -193,6 +193,7 @@ const config = {
     // Document trays
     getDocumentTrays: 'https://edxchange-document.aimtech.am/api/v1/document-tray',
     getTrackingStatus: 'https://edxchange-document.aimtech.am/api/v1/tracking-status/', // + id
+    getDocumentsStatus: 'https://edxchange-document.aimtech.am/api/v1/document-status',
     getTrackingStatusByCategory: 'https://edxchange-document.aimtech.am/api/v1/get-tracking-status/', // + category id
     documentsByTray: 'https://edxchange-document.aimtech.am/api/v1/documents-by-tray/', // + id + id
     getDocumentCategory: 'https://edxchange-document.aimtech.am/api/v1/document-category',
@@ -218,7 +219,10 @@ const config = {
     
     // ITEMIZATION
     getItemizationLists: 'https://edxchange-activity.aimtech.am/api/v1/get-breakdown/', // + id
+    getItemizationListsForInventory: 'https://edxchange-activity.aimtech.am/api/v1/get-breakdown-inventory/', // + id
     addItemizationItem: 'https://edxchange-activity.aimtech.am/api/v1/add-budget-breakdown/', // + id
+    deleteItemizationItem: 'https://edxchange-activity.aimtech.am/api/v1/remove-budget-item/', // + id
+    addItemToInventory: 'https://edxchange-activity.aimtech.am/api/v1/add-item-to-inventory/', // + id
 }
 
 export default config

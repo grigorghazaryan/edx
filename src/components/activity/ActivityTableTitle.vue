@@ -506,20 +506,77 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-md-6 q-pr-sm">
+
+                            <div class="col-md-3 q-pr-sm" v-if="editedItem.qtyOptions && !isOptimizeOrders">
+                                
+                                <div class="text-subtitle2 q-mb-sm">
+                                    {{ editedItem.qtyOptions.label }}
+                                </div>
+
+                                <q-input class="q-mb-md" outlined type="text" v-model="editedItem.quantity" dense autofocus />
+
+
+                                <q-popup-edit v-model="editedItem.quantity" title="Update Quantity" buttons>
+
+                                    <q-select class="q-mb-sm" v-model="editedItem.qtyOptions" :options="options" dense outlined />
+                                    <q-input v-if="editedItem.qtyOptions && editedItem.qtyOptions.id != 3" type="number" class="q-mb-sm" v-model="editedItem.quantity" dense autofocus outlined />
+
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <q-input prefix="$" type="number" class="q-mb-sm q-pr-sm" v-model="editedItem.amount" dense autofocus outlined />
+                                        </div>
+                                        <div class="col-md-4">
+                                            <q-input prefix="%" type="number" class="q-mb-sm" v-model="editedItem.percentage" dense autofocus outlined />
+                                        </div>
+                                    </div>
+
+                                </q-popup-edit>
+                            </div>
+
+                            <div class="col-md-4 q-pr-sm">
                                 <div class="text-subtitle2 q-mb-sm">Amount</div>
-                                <q-input prefix="$" class="q-mb-md" outlined type="text" v-model="editedItem.amount" dense autofocus />
-                                <q-popup-edit v-model="editedItem.amount" title="Update amount" buttons>
+                                <q-input prefix="$" :standout="isOptimizeOrders" :readonly="isOptimizeOrders" class="q-mb-md" :outlined="!isOptimizeOrders" type="text" v-model="editedItem.amount" dense autofocus />
+                                <!-- <q-popup-edit v-model="editedItem.amount" title="Update amount" buttons>
                                     <q-input prefix="$" class="q-mb-sm" type="text" v-model="editedItem.amount" dense outlined autofocus />
                                     <q-input prefix="%" v-model="editedItem.percentage"  type="number" outlined  
                                     :label="editedItem.type_uni && (editedItem.type_uni.label + ' Percentage') " dense autofocus/>
+                                </q-popup-edit> -->
+                                <q-popup-edit v-if="!isOptimizeOrders" v-model="editedItem.quantity" title="Update Quantity" buttons>
+
+                                    <q-select class="q-mb-sm" v-model="editedItem.qtyOptions" :options="options" dense outlined />
+                                    <q-input v-if="editedItem.qtyOptions && editedItem.qtyOptions.id != 3" type="number" class="q-mb-sm" v-model="editedItem.quantity" dense autofocus outlined />
+
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <q-input prefix="$" type="number" class="q-mb-sm q-pr-sm" v-model="editedItem.amount" dense autofocus outlined />
+                                        </div>
+                                        <div class="col-md-4">
+                                            <q-input prefix="%" type="number" class="q-mb-sm" v-model="editedItem.percentage" dense autofocus outlined />
+                                        </div>
+                                    </div>
+
                                 </q-popup-edit>
                             </div>
-                            <div class="col-md-6">
+
+                            <div class="col-md-4">
                                 <div class="text-subtitle2 q-mb-sm">Charge</div>
                                 <q-input prefix="$" standout readonly  class="q-mb-md" type="text" 
                                 v-model="charge" dense autofocus />
                             </div>
+
+                            <div class="col-md-1 q-pr-sm">
+                                <div class="itemize-order-parent">
+                                    <q-tooltip 
+                                        anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                                        transition-show="flip-right"
+                                        transition-hide="flip-left"
+                                    >
+                                        Itemize Order
+                                    </q-tooltip>
+                                    <q-btn @click="openItemizationModal" round :class=" isOptimizeOrders ? 'edx-bg-green' : 'edx-bg-gray' " class="edx-white" icon="format_list_numbered" />
+                                </div>
+                            </div>
+
                         </div>
 
                     </div>
@@ -1336,6 +1393,13 @@
             :categoryId="categoryId"
         />
 
+        <ItemizationModal
+            :show="showItemizationModal" 
+            :id="editedItem.id"
+            @togglePopup="toggleItemizationModal"
+            :inventoryCategories="optionsInventoryCategory"
+        />
+
     </div>
 </template>
 
@@ -1344,6 +1408,7 @@
 import dialogDraggable from '../../components/DialogDraggable'
 import DateOfActivityTable from './DateOfActivityTable';
 import DocumentsPopup from '../documentsPopup/DocumentsPopup';
+import ItemizationModal from '../material/ItemizationListModal';
 
 import axios from 'axios'
 import config from '../../../config'
@@ -1354,15 +1419,6 @@ let typingTimer
 let doneTypingInterval = 500
 
 
-const stringOptions = [
-  'Google', 'Facebook', 'Twitter', 'Apple', 'Oracle'
-].reduce((acc, opt) => {
-  for (let i = 1; i <= 5; i++) {
-    acc.push(opt + ' ' + i)
-  }
-  return acc
-}, [])
-
 
 export default {
     
@@ -1371,7 +1427,8 @@ export default {
         dialogDraggable,
         DateOfActivityTable,
         DialogDraggable,
-        DocumentsPopup
+        DocumentsPopup,
+        ItemizationModal
     },
     props: {
         title: {
@@ -1381,8 +1438,15 @@ export default {
     data() {
         return {
 
+            // to do - i need refactor this
+            options: [],
+            isOptimizeOrders: false,
+            showItemizationModal: false,
+            optionsInventoryCategory: [],
+            //
+
             model: null,
-            options: stringOptions,
+            // options: stringOptions,
 
             showDocumentPopup: false,
 
@@ -1656,6 +1720,88 @@ export default {
         }
     },
     methods: {
+
+        getInventoryCategories() {
+
+            const conf = {
+                method: 'GET',
+                url: config.getInventoryCategories,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+                console.log(res.data, 'asdasdasdasd')
+                const categoryInventory = res.data.invenotoryCategoryType
+                let categoryInventoryArr = [];
+
+                for(let i=0; i<categoryInventory.length; i++) {
+                    categoryInventoryArr.push({
+                        id: categoryInventory[i].id,
+                        label: categoryInventory[i].name
+                    })
+                }
+                this.optionsInventoryCategory = categoryInventoryArr
+            })
+        },
+
+        openItemizationModal() {
+            this.showItemizationModal = true
+        },
+        toggleItemizationModal(val) {
+            this.showItemizationModal = val
+
+            if(!val) {
+                this.getItemizationLists()
+            }
+            
+        },
+        getItemizationLists() {
+
+            const conf = {
+                method: 'GET',
+                url: `${config.getItemizationLists}${this.editedItem.id}`,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+
+                if(res.data.breakdown.length) {
+                    this.isOptimizeOrders = true
+                }else {
+                    this.isOptimizeOrders = false
+                }
+                
+            })
+            
+        },
+
+        getUnits() {
+            
+            const conf = {
+                method: 'GET',
+                url: `${config.getUnits}`,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+                console.log('get units', res.data)
+                let units = res.data.unity
+                let unitsArr = []
+                for(let i=0; i<units.length; i++) {
+                    unitsArr.push({
+                        id: units[i].id,
+                        label: units[i].abbreviation
+                    })
+                }
+                this.options = unitsArr
+            })
+        },
         
         togglePopup(val) {
             this.showDocumentPopup = val
@@ -1796,6 +1942,11 @@ export default {
         let activityObj = {
             // remainingBalance: charge,
             remainingBalance: 0,
+            quantity: data[i].quantity ?  data[i].quantity : 0,
+            qtyOptions: { 
+                id: data[i].unit ? data[i].unit.id : 1, 
+                label: data[i].unit ? data[i].unit.abbreviation : 'Qty' 
+            },
             fund_source: {
                 id: data[i].fund_source ? data[i].fund_source.id : null,
                 label: data[i].fund_source ? data[i].fund_source.name : null,
@@ -1980,6 +2131,8 @@ export default {
 
             const editData = {
 
+                budget_unit_id: this.editedItem.qtyOptions?.id,
+
                 fund_source_id: this.editedItem.fund_source ? this.editedItem.fund_source.id : null,
                 supplier_id: this.editedItem.provider && this.editedItem.provider.id,
                 status_id: this.editedItem.status_uni && this.editedItem.status_uni.id,
@@ -2052,6 +2205,12 @@ export default {
             this.btnLoading = true;
 
             const editData = {
+                
+                
+
+                budget_unit_id: this.editedItem?.id,
+                quantity: this.editedItem.quantity,
+
 
                 fund_source_id: this.editedItem.fund_source ? this.editedItem.fund_source.id : null,
                 supplier_id: this.editedItem.provider && this.editedItem.provider.id,
@@ -2311,6 +2470,7 @@ export default {
             this.getSchedules(row.id)
             // this.getAttdeesById(row.id)
             row.type_uni && this.getSubcategories(row.type_uni.id)
+            this.getItemizationLists()
         },
         // Get subcategories
         getSubcategories(id) {
@@ -3347,6 +3507,7 @@ export default {
                 this.isEdit = false
                 this.isDuplicate = false
             }else {
+                this.getUnits();
                 this.getCampueses();
                 this.getStatus(parseInt(this.tab));
                 this.getTrackingCategories(this.tab, 1);
@@ -3367,6 +3528,7 @@ export default {
         this.getRcurranceTypes()
 
         this.getFunds(tab)
+        this.getInventoryCategories();
         // this.getAllocationFundId(tab, 1)
         
     },
@@ -3418,6 +3580,11 @@ export default {
 
 .q-table--no-wrap th, .q-table--no-wrap td {
     white-space: initial;
+}
+
+.itemize-order-parent {
+    margin-top: 28px;
+    margin-left: 10px;
 }
 
 

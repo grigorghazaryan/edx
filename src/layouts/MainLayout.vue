@@ -37,17 +37,20 @@
 
             <q-btn-dropdown label="luke skywalker">
               <q-list>
+                
                 <q-item clickable v-close-popup to="/Profile">
                   <q-item-section>
                     <q-item-label>My Profile</q-item-label>
                   </q-item-section>
                 </q-item>
+
                 <q-item clickable v-close-popup>
                   <q-item-section>
                     <q-item-label>Logout</q-item-label>
                   </q-item-section>
                 </q-item>
               </q-list>
+              
             </q-btn-dropdown>
             
           </div>

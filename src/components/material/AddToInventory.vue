@@ -12,8 +12,8 @@
                     <div class="row">
                         <div class="col-md-8"></div>
                         <div class="col-md-4">
-                            <div class="text-right"><b>Total: $ <span>2590.00</span> </b></div>
-                            <div class="text-right"><b>Total w/Markup: $ <span>3568.00</span> </b></div>
+                            <div class="text-right"><b>Total: $ <span>{{ total }}</span> </b></div>
+                            <div class="text-right"><b>Total w/Markup: $ <span>{{ totalMarkup }}</span> </b></div>
                         </div>
 
                         <div class="col-md-12 q-mt-md">
@@ -41,7 +41,7 @@
                                             $ {{props.row.amount}}
                                         </q-td>
                                         <q-td key="total" :props="props">
-                                            $ {{ props.row.total }}
+                                            $ {{ parseInt(props.row.qty) * parseInt(props.row.amount) }}
                                         </q-td>
                                         <q-td key="checked" :props="props">
                                             <q-checkbox v-model="props.row.checked" />
@@ -58,7 +58,7 @@
             <q-card-actions class="row justify-end">
                 <div>
                     <q-btn @click="closePopup" flat label="Cancel" color="primary"></q-btn>
-                    <q-btn @click="closePopup" flat label="Add Selected" color="primary"></q-btn>
+                    <q-btn @click="addToInventory" flat label="Add Selected" color="primary"></q-btn>
                 </div>
             </q-card-actions>
 
@@ -78,6 +78,9 @@ import config from '../../../config'
 export default {
     props: {
         show: {
+            required: true
+        },
+        id: {
             required: true
         }
     },
@@ -172,30 +175,124 @@ export default {
         closePopup() {
             this.$emit('togglePopup', false)
         },
-        addItem() {
-            let newItemObj = {
-                materialName: '',
-                description: '',
-                inventoryCategory: {
-                    id: null,
-                    label: ''
-                },
-                qty: '',
-                amount: '0.00',
-                total: '0.00',
-                wMarkup: '0.00'
+        getItemizationLists() {
+
+            const conf = {
+                method: 'GET',
+                url: `${config.getItemizationListsForInventory}${this.id}`,
+                headers: {
+                    Accept: 'application/json',
+                }
             }
-            this.data.push(newItemObj)
+
+            axios(conf).then(res => {
+
+                let breakdownsArr = []
+                let breakdowns = res.data.inventoryItems
+                for(let i=0; i<breakdowns.length; i++) {
+                    breakdownsArr.push({
+                        id: breakdowns[i].id,
+                        materialName: breakdowns[i].name,
+                        description: breakdowns[i].description,
+                        inventoryCategory: {
+                            id: breakdowns[i].inventory_category?.id,
+                            label: breakdowns[i].inventory_category?.name
+                        },
+                        amount: breakdowns[i].unit_cost,
+                        qty: breakdowns[i].quantity,
+                        qtyOptions: { 
+                            id: breakdowns[i].unit?.id, 
+                            label: breakdowns[i].unit?.abbreviation
+                        },
+                        percentage: breakdowns[i].markup_percentage,
+                        checked: breakdowns[i].inventory == null ? false : true
+                    })
+                }
+
+                this.data = breakdownsArr
+            })
+            
+        },
+        addToInventory() {
+
+            let breakdowns = []
+
+            for(let i=0; i<this.data.length; i++) {
+                console.log(this.data)
+                if(this.data[i].checked) {
+                    breakdowns.push(this.data[i].id)
+                }
+            }
+
+            const conf = {
+                method: 'POST',
+                url: config.addItemToInventory + this.id,
+                headers: {
+                    Accept: 'application/json',
+                },
+                data: {
+                    breakdown: breakdowns
+                }
+            }
+
+            axios(conf)
+                .then(res => {
+
+                    this.$q.notify({
+                        message: 'Added!',
+                        type: 'positive',
+                    })
+
+                    this.closePopup()
+                })
         }
     },
     computed: {
         showPopup() {
             return this.show
         },
+        total() {
+            let count = 0
+            for(let i=0; i<this.data.length; i++) {
+                if(this.data[i].checked) {
+
+                    if (count == '') {
+                        count = 0
+                    }
+
+                    count += (parseFloat(this.data[i].amount) * parseFloat(this.data[i].qty))
+
+                }
+
+            }
+            return count
+        },
+        totalMarkup() {
+
+            let count = 0
+            for(let i=0; i<this.data.length; i++) {
+
+                if(this.data[i].checked) {
+                    let uc = (parseFloat(this.data[i].amount) * parseFloat(this.data[i].qty)) + (parseFloat(this.data[i].amount) * parseFloat(this.data[i].qty) / parseFloat(this.data[i].percentage))
+                    
+                    if (isNaN(uc)) {
+                        uc = 0
+                    }
+
+                    count += uc
+                }
+            
+            }
+            return count
+        }  
     },
     watch: {
         show(val) {
             this.$emit('togglePopup', val)
+
+            if(val) {
+                this.getItemizationLists()
+            }
         }
     }
 }
