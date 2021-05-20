@@ -92,22 +92,45 @@
                                             $ {{ (parseFloat(props.row.amount) * parseFloat(props.row.qty)) + ((parseFloat(props.row.amount) * parseFloat(props.row.qty)) / parseFloat(props.row.percentage)) }}
                                         </q-td>
                                         <q-td key="action" :props="props">
-                                           <q-btn
-                                                icon="delete_forever"
-                                                color="red" 
-                                                size=sm 
-                                                no-caps
-                                                round 
-                                                @click="openDeleteModal(props.row)"
-                                            >
-                                                <q-tooltip 
-                                                    anchor="top middle" self="bottom middle" :offset="[10, 10]"
-                                                    transition-show="flip-right"
-                                                    transition-hide="flip-left"
+
+                                            <q-fab padding="xs" @click.stop color="edx-action-btn" icon="toc" active-icon="menu_open"  direction="left">
+                            
+                                                <q-fab-action
+                                                    icon="content_copy"
+                                                    color="edx-duplicate-btn" 
+                                                    size=sm 
+                                                    no-caps
+                                                    round 
+                                                    class="q-mr-sm"
+                                                    @click="openDuplicatePopup(props.row)"
                                                 >
-                                                    <strong>Delete</strong>
-                                                </q-tooltip>
-                                            </q-btn>
+                                                    <q-tooltip 
+                                                        anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                                                        transition-show="flip-right"
+                                                        transition-hide="flip-left"
+                                                    >
+                                                        <strong>Duplicate</strong>
+                                                    </q-tooltip>
+                                                </q-fab-action>
+
+                                                <q-fab-action
+                                                    icon="delete_forever"
+                                                    color="edx-delete-btn" 
+                                                    size=sm 
+                                                    no-caps
+                                                    round
+                                                    @click="openDeleteModal(props.row)" 
+                                                >
+                                                    <q-tooltip 
+                                                        anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                                                        transition-show="flip-right"
+                                                        transition-hide="flip-left"
+                                                    >
+                                                        <strong>Delete</strong>
+                                                    </q-tooltip>
+                                                </q-fab-action>
+
+                                            </q-fab>
                                         </q-td>
                                     </q-tr>
                                 </template>
@@ -408,6 +431,7 @@ export default {
                 })
         
         },
+
         openDeleteModal(row) {
             this.confirm = true
             this.deletedId = row.id
@@ -432,6 +456,15 @@ export default {
 
                     this.getItemizationLists()
                 })
+        },
+
+        openDuplicatePopup(row) {
+
+            delete row.id
+            let newData = JSON.stringify(row)
+            newData = JSON.parse(newData)
+            
+            this.data.push(newData)
         }
     },
     computed: {

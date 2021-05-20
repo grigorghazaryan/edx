@@ -107,7 +107,7 @@ const config = {
     addAttendee: 'https://edxchange-activity.aimtech.am/api/v1/add-attendy/', // + id
     filterActivity: 'https://edxchange-activity.aimtech.am/api/v1/filter-budget/', // 1/1001/ if activity : 1 , if material : 2 ?search=test&type=1&year=1015
     getSubcategories: 'https://edxchange-activity.aimtech.am/api/v1/get-types-subcategories/', // + title id
-    getActivityStatus: 'https://edxchange-activity.aimtech.am/api/v1/get-item-status/',
+    
     
     // Get attendee types
     getAtendeeTypes: 'https://edxchange-activity.aimtech.am/api/v1/get-atendee-types', 
@@ -205,6 +205,9 @@ const config = {
 
     // Activity Tracking
     getActivityTrackings: 'https://edxchange-document.aimtech.am/api/v1/activity-tracking',
+    // Activity Status
+    getActivityTypes: 'https://edxchange-activity.aimtech.am/api/v1/online-status',
+    getActivityStatus: 'https://edxchange-activity.aimtech.am/api/v1/get-item-status/',
     
     // Get statuses
     getStatuses: 'https://edxchange-activity.aimtech.am/api/v1/get-statuses?',

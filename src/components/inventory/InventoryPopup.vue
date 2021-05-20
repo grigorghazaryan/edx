@@ -1721,6 +1721,8 @@ export default {
 
 
         editInventory() {
+
+            
         
             const updateData = {
                 school_id: this.editedData.school_id,
@@ -1738,7 +1740,10 @@ export default {
                 location: this.editedData.location,
                 location_information_note: this.editedData.location_information_note,
                 note:  this.editedData.note,
-                purchase_date: this.editedData.purchase_date
+                purchase_date: this.editedData.purchase_date,
+                visibility_date : "",
+                transition_date : "",
+                transition_information_note :  ""
             }
 
             const modifyData = {

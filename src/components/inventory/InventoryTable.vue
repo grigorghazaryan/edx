@@ -155,7 +155,7 @@
       <q-tr :props="props" class="cursor-pointer" :class="{ 'bg-red-2' : props.row.changed }"  @click="openEditPopup(props.row)">
 
         <q-td auto-width>
-            <div>
+            <div v-if="props.row.needs_review">
                 <q-icon name="fiber_new" style="font-size: 1.5rem" class="edx-red" />
                 <q-tooltip content-class="edx-tooltip">New</q-tooltip>
             </div>
@@ -850,193 +850,16 @@ export default {
 
         },
         filterType() {
-        if(this.typeModel) {
-            if(this.typeModel == 'Professional Development') {
-            this.data = this.tempDataX.filter(a => a.type == 'PD');
+            if(this.typeModel) {
+                if(this.typeModel == 'Professional Development') {
+                this.data = this.tempDataX.filter(a => a.type == 'PD');
+                }else {
+                this.data = this.tempDataX.filter(a => a.type == 'FE');
+                }
             }else {
-            this.data = this.tempDataX.filter(a => a.type == 'FE');
+                this.data = this.tempDataX
             }
-        }else {
-            this.data = this.tempDataX
-        }
         },
-        // addEmptyRow() {
-        // let id = Math.floor(Math.random() * 100)
-
-        // let obj = {
-        //     id: id,
-        //     qt0: 0,
-        //     categoryDescription: '',
-        //     itemName: '' ,
-        //     vendor: '',
-        //     identifier: '',
-        //     mpsId: 0,
-        //     serial: parseInt((id * 8) / 4),
-        //     costPerItem: 0,
-        //     totalCost: 0,
-        //     type: 'PD',
-        //     dateOfPurchase: '24-11-2020',
-        //     condition: '',
-        //     location: '',
-        //     classroomOrLocationWithinSchool: '',
-        //     dateAndExplanationOfRemoval: '',
-        //     status: '',
-        //     notes: '',
-        //     // changed: false,
-        //     // showEditButton: true,
-        // }
-        // this.data.unshift(obj)
-        // },
-        // copyRowData(index) {
-        // oldObject = JSON.stringify(this.tempDataX[index])
-        // },
-        // copyRow(row, index) {
-        // oldObject = JSON.stringify(this.tempDataX[index])
-        // },
-        // detectChange(index) {
-
-        // this.editedItem = this.tempDataX[index]
-        // console.log('detectChange function', this.editedItem)
-
-        // let d = JSON.parse(oldObject)
-        // let f = JSON.stringify(this.data[index])
-        //     f = JSON.parse(f)
-
-        // let status = _.isEqual(d, f)
-
-        // if(status) {
-        //     this.data[index].changed = false
-        // }else {
-        //     this.data[index].changed = true
-        // }
-
-
-        // },
-        // changeStatus(index) {
-
-        //   this.editedItem = this.data[index]
-        //   this.statusChangeObject = {
-        //       quantity: this.editedItem.quantity,
-        //       schoolToTransfer: null,
-        //       location: '',
-        //       locationWithinSchool: '',
-        //       note: '',
-        //       serial: '',
-        //       showUntil: '',
-        //       stickerRangeStart: '',
-        //       stickerRangeEnd: '',
-        //       newSerial: '',
-        //   }
-
-        //   this.getSchools();
-
-        //   this.statusChangeObject.serial = this.editedItem.serial_number
-        //   console.log('change status', this.data[index].status_uni)
-        
-        //   if(this.data[index].status_uni.label == 'On Premise') {
-
-        //       this.onpremise = true
-        //       this.statusChangeObject.location = this.$route.query.name
-        //       if (this.editedItem.quantity <= 1) {
-        //       this.statusChangeObject.locationWithinSchool = ''
-        //       }
-              
-        //   }
-        //   else if(this.data[index].status_uni.label == 'Off Premise') {
-        //       this.offpremise = true      
-        //       this.statusChangeObject.location = 'Off Premise'
-        //       if (this.editedItem.quantity <= 1) {
-        //       this.statusChangeObject.locationWithinSchool = ''
-        //       }
-
-        //   }
-        //   else if(this.data[index].status_uni.label == 'Disposed') {
-        //       this.disposed = true
-        //       this.statusChangeObject.location = 'Disposed'   
-        //       if (this.editedItem.quantity <= 1) {
-        //       this.statusChangeObject.locationWithinSchool = ''
-        //       }    
-        //   }
-        //   else if(this.data[index].status_uni.label == 'Lost') {
-
-        //       this.lost = true    
-        //       this.statusChangeObject.location = 'Lost'
-        //       if (this.editedItem.quantity <= 1) {
-        //       this.statusChangeObject.locationWithinSchool = ''
-        //       }
-
-        //   }
-        //   else if(this.data[index].status_uni.label == 'Stolen') {
-        //       this.stolen = true     
-        //       this.statusChangeObject.location = 'Stolen'
-        //       if (this.editedItem.quantity <= 1) {
-        //       this.statusChangeObject.locationWithinSchool = ''
-        //       }  
-        //   }
-        //   else if(this.data[index].status_uni.label == 'Transfered') {
-        //       this.transfered = true     
-        //       this.statusChangeObject.location = 'Transfered'
-
-        //       switch(this.tab) {
-        //       case '1':
-        //           this.allocationSelected = this.optionsAllocation[0]
-        //           break;
-        //       case '2':
-        //           this.allocationSelected = this.optionsAllocation[1]
-        //           break;
-        //       case '3':
-        //           this.allocationSelected = this.optionsAllocation[2]
-        //           break;
-        //       case '4':
-        //           this.allocationSelected = this.optionsAllocation[3]
-        //           break;
-        //       case '5':
-        //           this.allocationSelected = this.optionsAllocation[4]
-        //           break;
-        //       case '6':
-        //           this.allocationSelected = this.optionsAllocation[5]
-        //           break;
-        //       }
-
-        //       if (this.editedItem.quantity <= 1) {
-              
-        //       this.statusChangeObject.locationWithinSchool = ''
-        //       }  
-        //   }
-        //   else {
-        //       this.stored = true
-        //       this.statusChangeObject.location = 'Stored'
-        //       if (this.editedItem.quantity <= 1) {
-              
-        //       this.statusChangeObject.locationWithinSchool = ''
-        //       }
-        //   }
-
-        // },
-        // cancellChange(index) {
-
-        // if(this.addNew) {
-        //     this.data.splice(0, 1)
-        //     this.addNew = false
-        // } else {
-        //     let d = JSON.parse(oldObject)
-        //     Object.assign(this.data[index], d);
-        //     this.data[index].changed = false
-        // }
-
-        // },
-        // cancelStatus() {
-        // console.log('cancel status')
-
-        // let d = JSON.parse(oldObject)
-        // console.log(d)
-        // let index = this.data.findIndex( item => item.id === d.id )
-        // console.log('old', index)
-
-        // this.data[index].status_uni = d.status_uni
-        // this.statusChanged = false
-
-        // },
         exportTable() {
         // naive encoding to csv format
         const content = [this.columns.map(col => wrapCsvValue(col.label))].concat(
@@ -1062,6 +885,7 @@ export default {
             })
         }
         },
+        
         // closePopup() {
         // this.onpremise = false
         // this.offpremise = false
@@ -1108,17 +932,17 @@ export default {
         },
         identifierCheckQuantity(index) {
 
-        this.editedItem = this.tempDataX[index]
-        let i = this.optionsIdentifier.findIndex( item => item.id == 5 )
-        let indexSticker = this.optionsIdentifier.findIndex( item => item.id == 2 )
+            this.editedItem = this.tempDataX[index]
+            let i = this.optionsIdentifier.findIndex( item => item.id == 5 )
+            let indexSticker = this.optionsIdentifier.findIndex( item => item.id == 2 )
 
-        if(this.editedItem.quantity <= 1) {
-            this.optionsIdentifier[i].disable = true
-            this.optionsIdentifier[indexSticker].disable = false
-        } else {
-            this.optionsIdentifier[i].disable = false
-            this.optionsIdentifier[indexSticker].disable = true
-        }
+            if(this.editedItem.quantity <= 1) {
+                this.optionsIdentifier[i].disable = true
+                this.optionsIdentifier[indexSticker].disable = false
+            } else {
+                this.optionsIdentifier[i].disable = false
+                this.optionsIdentifier[indexSticker].disable = true
+            }
 
         },
 
@@ -1233,22 +1057,28 @@ export default {
         },
 
         allocationParsing(data) {
+
         for(let i=0; i<data.length; i++) {
+
+            // is new
+            if(data[i].needs_review == "0") {
+                data[i].needs_review = true
+            }else data[i].needs_review = false
 
             // Inventory
             if(data[i].inventory_category != null) {
-            data[i].inventory_category_uni = {
-                id: data[i].inventory_category?.id,
-                label: data[i].inventory_category?.name,
-                value: data[i].inventory_category?.id
-            }
+                data[i].inventory_category_uni = {
+                    id: data[i].inventory_category?.id,
+                    label: data[i].inventory_category?.name,
+                    value: data[i].inventory_category?.id
+                }
             }
             else {
-            data[i].inventory_category_uni = {
-                id: 0,
-                label: 'N/A',
-                value: 0
-            }
+                data[i].inventory_category_uni = {
+                    id: 0,
+                    label: 'N/A',
+                    value: 0
+                }
             }
 
 
@@ -1261,18 +1091,18 @@ export default {
                 value: data[i].inventory_supplier.id
             }
 
-            data[i].inventory_supplier_uni = objSuplier
+                data[i].inventory_supplier_uni = objSuplier
             }else {
-            data[i].inventory_supplier_uni = {
-                id: 0,
-                label: 'N/A'       
-            }
+                data[i].inventory_supplier_uni = {
+                    id: 0,
+                    label: 'N/A'       
+                }
             }
 
             // Condition
             let conditionObj = {
-            id: data[i].condition_id,
-            label: data[i].condition
+                id: data[i].condition_id,
+                label: data[i].condition
             }
             data[i].condition = conditionObj
             
@@ -1343,6 +1173,7 @@ export default {
             })
         },
         getInventoryByType(type, id, limit, page) {
+
             this.loading = true
 
             const conf = {

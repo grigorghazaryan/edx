@@ -9,8 +9,9 @@ const ICONS = {
     noAnswer: 'do_disturb_on',
 
     // Activity Type
-    online: 'laptop_mac',
-    onSite: 'emoji_transportation',
+    onSite: 'apartment',
+    offCampus: 'emoji_transportation',
+    virtual: 'laptop_chromebook',
 
     // Approval Status
     approved: 'approval',

@@ -245,13 +245,14 @@
           <div class="col-md-6 q-pl-lg">
             <div class="q-mb-md">
               <div class="text-subtitle2 q-mb-sm">Status</div>
-              <q-select
+              Preliminary  <q-toggle v-model="isFinal" :label="`Final`"/>
+              <!-- <q-select
                 v-if="editedItem.final"
                 outlined
                 dense
                 v-model="editedItem.final"
                 :options="options"
-              />
+              /> -->
             </div>
           </div>
 
@@ -271,6 +272,8 @@
               <div class="text-subtitle2 q-mb-sm">{{ i.edxName }} </div>
 
               <div v-if=" i.isInput == '1' ">
+                
+
                 <q-input
                   prefix="$"
                   v-model="i.amount"
@@ -278,6 +281,7 @@
                   outlined
                   dense
                 />
+
               </div>
 
               <div v-if=" i.is_percentage == '1' ">
@@ -298,7 +302,8 @@
                 />
               </div>
 
-              <div v-if="i.rule_input && i.rule_input.length > 1">
+              <div v-if="i.rule_input && i.rule_input.length > 1 && i.isInput != '1'">
+                
                 <q-input
                   prefix="$"
                   v-model="i.amount"
@@ -307,79 +312,6 @@
                   readonly
                 />
               </div>
-              
-
-              <!-- <div v-if=" i.isInput == '1' ">
-                <q-input
-                  prefix="$"
-                  v-model="i.amount"
-                  outlined
-                  dense
-                />
-              </div>
-
-              <div v-if=" i.isInput == '1' ">
-                <q-input
-                  prefix="$"
-                  v-model="i.amount"
-                  outlined
-                  dense
-                />
-              </div> -->
-
-              <!-- <div v-if="i.percentage == null">
-                <q-input
-                  readonly
-                  prefix="$"
-                  :value="allocationCalculation(i.rule_input, index, true)"
-                  outlined
-                  dense
-                />
-              </div>
-
-              <div v-else-if="i.anotherPercentage">
-                <q-input
-                  prefix="$"
-                  class="q-mb-sm"
-                  readonly
-                  :value="allocationAnotherPercentageCalculation(i.rule_input, i.percentage, index, true)"
-                  outlined
-                  dense
-                />
-
-                <q-input
-                  prefix="%"
-                  class="q-mb-md"
-                  outlined
-                  type="number"
-                  v-model="i.percentage"
-                  @input="d(i.percentage)"
-                  dense
-                  autofocus
-                />
-              </div>
-
-              <div v-else>
-                <q-input
-                  prefix="$"
-                  class="q-mb-sm"
-                  readonly
-                  outlined
-                  type="text"
-                  :value="(i.amount * i.percentage) / 100"
-                  dense
-                  autofocus
-                />
-                <q-input
-                  prefix="%"
-                  class="q-mb-md"
-                  outlined
-                  type="text"
-                  v-model="i.percentage"
-                  dense
-                  autofocus
-                />
-              </div> -->
 
             </div>
           </div>
@@ -476,16 +408,17 @@ export default {
           isEditAllocation: false,
 
           model: '',
-          options: [
-              {
-                id: 0,
-                label: 'Preliminary'
-              },
-              {
-                id: 1,
-                label: 'Final'
-              },
-          ],
+          // options: [
+          //     {
+          //       id: 0,
+          //       label: 'Preliminary'
+          //     },
+          //     {
+          //       id: 1,
+          //       label: 'Final'
+          //     },
+          // ],
+          isFinal: false,
 
           schools: [],
           selectedSchool: null,
@@ -903,23 +836,19 @@ export default {
 
               
 
-              parentObj.id=i+1
+              parentObj.id= data[i][0].allocationId
               parentObj.changed = false
               parentObj.add = false
               parentObj.showEditButton = true
+              parentObj.allocationTypeId = data[i][0].allocation_id
+              
 
-              if(data[i][0].final) {
-                  parentObj.final = {
-                    id: 1,
-                    label: 'Final',
-                    shortName: 'FN'
-                  }
+              if(data[i][0].final == '1') {
+
+                parentObj.final = true
+
               }else {
-                  parentObj.final = {
-                    id: 0,
-                    label: 'Preliminary',
-                    shortName: 'PR'
-                  }
+                parentObj.final = false
               }
 
               parentObj.school = {
@@ -1091,32 +1020,58 @@ export default {
 
     editAllocation() {
 
-        console.log('this.editedItem', this.editedItem)
-        console.log('this.editedItem temp', this.tempEditedItem)
+        // console.log('this.editedItem', this.editedItem)
+        // console.log('this.editedItem temp', this.tempEditedItem)
+
+        // school_id: 1001
+        // status_id: 1
+        // allocation_type_id: 1
+        // note: 'sdfgsdfgfsdg'
 
 
-        // const data  = {
-        //   is_final:  this.editedItem.status_string == 'Final' ? true : false,
-        //   creation_date: this.editedItem.creation_date,
-        //   total_instruction: parseFloat(this.editedItem.total_instruction),
-        //   professional_development_percentage: parseFloat(this.editedItem.professional_development_percentage),
-        //   family_engagement: parseFloat(this.editedItem.family_engagement),
-        //   note: this.editedItem.note,
-        //   allocation_type: parseInt(this.editedItem.allocation_type)
-        // }
+        const data  = {
 
-        // if(this.isEditAllocation) {
+          school_id: this.editedItem.school.id,
+          status_id:  this.isFinal ? 1 : 0,
+          note: this.editedItem.note,
+          allocation_type_id: parseInt(this.editedItem.allocationTypeId),
 
-        //   data.school_id = this.selectedSchool.id
+        }
 
-        //   const conf = {
-        //     method: 'POST',
-        //     url: config.addAllocation,
-        //     headers: {
-        //       Accept: 'application/json',
-        //     },
-        //     data: data
-        //   }
+        let arr = []
+
+        for(let i in this.editedItem) {
+          if(this.editedItem[i].allocationFundTemplateId) {
+
+            // percentgage
+            let obj = {
+
+              id: this.editedItem[i].allocationFundTemplateId,
+              value: parseFloat(this.editedItem[i].amount),
+              fundId: this.editedItem[i].fundId
+
+            }
+
+            if(this.editedItem[i].percentage){
+              obj.percentage = this.editedItem[i].percentage
+            }
+
+            arr.push(obj)
+          }
+        }
+
+        data.values = arr
+
+        if(this.isEditAllocation) {
+
+          // const conf = {
+          //   method: 'POST',
+          //   url: config.addAllocation,
+          //   headers: {
+          //     Accept: 'application/json',
+          //   },
+          //   data: data
+          // }
 
         //   axios(conf)
         //     .then(res => {
@@ -1141,25 +1096,27 @@ export default {
 
         // } else {
 
-        //   this.data[index].changed = false
+          // this.data[index].changed = false
 
-        //   const conf = {
-        //     method: 'PUT',
-        //     url: config.getAllocationByTitle + this.editedItem.id,
-        //     headers: {
-        //       Accept: 'application/json',
-        //     },
-        //     data: data
-        //   }
+          const conf = {
+            method: 'PUT',
+            url: `${config.addAllocation}${this.editedItem.id}`,
+            headers: {
+              Accept: 'application/json',
+            },
+            data: data
+          }
 
-        //   axios(conf)
-        //     .then(res => {
-        //       this.$q.notify({
-        //         message: 'Allocation updated successfully!',
-        //         type: 'positive',
-        //       })
-        //     })
-        // }
+          axios(conf)
+            .then(res => {
+
+              this.$q.notify({
+                message: 'Allocation updated successfully!',
+                type: 'positive',
+              })
+
+            })
+        }
 
     },
     deleteItem() {
@@ -1268,6 +1225,10 @@ export default {
         this.index = index
         this.editedItem = {...row}
         this.showAllocationModal = true
+        this.isFinal = this.editedItem.final
+
+
+        console.log('roe row', row)
 
     }
 

@@ -3198,6 +3198,31 @@ export default {
             this.getBudgetBalance( tab, 2, schoolId, this.count, val)
         },
 
+        getActivityTypes() {
+
+            const conf = {
+                method: 'GET',
+                url: config.getActivityTypes,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+                let arr = []
+                let status = res.data.onlineStatus
+                for(let i=0; i<status.length; i++) {
+                    arr.push({
+                        id: status[i].id,
+                        label: status[i].name
+                    })
+                }
+                this.online = arr
+            })
+
+            
+        },
+
         ////////
         approvalType(id) {
             for(let i=0; i<this.optionsApp.length; i++) {
@@ -3272,10 +3297,13 @@ export default {
 
             switch(iconId) {
                 case 1:
-                    icon = ICONS.online
+                    icon = ICONS.onSite
                     break;
                 case 2:
-                    icon = ICONS.onSite
+                    icon = ICONS.offCampus
+                    break;
+                case 3:
+                    icon = ICONS.virtual
                     break;
             }
 
@@ -3284,8 +3312,9 @@ export default {
         },
         activityTypeIconColor(id) {
 
-            // id: 1 : Online
-            // id: 2 : On site
+            // id: 1 : On site
+            // id: 2 : Off campus
+            // id: 3 : Virtual
 
             if(id) {
 
@@ -3294,10 +3323,13 @@ export default {
 
                 switch(iconId) {
                     case 1:
-                        color = 'edx-icon-online'
+                        color = 'edx-green'
                         break;
                     case 2:
-                        color = 'edx-icon-on-site'
+                        color = 'edx-orange'
+                        break;
+                    case 3:
+                        color = 'edx-pink'
                         break;
                 }
 
@@ -3492,6 +3524,7 @@ export default {
         // this.getSchoolYears()
 
         this.getFunds(tab)
+        this.getActivityTypes()
         // this.getAllocationFundId(tab, 2)
 
     },
