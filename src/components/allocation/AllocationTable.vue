@@ -47,7 +47,7 @@
             <q-icon name="search" />
           </template>
         </q-input>
-
+<!-- 
         <q-select
           class="q-mr-md"
           style="min-width: 200px; max-width: 200px"
@@ -65,7 +65,7 @@
               class="cursor-pointer"
             />
           </template>
-        </q-select>
+        </q-select> -->
 
         <q-btn
           square
@@ -156,7 +156,7 @@
 
           <q-td key="status" :props="props">
             <q-chip square class="cursor-pointer edx-bg-final">
-              {{props.row.final.shortName}}
+              {{props.row.status.abbr}}
 
               <q-tooltip
                 anchor="top middle"
@@ -165,7 +165,7 @@
                 transition-show="flip-right"
                 transition-hide="flip-left"
               >
-                <strong>{{props.row.final.label}}</strong>
+                <strong>{{props.row.status.label}}</strong>
               </q-tooltip>
             </q-chip>
           </q-td>
@@ -233,7 +233,9 @@
           <div class="col-6">
             <div class="q-mb-md">
               <div class="text-subtitle2 q-mb-sm">School</div>
+              <div v-if="isEditAllocation">{{ editedItem.school.label }}</div>
               <q-select
+                v-else
                 outlined
                 dense
                 v-model="editedItem.school"
@@ -311,6 +313,7 @@
                   dense
                   readonly
                 />
+                
               </div>
 
             </div>
@@ -805,6 +808,8 @@ export default {
                     // }
                   }
 
+                 
+
                   parentObj[j] = data[i][j]
 
                   if(i == 0 && this.oneTime) {
@@ -824,17 +829,7 @@ export default {
 
               }
 
-              // data[i].sort(function(a, b) { 
-
-              //   console.log(a, 'aaaaa')
-              //   console.log(b, 'bbbbb')
-
-              //   return parseInt(a.order) - parseInt(b.order)
-              // });
-
-              
-
-              
+          
 
               parentObj.id= data[i][0].allocationId
               parentObj.changed = false
@@ -846,9 +841,19 @@ export default {
               if(data[i][0].final == '1') {
 
                 parentObj.final = true
+                parentObj.status = {
+                  id: 1,
+                  label: "Final",
+                  abbr: "FN"
+                }
 
               }else {
                 parentObj.final = false
+                parentObj.status = {
+                  id: 0,
+                  label: "Preliminary",
+                  abbr: "PR"
+                }
               }
 
               parentObj.school = {
@@ -902,7 +907,6 @@ export default {
       finalArr = finalArr.flat(Infinity)
 
 
-
       for(let i=0; i<finalArr.length; i++) {
 
         if(finalArr[i].isInput == '0') {
@@ -922,34 +926,39 @@ export default {
           }
 
           setTimeout(()=>{
+
+
+            console.log('asdasdasdasdasdasdasdasdasd')
+
             if(finalArr[i].rule_input && finalArr[i].rule_input.length > 1) {
 
-            console.log('Rule input : ', finalArr[i].rule_input)
+              let amountArr = [];
+              let count = 0;
 
-            let amountArr = [];
-            let count = 0;
+              for(let j=0; j<finalArr[i].rule_input.length; j++) {
+                let item = finalArr.filter(x => x.allocationFundTemplateId == finalArr[i].rule_input[j]);
+                console.log(item[0], parseFloat(item[0].amount), 'itemsssssss=======')
+                amountArr.push( parseFloat(item[0].amount) )
+              }
 
-            for(let j=0; j<finalArr[i].rule_input.length; j++) {
-              let item = finalArr.filter(x => x.allocationFundTemplateId == finalArr[i].rule_input[j]);
-              console.log(item[0], parseFloat(item[0].amount), 'itemsssssss=======')
-              amountArr.push( parseFloat(item[0].amount) )
+
+              console.log('is_addition', amountArr)
+
+              if(finalArr[i].is_addition == '1') {
+                // ++++ is_addition
+                count = amountArr.reduce((a, b) => parseFloat(a) + parseFloat(b), 0)
+                console.log('+++++', amountArr, count)
+              }
+
+              if(finalArr[i].is_subtraction == '1') {
+                // ----  is_subtraction
+                count = amountArr.reduce((a, b) => parseFloat(a) - parseFloat(b))
+                console.log('-----', amountArr, count)
+              }
+
+              finalArr[i].amount = count
+
             }
-
-            if(finalArr[i].is_addition == '1') {
-              // ++++ is_addition
-              count = amountArr.reduce((a, b) => parseFloat(a) + parseFloat(b), 0)
-              console.log('+++++', amountArr, count)
-            }
-
-            if(finalArr[i].is_subtraction == '1') {
-              // ----  is_subtraction
-              count = amountArr.reduce((a, b) => parseFloat(a) - parseFloat(b))
-              console.log('-----', amountArr, count)
-            }
-
-            finalArr[i].amount = count
-
-          }
           }, 100)
 
         }
@@ -1115,6 +1124,11 @@ export default {
                 type: 'positive',
               })
 
+              this.showAllocationModal = false
+              this.getAllocationByType(this.titleId, this.count, this.current)
+
+
+
             })
         }
 
@@ -1169,6 +1183,7 @@ export default {
         })
 
     },
+
     allocationCalculation(ids, index, parsingBool) {
 
         if(ids != undefined) {
@@ -1193,6 +1208,7 @@ export default {
 
         }
     },
+
     allocationAnotherPercentageCalculation(ids, percentage, index, parsingBool) {
 
         let data = this.data[index];

@@ -1058,12 +1058,15 @@ export default {
 
         allocationParsing(data) {
 
+            console.log('DDDAAAATTTTAAAAA', data)
+
         for(let i=0; i<data.length; i++) {
 
             // is new
             if(data[i].needs_review == "0") {
                 data[i].needs_review = true
             }else data[i].needs_review = false
+
 
             // Inventory
             if(data[i].inventory_category != null) {
@@ -1072,8 +1075,7 @@ export default {
                     label: data[i].inventory_category?.name,
                     value: data[i].inventory_category?.id
                 }
-            }
-            else {
+            }else {
                 data[i].inventory_category_uni = {
                     id: 0,
                     label: 'N/A',
@@ -1085,13 +1087,13 @@ export default {
             // Suplier
             if(data[i].inventory_supplier != null) {
 
-            let objSuplier = {
-                id: data[i].inventory_supplier.id,
-                label: data[i].inventory_supplier.short_name,
-                value: data[i].inventory_supplier.id
-            }
+                let objSuplier = {
+                    id: data[i].inventory_supplier.id,
+                    label: data[i].inventory_supplier.short_name,
+                    value: data[i].inventory_supplier.id
+                }
 
-                data[i].inventory_supplier_uni = objSuplier
+            data[i].inventory_supplier_uni = objSuplier
             }else {
                 data[i].inventory_supplier_uni = {
                     id: 0,
@@ -1110,12 +1112,13 @@ export default {
             let statusId = data[i].status
             let statusName = ''
 
+
             switch(statusId) {
             case 1:
                 statusName = "On Premise"
                 break;
             case 2:
-                statusName = "Off Premise"
+                statusName = "Checked Out"
                 break;
             case 3:
                 statusName = "Disposed"
@@ -1137,15 +1140,20 @@ export default {
             }
 
             let statusObj = {
-            id: data[i].status_id,
-            label: statusName
+                id: data[i].status_id,
+                label: statusName
             }
             data[i].status_uni = statusObj
 
+            data[i].campus_uni = {
+                id: data[i].campus ? data[i].campus.id : null,
+                label: data[i].campus ? data[i].campus.name : 'N/A',
+            }
+
             // Identification
             let identificationObj = {
-            id: data[i].identification_id,
-            label: data[i].identification
+                id: data[i].identification_id,
+                label: data[i].identification
             }
             data[i].identification_uni = identificationObj
 
@@ -1154,7 +1162,6 @@ export default {
 
         }
 
-        console.log('DATA ==============', data)
         return data
         },
 

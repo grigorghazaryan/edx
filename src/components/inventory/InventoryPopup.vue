@@ -34,21 +34,11 @@
                                 <q-select  
                                     dense
                                     outlined
-                                    hide-selected
                                     fill-input
                                     input-debounce="0"
                                     v-model="editedData.campus_uni" 
                                     :options="optionsCampus"
-                                >
-                                    <template v-slot:no-option>
-                                    <q-item>
-                                        <q-item-section class="text-grey">
-                                        No results
-                                        </q-item-section>
-                                    </q-item>
-                                    </template>
-
-                                </q-select>
+                                />
                             </div>
 
                             <div class="q-mb-md">
@@ -96,8 +86,14 @@
                                 <div class="row">
                                     <div class="col-md-4 q-pr-sm" v-if="editedData.status_uni">
                                         <div class="text-subtitle2 q-mb-sm">Removal Date</div>
-                                        <q-input :disabled="editedData.status_uni.label == 'On Premise'" v-model="editedData.relocation_date" dense outlined />
-                                        <q-popup-proxy>
+                                        
+                                        <q-input 
+                                            :disabled="editedData.status_uni.label == 'On Premise'" 
+                                            :readonly="editedData.status_uni.label == 'On Premise'"
+                                            v-model="editedData.relocation_date" dense outlined
+                                        />
+
+                                        <q-popup-proxy v-if="editedData.status_uni.label != 'On Premise'">
                                             <q-date color="edx-pagination" :disabled="editedData.status_uni.label == 'On Premise'" v-model="editedData.relocation_date" mask="YYYY-MM-DD">
                                                 <div class="row items-center justify-end q-gutter-sm">
                                                 <q-btn label="Cancel" color="primary" flat v-close-popup />
@@ -178,11 +174,11 @@
 
                                         <q-popup-edit v-model="editedData.status" title="Status">
                                             <q-select
-                                            @input="changeStatus(4)"
-                                            dense
-                                            outlined
-                                            v-model="editedData.status_uni"
-                                            :options="optionsStatus"
+                                                @input="changeStatus(4)"
+                                                dense
+                                                outlined
+                                                v-model="editedData.status_uni"
+                                                :options="optionsStatus"
                                             />
                                         </q-popup-edit>
 
@@ -203,9 +199,9 @@
                                             <span class="q-ml-sm">{{ editedData.status_uni.label }}</span>
                                         </div>
 
-                                        <div v-else-if="editedData.status_uni.label == 'Off Premise'">
+                                        <div v-else-if="editedData.status_uni.label == 'Checked Out'">
                                             <q-icon
-                                                name="domain_disabled" 
+                                                name="shop" 
                                                 class="edx-icon-offpremise"
                                             >
                                                 <q-tooltip 
@@ -304,6 +300,7 @@
                                             </q-icon>
                                             <span class="q-ml-sm">{{ editedData.status_uni.label }}</span>
                                         </div>
+
                                     </div>
                                     <div v-if="editedData.condition" class="col-md-4 cursor-pointer">
                                         <div class="text-subtitle2 q-mb-sm">Condition</div>
@@ -603,7 +600,7 @@
             </q-card>
         </dialog-draggable>
 
-        <dialog-draggable :width="700" :modelDialog="offpremise" :title=" 'Off Premise' " @onHide="offpremise=false">
+        <dialog-draggable :width="700" :modelDialog="offpremise" :title=" 'Checked Out' " @onHide="offpremise=false">
             <q-card>
                 
                 <q-toolbar>
@@ -613,7 +610,7 @@
                     </q-avatar> -->
                     
                     <q-toolbar-title class="row justify-between">
-                    <!-- Off Premise -->
+                    <!-- Checked Out -->
                     <div v-if="editedData.quantity > 1">
                         {{ editedData.quantity - statusChangeObject.quantity }}
                         left
@@ -1606,9 +1603,9 @@ export default {
               }
               
           }
-          else if(this.editedData.status_uni.label == 'Off Premise') {
+          else if(this.editedData.status_uni.label == 'Checked Out') {
               this.offpremise = true      
-              this.statusChangeObject.location = 'Off Premise'
+              this.statusChangeObject.location = 'Checked Out'
               if (this.editedData.quantity <= 1) {
                 this.statusChangeObject.locationWithinSchool = ''
               }
@@ -1741,9 +1738,10 @@ export default {
                 location_information_note: this.editedData.location_information_note,
                 note:  this.editedData.note,
                 purchase_date: this.editedData.purchase_date,
-                visibility_date : "",
-                transition_date : "",
-                transition_information_note :  ""
+                visibility_date : this.editedData.visibility_date,
+
+                transition_date : this.editedData.relocation_date,
+                transition_information_note :  this.editedData.transition_information_note
             }
 
             const modifyData = {
