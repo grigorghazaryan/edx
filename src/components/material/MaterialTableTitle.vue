@@ -494,12 +494,15 @@
 
                         <div class="row">
 
-                            <div class="col-md-2 q-pr-sm" v-if="editedItem.qtyOptions && !isOptimizeOrders">
+                            <div class="col-md-2 q-pr-sm" v-if="editedItem.qtyOptions && !isOptimizeOrders && editedItem.qtyOptions.id != 3">
                                 <div class="text-subtitle2 q-mb-sm">
                                     {{ editedItem.qtyOptions.label }}
                                 </div>
 
-                                <q-input class="q-mb-md" outlined type="text" v-model="editedItem.quantity" dense autofocus />
+                                <!-- <q-input class="q-mb-md" outlined type="text" v-model="editedItem.quantity" dense autofocus /> -->
+                                <div class="h-popup w-100">
+                                     {{editedItem.quantity}}
+                                </div>
 
                                 <!-- <q-popup-edit v-model="editedItem.quantity" title="Update qty" buttons>
                                     <q-input class="q-mb-sm" type="text" v-model="editedItem.quantity" dense outlined autofocus />
@@ -1295,6 +1298,8 @@
             :id="editedItem.id"
             @togglePopup="toggleItemizationModal"
             :inventoryCategories="optionsInventoryCategory"
+
+            :inventoryCategory="'true'"
         />
 
 

@@ -27,7 +27,7 @@
                                     <q-tr :props="props" class="cursor-pointer">
                                         <q-td key="materialName" :props="props">
                                             <div>{{ props.row.materialName }}</div>
-                                            <q-popup-edit v-model="props.row.materialName" title="Material Name" buttons>
+                                            <q-popup-edit v-model="props.row.materialName" title="Activity Name" buttons>
                                                 <q-input dense outlined v-model="props.row.materialName" />
                                             </q-popup-edit>
                                         </q-td>
@@ -37,12 +37,18 @@
                                                 <q-input type="textarea" dense outlined v-model="props.row.description" />
                                             </q-popup-edit>
                                         </q-td>
-                                        <q-td key="inventoryCategory" :props="props">
+
+                                        <q-td 
+                                            
+                                            key="inventoryCategory" :props="props"
+                                        >
+                                            {{inventoryCategory}}
                                             <div>{{ props.row.inventoryCategory.label }}</div>
                                              <q-popup-edit v-model="props.row.inventoryCategory" title="Inventory Category" buttons>
                                                 <q-select dense outlined v-model="props.row.inventoryCategory" :options="inventoryCategories" />
                                             </q-popup-edit>
                                         </q-td>
+
                                         <q-td key="qty" :props="props" >
 
                                                 <div class="row">
@@ -187,6 +193,9 @@ export default {
         },
         id: {
             required: true
+        },
+        inventoryCategory: {
+            required: false
         }
     },
     components: {
@@ -247,7 +256,7 @@ export default {
                 {
                     name: "materialName",
                     align: "left",
-                    label: "Material Name",
+                    label: "Activity Name",
                     field: "materialName",
                     sortable: true
                 },
@@ -505,9 +514,16 @@ export default {
         show(val) {
             this.$emit('togglePopup', val)
 
+
+
             if(val) {
                 this.getItemizationLists()
                 this.getUnits()
+
+                if(!this.inventoryCategory) {
+                    this.columns.splice(2, 1)
+                }
+                
             }
         }
     }

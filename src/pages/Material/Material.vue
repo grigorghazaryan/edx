@@ -120,7 +120,7 @@
           </q-tab-panel>
 
           <q-tab-panel name="6" class="q-p-sm">
-            
+            <MaterialTableTitle :title="6" :barInfo="barInfo" />
           </q-tab-panel>
 
 

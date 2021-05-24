@@ -50,8 +50,7 @@ const config = {
     deleteVendorContact: 'https://edxchange-supplier.aimtech.am/api/v1/remove-supplier-contact/',
     filterVendor: 'https://edxchange-supplier.aimtech.am/api/v1/filter-supplier?search=',
 
-    
-    
+
     // Get States
     getStates: 'https://edxchange-school.aimtech.am/api/v1/get-states-list',
 

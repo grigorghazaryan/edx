@@ -35,7 +35,7 @@
       <q-select
         @input="filterInventory"
         class="q-mr-md"
-        style="min-width: 300px; max-width: 300px"
+        style="min-width: 250px; max-width: 250px"
         dense
         outlines
         label="Category"
@@ -44,6 +44,21 @@
       >
         <template v-if="filterCategoryValue" v-slot:append>
           <q-icon name="cancel" @click.stop="filterCategoryValue = '', filterInventory()" class="cursor-pointer" />
+        </template>
+      </q-select>
+
+      <q-select
+        @input="filterInventory"
+        class="q-mr-md"
+        style="min-width: 250px; max-width: 250px"
+        dense
+        outlines
+        label="Campus"
+        :options="campusOptions"
+        v-model="filterCampusValue"
+      >
+        <template v-if="filterCampusValue" v-slot:append>
+          <q-icon name="cancel" @click.stop="filterCampusValue = '', filterInventory()" class="cursor-pointer" />
         </template>
       </q-select>
 
@@ -158,6 +173,10 @@
             <div v-if="props.row.needs_review">
                 <q-icon name="fiber_new" style="font-size: 1.5rem" class="edx-red" />
                 <q-tooltip content-class="edx-tooltip">New</q-tooltip>
+            </div>
+            <div v-if="props.row.isTransition">
+                <q-icon name="local_shipping" style="font-size: 1.5rem" class="edx-yellow" />
+                <q-tooltip content-class="edx-tooltip">Transfered</q-tooltip>
             </div>
         </q-td>
 
@@ -651,6 +670,7 @@ export default {
             optionsSupplier: [],
             optionsSupplierForFilter: [],
             optionsIdentifier: [],
+            campusOptions: [],
 
 
 
@@ -748,6 +768,7 @@ export default {
 
         filter: '',
         filterCategoryValue: '',
+        filterCampusValue: '',
         filterVendor: '',
         filterCondition: '',
         filterStatus: '',
@@ -813,7 +834,16 @@ export default {
         openAddPopup() {
             this.showPopup = true
             this.isEdit = false
-            this.editedItem = {}
+            this.editedItem = {
+                status_uni: {
+                    id: null,
+                    label: 'N/A'
+                },
+                condition: {
+                    id: null,
+                    label: 'N/A'
+                }
+            }
         },
         openEditPopup(row) {
             this.showPopup = true
@@ -968,6 +998,34 @@ export default {
                 const needle = val.toLowerCase()
                 this.optionsSchool = this.optionsSchoolForFilter.filter(v =>   v.label.toLowerCase().indexOf(needle) > -1)
                 }
+            })
+        },
+        getcategories() {
+
+            const conf = {
+                method: 'GET',
+                url: config.getAllCategories,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+
+                console.log(res.data.categories, 'res.data.categories')
+                let categories = res.data.categories
+                let arr = []
+
+                for(let i=0; i<categories.length; i++) {
+                    console.log(categories[i])
+
+                    arr.push({
+                        id: categories[i].id,
+                        label: categories[i].name
+                    })
+                }
+
+                this.optionsCategory = arr
             })
         },
 
@@ -1381,6 +1439,7 @@ export default {
             })
         },
         filterInventory() {
+
         this.loading = true
         console.log('filterInventory')
 
@@ -1406,6 +1465,11 @@ export default {
             uri += '&status=' + this.filterStatus.id
         }
 
+        if(this.filterCampusValue != '') {
+            uri += '&campus=' + this.filterCampusValue.id
+
+        }
+
         console.log('URI', uri)
 
         const conf = {
@@ -1429,12 +1493,120 @@ export default {
             this.loading = false
         });
 
-        }
+        },
+        getCampusBySchoolId(id) {
+            
+
+            let arr = []
+            const conf = {
+                method: 'GET',
+                url: config.getCampuses + id,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+                let campuses = res.data[0].campus
+                if(campuses.length) {
+                    for(let i=0; i<campuses.length; i++) {
+                        arr.push({
+                            id: campuses[i].id,
+                            label: campuses[i].name
+                        })
+                    }
+                }
+                
+                this.campusOptions = arr
+            })
+        },
+                getAdditionalInfo(type) {
+
+            const conf = {
+                method: 'GET',
+                url: config.getAdditionalInfoForInventory + '/' + type,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+
+                let conditionsArr = []
+                for(let i=0; i<res.data.conditions.length; i++) {
+                    let obj = {
+                        id: res.data.conditions[i].id,
+                        label: res.data.conditions[i].condition_name
+                    }
+                    conditionsArr.push(obj)
+                }
+                this.optionsCondition = conditionsArr
+                console.log('CONDITION ARR =',this.optionsCondition  )
+
+
+                // Status
+                let statusArr = []
+                for(let i=0; i<res.data.status.length; i++) {
+                    let obj = {
+                        id: res.data.status[i].id,
+                        label: res.data.status[i].status_name
+                    }
+                    statusArr.push(obj)
+                }
+                this.optionsStatus = statusArr
+
+
+                // Category
+                let categoryArr = []
+                for(let i=0; i<res.data.categories.length; i++) {
+                    let label = res.data.categories[i].category.name ? res.data.categories[i].category.name : ''
+                    let obj = {
+                        id: res.data.categories[i].category?.id,
+                        label: res.data.categories[i].category?.name,
+                        value: res.data.categories[i].category?.id
+                    }
+                    categoryArr.push(obj)
+                }
+                this.optionsCategory = categoryArr
+                this.optionsCategoryForFilter = categoryArr
+
+
+                // Supplier
+                let supplierArr = []
+                for(let i=0; i<res.data.suppliers.length; i++) {
+                    let label = res.data.suppliers[i].short_name ? res.data.suppliers[i].short_name : ''
+                    let obj = {
+                        id: res.data.suppliers[i]?.id,
+                        label: label,
+                        value: res.data.suppliers[i]?.id
+                    }
+                    supplierArr.push(obj)
+                }
+                this.optionsSupplier = supplierArr
+                this.optionsSupplierForFilter = supplierArr
+
+                // Identifications
+                let identArr = []
+                for(let i=0; i<res.data.identifications.length; i++) {
+                    let obj = {
+                        id: res.data.identifications[i].id,
+                        label: res.data.identifications[i].identifcation_name
+                    }
+                    identArr.push(obj)
+                }
+                this.optionsIdentifier = identArr
+
+
+            })
+        },
 
     },
     created() {
         this.tab = this.type
         this.getInventoryByType( parseInt(this.tab), this.$route.params.id, this.count, this.current )
+        this.getcategories()
+        this.getCampusBySchoolId(this.$route.params.id)
+        this.getAdditionalInfo(this.tab)
     },
     computed: {
         // BUTTONS

@@ -495,7 +495,7 @@
                                     <q-td key="hourlyOverride" :props="props">
                                         <div class="row justify-end">
                                            
-                                            <q-checkbox v-model="props.row.isHourlyOverride" />
+                                            <q-checkbox @input="changeHourlyOverrideToZero" v-model="props.row.isHourlyOverride" />
                                             <q-input
                                                 :disable="!props.row.isHourlyOverride" 
                                                 :filled="!props.row.isHourlyOverride" 
@@ -515,7 +515,7 @@
                     <q-separator class="q-mt-lg q-mb-lg" />
 
                     <div class="col-md-3 q-pl-md">
-                        <q-btn @click="paySchedule" color="primary q-mt-lg">
+                        <q-btn @click="paySchedule" color="edx-pagination q-mt-lg">
                             View pay schedule
                         </q-btn>
                     </div>
@@ -1515,6 +1515,9 @@ export default {
                     { id: 7, name: 'S', hours: null, checked: false }
                 ]
             }
+        },
+        changeHourlyOverrideToZero() {
+            this.monthlyDetails[0].hourlyOverride = 0
         }
     },
     watch: {
@@ -1542,7 +1545,7 @@ export default {
         // },
         totalH() {
             this.calculateBusinessDays()
-        }
+        },
     },
     created() {
 

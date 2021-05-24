@@ -513,7 +513,10 @@
                                     {{ editedItem.qtyOptions.label }}
                                 </div>
 
-                                <q-input class="q-mb-md" outlined type="text" v-model="editedItem.quantity" dense autofocus />
+                                <!-- <q-input class="q-mb-md" outlined type="text" v-model="editedItem.quantity" dense autofocus /> -->
+                                <div class="h-popup w-100">
+                                     {{editedItem.quantity}}
+                                </div>
 
 
                                 <q-popup-edit v-model="editedItem.quantity" title="Update Quantity" buttons>

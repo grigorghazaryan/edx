@@ -272,10 +272,10 @@
             <div v-if="i.allocationFundTemplateId">
 
               <div class="text-subtitle2 q-mb-sm">{{ i.edxName }} </div>
-
+{{i.allocationFundTemplateId}}
               <div v-if=" i.isInput == '1' ">
                 
-
+                
                 <q-input
                   prefix="$"
                   v-model="i.amount"
@@ -612,14 +612,14 @@ export default {
       },
       changePagination (val) {
 
-        console.log('change pagination')
+        // console.log('change pagination')
         this.current = val
         this.getAllocationByType(1, this.count, val)
 
       },
       changeRowsPerPage() {
 
-        console.log('changeRowsPerPage')
+        // console.log('changeRowsPerPage')
 
         this.count = this.pagination.rowsPerPage
         this.current = 1
@@ -879,20 +879,25 @@ export default {
 
     calculateAllocations(i, arr) {
 
-      console.log(i)
 
       let isInputArr = [],
           ruleInputArr = [],
           isPercentageArr = [];
 
-      for(const i in arr) {
+      for(let i in arr) {
         if(arr[i].allocationFundTemplateId) {
 
           if(arr[i].isInput == '1') {
+            if(arr[i].amount == '') {
+              arr[i].amount = 0
+            }
             isInputArr.push(arr[i])
           }
 
           if(arr[i].is_percentage == '1') {
+            if(arr[i].percentage == '') {
+              arr[i].percentage = 0
+            }
             isPercentageArr.push(arr[i])
           }
 
@@ -913,8 +918,8 @@ export default {
 
           if(finalArr[i].is_percentage == '1') {
 
-            console.log('self', finalArr[i])
-            console.log('Percentage: ', finalArr[i].percentage)
+            // console.log('self', finalArr[i])
+            // console.log('Percentage: ', finalArr[i].percentage)
 
             let count = 0;
             let id = finalArr[i].rule_input[0]
@@ -927,9 +932,6 @@ export default {
 
           setTimeout(()=>{
 
-
-            console.log('asdasdasdasdasdasdasdasdasd')
-
             if(finalArr[i].rule_input && finalArr[i].rule_input.length > 1) {
 
               let amountArr = [];
@@ -937,28 +939,27 @@ export default {
 
               for(let j=0; j<finalArr[i].rule_input.length; j++) {
                 let item = finalArr.filter(x => x.allocationFundTemplateId == finalArr[i].rule_input[j]);
-                console.log(item[0], parseFloat(item[0].amount), 'itemsssssss=======')
                 amountArr.push( parseFloat(item[0].amount) )
+                console.log('====', parseFloat(item[0].amount))
               }
-
-
-              console.log('is_addition', amountArr)
 
               if(finalArr[i].is_addition == '1') {
                 // ++++ is_addition
                 count = amountArr.reduce((a, b) => parseFloat(a) + parseFloat(b), 0)
-                console.log('+++++', amountArr, count)
+                // console.log('+++++', amountArr, count)
               }
 
               if(finalArr[i].is_subtraction == '1') {
                 // ----  is_subtraction
                 count = amountArr.reduce((a, b) => parseFloat(a) - parseFloat(b))
-                console.log('-----', amountArr, count)
+                // console.log('-----', amountArr, count)
               }
 
               finalArr[i].amount = count
+              console.log(count, 'count')
 
             }
+
           }, 100)
 
         }

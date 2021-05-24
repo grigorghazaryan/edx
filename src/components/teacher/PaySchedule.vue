@@ -5,7 +5,6 @@
             :title="'Pay Schedule'" 
             @onHide="hidePopup"
             :icon="'attach_money'"
-            :color="'green'"
         >
 
         <q-card-section style="max-height: 60vh" class="scroll q-pt-none q-pb-none q-pr-none q-pl-none">
@@ -38,13 +37,15 @@
                 </div>
 
                 <div class="col-md-12 q-mt-md">
+
+        
                                         
                     <q-table
                         :data="data" 
                         :columns="columns"
                         hide-bottom
                         :pagination.sync="pagination"
-                        class="overflow-auto my-sticky-column-table"
+                        class="overflow-auto"
                     >
                         <!-- Table Body -->
                         <template v-slot:body="props">
@@ -55,6 +56,7 @@
                                 <q-td key="date" :props="props">
                                     {{props.row.date}}
                                 </q-td>
+
                                 <q-td key="category" :props="props">
                                     
                                     <q-chip 
@@ -71,6 +73,7 @@
                                     </q-chip>
 
                                 </q-td>
+
                                 <q-td key="amount" :props="props">
                                     $ {{props.row.amount}}
                                 </q-td>
@@ -101,6 +104,7 @@ import DialogDraggable from '../DialogDraggable.vue';
 export default {
     name: 'PaySchedule',
     props: {
+
         show : {
             required : true,
             default: false
@@ -111,7 +115,6 @@ export default {
         startDate : { required : false, default: '01/01/2020' },
         endDate : { required : false, default: '01/01/2020' },
         hourlyFringe: { required: false, default: 0 },
-        
 
         selectedWeekDays: { required: false, default: [] },
 
@@ -191,8 +194,6 @@ export default {
 
                 let dates = this.dateRange(this.startDate, this.endDate)
                 let selectedWeekDays = this.selectedWeekDays
-                console.log('selectedWeekDays', selectedWeekDays)
-                console.log('dates', dates)
 
                 for(let i=0; i<dates.length; i++) {
 
