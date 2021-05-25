@@ -1,5 +1,6 @@
 <template>
     <div>
+
         <dialog-draggable 
             :width="800" 
             :modelDialog="showPopup" 
@@ -28,7 +29,7 @@
                                     dense
                                     outlined
                                     rows="2"
-                                    v-model="editedData.note"
+                                    v-model="editedData.description"
                                 />
                             </div>
 
@@ -85,9 +86,11 @@
                                 </div>
                             </div>
 
+                          
+
                              <div class="q-mb-md">
                                 <div class="row">
-                                    <div v-if="editedData.identification_uni" class="col-md-5 q-pr-sm">
+                                    <div class="col-md-5 q-pr-sm">
                                         <div class="text-subtitle2 q-mb-sm">Identifier</div>  
                                         <q-select
                                             dense
@@ -140,7 +143,7 @@
                                         <div class="text-subtitle2 q-mb-sm">Purchase Date</div>
                                         <q-input v-model="editedData.purchase_date" dense outlined />
                                         <q-popup-proxy>
-                                            <q-date color="edx-pagination" v-model="editedData.purchase_date" mask="YYYY-MM-DD">
+                                            <q-date color="edx-pagination" v-model="editedData.purchase_date" mask="MM-DD-YYYY">
                                                 <div class="row items-center justify-end q-gutter-sm">
                                                 <q-btn label="Cancel" color="primary" flat v-close-popup />
                                                 <q-btn label="OK" color="primary" flat v-close-popup />
@@ -421,6 +424,7 @@
                                     <div class="q-mb-md">
                                         <div class="row">
                                             <div class="col-md-12">
+                                                pp
                                                     <div class="text-subtitle2 q-mb-sm">Location within school</div> 
                                                     <q-input dense outlined v-model="editedData.location" />
                                             </div>
@@ -453,17 +457,13 @@
                                 <div v-else>
                                     <div class="q-mb-md">
                                         <div class="row">
-                                            <div class="col-md-4 q-pr-sm" v-if="editedData.status_uni">
+                                            <div class="col-md-4 q-pr-sm">
                                                 <div class="text-subtitle2 q-mb-sm">Status Date</div>
                                                 
-                                                <q-input 
-                                                    :disabled="editedData.status_uni.label == 'On Premise'" 
-                                                    :readonly="editedData.status_uni.label == 'On Premise'"
-                                                    v-model="editedData.relocation_date" dense outlined
-                                                />
+                                                <q-input v-model="editedData.transition_date" dense outlined />
 
-                                                <q-popup-proxy v-if="editedData.status_uni.label != 'On Premise'">
-                                                    <q-date color="edx-pagination" :disabled="editedData.status_uni.label == 'On Premise'" v-model="editedData.relocation_date" mask="YYYY-MM-DD">
+                                                <q-popup-proxy>
+                                                    <q-date color="edx-pagination" v-model="editedData.transition_date" mask="MM-DD-YYYY">
                                                         <div class="row items-center justify-end q-gutter-sm">
                                                         <q-btn label="Cancel" color="primary" flat v-close-popup />
                                                         <q-btn label="OK" color="primary" flat v-close-popup />
@@ -475,7 +475,7 @@
                                                 <div class="text-subtitle2 q-mb-sm">Show Until</div>
                                                 <q-input v-model="editedData.visibility_date" dense outlined />
                                                 <q-popup-proxy>
-                                                    <q-date color="edx-pagination" v-model="editedData.visibility_date" mask="YYYY-MM-DD">
+                                                    <q-date color="edx-pagination" v-model="editedData.visibility_date" mask="MM-DD-YYYY">
                                                         <div class="row items-center justify-end q-gutter-sm">
                                                         <q-btn label="Cancel" color="primary" flat v-close-popup />
                                                         <q-btn label="OK" color="primary" flat v-close-popup />
@@ -533,7 +533,7 @@
         <!-- ############################ -->
         <!-- STATUS POPUPS -->
 
-        <dialog-draggable :icon="'emoji_transportation'" :width="500" :modelDialog="onpremise" :title=" 'On Premise' " @onHide="onpremise=false">
+        <dialog-draggable v-if="isEdit" :icon="'emoji_transportation'" :width="500" :modelDialog="onpremise" :title=" 'On Premise' " @onHide="onpremise=false">
             <q-card>
                 
             <q-toolbar>
@@ -562,7 +562,7 @@
                     dense 
                     v-model="statusChangeObject.quantity" 
                     :disable="editedData.quantity <= 1" 
-                    :rules="[ val => val <= editedData.quantity || 'Number cant be more than ' + editedData.quantity]"
+                    :rules="[ isEdit && (val => val <= editedData.quantity || 'Number cant be more than ' + editedData.quantity)]"
                     />
                 </div>
 
@@ -642,7 +642,7 @@
             </q-card>
         </dialog-draggable>
 
-        <dialog-draggable :icon="'shop'" :width="700" :modelDialog="offpremise" :title=" 'Checked Out' " @onHide="offpremise=false">
+        <dialog-draggable  v-if="isEdit" :icon="'shop'" :width="700" :modelDialog="offpremise" :title=" 'Checked Out' " @onHide="offpremise=false">
             <q-card>
                 
                 <q-toolbar>
@@ -671,7 +671,7 @@
                         dense 
                         v-model="statusChangeObject.quantity" 
                         :disable="editedData.quantity <= 1" 
-                        :rules="[ val => val <= editedData.quantity || 'Number cant be more than ' + editedData.quantity]"
+                        :rules="[ isEdit && (val => val <= editedData.quantity || 'Number cant be more than ' + editedData.quantity)]"
                         />
                     </div>
 
@@ -751,7 +751,7 @@
             </q-card>
         </dialog-draggable>
 
-        <dialog-draggable :icon="'recyclingd'" :width="700" :modelDialog="disposed" :title=" 'Disposed' " @onHide="disposed=false">
+        <dialog-draggable  v-if="isEdit" :icon="'recyclingd'" :width="700" :modelDialog="disposed" :title=" 'Disposed' " @onHide="disposed=false">
             <q-card>
                 <q-toolbar>
 
@@ -779,7 +779,7 @@
                         dense 
                         v-model="statusChangeObject.quantity" 
                         :disable="editedData.quantity <= 1" 
-                        :rules="[ val => val <= editedData.quantity || 'Number cant be more than ' + editedData.quantity]"
+                        :rules="[ isEdit && (val => val <= editedData.quantity || 'Number cant be more than ' + editedData.quantity)]"
                         />
                     </div>
 
@@ -804,7 +804,7 @@
                         <template v-slot:append>
                             <q-icon name="event" class="cursor-pointer">
                             <q-popup-proxy transition-show="scale" transition-hide="scale">
-                            <q-date color="edx-pagination" v-model="statusChangeObject.showUntil" mask="YYYY-MM-DD">
+                            <q-date color="edx-pagination" v-model="statusChangeObject.showUntil" mask="MM-DD-YYYY">
                                 <div class="row items-center justify-end q-gutter-sm">
                                 <q-btn label="Cancel" color="primary" flat v-close-popup />
                                 <q-btn label="OK" color="primary" flat v-close-popup />
@@ -876,7 +876,7 @@
             </q-card>
         </dialog-draggable>
 
-        <dialog-draggable :icon="'wrong_location'" :width="700" :modelDialog="lost" :title=" 'Lost' " @onHide="lost=false">
+        <dialog-draggable  v-if="isEdit" :icon="'wrong_location'" :width="700" :modelDialog="lost" :title=" 'Lost' " @onHide="lost=false">
             <q-card>
             <q-toolbar>
         <!-- 
@@ -904,7 +904,7 @@
                         dense 
                         v-model="statusChangeObject.quantity" 
                         :disable="editedData.quantity <= 1" 
-                        :rules="[ val => val <= editedData.quantity || 'Number cant be more than ' + editedData.quantity]"
+                        :rules="[ isEdit && (val => val <= editedData.quantity || 'Number cant be more than ' + editedData.quantity)]"
                         />
                     </div>
 
@@ -914,7 +914,7 @@
                         <template v-slot:append>
                             <q-icon name="event" class="cursor-pointer">
                             <q-popup-proxy transition-show="scale" transition-hide="scale">
-                            <q-date color="edx-pagination" v-model="statusChangeObject.showUntil" mask="YYYY-MM-DD">
+                            <q-date color="edx-pagination" v-model="statusChangeObject.showUntil" mask="MM-DD-YYYY">
                                 <div class="row items-center justify-end q-gutter-sm">
                                 <q-btn label="Cancel" color="primary" flat v-close-popup />
                                 <q-btn label="OK" color="primary" flat v-close-popup />
@@ -1003,7 +1003,7 @@
             </q-card>
         </dialog-draggable>
 
-        <dialog-draggable :icon="'person_search'" :width="700" :modelDialog="stolen" :title=" 'Stolen' " @onHide="stolen=false">
+        <dialog-draggable  v-if="isEdit" :icon="'person_search'" :width="700" :modelDialog="stolen" :title=" 'Stolen' " @onHide="stolen=false">
                 <q-card>
                 
                 <q-toolbar>
@@ -1035,7 +1035,7 @@
                         dense 
                         v-model="statusChangeObject.quantity" 
                         :disable="editedData.quantity <= 1" 
-                        :rules="[ val => val <= editedData.quantity || 'Number cant be more than ' + editedData.quantity]"
+                        :rules="[ isEdit && (val => val <= editedData.quantity || 'Number cant be more than ' + editedData.quantity)]"
                         />
                     </div>
 
@@ -1045,7 +1045,7 @@
                         <template v-slot:append>
                             <q-icon name="event" class="cursor-pointer">
                             <q-popup-proxy transition-show="scale" transition-hide="scale">
-                            <q-date color="edx-pagination" v-model="statusChangeObject.showUntil" mask="YYYY-MM-DD">
+                            <q-date color="edx-pagination" v-model="statusChangeObject.showUntil" mask="MM-DD-YYYY">
                                 <div class="row items-center justify-end q-gutter-sm">
                                 <q-btn label="Cancel" color="primary" flat v-close-popup />
                                 <q-btn label="OK" color="primary" flat v-close-popup />
@@ -1134,7 +1134,7 @@
                 </q-card>
         </dialog-draggable>
 
-        <dialog-draggable :icon="'local_shipping'" :width="700" :modelDialog="transfered" :title=" 'Transfered' " @onHide="transfered=false">
+        <dialog-draggable  v-if="isEdit" :icon="'local_shipping'" :width="700" :modelDialog="transfered" :title=" 'Transfered' " @onHide="transfered=false">
             <q-card>
                 <q-toolbar>
 
@@ -1162,7 +1162,7 @@
                         dense 
                         v-model="statusChangeObject.quantity" 
                         :disable="editedData.quantity <= 1" 
-                        :rules="[ val => val <= editedData.quantity || 'Number cant be more than ' + editedData.quantity]"
+                        :rules="[ isEdit && (val => val <= editedData.quantity || 'Number cant be more than ' + editedData.quantity)]"
                     />
                     </div>
 
@@ -1212,7 +1212,7 @@
                         <template v-slot:append>
                         <q-icon name="event" class="cursor-pointer">
                             <q-popup-proxy transition-show="scale" transition-hide="scale">
-                            <q-date color="edx-pagination" v-model="statusChangeObject.showUntil" mask="YYYY-MM-DD">
+                            <q-date color="edx-pagination" v-model="statusChangeObject.showUntil" mask="MM-DD-YYYY">
                             <div class="row items-center justify-end q-gutter-sm">
                                 <q-btn label="Cancel" color="primary" flat v-close-popup />
                                 <q-btn label="OK" color="primary" flat v-close-popup />
@@ -1286,7 +1286,7 @@
             </q-card>
         </dialog-draggable>
 
-        <dialog-draggable :icon="'inventory'" :width="700" :modelDialog="stored" :title=" 'Stored' " @onHide="stored=false">
+        <dialog-draggable  v-if="isEdit" :icon="'inventory'" :width="700" :modelDialog="stored" :title=" 'Stored' " @onHide="stored=false">
                 <q-card>
                 <q-toolbar>
 
@@ -1314,7 +1314,7 @@
                         dense 
                         v-model="statusChangeObject.quantity" 
                         :disable="editedData.quantity <= 1" 
-                        :rules="[ val => val <= editedData.quantity || 'Number cant be more than ' + editedData.quantity]"
+                        :rules="[ isEdit && (val => val <= editedData.quantity || 'Number cant be more than ' + editedData.quantity)]"
                         />
                     </div>
 
@@ -1324,7 +1324,7 @@
                         <template v-slot:append>
                             <q-icon name="event" class="cursor-pointer">
                             <q-popup-proxy transition-show="scale" transition-hide="scale">
-                            <q-date color="edx-pagination" v-model="statusChangeObject.showUntil" mask="YYYY-MM-DD">
+                            <q-date color="edx-pagination" v-model="statusChangeObject.showUntil" mask="MM-DD-YYYY">
                                 <div class="row items-center justify-end q-gutter-sm">
                                 <q-btn label="Cancel" color="primary" flat v-close-popup />
                                 <q-btn label="OK" color="primary" flat v-close-popup />
@@ -1767,7 +1767,6 @@ export default {
 
         editInventory() {
 
-            
         
             const updateData = {
                 school_id: this.editedData.school_id,
@@ -1789,7 +1788,12 @@ export default {
                 visibility_date : this.editedData.visibility_date,
 
                 transition_date : this.editedData.relocation_date,
-                transition_information_note :  this.editedData.transition_information_note
+                transition_information_note :  this.editedData.transition_information_note,
+
+
+                sticker_range_start: this.editedData.sticker_range_start,
+                sticker_range_end: this.editedData.sticker_range_end,
+                description: this.editedData.description,
             }
 
             const modifyData = {
@@ -1807,6 +1811,7 @@ export default {
                 allocation_type_id: this.allocationSelected.id,
                 school_id: this.statusChangeObject.schoolToTransfer && this.statusChangeObject.schoolToTransfer.id,
                 purchase_date: this.editedData.purchase_date,
+                description: this.editedData.description,
 
             }
 

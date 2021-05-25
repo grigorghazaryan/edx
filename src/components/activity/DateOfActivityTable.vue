@@ -57,8 +57,7 @@
                             content: props.row.note,
                             placement: 'top-center',
                             classes: ['info'],
-                            targetClasses: ['it-has-a-tooltip'],
-                            offset: 19,
+                            offset: 20,
                         }"
                     >
                     </q-icon>
@@ -174,6 +173,7 @@ export default {
 
 .tooltip {
   &.info {
+
     $color: rgba(#004499, .9);
 
     .tooltip-inner {
@@ -183,11 +183,13 @@ export default {
       border-radius: 5px;
       box-shadow: 0 5px 30px rgba(black, .1);
       max-width: 250px;
+      z-index: 9999999999 !important;
     }
 
     .tooltip-arrow {
       border-color: $color;
     }
+    
   }
 }
 

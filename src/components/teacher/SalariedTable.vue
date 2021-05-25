@@ -65,7 +65,7 @@
                         <template v-slot:prepend>
                         <q-icon name="event" class="cursor-pointer">
                             <q-popup-proxy transition-show="scale" transition-hide="scale">
-                            <q-date color="edx-pagination" v-model="editedItem.date" mask="YYYY-MM-DD">
+                            <q-date color="edx-pagination" v-model="editedItem.date" mask="MM-DD-YYYY">
                                 <div class="row items-center justify-end">
                                 <q-btn v-close-popup label="Close" color="primary" flat />
                                 </div>
