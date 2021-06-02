@@ -841,6 +841,8 @@ export default {
             
             const data = {
 
+                token: localStorage.getItem('access-token'),
+
                 number: this.internalInvoiceData[0].internalInvoice,
                 
                 invoice_term_id: this.internalInvoiceData[0].terms?.id,
@@ -927,7 +929,8 @@ export default {
                 },
                 budgetItems: [
                     { id: 1, reconciliation_amount: 9000 }
-                ]
+                ],
+                token: localStorage.getItem('access-token'),
             }
 
             let budgetItems = []

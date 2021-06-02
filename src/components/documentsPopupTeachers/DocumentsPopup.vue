@@ -213,7 +213,8 @@ export default {
                     Accept: 'application/json',
                 },
                 data: {
-                    note: this.note
+                    note: this.note,
+                    token: localStorage.getItem('access-token'),
                 }
             }
 

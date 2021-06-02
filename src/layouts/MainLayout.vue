@@ -35,7 +35,7 @@
             </q-btn>
 
 
-            <q-btn-dropdown label="luke skywalker">
+            <q-btn-dropdown label="Name">
               <q-list>
                 
                 <q-item clickable v-close-popup to="/Profile">
@@ -44,7 +44,7 @@
                   </q-item-section>
                 </q-item>
 
-                <q-item clickable v-close-popup>
+                <q-item @click="logout" clickable v-close-popup>
                   <q-item-section>
                     <q-item-label>Logout</q-item-label>
                   </q-item-section>
@@ -80,7 +80,7 @@
 
           <!-- MANAGEMENT -->
 
-          <q-expansion-item v-if="!miniState"
+          <q-expansion-item v-if="!miniState && !isAdmin && !isUser"
             icon="settings"
             label="Management"
           >
@@ -130,7 +130,7 @@
             </q-list>
           </q-expansion-item>
 
-          <q-item v-else active-class="q-item-no-link-highlighting">
+          <q-item v-if="miniState && !isAdmin" active-class="q-item-no-link-highlighting">
             <q-item-section avatar>
               <q-icon name="settings"/>
             </q-item-section>
@@ -188,7 +188,7 @@
 
           <!-- ADMINISTRATION -->
 
-          <q-expansion-item v-if="!miniState"
+          <q-expansion-item v-if="!miniState && !isAdmin && !isUser"
             icon="admin_panel_settings"
             label="Administration"
           >
@@ -215,7 +215,7 @@
             </q-list>
           </q-expansion-item>
 
-          <q-item v-else active-class="q-item-no-link-highlighting">
+          <q-item v-if="miniState && !isAdmin" active-class="q-item-no-link-highlighting">
             <q-item-section avatar>
               <q-icon name="admin_panel_settings"/>
             </q-item-section>
@@ -256,7 +256,7 @@
             icon="account_balance"
             label="Allocations"
             class="menu-parent"
-            v-if="!miniState"
+            v-if="!miniState && !isAdmin && !isUser"
           >
             <q-list class="bg-sidebar-opened edx-menu-toggle">
               <q-item to="/Allocations/Title1" 
@@ -316,7 +316,7 @@
             </q-list>
           </q-expansion-item>
 
-          <q-item v-else active-class="q-item-no-link-highlighting">
+          <q-item v-if="miniState && !isAdmin && !isUser" active-class="q-item-no-link-highlighting">
             <q-item-section avatar>
               <q-icon name="account_balance"/>
             </q-item-section>
@@ -483,7 +483,7 @@
                   <q-icon name="dvr"/>
                 </q-item-section>
                 <q-item-section>
-                  <q-item-label>License</q-item-label>
+                  <q-item-label>Licence & Subscription</q-item-label>
                 </q-item-section>
               </q-item>
             </q-list>
@@ -515,7 +515,7 @@
                     <q-icon name="dvr"/>
                   </q-item-section>
                   <q-item-section>
-                    <q-item-label>License</q-item-label>
+                    <q-item-label>Licence & Subscription</q-item-label>
                   </q-item-section>
                 </q-item>
               </q-list>
@@ -578,7 +578,7 @@
               </q-item>
             </q-list>
 
-            <q-list class="bg-sidebar-opened edx-menu-toggle">
+            <q-list v-if="!isAdmin" class="bg-sidebar-opened edx-menu-toggle">
               <q-item to="/Teacher Assignments" 
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
@@ -636,7 +636,7 @@
                     <q-item-label>Instructional Services</q-item-label>
                   </q-item-section>
                 </q-item>
-                <q-item clickable  v-close-popup to="/Teacher Assignments"  active-class="q-item-no-link-highlighting">
+                <q-item v-if="!isAdmin" clickable  v-close-popup to="/Teacher Assignments"  active-class="q-item-no-link-highlighting">
                   <q-item-section avatar>
                     <q-icon name="account_balance"/>
                   </q-item-section>
@@ -649,9 +649,10 @@
           </q-item>
 
 
+
           <!-- BILLING & EXPENSES -->
 
-          <q-expansion-item v-if="!miniState"
+          <q-expansion-item v-if="!miniState && !isUser"
             icon="monetization_on"
             label="Billing & Expenses"
           >
@@ -682,7 +683,7 @@
 
           </q-expansion-item>
 
-          <q-item v-else active-class="q-item-no-link-highlighting">
+          <q-item v-if="miniState && !isUser" active-class="q-item-no-link-highlighting">
             <q-item-section avatar>
               <q-icon name="monetization_on"/>
             </q-item-section>
@@ -720,7 +721,7 @@
 
           <!-- REIMBURSEMENT -->
 
-          <q-expansion-item v-if="!miniState"
+          <q-expansion-item v-if="!miniState && !isUser"
             icon="credit_card"
             label="Reimbursement"
           >
@@ -746,7 +747,7 @@
             </q-list>
           </q-expansion-item>
 
-          <q-item v-else active-class="q-item-no-link-highlighting">
+          <q-item v-if="miniState && !isUser" active-class="q-item-no-link-highlighting">
             <q-item-section avatar>
               <q-icon name="credit_card"/>
             </q-item-section>
@@ -777,7 +778,7 @@
 
           <!-- TRACKING -->
 
-          <q-expansion-item v-if="!miniState"
+          <q-expansion-item v-if="!miniState && !isUser"
             icon="published_with_changes"
             label="Tracking"
           >
@@ -796,7 +797,7 @@
 
           </q-expansion-item>
 
-          <q-item v-else active-class="q-item-no-link-highlighting">
+          <q-item v-if="miniState && !isUser" active-class="q-item-no-link-highlighting">
             <q-item-section avatar>
               <q-icon name="published_with_changes"/>
             </q-item-section>
@@ -822,8 +823,7 @@
           </q-item>
 
           <!-- REPORTING -->
-
-          <q-expansion-item v-if="!miniState"
+          <q-expansion-item v-if="!miniState && !isUser"
             icon="leaderboard"
             label="Reporting"
           >
@@ -888,7 +888,7 @@
             </q-list>
           </q-expansion-item>
 
-          <q-item v-else active-class="q-item-no-link-highlighting">
+          <q-item v-if="miniState && !isUser" active-class="q-item-no-link-highlighting">
             <q-item-section avatar>
               <q-icon name="leaderboard"/>
             </q-item-section>
@@ -959,7 +959,7 @@
           <!-- ################# -->
           <!-- ################# -->
           
-          <hr v-if="!miniState">
+          <!-- <hr v-if="!miniState">
 
           <q-expansion-item v-if="!miniState"
             icon="developer_mode"
@@ -983,7 +983,7 @@
                 </q-item-section>
               </q-item>
             </q-list>
-          </q-expansion-item>
+          </q-expansion-item> -->
         
           </q-list>
         </q-scroll-area>
@@ -1026,6 +1026,32 @@ export default {
     }
   },
 
+  computed: {
+
+    isSuperAdmin() {
+      let role = localStorage.getItem('role')
+
+      if(role == 'super_admin') {
+        return true
+      }else { return false }
+    },
+
+    isAdmin() {
+      let role = localStorage.getItem('role')
+      if(role == 'admin') {
+        return true
+      }else { return false }
+    },
+
+    isUser() {
+      let role = localStorage.getItem('role')
+      if(role == 'user') {
+        return true
+      }else { return false }
+    }
+
+  },
+
   methods: {
     drawerClick (e) {
       if(this.miniState) {
@@ -1034,10 +1060,22 @@ export default {
     },
     setMiniState() {
       this.miniState = !this.miniState
+    },
+
+    logout() {
+
+      localStorage.removeItem('user-info')
+      localStorage.removeItem('access-token')
+      localStorage.removeItem('role')
+
+      this.$router.push('/Login-1')
+      
     }
   },
 
   created() {
+    let role = localStorage.getItem('role')
+      console.log(role, 'role ====')
     this.miniState = JSON.parse( localStorage.getItem('miniState') )
   },
 

@@ -337,6 +337,7 @@ export default {
         addContact() {
 
             let data = {
+                token: localStorage.getItem('access-token'),
                 first_name: this.contacts.first_name,
                 last_name: this.contacts.last_name,
                 title: this.contacts.title,
@@ -384,6 +385,7 @@ export default {
         editContact() {
 
             let data = {
+                token: localStorage.getItem('access-token'),
                 first_name: this.contacts.first_name,
                 last_name: this.contacts.last_name,
                 title: this.contacts.title,

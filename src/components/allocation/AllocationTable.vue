@@ -72,7 +72,7 @@
           class="q-mr-md edx-add-btn"
           text-color="white"
           icon="add"
-          @click="openAllocationModal(data[0], 0)"
+          @click="isEditAllocation=false, openAllocationModal(data[0], 0)"
           no-caps
           >Add</q-btn
         >
@@ -155,7 +155,7 @@
           <!-- ########## -->
 
           <q-td key="status" :props="props">
-            <q-chip square class="cursor-pointer edx-bg-final">
+            <q-chip square class="cursor-pointer edx-white" :class="props.row.status.id == 1 ? 'edx-bg-green' : 'edx-delete-btn' ">
               {{props.row.status.abbr}}
 
               <q-tooltip
@@ -218,6 +218,7 @@
           </div>
         </div>
       </template>
+
     </q-table>
 
     <dialog-draggable
@@ -226,7 +227,6 @@
       :title="'Allocation'"
       @onHide="showAllocationModal=false"
       :icon="'text_format'"
-      :color="'green'"
     >
       <q-card-section style="max-height: 70vh" class="scroll">
         <div class="row">
@@ -267,15 +267,17 @@
             v-for="i in editedItem"
             :key="i.edxName"
             class="q-mb-md col-md-4 q-pr-lg"
+            
           >
 
             <div v-if="i.allocationFundTemplateId">
 
               <div class="text-subtitle2 q-mb-sm">{{ i.edxName }} </div>
-{{i.allocationFundTemplateId}}
+              
+              <!-- {{i.allocationFundTemplateId}} -->
+              
               <div v-if=" i.isInput == '1' ">
-                
-                
+                    
                 <q-input
                   prefix="$"
                   v-model="i.amount"
@@ -286,7 +288,36 @@
 
               </div>
 
-              <div v-if=" i.is_percentage == '1' ">
+              <div v-if=" i.is_percentage == '1' && i.additionalCheck == '0' ">
+
+                <q-input
+                  prefix="$"
+                  v-model="i.amount"
+                  outlined
+                  dense
+                  readonly
+                  class="q-mb-sm"
+                  
+                />
+                <q-input
+                  prefix="%"
+                  v-model="i.percentage"
+                  
+                  outlined
+                  dense
+                  @input="calculateAllocations(i, editedItem)"
+                  type="number"
+                  :hint="`Min ${i.min_percentage}%, Max ${i.max_percentage}%`"
+                  :rules="[ 
+                    val => val >= i.min_percentage || `Min ${i.min_percentage}%`,
+                    val => val <= i.max_percentage || `Max ${i.max_percentage}%`
+                  ]"
+                />
+
+              </div>
+
+              <div v-if=" i.is_percentage == '1' && i.additionalCheck == '1' ">
+
                 <q-input
                   prefix="$"
                   v-model="i.amount"
@@ -300,12 +331,20 @@
                   v-model="i.percentage"
                   outlined
                   dense
+                  
                   @input="calculateAllocations(i, editedItem)"
+                  type="number"
+                  :hint="`Min ${i.min_percentage}%, Max ${i.max_percentage}%`"
+                  :rules="[ 
+                    val => val >= i.min_percentage || `Min ${i.min_percentage}%`,
+                    val => val <= i.max_percentage || `Max ${i.max_percentage}%`
+                  ]"
                 />
+
               </div>
 
-              <div v-if="i.rule_input && i.rule_input.length > 1 && i.isInput != '1'">
-                
+              <div v-if="i.rule_input && i.rule_input.length > 1 && i.isInput != '1' && i.additionalCheck != '1'">
+              
                 <q-input
                   prefix="$"
                   v-model="i.amount"
@@ -321,7 +360,7 @@
 
           <div class="col-md-12">
             <div class="text-subtitle2 q-mb-sm">Note</div>
-            <q-input outlined v-model="editedItem.note" dense type="textarea" />
+            <q-input ref="r" outlined v-model="editedItem.note" dense type="textarea" />
           </div>
         </div>
       </q-card-section>
@@ -330,17 +369,21 @@
         <div>
           <q-btn flat label="Cancel" color="primary" v-close-popup></q-btn>
           <q-btn
+            :disable='validate'
             v-if="!isEditAllocation"
             flat
             label="Confirm"
             color="primary"
             @click="editAllocation"
+            :loading="btnLoading"
           ></q-btn>
           <q-btn
+            :disable='validate'
             v-else
             flat
             label="Save"
             color="primary"
+            :loading="btnLoading"
             @click="editAllocation"
           ></q-btn>
         </div>
@@ -393,6 +436,7 @@ export default {
     data() {
         return {
           titleId: 1,
+          btnLoading: false,
           //
           confirm: false,
           loading: false,
@@ -509,68 +553,7 @@ export default {
         };
     },
     methods: {
-      addRow() {
 
-          let pdPercentage = this.editedItem.pdPercentage,
-              totalInstruction = this.editedItem.totalInstruction,
-              totalInstructionFinal = this.editedItem.totalInstructionFinal,
-              instruction,
-              profDev,
-              total,
-              familyEngagemenetEstimated = this.editedItem.familyEngagemenet,
-              familyEngagemenetFinal = this.editedItem.familyEngagemenetFinal;
-
-              // Professional development
-              let p_percentage = parseFloat(pdPercentage) / 100;
-              if (this.editedItem.allocation) {
-              profDev = (parseFloat(totalInstructionFinal) * p_percentage).toFixed(2);
-              } else {
-              profDev = (parseFloat(totalInstruction) * p_percentage).toFixed(2);
-              }
-
-              // instruction
-              let i_percentage = ( 100 - parseFloat(pdPercentage) ) / 100
-              if (this.editedItem.allocation) {
-              instruction = ( parseFloat(totalInstructionFinal) * i_percentage ).toFixed(2);
-              } else {
-              instruction = ( parseFloat(totalInstruction) * i_percentage ).toFixed(2);
-              }
-
-              // Total
-              if (this.editedItem.allocation) {
-              total = ( parseFloat(totalInstructionFinal) + parseFloat(familyEngagemenetFinal)  ).toFixed(2);
-              } else {
-              total = ( parseFloat(totalInstruction) + parseFloat(familyEngagemenetEstimated)   ).toFixed(2);
-              }
-
-          let obj = {
-          date: this.editedItem.date,
-          school: this.editedItem.school,
-          instruction: instruction,
-          profDev: profDev,
-
-          totalInstruction: totalInstruction,
-          familyEngagemenet: familyEngagemenetEstimated,
-
-          totalInstructionFinal: totalInstructionFinal,
-          familyEngagemenetFinal: familyEngagemenetFinal,
-
-          allocation: this.editedItem.allocation,
-          pdPercentage: pdPercentage,
-          total: total,
-          totalPercent: 9,
-          notes: this.editedItem.notes,
-          }
-
-
-      if (this.editedIndex > -1) {
-          Object.assign(this.data[this.editedIndex], obj);
-      } else {
-          this.data.unshift(obj);
-      }
-
-      this.close()
-      },
       openDeleteModal(item) {
         this.confirm = true
         this.item = item
@@ -614,7 +597,7 @@ export default {
 
         // console.log('change pagination')
         this.current = val
-        this.getAllocationByType(1, this.count, val)
+        this.getAllocationByType(this.title, this.count, val)
 
       },
       changeRowsPerPage() {
@@ -624,7 +607,7 @@ export default {
         this.count = this.pagination.rowsPerPage
         this.current = 1
 
-        this.getAllocationByType(1, this.count, this.current)
+        this.getAllocationByType(this.title, this.count, this.current)
 
       },
       copyRowData(index) {
@@ -657,7 +640,6 @@ export default {
 
         return year + "-" + month + "-" + day;
       },
-
       // Add new Row
       addNewRow() {
 
@@ -683,7 +665,6 @@ export default {
         this.editedItem = obj
 
       },
-
       // Filter key events
       keyUpFilter() {
         console.log('Key up')
@@ -701,13 +682,13 @@ export default {
             this.filterAllocation()
         }
       },
-
       // Filter Allocation
       filterAllocation() {
 
         this.loading = true
 
-        let model = '', url = '';
+        let model = '', 
+        url = '';
 
         if(this.filter != '') {
             url += '&search=' + this.filter
@@ -727,7 +708,7 @@ export default {
 
         const conf = {
         method: 'GET',
-        url: config.filterAllocation + '1?' + url,
+        url: `${config.filterAllocation}/${this.title}?${url}`,
         headers: {
             Accept: 'application/json',
         }
@@ -763,491 +744,534 @@ export default {
         })
 
       },
-
       // ##############################
       // ##############################
       // ##############################
       // ##############################
       // ##############################
 
-    // Requests
-    getAllocationByType(type, limit, page) {
+      // Requests
+      getAllocationByType(type, limit, page) {
 
-        this.loading = true
+          this.loading = true
 
-        const conf = {
+          const conf = {
+            method: 'GET',
+            url: config.getAllocationByTitle + type + '?limit=' + limit + '&page=' + page,
+            headers: {
+                Accept: 'application/json',
+            }
+          }
+
+          axios(conf).then(res => {
+
+              let data = res.data.allocations
+              this.pages = res.data.pagesCount
+              let fArr= []
+
+              for(let i=0; i<data.length; i++) {
+
+                let parentObj = {}, startNumber = 2;
+
+                data[i] = data[i].sort((a, b) => (a.order > b.order) ? 1 : -1)
+
+
+                // console.log('DATA DATA DATA ', data[i])
+
+                for(let j=0; j<data[i].length; j++) {
+
+                    // Spliced Name
+                    const edxName = data[i][j].templateName
+                    data[i][j].edxName = edxName
+
+                    
+
+                    if(parseInt(data[i][j].hasRule) == 1 ) {
+                      // if(data[i][j].rule_input) {
+                        const ruleInput = data[i][j].rule_input.split(',')
+                        data[i][j].rule_input = ruleInput
+                      // }
+                    }
+
+                    // console.log('EDX name', data[i][j].edxName)
+
+                    parentObj[j] = data[i][j]
+
+                    if(i == 0 && this.oneTime) {
+
+                      let obj = {
+                          name: edxName,
+                          align: "left",
+                          label: data[i][j].edxName,
+                          field: edxName,
+                          sortable: false
+                      }
+
+                      // console.log('column obj = ', obj)
+
+                      this.columns.splice(startNumber, 0, obj);
+                      startNumber++
+
+                    }
+
+                }
+
+          
+                parentObj.id = data[i][0].allocationId
+                // parentObj.id = i+1
+                parentObj.changed = false
+                parentObj.add = false
+                parentObj.showEditButton = true
+                // parentObj.allocationTypeId = data[i][0].allocation_id
+                
+
+                if(data[i][0].final == '1') {
+
+                  parentObj.final = true
+                  parentObj.status = {
+                    id: 1,
+                    label: "Final",
+                    abbr: "FN"
+                  }
+
+                }else {
+                  parentObj.final = false
+                  parentObj.status = {
+                    id: 0,
+                    label: "Preliminary",
+                    abbr: "PR"
+                  }
+                }
+
+                parentObj.school = {
+                    id: data[i][0].schoolId,
+                    label: data[i][0].schoolName
+                }
+
+                parentObj.note = data[i][0].note || ''
+
+                fArr.push(parentObj)
+
+              }
+
+              this.oneTime = false
+
+              this.data = fArr
+              this.tempData = fArr
+
+              this.loading = false
+              console.log('fArr=======', fArr)
+
+          })
+      },
+
+
+      calculateAllocations(i, arr) {
+
+        let isInputArr = [],
+            ruleInputArr = [],
+            isPercentageArr = [];
+
+        for(let i in arr) {
+          if(arr[i].allocationFundTemplateId) {
+
+            if(arr[i].isInput == '1') {
+              if(arr[i].amount == '') {
+                arr[i].amount = 0
+              }
+              isInputArr.push(arr[i])
+            }
+
+            if(arr[i].is_percentage == '1' ) {
+              // && arr[i].additionalCheck == '0'
+
+              if(arr[i].percentage == '') {
+                arr[i].percentage = 0
+              }
+
+              // if(arr[i].percentage > arr[i].max_percentage) {
+              //   arr[i].percentage = arr[i].max_percentage
+              //   this.$refs.r.$el.click()
+              // }
+
+              // if(arr[i].percentage < arr[i].min_percentage) {
+              //   arr[i].percentage = arr[i].min_percentage
+              //   this.$refs.r.$el.click()
+              // }
+
+              isPercentageArr.push(arr[i])
+            }
+
+            if(arr[i].rule_input && arr[i].rule_input.length > 1) {
+              ruleInputArr.push(arr[i])
+            }
+
+            if(arr[i].additionalCheck == '1' && arr[i].isInput == '1') {
+              ruleInputArr.push(arr[i])
+            }
+
+          }
+        }
+
+        let finalArr = [isInputArr, ruleInputArr, isPercentageArr]
+        finalArr = finalArr.flat(Infinity)
+
+
+        for(let i=0; i<finalArr.length; i++) {
+
+          if(finalArr[i].isInput == '0') {
+
+            if(finalArr[i].is_percentage == '1' && finalArr[i].additionalCheck == '0') {
+
+              let count = 0;
+              let id = finalArr[i].rule_input[0]
+              let item = finalArr.filter(x => x.allocationFundTemplateId == id);
+
+              count =  ( item[0].amount * finalArr[i].percentage ) / 100
+              finalArr[i].amount = count.toFixed(2)
+
+            }
+
+            setTimeout(()=>{
+
+              if(finalArr[i].additionalCheck == '1') {
+
+                let amountArr = [];
+                let count = 0;
+
+                for(let j=0; j<finalArr[i].rule_input.length; j++) {
+                  let item = finalArr.filter(x => x.allocationFundTemplateId == finalArr[i].rule_input[j]);
+                  amountArr.push( parseFloat(item[0].amount) )
+                }
+
+                if(finalArr[i].is_addition == '1') {
+                  // ++++ is_addition
+                  count = amountArr.reduce((a, b) => parseFloat(a) + parseFloat(b), 0)
+                  // console.log('+++++', amountArr, count)
+                }
+
+                if(finalArr[i].is_subtraction == '1') {
+                  // ----  is_subtraction
+                  count = amountArr.reduce((a, b) => parseFloat(a) - parseFloat(b))
+                  // console.log('-----', amountArr, count)
+                }
+
+                count =  ( count * finalArr[i].percentage ) / 100
+                finalArr[i].amount = count.toFixed(2)
+
+              }
+
+            }, 100)
+
+
+            setTimeout(()=>{
+
+              if(finalArr[i].rule_input && finalArr[i].rule_input.length > 1 && finalArr[i].additionalCheck == '0') {
+
+                let amountArr = [];
+                let count = 0;
+
+                for(let j=0; j<finalArr[i].rule_input.length; j++) {
+                  let item = finalArr.filter(x => x.allocationFundTemplateId == finalArr[i].rule_input[j]);
+                  amountArr.push( parseFloat(item[0].amount) )
+                }
+
+                if(finalArr[i].is_addition == '1') {
+                  // ++++ is_addition
+                  count = amountArr.reduce((a, b) => parseFloat(a) + parseFloat(b), 0)
+                  // console.log('+++++', amountArr, count)
+                }
+
+                if(finalArr[i].is_subtraction == '1') {
+                  // ----  is_subtraction
+                  count = amountArr.reduce((a, b) => parseFloat(a) - parseFloat(b))
+                  // console.log('-----', amountArr, count)
+                }
+
+                finalArr[i].amount = count.toFixed(2)
+
+              }
+
+            }, 200)
+
+          }
+
+        }
+
+        this.data = [...this.data]
+
+      },
+
+      getSchools() {
+
+          const conf = {
           method: 'GET',
-          url: config.getAllocationByTitle + type + '?limit=' + limit + '&page=' + page,
+          url: config.getSchools + '?limit=' + 500 + '&page=' + 1,
           headers: {
               Accept: 'application/json',
           }
-        }
-
-        axios(conf).then(res => {
-
-            let data = res.data.allocations
-            this.pages = res.data.pagesCount
-            let fArr= []
-
-            for(let i=0; i<data.length; i++) {
-
-              let parentObj = {}, startNumber = 2;
-
-              data[i] = data[i].sort((a, b) => (a.order > b.order) ? 1 : -1)
-
-              for(let j=0; j<data[i].length; j++) {
-
-                  // Spliced Name
-                  const edxName = data[i][j].templateName;
-                  data[i][j].edxName = edxName
-
-                  if(parseInt(data[i][j].hasRule) == 1 ) {
-                    // if(data[i][j].rule_input) {
-                      const ruleInput = data[i][j].rule_input.split(',')
-                      data[i][j].rule_input = ruleInput
-                    // }
-                  }
-
-                 
-
-                  parentObj[j] = data[i][j]
-
-                  if(i == 0 && this.oneTime) {
-
-                    let obj = {
-                        name: edxName,
-                        align: "left",
-                        label: data[i][j].edxName,
-                        field: edxName,
-                        sortable: true
-                    }
-
-                    this.columns.splice(startNumber, 0, obj);
-                    startNumber++
-
-                  }
-
-              }
-
-          
-
-              parentObj.id= data[i][0].allocationId
-              parentObj.changed = false
-              parentObj.add = false
-              parentObj.showEditButton = true
-              parentObj.allocationTypeId = data[i][0].allocation_id
-              
-
-              if(data[i][0].final == '1') {
-
-                parentObj.final = true
-                parentObj.status = {
-                  id: 1,
-                  label: "Final",
-                  abbr: "FN"
-                }
-
-              }else {
-                parentObj.final = false
-                parentObj.status = {
-                  id: 0,
-                  label: "Preliminary",
-                  abbr: "PR"
-                }
-              }
-
-              parentObj.school = {
-                  id: data[i][0].schoolId,
-                  label: data[i][0].schoolName
-              }
-
-              parentObj.note = data[i][0].note || ''
-
-              fArr.push(parentObj)
-
-            }
-            this.oneTime = false
-
-            this.data = fArr
-            this.tempData = fArr
-
-            this.loading = false
-            console.log('fArr=======', fArr)
-
-        })
-    },
-
-    calculateAllocations(i, arr) {
-
-
-      let isInputArr = [],
-          ruleInputArr = [],
-          isPercentageArr = [];
-
-      for(let i in arr) {
-        if(arr[i].allocationFundTemplateId) {
-
-          if(arr[i].isInput == '1') {
-            if(arr[i].amount == '') {
-              arr[i].amount = 0
-            }
-            isInputArr.push(arr[i])
           }
 
-          if(arr[i].is_percentage == '1') {
-            if(arr[i].percentage == '') {
-              arr[i].percentage = 0
-            }
-            isPercentageArr.push(arr[i])
-          }
+          axios(conf).then(res => {
 
-          if(arr[i].rule_input && arr[i].rule_input.length > 1) {
-            ruleInputArr.push(arr[i])
-          }
+          let schoolsArr = []
+          for(let i=0; i<res.data.schools.length; i++) {
 
-        }
-      }
+              let obj = {
+              id: res.data.schools[i].id,
+              label: res.data.schools[i].name
+              }
 
-      let finalArr = [isInputArr, ruleInputArr, isPercentageArr]
-      finalArr = finalArr.flat(Infinity)
-
-
-      for(let i=0; i<finalArr.length; i++) {
-
-        if(finalArr[i].isInput == '0') {
-
-          if(finalArr[i].is_percentage == '1') {
-
-            // console.log('self', finalArr[i])
-            // console.log('Percentage: ', finalArr[i].percentage)
-
-            let count = 0;
-            let id = finalArr[i].rule_input[0]
-            let item = finalArr.filter(x => x.allocationFundTemplateId == id);
-
-            count =  ( item[0].amount * finalArr[i].percentage ) / 100
-            finalArr[i].amount = count
+              schoolsArr.push(obj)
 
           }
 
-          setTimeout(()=>{
+          this.schools = schoolsArr
 
-            if(finalArr[i].rule_input && finalArr[i].rule_input.length > 1) {
+          })
 
-              let amountArr = [];
-              let count = 0;
-
-              for(let j=0; j<finalArr[i].rule_input.length; j++) {
-                let item = finalArr.filter(x => x.allocationFundTemplateId == finalArr[i].rule_input[j]);
-                amountArr.push( parseFloat(item[0].amount) )
-                console.log('====', parseFloat(item[0].amount))
-              }
-
-              if(finalArr[i].is_addition == '1') {
-                // ++++ is_addition
-                count = amountArr.reduce((a, b) => parseFloat(a) + parseFloat(b), 0)
-                // console.log('+++++', amountArr, count)
-              }
-
-              if(finalArr[i].is_subtraction == '1') {
-                // ----  is_subtraction
-                count = amountArr.reduce((a, b) => parseFloat(a) - parseFloat(b))
-                // console.log('-----', amountArr, count)
-              }
-
-              finalArr[i].amount = count
-              console.log(count, 'count')
-
-            }
-
-          }, 100)
-
-        }
-
-      }
-
-      console.log(finalArr, 'FINAL ARR===============')
-
-      // this.data[this.index] = arr 
-    },
-
-
-
-    getSchools() {
-
-        const conf = {
-        method: 'GET',
-        url: config.getSchools + '?limit=' + 500 + '&page=' + 1,
-        headers: {
-            Accept: 'application/json',
-        }
-        }
-
-        axios(conf).then(res => {
-
-        let schoolsArr = []
-        for(let i=0; i<res.data.schools.length; i++) {
-
-            let obj = {
-            id: res.data.schools[i].id,
-            label: res.data.schools[i].name
-            }
-
-            schoolsArr.push(obj)
-
-        }
-
-        this.schools = schoolsArr
-
-        })
-
-    },
-    getSchoolYears() {
-        const conf = {
-        method: 'GET',
-        url: config.getSchoolYears,
-        headers: {
-            Accept: 'application/json',
-        }
-        }
-        axios(conf).then(res => {
-
-        let data = res.data, schoolsArr = []
-        for(let i=0; i<data.length; i++) {
-            let obj = {
-            id: data[i].id,
-            label: data[i].year_name,
-            value: data[i].year_name
-            }
-            schoolsArr.push(obj)
-        }
-        this.schoolYears = schoolsArr
-        })
-    },
-    filterAllocationsBySchoolName() {
-
-    },
-
-    editAllocation() {
-
-        // console.log('this.editedItem', this.editedItem)
-        // console.log('this.editedItem temp', this.tempEditedItem)
-
-        // school_id: 1001
-        // status_id: 1
-        // allocation_type_id: 1
-        // note: 'sdfgsdfgfsdg'
-
-
-        const data  = {
-
-          school_id: this.editedItem.school.id,
-          status_id:  this.isFinal ? 1 : 0,
-          note: this.editedItem.note,
-          allocation_type_id: parseInt(this.editedItem.allocationTypeId),
-
-        }
-
-        let arr = []
-
-        for(let i in this.editedItem) {
-          if(this.editedItem[i].allocationFundTemplateId) {
-
-            // percentgage
-            let obj = {
-
-              id: this.editedItem[i].allocationFundTemplateId,
-              value: parseFloat(this.editedItem[i].amount),
-              fundId: this.editedItem[i].fundId
-
-            }
-
-            if(this.editedItem[i].percentage){
-              obj.percentage = this.editedItem[i].percentage
-            }
-
-            arr.push(obj)
+      },
+      getSchoolYears() {
+          const conf = {
+          method: 'GET',
+          url: config.getSchoolYears,
+          headers: {
+              Accept: 'application/json',
           }
-        }
+          }
+          axios(conf).then(res => {
 
-        data.values = arr
+          let data = res.data, schoolsArr = []
+          for(let i=0; i<data.length; i++) {
+              let obj = {
+              id: data[i].id,
+              label: data[i].year_name,
+              value: data[i].year_name
+              }
+              schoolsArr.push(obj)
+          }
+          this.schoolYears = schoolsArr
+          })
+      },
+      filterAllocationsBySchoolName() {
 
-        if(this.isEditAllocation) {
+      },
 
-          // const conf = {
-          //   method: 'POST',
-          //   url: config.addAllocation,
-          //   headers: {
-          //     Accept: 'application/json',
-          //   },
-          //   data: data
-          // }
+      editAllocation() {
 
-        //   axios(conf)
-        //     .then(res => {
+        this.btnLoading = true
 
-        //       this.$q.notify({
-        //         message: 'Allocation Added successfully!',
-        //         type: 'positive',
-        //       })
+        console.log('row = ', this.editedItem)
 
-        //       this.data[index].changed = false
-        //       this.data[index].showEditButton = true
-        //       this.data[index].id = res.data.id
-        //       this.data[index].add = false
 
-        //       let school = {
-        //         school_name: this.selectedSchool.label
-        //       }
+          const data  = {
 
-        //       this.data[index].school = school
-        //       this.addNew = false
-        //     })
+            token: localStorage.getItem('access-token'),
 
-        // } else {
+            school_id: this.editedItem.school.id,
+            status_id:  this.isFinal ? 1 : 0,
+            note: this.editedItem.note,
+            allocation_type_id: parseInt(this.title),
 
-          // this.data[index].changed = false
+          }
+
+          let arr = []
+
+          for(let i in this.editedItem) {
+            if(this.editedItem[i].allocationFundTemplateId) {
+
+              // percentgage
+              let obj = {
+
+                id: this.editedItem[i].allocationFundTemplateId,
+                value: this.editedItem[i].amount,
+                fundId: this.editedItem[i].fundId
+
+              }
+
+              if(this.editedItem[i].percentage){
+                obj.percentage = this.editedItem[i].percentage
+              }
+
+              arr.push(obj)
+            }
+          }
+
+          data.values = arr
+
+          if(this.isEditAllocation) {
+     
+            const conf = {
+              method: 'PUT',
+              url: `${config.addAllocation}/${this.editedItem.id}`,
+              headers: {
+                Accept: 'application/json',
+              },
+              data: data
+            }
+
+            axios(conf)
+              .then(res => {
+
+                this.$q.notify({
+                  message: 'Allocation updated successfully!',
+                  type: 'positive',
+                })
+
+                this.showAllocationModal = false
+                this.getAllocationByType(this.titleId, this.count, this.current)
+
+                this.btnLoading = false
+
+              })
+              .catch(err => {
+                this.btnLoading = false
+              })
+
+
+          }else {
+
+            const conf = {
+              method: 'POST',
+              url: config.addAllocation,
+              headers: {
+                Accept: 'application/json',
+              },
+              data: data
+            }
+
+            axios(conf)
+              .then(res => {
+
+                this.$q.notify({
+                  message: 'Allocation Added successfully!',
+                  type: 'positive',
+                })
+
+                this.showAllocationModal = false
+                this.getAllocationByType(this.titleId, this.count, this.current)
+
+              this.btnLoading = false
+
+              })
+              .catch(err => {
+                this.btnLoading = false
+              })
+
+          }
+
+      },
+      deleteItem() {
+          let item = this.item
 
           const conf = {
-            method: 'PUT',
-            url: `${config.addAllocation}${this.editedItem.id}`,
-            headers: {
+          method: 'DELETE',
+          url: config.getAllocationByTitle + item.id,
+          headers: {
               Accept: 'application/json',
-            },
-            data: data
+          }
           }
 
           axios(conf)
-            .then(res => {
-
+          .then(res => {
+          const index = this.data.indexOf(item)
+          this.data.splice(index, 1)
               this.$q.notify({
-                message: 'Allocation updated successfully!',
-                type: 'positive',
+              message: res.data,
+              type: 'positive',
               })
+          })
 
-              this.showAllocationModal = false
-              this.getAllocationByType(this.titleId, this.count, this.current)
+      },
+      addSchoolNameToObject() {
+          this.editedItem.school_name = this.selectedSchool.label
+          console.log(this.editedItem)
+      },
 
+      getTemplate() {
 
+          const conf = {
+          method: 'GET',
+          url: config.getTemplates + this.titleId,
+          headers: {
+              Accept: 'application/json',
+          }
+          }
 
-            })
-        }
+          axios(conf).then(res => {
+          const logic = res.data.category.reverse()
 
-    },
-    deleteItem() {
-        let item = this.item
+          for(let i=0; i<logic.length; i++) {
 
-        const conf = {
-        method: 'DELETE',
-        url: config.getAllocationByTitle + item.id,
-        headers: {
-            Accept: 'application/json',
-        }
-        }
+              console.log('@@@@')
+              console.log(logic[i])
+              console.log('@@@@')
 
-        axios(conf)
-        .then(res => {
-        const index = this.data.indexOf(item)
-        this.data.splice(index, 1)
-            this.$q.notify({
-            message: res.data,
-            type: 'positive',
-            })
-        })
+          }
+          })
 
-    },
-    addSchoolNameToObject() {
-        this.editedItem.school_name = this.selectedSchool.label
-        console.log(this.editedItem)
-    },
+      },
 
-    getTemplate() {
+      allocationCalculation(ids, index, parsingBool) {
 
-        const conf = {
-        method: 'GET',
-        url: config.getTemplates + this.titleId,
-        headers: {
-            Accept: 'application/json',
-        }
-        }
+          if(ids != undefined) {
 
-        axios(conf).then(res => {
-        const logic = res.data.category.reverse()
+          let idArr = ids.split(',');
+          let data = this.data[index];
+          let count = 0;
 
-        for(let i=0; i<logic.length; i++) {
-
-            console.log('@@@@')
-            console.log(logic[i])
-            console.log('@@@@')
-
-        }
-        })
-
-    },
-
-    allocationCalculation(ids, index, parsingBool) {
-
-        if(ids != undefined) {
-
-        let idArr = ids.split(',');
-        let data = this.data[index];
-        let count = 0;
-
-        for (const i in data) {
-            if(idArr.includes(data[i]['allocationFundTemplateId'])) {
-            count += parseFloat(data[i]['amount'])
-            if(parsingBool) {
-                console.log('LLLL', this.editedItem[index])
-                this.editedItem[index].amount = count
-            }
-            }
-        }
+          for (const i in data) {
+              if(idArr.includes(data[i]['allocationFundTemplateId'])) {
+              count += parseFloat(data[i]['amount'])
+              if(parsingBool) {
+                  console.log('LLLL', this.editedItem[index])
+                  this.editedItem[index].amount = count
+              }
+              }
+          }
 
 
 
-        return count.toFixed(2)
+          return count.toFixed(2)
 
-        }
-    },
+          }
+      },
 
-    allocationAnotherPercentageCalculation(ids, percentage, index, parsingBool) {
+      // allocationAnotherPercentageCalculation(ids, percentage, index, parsingBool) {
 
-        let data = this.data[index];
-        let count = 0;
+      //     let data = this.data[index];
+      //     let count = 0;
 
-        for (const i in data) {
-        if( parseInt(ids) == parseInt(data[i]['allocationFundTemplateId']) ) {
-            count = (parseFloat(data[i]['amount']) * percentage) / 100
-            if(parsingBool) {
-            console.log('JJJJ', this.editedItem[index])
-            this.editedItem[index].amount = count
-            }
-        }
-        }
-
-
-
-        return count.toFixed(2)
-
-    },
-    d(percentage) {
-        console.log(percentage)
-        this.editedItem.a = 0
-        console.log(this.editedItem)
-    },
-
-    //
-    openAllocationModal(row, index) {
-
-        this.index = index
-        this.editedItem = {...row}
-        this.showAllocationModal = true
-        this.isFinal = this.editedItem.final
+      //     for (const i in data) {
+      //     if( parseInt(ids) == parseInt(data[i]['allocationFundTemplateId']) ) {
+      //         count = (parseFloat(data[i]['amount']) * percentage) / 100
+      //         if(parsingBool) {
+      //         console.log('JJJJ', this.editedItem[index])
+      //         this.editedItem[index].amount = count
+      //         }
+      //     }
+      //     }
 
 
-        console.log('roe row', row)
 
-    }
+      //     return count.toFixed(2)
+
+      // },
+      // d(percentage) {
+      //     console.log(percentage)
+      //     this.editedItem.a = 0
+      //     console.log(this.editedItem)
+      // },
+
+      //
+      openAllocationModal(row, index) {
+
+          this.index = index
+          this.editedItem = {...row}
+          this.showAllocationModal = true
+          this.isFinal = this.editedItem.final
+
+      }
 
     },
     watch: {
@@ -1274,8 +1298,85 @@ export default {
           this.schoolYear == ''
           ? title = this.schoolYears[0] && this.schoolYears[0].value
           : title = this.schoolYear.value
-          return 'Title I - ' + title
+
+
+          let rNum = ''
+
+          switch(this.title) {
+            case 1:
+              rNum = 'Title I -';
+              break;
+            case 2:
+              rNum = 'Title II -';
+              break;
+            case 3:
+              rNum = 'Title III -';
+              break;
+            case 4:
+              rNum = 'Title IV -';
+              break;
+            case 5:
+              rNum = 'ESSER -';
+              break;
+            case 6:
+              rNum = 'GEER -';
+              break;
+          }
+
+          return `${rNum} ${title}`
       },
+      validate() {
+
+        let arr = []
+
+        for(const i in this.editedItem) {
+          if(this.editedItem[i].allocationFundTemplateId) {
+            let p = this.editedItem[i].percentage
+
+            let mnp = this.editedItem[i].min_percentage
+            let mxp = this.editedItem[i].max_percentage
+
+
+
+            if(p == '') {
+              p = -1
+            }
+            
+            if(p) {
+              if(parseFloat(p) < parseFloat(mnp) ||  parseFloat(p) > parseFloat(mxp)) {
+                arr.push(true)
+              }else {
+                arr.push(false)
+              }
+            }
+          }
+        }
+
+        let x = false
+
+        console.log(arr, 'arrarrarrarr')
+
+        for(let i=0; i<arr.length; i++) {
+          console.log('doc = ', arr[i])
+          if(arr[i] == true) {
+            // return true
+            x = true
+            break
+          }
+        }
+
+        if(x) {
+          return true
+        }else {
+          return false
+        }
+
+      }
+    },
+    watch: {
+      data() {
+        // console.log('changed')
+      }
     }
 }
 </script>

@@ -2125,6 +2125,7 @@ export default {
 
             const editData = {
 
+                token: localStorage.getItem('access-token'),
                 budget_unit_id: this.editedItem.qtyOptions?.id,
 
                 fund_source_id: this.editedItem.fund_source ? this.editedItem.fund_source.id : null,
@@ -2199,9 +2200,8 @@ export default {
             this.btnLoading = true;
 
             const editData = {
-                
-                
 
+                token: localStorage.getItem('access-token'),
                 budget_unit_id: this.editedItem.qtyOptions?.id,
                 quantity: this.editedItem.quantity,
 
@@ -2864,6 +2864,7 @@ export default {
             }
 
             let data = {
+                token: localStorage.getItem('access-token'),
                 start_date: tempData.startdate,
                 end_date: tempData.endDate,
                 start_time: tempData.time1,
@@ -2913,6 +2914,7 @@ export default {
             }
 
             let data = {
+                token: localStorage.getItem('access-token'),
                 start_date: tempData.startdate,
                 end_date: tempData.endDate,
                 start_time: tempData.time1,

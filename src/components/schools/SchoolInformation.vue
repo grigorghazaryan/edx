@@ -250,6 +250,7 @@ export default {
         editSchoolInfo() {
 
             let data = {
+                token: localStorage.getItem('access-token'),
                 name: this.schoolName,
                 abbreviation: this.schoolAbbriviation,
                 short_name: this.schoolShortName,

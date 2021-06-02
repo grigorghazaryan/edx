@@ -100,8 +100,8 @@
 
 <script>
 
-// import axios from 'axios'
-// import config from '../../../config'
+import axios from 'axios'
+import config from '../../../config'
 
 import LicenseTableTitle from '../../components/license/LicenseTableTitle'
 
@@ -140,8 +140,24 @@ export default {
       barInfo: {},
     }
   },
+  methods: {
+    getLicenseBar(id) {
+      const conf = {
+        method: 'GET',
+        url: `${config.getTotalLicense}${id}/${this.tab}`,
+        headers: {
+            Accept: 'application/json',
+        }
+      }
+      axios(conf).then(res => {
+          this.barInfo = res.data
+          console.log('Bar info', this.barInfo)
+      })
+    },
+  },
   created() {
     this.schoolName = this.$route.query.name
+    this.getLicenseBar(this.$route.params.id)
   }
 
 }

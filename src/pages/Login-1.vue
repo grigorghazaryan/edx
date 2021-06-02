@@ -1,27 +1,30 @@
 <template>
   <q-layout>
     <q-page-container>
-      <q-page class="flex bg-image flex-center">
+      <q-page class="flex edx-bg-blue bg-image flex-center">
         <q-card v-bind:style="$q.screen.lt.sm?{'width': '80%'}:{'width':'30%'}">
-          <q-card-section>
-            <q-avatar size="103px" class="absolute-center shadow-10">
+          <q-card-section class="text-center">
+            <!-- <q-avatar size="103px" class="absolute-center shadow-10">
               <img src="../statics/profile.svg">
-            </q-avatar>
+            </q-avatar> -->
+            <img class="w-50" src="https://upload.wikimedia.org/wikipedia/commons/8/8f/EdX.svg" alt="">
           </q-card-section>
           <q-card-section>
-            <div class="text-center q-pt-lg">
+            <div class="text-center">
               <div class="col text-h6 ellipsis">
-                Log in
+                Please Login!
               </div>
             </div>
           </q-card-section>
           <q-card-section>
+
             <q-form
               class="q-gutter-md"
               @submit="login"
             >
               <q-input
-                filled
+                outlined
+                dense
                 v-model="username"
                 label="Username"
                 lazy-rules
@@ -30,7 +33,8 @@
 
               <q-input
                 type="password"
-                filled
+                outlined
+                dense
                 v-model="password"
                 label="Password"
                 lazy-rules
@@ -38,7 +42,7 @@
               />
 
               <div>
-                <q-btn :loading="loading" label="Login" type="submit" color="primary" />
+                <q-btn size="md" :loading="loading" label="Login" type="submit" class="edx-add-btn w-100" />
               </div>
 
             </q-form>
@@ -63,6 +67,12 @@
         },
         methods: {
           login() {
+
+            // localStorage.setItem('role', 'super_admin')
+            // admin
+            // user
+
+            ////////////////////
             this.loading = true
             let body = {
               email:    this.username,
@@ -75,6 +85,9 @@
                 let data = res.data.data
                 localStorage.setItem('user-info', JSON.stringify(data.user))
                 localStorage.setItem('access-token', data.tokens.access_token)
+                localStorage.setItem('role', data.user.admin_role)
+
+                console.log('DATA', data)
 
                 this.$router.push('/')
               })
@@ -88,7 +101,4 @@
 </script>
 
 <style>
-  .bg-image {
-   background-image: linear-gradient(135deg, #7028e4 0%, #e5b2ca 100%);
-  }
 </style>

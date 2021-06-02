@@ -230,7 +230,8 @@ export default {
                     Accept: 'application/json',
                 },
                 data: {
-                    documentids: data
+                    documentids: data,
+                    token: localStorage.getItem('access-token'),
                 }
             }
 

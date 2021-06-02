@@ -13,8 +13,6 @@
                 <div class="q-pa-md">
                     <div class="row">
 
-                        
-
                         <div class="col-md-6 q-pr-sm">
                             
                             <div class="q-mb-md">
@@ -72,7 +70,7 @@
                             <div class="q-mb-md">
                                 <div class="row">
                                     <div class="col-md-4 q-pr-sm">
-                                        <div class="text-subtitle2 q-mb-sm">Qty</div>
+                                        <div class="text-subtitle2 q-mb-sm">Quantity</div>
                                         <q-input type="number" dense outlined v-model="editedData.quantity" />
                                     </div>
                                     <div class="col-md-4 q-pr-sm">
@@ -81,7 +79,8 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="text-subtitle2 q-mb-sm">Total</div>
-                                        <q-input prefix="$" dense outlined disable filled readonly :value="editedData.item_cost * editedData.quantity" />
+                                        <q-input prefix="$" dense outlined disable filled readonly 
+                                        :value="isNaN(editedData.item_cost * editedData.quantity) ? 0 : (editedData.item_cost * editedData.quantity).toFixed(2)" />
                                     </div>
                                 </div>
                             </div>
@@ -91,7 +90,7 @@
                              <div class="q-mb-md">
                                 <div class="row">
                                     <div class="col-md-5 q-pr-sm">
-                                        <div class="text-subtitle2 q-mb-sm">Identifier</div>  
+                                        <div class="text-subtitle2 q-mb-sm">Identifier</div> 
                                         <q-select
                                             dense
                                             outlined
@@ -119,14 +118,15 @@
                                 </div>
                             </div>
 
+                            <div class="q-mb-md" v-if="editedData.identification_uni">
 
-                            <div class="q-mb-md">
-                               <div class="row">
+                               <div class="row" v-if="editedData.identification_uni.id != 1 && editedData.identification_uni.id != 5">
                                    <div class="col-md-4">
                                         <div class="text-subtitle2 q-mb-sm">Serial #</div> 
                                         <q-input dense outlined v-model="editedData.serial_number" />
                                    </div>
                                 </div> 
+
                             </div>
 
                             
@@ -143,7 +143,7 @@
                                         <div class="text-subtitle2 q-mb-sm">Purchase Date</div>
                                         <q-input v-model="editedData.purchase_date" dense outlined />
                                         <q-popup-proxy>
-                                            <q-date color="edx-pagination" v-model="editedData.purchase_date" mask="MM-DD-YYYY">
+                                            <q-date color="edx-pagination" v-model="editedData.purchase_date" mask="MM/DD/YYYY">
                                                 <div class="row items-center justify-end q-gutter-sm">
                                                 <q-btn label="Cancel" color="primary" flat v-close-popup />
                                                 <q-btn label="OK" color="primary" flat v-close-popup />
@@ -424,9 +424,8 @@
                                     <div class="q-mb-md">
                                         <div class="row">
                                             <div class="col-md-12">
-                                                pp
                                                     <div class="text-subtitle2 q-mb-sm">Location within school</div> 
-                                                    <q-input dense outlined v-model="editedData.location" />
+                                                    <q-input dense outlined :disable="isEdit" :filled="isEdit" :readonly="isEdit" v-model="editedData.location" />
                                             </div>
                                         </div> 
                                     </div>
@@ -435,72 +434,51 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                     <div class="text-subtitle2 q-mb-sm">Location Note</div> 
-                                                    <q-input rows="5" type="textarea" dense outlined v-model="editedData.location_information_note" />
+                                                    <q-input rows="5" type="textarea" dense outlined :disable="isEdit" :filled="isEdit" :readonly="isEdit"  v-model="editedData.location_information_note" />
                                             </div>
                                         </div> 
                                     </div>
-                                    <!-- <div class="row">
-                                        <div class="col-md-5 q-pr-sm">
-                                            <div class="text-subtitle2 q-mb-sm">Status Date</div>
-                                            <q-input disable  dense filled outlined />
-                                        </div>
-                                        <div class="col-md-5">
-                                            <div class="text-subtitle2 q-mb-sm">Show Until</div>
-                                            <q-input disable dense filled outlined />
-                                        </div>
-                                        <div class="col-md-12 q-mt-sm">
-                                            <div class="text-subtitle2 q-mb-sm">Status Note</div>
-                                            <q-input type="textarea" filled disable dense outlined />
-                                        </div>
-                                    </div> -->
                                 </div>
+
                                 <div v-else>
                                     <div class="q-mb-md">
                                         <div class="row">
                                             <div class="col-md-4 q-pr-sm">
                                                 <div class="text-subtitle2 q-mb-sm">Status Date</div>
                                                 
-                                                <q-input v-model="editedData.transition_date" dense outlined />
+                                                <q-input disable filled readonly  v-model="editedData.transition_date" dense outlined />
 
-                                                <q-popup-proxy>
-                                                    <q-date color="edx-pagination" v-model="editedData.transition_date" mask="MM-DD-YYYY">
+                                                <!-- <q-popup-proxy>
+                                                    <q-date color="edx-pagination" v-model="editedData.transition_date" mask="MM/DD/YYYY">
                                                         <div class="row items-center justify-end q-gutter-sm">
                                                         <q-btn label="Cancel" color="primary" flat v-close-popup />
                                                         <q-btn label="OK" color="primary" flat v-close-popup />
                                                         </div>
                                                     </q-date>
-                                                </q-popup-proxy>
+                                                </q-popup-proxy> -->
                                             </div>
-                                            <div class="col-md-4 q-pr-sm">
+                                            <div class="col-md-4 q-pr-sm" v-if="editedData.status_uni.label != 'Checked Out'">
                                                 <div class="text-subtitle2 q-mb-sm">Show Until</div>
-                                                <q-input v-model="editedData.visibility_date" dense outlined />
-                                                <q-popup-proxy>
-                                                    <q-date color="edx-pagination" v-model="editedData.visibility_date" mask="MM-DD-YYYY">
+                                                <q-input disable filled readonly v-model="editedData.visibility_date" dense outlined />
+                                                <!-- <q-popup-proxy>
+                                                    <q-date color="edx-pagination" v-model="editedData.visibility_date" mask="MM/DD/YYYY">
                                                         <div class="row items-center justify-end q-gutter-sm">
                                                         <q-btn label="Cancel" color="primary" flat v-close-popup />
                                                         <q-btn label="OK" color="primary" flat v-close-popup />
                                                         </div>
                                                     </q-date>
-                                                </q-popup-proxy>
+                                                </q-popup-proxy> -->
                                             </div>
                                         </div>
                                     </div>
                                     <div class="q-mb-md">
                                         <div class="text-subtitle2 q-mb-sm">Status Note</div>
-                                        <q-input rows="3" dense outlined type="textarea" v-model="editedData.transition_information_note" />
+                                        <q-input rows="3" disable filled readonly  dense outlined type="textarea" v-model="editedData.transition_information_note"/>
+                                        <!-- v-model="editedData.transition_information_note" -->
                                     </div>
                                 </div>
                             </div>
                             
-
-
-
-                            
-
-                            
-
-                            
-
 
                         </div>
 
@@ -573,12 +551,12 @@
 
                 <div class="col-10 q-pr-sm q-pl-sm">
                     <div class="text-subtitle2 q-mb-sm">Location within school</div>
-                    <q-input  outlined dense v-model="statusChangeObject.locationWithinSchool" />
+                    <q-input  outlined dense v-model="editedData.location" />
                 </div>
 
                 <div class="col-12 q-pr-sm q-pl-sm q-mt-md">
                     <div class="text-subtitle2 q-mb-sm">Note</div>
-                    <q-input outlined type="textarea" dense v-model="statusChangeObject.note" />
+                    <q-input outlined type="textarea" dense v-model="editedData.location_information_note" />
                 </div>
 
                 <div class="full-width" v-if="editedData.identification_uni && editedData.identification_uni.id == 5">
@@ -675,19 +653,9 @@
                         />
                     </div>
 
-                    <!-- <div class="col-5 q-pr-sm q-pl-sm">
-                        <div class="text-subtitle2 q-mb-sm">Location</div>
-                        <q-input disable outlined dense v-model="statusChangeObject.location" />
-                    </div>
-
-                    <div class="col-5 q-pr-sm q-pl-sm">
-                        <div class="text-subtitle2 q-mb-sm">Location within school</div>
-                        <q-input disable outlined dense v-model="statusChangeObject.locationWithinSchool" />
-                    </div> -->
-
                     <div class="col-12 q-pr-sm q-pl-sm q-mt-md">
                         <div class="text-subtitle2 q-mb-sm">Note</div>
-                        <q-input outlined type="textarea" dense v-model="statusChangeObject.note" />
+                        <q-input outlined type="textarea" dense v-model="editedData.transition_information_note" />
                     </div>
 
                     <div class="full-width" v-if="editedData.identification_uni && editedData.identification_uni.id == 5">
@@ -790,21 +758,21 @@
 
                     <div class="col-5 q-pr-sm q-pl-sm">
                         <div class="text-subtitle2 q-mb-sm">Location within school</div>
-                        <q-input disable outlined dense v-model="statusChangeObject.locationWithinSchool" />
+                        <q-input  outlined dense v-model="editedData.location" />
                     </div>
 
                     <div class="col-9 q-pr-sm q-pl-sm q-mt-md">
                         <div class="text-subtitle2 q-mb-sm">Note</div>
-                        <q-input outlined type="textarea" dense v-model="statusChangeObject.note" />
+                        <q-input outlined type="textarea" dense v-model="editedData.transition_information_note" />
                     </div>
 
                     <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
                         <div class="text-subtitle2 q-mb-sm">Show until</div>
-                        <q-input dense outlined v-model="statusChangeObject.showUntil">
+                        <q-input dense outlined v-model="editedData.visibility_date">
                         <template v-slot:append>
                             <q-icon name="event" class="cursor-pointer">
                             <q-popup-proxy transition-show="scale" transition-hide="scale">
-                            <q-date color="edx-pagination" v-model="statusChangeObject.showUntil" mask="MM-DD-YYYY">
+                            <q-date color="edx-pagination" v-model="editedData.visibility_date" mask="MM/DD/YYYY">
                                 <div class="row items-center justify-end q-gutter-sm">
                                 <q-btn label="Cancel" color="primary" flat v-close-popup />
                                 <q-btn label="OK" color="primary" flat v-close-popup />
@@ -910,11 +878,11 @@
 
                     <div class="col-3 q-pr-sm q-pl-sm">
                         <div class="text-subtitle2 q-mb-sm">Show until</div>
-                        <q-input dense outlined v-model="statusChangeObject.showUntil">
+                        <q-input dense outlined v-model="editedData.visibility_date">
                         <template v-slot:append>
                             <q-icon name="event" class="cursor-pointer">
                             <q-popup-proxy transition-show="scale" transition-hide="scale">
-                            <q-date color="edx-pagination" v-model="statusChangeObject.showUntil" mask="MM-DD-YYYY">
+                            <q-date color="edx-pagination" v-model="editedData.visibility_date" mask="MM/DD/YYYY">
                                 <div class="row items-center justify-end q-gutter-sm">
                                 <q-btn label="Cancel" color="primary" flat v-close-popup />
                                 <q-btn label="OK" color="primary" flat v-close-popup />
@@ -926,19 +894,9 @@
                         </q-input>
                     </div>
 
-                    <!-- <div class="col-5 q-pr-sm q-pl-sm">
-                        <div class="text-subtitle2 q-mb-sm">Location</div>
-                        <q-input disable outlined dense v-model="statusChangeObject.location" />
-                    </div>
-
-                    <div class="col-5 q-pr-sm q-pl-sm">
-                        <div class="text-subtitle2 q-mb-sm">Location within school</div>
-                        <q-input disable outlined dense v-model="statusChangeObject.locationWithinSchool" />
-                    </div> -->
-
                     <div class="col-12 q-pr-sm q-pl-sm q-mt-md">
                         <div class="text-subtitle2 q-mb-sm">Note</div>
-                        <q-input outlined type="textarea" dense v-model="statusChangeObject.note" />
+                        <q-input outlined type="textarea" dense v-model="editedData.transition_information_note" />
                     </div>
 
                     
@@ -1041,11 +999,11 @@
 
                     <div class="col-3 q-pr-sm q-pl-sm">
                         <div class="text-subtitle2 q-mb-sm">Show until</div>
-                        <q-input dense outlined v-model="statusChangeObject.showUntil">
+                        <q-input dense outlined v-model="editedData.visibility_date">
                         <template v-slot:append>
                             <q-icon name="event" class="cursor-pointer">
                             <q-popup-proxy transition-show="scale" transition-hide="scale">
-                            <q-date color="edx-pagination" v-model="statusChangeObject.showUntil" mask="MM-DD-YYYY">
+                            <q-date color="edx-pagination" v-model="editedData.visibility_date" mask="MM/DD/YYYY">
                                 <div class="row items-center justify-end q-gutter-sm">
                                 <q-btn label="Cancel" color="primary" flat v-close-popup />
                                 <q-btn label="OK" color="primary" flat v-close-popup />
@@ -1057,19 +1015,10 @@
                         </q-input>
                     </div>
 
-                    <!-- <div class="col-5 q-pr-sm q-pl-sm">
-                        <div class="text-subtitle2 q-mb-sm">Location</div>
-                        <q-input disable outlined dense v-model="statusChangeObject.location" />
-                    </div>
-
-                    <div class="col-5 q-pr-sm q-pl-sm">
-                        <div class="text-subtitle2 q-mb-sm">Location within school</div>
-                        <q-input disable outlined dense v-model="statusChangeObject.locationWithinSchool" />
-                    </div> -->
 
                     <div class="col-12 q-pr-sm q-pl-sm q-mt-md">
                         <div class="text-subtitle2 q-mb-sm">Note</div>
-                        <q-input outlined type="textarea" dense v-model="statusChangeObject.note" />
+                        <q-input outlined type="textarea" dense v-model="editedData.transition_information_note" />
                     </div>
 
                     
@@ -1197,22 +1146,22 @@
                     </div>
 
                     <div class="col-4 q-pr-sm q-pl-sm">
-                    <div class="text-subtitle2 q-mb-sm">Location within school</div>
-                    <q-input outlined dense v-model="statusChangeObject.locationWithinSchool" />
+                        <div class="text-subtitle2 q-mb-sm">Location within school</div>
+                        <q-input dense outlined v-model="editedData.location" />
                     </div>
 
                     <div class="col-9 q-pr-sm q-pl-sm q-mt-md">
                     <div class="text-subtitle2 q-mb-sm">Transfer Note</div>
-                    <q-input outlined type="textarea" dense v-model="statusChangeObject.note" />
+                    <q-input outlined type="textarea" dense v-model="editedData.transition_information_note" />
                     </div>
 
                     <div class="col-3 q-pr-sm q-pl-sm q-mt-md">
                     <div class="text-subtitle2 q-mb-sm">Show until</div>
-                    <q-input dense outlined v-model="statusChangeObject.showUntil">
+                    <q-input dense outlined v-model="editedData.visibility_date">
                         <template v-slot:append>
                         <q-icon name="event" class="cursor-pointer">
                             <q-popup-proxy transition-show="scale" transition-hide="scale">
-                            <q-date color="edx-pagination" v-model="statusChangeObject.showUntil" mask="MM-DD-YYYY">
+                            <q-date color="edx-pagination" v-model="editedData.visibility_date" mask="MM/DD/YYYY">
                             <div class="row items-center justify-end q-gutter-sm">
                                 <q-btn label="Cancel" color="primary" flat v-close-popup />
                                 <q-btn label="OK" color="primary" flat v-close-popup />
@@ -1320,11 +1269,11 @@
 
                     <div class="col-3 q-pr-sm q-pl-sm">
                         <div class="text-subtitle2 q-mb-sm">Show until</div>
-                        <q-input dense outlined v-model="statusChangeObject.showUntil">
+                        <q-input dense outlined v-model="editedData.visibility_date">
                         <template v-slot:append>
                             <q-icon name="event" class="cursor-pointer">
                             <q-popup-proxy transition-show="scale" transition-hide="scale">
-                            <q-date color="edx-pagination" v-model="statusChangeObject.showUntil" mask="MM-DD-YYYY">
+                            <q-date color="edx-pagination" v-model="editedData.visibility_date" mask="MM/DD/YYYY">
                                 <div class="row items-center justify-end q-gutter-sm">
                                 <q-btn label="Cancel" color="primary" flat v-close-popup />
                                 <q-btn label="OK" color="primary" flat v-close-popup />
@@ -1336,19 +1285,9 @@
                         </q-input>
                     </div>
 
-                    <!-- <div class="col-5 q-pr-sm q-pl-sm">
-                        <div class="text-subtitle2 q-mb-sm">Location</div>
-                        <q-input disable outlined dense v-model="statusChangeObject.location" />
-                    </div>
-
-                    <div class="col-5 q-pr-sm q-pl-sm">
-                        <div class="text-subtitle2 q-mb-sm">Location within school</div>
-                        <q-input disable outlined dense v-model="statusChangeObject.locationWithinSchool" />
-                    </div> -->
-
                     <div class="col-12 q-pr-sm q-pl-sm q-mt-md">
                         <div class="text-subtitle2 q-mb-sm">Note</div>
-                        <q-input outlined type="textarea" dense v-model="statusChangeObject.note" />
+                        <q-input outlined type="textarea" dense v-model="editedData.transition_information_note" />
                     </div>
 
                     
@@ -1623,7 +1562,18 @@ export default {
               this.optionsSchoolForFilter = schoolsArr
           })
         },
+        getCurrentDay() {
+            let today = new Date();
+            let dd = String(today.getDate()).padStart(2, '0');
+            let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+            let yyyy = today.getFullYear();
+
+            today = mm + '/' + dd + '/' + yyyy;
+            return today
+        },
         changeStatus() {
+
+            this.editedData.transition_date = this.getCurrentDay()
 
             this.statusChangeObject = {
                 quantity: this.editedData.quantity,
@@ -1769,16 +1719,20 @@ export default {
 
         
             const updateData = {
-                school_id: this.editedData.school_id,
-                allocation_type_id: parseInt(this.editedData.allocation_type_id),
+
+                token: localStorage.getItem('access-token'),
+
+                campus_id: this.editedData.campus_uni.id,
+                school_id: this.$route.params.id,
+                allocation_type_id: parseInt(this.tab),
                 quantity:  this.editedData.quantity,
-                inventory_category_type_id:  this.editedData.inventory_category_uni.id,
+                category_type_id:  this.editedData.inventory_category_uni.id,
                 item_name: this.editedData.item_name,
                 supplier_id: this.editedData.inventory_supplier_uni.id,
                 item_cost: this.editedData.item_cost,
-                inventory_condition_type_id: this.editedData.condition.id,
+                condition_type_id: this.editedData.condition.id,
                 status_id: this.editedData.status_uni.id,
-                inventory_identification_type_id: this.editedData.identification_uni.id,
+                identification_type_id: this.editedData.identification_uni.id,
                 district_assigned_id: this.editedData.district_assigned_id,
                 serial_number: this.editedData.serial_number,
                 location: this.editedData.location,
@@ -1787,30 +1741,44 @@ export default {
                 purchase_date: this.editedData.purchase_date,
                 visibility_date : this.editedData.visibility_date,
 
-                transition_date : this.editedData.relocation_date,
+                transition_date : this.editedData.transition_date,
                 transition_information_note :  this.editedData.transition_information_note,
 
 
                 sticker_range_start: this.editedData.sticker_range_start,
                 sticker_range_end: this.editedData.sticker_range_end,
                 description: this.editedData.description,
+                
             }
 
             const modifyData = {
 
+                token: localStorage.getItem('access-token'),
+
+                campus_id: this.editedData.campus_uni.id,
+                school_id: this.$route.params.id,
+                allocation_type_id: parseInt(this.tab),
+                quantity:  this.editedData.quantity,
+                category_type_id:  this.editedData.inventory_category_uni.id,
+                item_name: this.editedData.item_name,
+                supplier_id: this.editedData.inventory_supplier_uni.id,
+                item_cost: this.editedData.item_cost,
+                condition_type_id: this.editedData.condition.id,
                 status_id: this.editedData.status_uni.id,
-                quantity: parseInt(this.statusChangeObject.quantity),
+                identification_type_id: this.editedData.identification_uni.id,
+                district_assigned_id: this.editedData.district_assigned_id,
+                serial_number: this.editedData.serial_number,
+                location: this.editedData.location,
+                location_information_note: this.editedData.location_information_note,
+                note:  this.editedData.note,
+                purchase_date: this.editedData.purchase_date,
+                visibility_date : this.editedData.visibility_date,
+
+                transition_date : this.editedData.transition_date,
+                transition_information_note :  this.editedData.transition_information_note,
+
                 sticker_range_start: this.editedData.sticker_range_start,
                 sticker_range_end: this.editedData.sticker_range_end,
-                location: this.statusChangeObject.location,
-                location_information_note: this.statusChangeObject.locationWithinSchool,
-                note: this.statusChangeObject.note,
-                visibility_date: this.statusChangeObject.showUntil,
-                new_sticker_range_start: this.statusChangeObject.stickerRangeStart,
-                new_sticker_range_end: this.statusChangeObject.stickerRangeEnd,
-                allocation_type_id: this.allocationSelected.id,
-                school_id: this.statusChangeObject.schoolToTransfer && this.statusChangeObject.schoolToTransfer.id,
-                purchase_date: this.editedData.purchase_date,
                 description: this.editedData.description,
 
             }

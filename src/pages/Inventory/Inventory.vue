@@ -135,6 +135,15 @@ export default {
       }
       
     }
+  },
+
+  created() {
+    this.schoolName = this.$route.query.name
+
+    let title = parseInt(this.tab)
+    let id = this.$route.params.id
+
+    this.getAllocationBar(title, id)
   }
 }
 

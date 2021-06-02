@@ -1269,6 +1269,9 @@ export default {
         editInventory(index) {
 
         const updateData = {
+
+            token: localStorage.getItem('access-token'),
+
             school_id: this.editedItem.school_id,
             allocation_type_id: parseInt(this.editedItem.allocation_type_id),
             quantity:  this.editedItem.quantity,
@@ -1288,6 +1291,8 @@ export default {
         }
 
         const modifyData = {
+
+            token: localStorage.getItem('access-token'),
 
             status_id: this.editedItem.status_uni.id,
             quantity: parseInt(this.statusChangeObject.quantity),
@@ -1420,6 +1425,7 @@ export default {
             this.data[index].changed = false
             data.school_year_id = this.editedItem.school_year_id
             data.purchase_date = this.editedItem.purchase_date
+            data.token = localStorage.getItem('access-token')
 
             const conf = {
             method: 'PUT',
@@ -1427,7 +1433,7 @@ export default {
             headers: {
                 Accept: 'application/json',
             },
-            data: data
+                data: data
             }
 
             axios(conf)
@@ -1441,40 +1447,36 @@ export default {
         filterInventory() {
 
         this.loading = true
-        console.log('filterInventory')
 
-        let uri = '';
+        let uri = '?';
 
         if(this.filter != '') {
-            uri += '&search=' + this.filter
+            uri += `search=${this.filter}&`
         }
 
         if(this.filterCategoryValue != '') {
-            uri += '&category=' + this.filterCategoryValue.id
+            uri += `category=${this.filterCategoryValue.id}&`
         }
 
         if(this.filterVendor != '') {
-            uri += '&supplier=' + this.filterVendor.id
+            uri += `supplier=${this.filterVendor.id}&`
         }
 
         if(this.filterCondition != '') {
-            uri += '&condition=' + this.filterCondition.id
+            uri += `condition=${this.filterCondition.id}&`
         }
 
         if(this.filterStatus != '') {
-            uri += '&status=' + this.filterStatus.id
+            uri += `status=${this.filterStatus.id}&`
         }
 
         if(this.filterCampusValue != '') {
-            uri += '&campus=' + this.filterCampusValue.id
-
+            uri += `campus=${this.filterCampusValue.id}&`
         }
-
-        console.log('URI', uri)
 
         const conf = {
             method: 'GET',
-            url: config.filterInventory + '1/' + this.$route.params.id + '?' + uri,
+            url: config.filterInventory + '1/' + this.$route.params.id + uri,
             headers: {
             Accept: 'application/json',
             }
@@ -1602,6 +1604,7 @@ export default {
 
     },
     created() {
+        
         this.tab = this.type
         this.getInventoryByType( parseInt(this.tab), this.$route.params.id, this.count, this.current )
         this.getcategories()

@@ -47,7 +47,7 @@
         <q-card-actions class="row justify-end">
             <div>
                 <q-btn flat label="Cancel" color="primary" @click="emitClosePopup"></q-btn>
-                <q-btn flat label="Save"  @click="addTrackingStatus" :loading="loading" color="primary"></q-btn>
+                <q-btn flat label="Save" :disabled="!selectedStatus.id"  @click="addTrackingStatus" :loading="loading" color="primary"></q-btn>
             </div>
         </q-card-actions>
 
@@ -103,7 +103,8 @@ export default {
                 data: {
                     id: this.data.id,
                     note: this.note,
-                    status: this.selectedStatus.id
+                    status: this.selectedStatus.id,
+                    token: localStorage.getItem('access-token'),
                 }
             }
 

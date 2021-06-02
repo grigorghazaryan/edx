@@ -288,13 +288,19 @@ export default {
       })
     },
     addSupplier() {
+
+      let data = {
+        company_name: this.vendor.company_name,
+        token: localStorage.getItem('access-token'),
+      }
+
         const conf = {
           method: 'POST',
           url: config.getSuppliers,
           headers: {
             Accept: 'application/json',
           },
-          data: this.vendor
+          data: data
         }
 
         axios(conf).then(res => {

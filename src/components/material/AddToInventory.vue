@@ -231,7 +231,8 @@ export default {
                     Accept: 'application/json',
                 },
                 data: {
-                    breakdown: breakdowns
+                    breakdown: breakdowns,
+                    token: localStorage.getItem('access-token'),
                 }
             }
 

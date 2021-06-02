@@ -316,6 +316,8 @@ export default {
 
             console.log(payScheduleArray)
 
+            payScheduleArray.token  = localStorage.getItem('access-token')
+
             const conf = {
                 method: 'POST',
                 url: config.addTeacherBudget + this.title,

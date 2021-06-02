@@ -585,7 +585,7 @@
                             <div class="col-md-6">
                                 <div class="text-subtitle2 q-mb-sm">Total with markup</div>
                                 <q-input prefix="$" standout readonly  class="q-mb-md" type="text" 
-                                v-model="(parseFloat(editedItem.amount) + parseFloat(((editedItem.amount * editedItem.percentage) / 100))).toFixed(2)" dense autofocus />
+                                :value="(parseFloat(editedItem.amount) + parseFloat(((editedItem.amount * editedItem.percentage) / 100)))" dense autofocus />
                             </div>
                         </div>
 
@@ -1587,6 +1587,8 @@ export default {
 
             const editData = {
 
+                token: localStorage.getItem('access-token'),
+
                 supplier_id: this.editedItem.provider && this.editedItem.provider.id,
                 status_id: this.editedItem.status_uni && this.editedItem.status_uni.id,
                 approval_status_id: this.editedItem.approval_status_uni && this.editedItem.approval_status_uni.id,
@@ -1651,6 +1653,8 @@ export default {
             this.btnLoading = true;
 
             const editData = {
+
+                token: localStorage.getItem('access-token'),
 
                 supplier_id: this.editedItem.provider && this.editedItem.provider.id,
                 status_id: this.editedItem.status_uni && this.editedItem.status_uni.id,
@@ -2073,6 +2077,9 @@ export default {
             }
 
 
+            attendeesArr.token = localStorage.getItem('access-token')
+
+
             const conf = {
                 method: 'POST',
                 url: config.addAttendee + item.id,
@@ -2178,6 +2185,7 @@ export default {
         addParticipant() {
 
             let obj = {
+                token: localStorage.getItem('access-token'),
                 searchParties: this.attendingSearch,
                 summary_id: this.attendeeItem.id, 
                 type_id: this.attendeeItem.type.id, 
@@ -2271,6 +2279,7 @@ export default {
             }
 
             let data = {
+                token: localStorage.getItem('access-token'),
                 start_date: tempData.startdate,
                 end_date: tempData.endDate,
                 start_time: tempData.time1,
@@ -2320,6 +2329,7 @@ export default {
             }
 
             let data = {
+                token: localStorage.getItem('access-token'),
                 start_date: tempData.startdate,
                 end_date: tempData.endDate,
                 start_time: tempData.time1,

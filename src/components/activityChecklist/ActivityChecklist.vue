@@ -317,7 +317,7 @@
 
             <!-- Table Body -->
             <template v-slot:body="props">
-                <q-tr :props="props" class="cursor-pointer">
+                <q-tr :props="props" @click="openModal" class="cursor-pointer">
                     <q-td key="provider" :props="props">
                         <span class="inline-span table-text"> {{ props.row.provider }} </span>
                     </q-td>
@@ -464,6 +464,37 @@
 
             </q-table>
         </div>
+
+
+
+
+        <dialog-draggable 
+            :width="850" 
+            :modelDialog="openModal1" 
+            :title="'Professional Development Details'" 
+            @onHide="openModal1=false"
+            :icon="'calendar_today'"
+            
+        >
+            <div class="q-pa-md scroll" style="max-height: 70vh">
+                <div class="row">
+
+              
+
+
+                </div>
+            </div>
+
+            <q-card-actions align="right">
+                <q-btn flat label="Cancel" color="primary" v-close-popup/>
+                <!-- <q-btn v-if="isEdit && !isDuplicate" :loading="btnLoading" @click="editActivity" flat label="Save" color="primary" />
+                <q-btn v-if="!isEdit && !isDuplicate" :loading="btnLoading" @click="addActivity" flat label="Add" color="primary" />
+                <q-btn v-if="isDuplicate && !isEdit" :loading="btnLoading" @click="duplicateItem" flat label="Duplicate" color="primary" /> -->
+            </q-card-actions>
+            
+        </dialog-draggable>
+
+
     </div>
 </template>
 
@@ -477,11 +508,15 @@ import ICONS from '../../../icons'
 import axios from 'axios'
 import config from '../../../config'
 
+import DialogDraggable from '../../components/DialogDraggable.vue';
 
 export default {
+        components: {
+        DialogDraggable,
+    },
     data() {
         return {
-
+            openModal1: false,
             filter: false,
 
             data: [],
@@ -604,6 +639,9 @@ export default {
         }
     },
     methods: {
+        openModal() {
+            this.openModal1 = true
+        },
         changePagination() {
             this.current = val
             this.getLicense( this.$route.params.id, this.count, val )

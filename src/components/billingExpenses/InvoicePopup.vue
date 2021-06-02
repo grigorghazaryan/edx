@@ -699,6 +699,8 @@ export default {
             
             const data = {
 
+                token: localStorage.getItem('access-token'),
+
                 number: this.internalInvoiceData[0].internalInvoice,
                 
                 invoice_term_id: this.internalInvoiceData[0].terms?.id,
@@ -753,6 +755,8 @@ export default {
         editInvoice() {
 
             const data = {
+
+                token: localStorage.getItem('access-token'),
 
                 number: this.internalInvoiceData[0].internalInvoice,
                 

@@ -6,7 +6,7 @@
           <div v-for="i in barInfo" :key="i.id" class="col-md-2 col-sm-12 col-xs-12">
             <q-item style="background-color: #fff" class="q-pa-none q-ml-xs">
               <q-item-section side style="background-color: #fff" class=" q-pa-lg q-mr-none text-white">
-                <q-icon name="school" color="deep-orange-6" size="24px"></q-icon>
+                <q-icon :name="allocationName(i)" color="deep-orange-6" size="24px"></q-icon>
               </q-item-section>
               <q-item-section class="q-ml-none">
                 <q-item-label class="text-grey-7">{{ i.title }}</q-item-label>
@@ -50,6 +50,30 @@ export default {
                 this.barInfo = res.data.totalAllocation
             })
         },
+        allocationName(i) {
+          console.log(i, 'allocations =======')
+          let icon = '';
+
+          switch(i.title) {
+            case 'Professional Development' : 
+              icon = 'how_to_reg';
+              break;
+            case 'Instruction' : 
+              icon = 'local_library';
+              break;
+            case 'Total Instruction' : 
+              icon = 'local_library';
+              break;
+            case 'Family Engagement' : 
+              icon = 'family_restroom';
+              break;
+            default:
+              icon = 'monetization_on'
+              break;
+          }
+
+          return icon;
+        }
     },
     created() {
         this.getAllocationBar()

@@ -101,7 +101,8 @@ export default {
                 data: {
                     id: this.data.id,
                     note: this.note,
-                    status: this.isComplete
+                    status: this.isComplete,
+                    token: localStorage.getItem('access-token'),
                 }
             }
 

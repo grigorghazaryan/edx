@@ -195,6 +195,7 @@ export default {
     }
   },
   methods: {
+
     schoolsParsing(data) {
         let schoolsArr = []
         for(let i=0; i<data.length; i++) {
@@ -227,6 +228,7 @@ export default {
 
       })
     },
+
     changeRoute(id, name) {
       this.$router.push({
         path: '/Schools/' + id,
@@ -242,10 +244,16 @@ export default {
       this.current = 1
       this.getSchools(this.count, this.current)
     },
+    
     showPopup() {
       this.isShowPopup = true
     },
     addSchool() {
+
+      let data = {
+        name: this.school.name,
+        token: localStorage.getItem('access-token'),
+      }
 
         const conf = {
           method: 'POST',
@@ -253,7 +261,7 @@ export default {
           headers: {
             Accept: 'application/json',
           },
-          data: this.school
+          data: data
         }
 
         axios(conf).then(res => {
@@ -316,6 +324,7 @@ export default {
         this.filterSchools()
       }
     }
+
   },
   created() {
     this.getSchools(this.count, this.current)

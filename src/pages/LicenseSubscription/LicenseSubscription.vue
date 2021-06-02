@@ -1,16 +1,16 @@
 <template>
   <q-page class="q-pa-sm edx-background">  
 
-    <div class="q-pa-md q-gutter-sm">
+    <!-- <div class="q-pa-md q-gutter-sm">
       <q-breadcrumbs>
         <q-breadcrumbs-el icon="dashboard" label="Dashboard" to="/" />
         <q-breadcrumbs-el label="Budget"/>
         <q-breadcrumbs-el label="License & Subscription"/>
         <q-breadcrumbs-el :label="schoolName" />
       </q-breadcrumbs>
-    </div>
+    </div> -->
 
-    <q-card class="bg-transparent no-shadow no-border">
+    <!-- <q-card class="bg-transparent no-shadow no-border">
       <q-card-section class="q-pa-none">
         <div class="row q-col-gutter-sm ">
 
@@ -95,9 +95,9 @@
 
         </div>
       </q-card-section>
-    </q-card>
+    </q-card> -->
 
-    <div class="q-pa-sm q-mt-sm q-gutter-sm">
+    <!-- <div class="q-pa-sm q-mt-sm q-gutter-sm">
       
       <div class="edx-header-parent">
         <span class="edx-header-text">{{ schoolName }}</span>
@@ -156,7 +156,7 @@
 
       </q-card>
       
-    </div>
+    </div> -->
 
   </q-page>
 </template>
@@ -212,7 +212,6 @@
           this.getActivityBar(parseInt(this.tab), this.$route.params.id)
         }
     }
-
 
 </script>
 

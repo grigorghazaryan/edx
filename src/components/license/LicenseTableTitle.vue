@@ -19,6 +19,65 @@
             <!-- Table Header -->
             <template v-slot:top-right="props">
 
+            <q-input
+              class="q-mr-md"
+              outlines
+              dense
+              v-model="filter"
+              placeholder="Search"
+              @keyup="keyUpFilter" 
+              @keydown="keyDownFilter"
+            >
+              <template v-slot:append>
+                <q-icon name="search" />
+              </template>
+            </q-input>
+
+            <q-select
+              @input="filterLicense"
+              class="q-mr-md"
+              style="min-width: 250px; max-width: 250px"
+              dense
+              outlines
+              label="Campus"
+              :options="campusOptions"
+              v-model="filterCampusValue"
+            >
+              <template v-if="filterCampusValue" v-slot:append>
+                <q-icon name="cancel" @click.stop="filterCampusValue = '', filterLicense()" class="cursor-pointer" />
+              </template>
+            </q-select>
+
+            <q-select
+              @input="filterLicense"
+              class="q-mr-md"
+              style="min-width: 200px; max-width: 200px"
+              dense
+              outlines
+              label="Vendor"
+              :options="optionsSupplier"
+              v-model="filterVendor"
+            >
+              <template v-if="filterVendor" v-slot:append>
+                <q-icon name="cancel" @click.stop="filterVendor = '', filterLicense()" class="cursor-pointer" />
+              </template>
+            </q-select>
+
+            <q-select
+              @input="filterLicense"
+              class="q-mr-md"
+              style="min-width: 150px; max-width: 150px"
+              dense
+              outlines
+              label="Status"
+              :options="statusOptions"
+              v-model="filterStatus"
+            >
+              <template v-if="filterStatus" v-slot:append>
+                <q-icon name="cancel" @click.stop="filterStatus = '', filterLicense()" class="cursor-pointer" />
+              </template>
+            </q-select>
+
               <q-btn square class="q-mr-md edx-add-btn" text-color="white" icon="add" 
               @click="openLicenseModal()" no-caps>Add</q-btn>
 
@@ -30,8 +89,6 @@
                   no-caps
                   @click="exportTable" 
                 />
-
-                
 
                 <q-btn
                     flat
@@ -107,7 +164,7 @@
                     :props="props"
                     style="white-space: initial;width: 350px; max-width: 350px;"
                 >
-                <span class="inline-span">{{ props.row.Item_name }}</span>
+                <span class="inline-span">{{ props.row.item_name }}</span>
                 </q-td>
 
                 
@@ -127,7 +184,7 @@
                     :props="props"
                 >
 
-                <div>$ {{ props.row.item_cost }}</div>
+                <div>$ {{ (props.row.item_cost) && (props.row.item_cost).toFixed(2) }}</div>
 
                 </q-td>
 
@@ -135,32 +192,57 @@
                     key="totalCost"
                     :props="props"
                 >
-                    <div>$ {{ parseFloat(props.row.quantity * props.row.item_cost) }}</div>
+                    <div>$ {{ (parseFloat(props.row.quantity * props.row.item_cost)) && (parseFloat(props.row.quantity * props.row.item_cost)).toFixed(2) }}</div>
 
                 </q-td>
 
                 <q-td key="purchaseDate" :props="props">
                     <div>{{ props.row.purchase_date }}</div>
-                    <q-popup-proxy transition-show="scale" transition-hide="scale">
+                    <!-- <q-popup-proxy transition-show="scale" transition-hide="scale">
                         <q-date color="edx-pagination" v-model="props.row.purchase_date" mask="MM-DD-YYYY" @input="detectChange(props.rowIndex)">
                         <div class="row items-center justify-end q-gutter-sm">
                             <q-btn label="Cancel" color="primary" flat v-close-popup />
                             <q-btn label="OK" color="primary" flat v-close-popup />
                         </div>
                         </q-date>
-                    </q-popup-proxy>
+                    </q-popup-proxy> -->
                 </q-td>
 
                 <q-td key="expirationDate" :props="props">
                     <div>{{ props.row.expiration_date }}</div>
-                    <q-popup-proxy transition-show="scale" transition-hide="scale">
+                    <!-- <q-popup-proxy transition-show="scale" transition-hide="scale">
                         <q-date color="edx-pagination" v-model="props.row.expiration_date" mask="MM-DD-YYYY" @input="detectChange(props.rowIndex)">
                         <div class="row items-center justify-end q-gutter-sm">
                             <q-btn label="Cancel" color="primary" flat v-close-popup />
                             <q-btn label="OK" color="primary" flat v-close-popup />
                         </div>
                         </q-date>
-                    </q-popup-proxy>
+                    </q-popup-proxy> -->
+                </q-td>
+
+                <q-td key="status" :props="props">
+                    <div v-if="props.row.status">
+                      <q-icon v-if="props.row.status.id == 1" name="card_membership" class="edx-green">
+                        <q-tooltip 
+                                content-class="edx-tooltip"
+                                anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                                transition-show="flip-right"
+                                transition-hide="flip-left"
+                            >
+                                <strong>{{ props.row.status.label }}</strong>
+                          </q-tooltip>
+                      </q-icon>
+                      <q-icon v-else name="dvr" class="edx-blue">
+                        <q-tooltip 
+                                content-class="edx-tooltip"
+                                anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                                transition-show="flip-right"
+                                transition-hide="flip-left"
+                            >
+                                <strong>{{ props.row.status.label }}</strong>
+                          </q-tooltip>
+                      </q-icon>
+                    </div>
                 </q-td>
 
                 <q-td key="actions" :props="props" >
@@ -283,10 +365,12 @@
         :show="licensePopup"
         :data="editedItem" 
         :isEdit="addNew" 
+        :isDuplicate="isDuplicate"
         :tab="tab"
         @togglePopup="togglePopup"
         @updateTableList="updateTableList"
       />
+      
     </div>
 
 </template>
@@ -300,6 +384,7 @@ import config from '../../../config'
 import ICONS from '../../../icons'
 
 let oldObject = {}
+
 let typingTimer
 let doneTypingInterval = 500
 
@@ -318,7 +403,15 @@ export default {
   data() {
     return {
         licensePopup: false,
+        statusOptions: [],
 
+        filter: '',
+        filterCategoryValue: '',
+        filterCampusValue: '',
+        filterVendor: '',
+        filterCondition: '',
+        filterStatus: '',
+        campusOptions: [],
 
 
 
@@ -396,6 +489,13 @@ export default {
           sortable: true
         },
         {
+          name: "status",
+          align: "left",
+          label: "Status",
+          field: "status",
+          sortable: true
+        },
+        {
           name: "actions",
           align: "left",
           label: "Actions",
@@ -427,7 +527,10 @@ export default {
       optionsCondition: [],
       optionsStatus: [],
       typeModel: null,
+
       addNew: false,
+      isDuplicate: false,
+
       rowsPerPageArr: ['5', '10', '25', '50', '75', '100'], 
       onpremise: false,
       offpremise: false,
@@ -548,7 +651,14 @@ export default {
                   label: 'N/A'
                 }
               }
+
+              data[i].is_subscription == 1 ? true : false
+              data[i].supplier && ( data[i].inventory_supplier_uni = { id: data[i].supplier.id, label: data[i].supplier.company_name  })
+              data[i].campus && (data[i].campus_uni = { id: data[i].campus.id, label: data[i].campus.name  })
+              data[i].status && (data[i].status = { id: data[i].status.id, label: data[i].status.name  })
+
             }
+            console.log('license data = ',data)
             return data
     },
 
@@ -561,45 +671,32 @@ export default {
       return year + "-" + month + "-" + day;
     },
     openEditLicensePopup(data) {
-      console.log(data, 'asdasdasdasdasd gridsdfsdfsdfsd')
+
         this.addNew = false
+        this.isDuplicate = false
         this.editedItem = data
         this.licensePopup = true
+
     },
     openDuplicatePopup(data) {
+
         this.addNew = true
+        this.isDuplicate = true
+
         this.editedItem = data
         this.licensePopup = true
+
     },
     openLicenseModal(data) {
+
         this.addNew = true
+        this.isDuplicate = false
+
         this.editedItem = data
         this.licensePopup = true
-
-    //   let date = this.getToday()
-
-    //   const obj  = {
-    //     quantity: 1,
-    //     add: true,
-    //     allocation_type_id_uni: {
-    //       id: 1,
-    //       label: 'Title I'      
-    //     },
-    //     Item_name: '',
-    //     supplier_id: 1,
-    //     item_cost: 0,
-    //     total_cost: 0,
-    //     purchase_date: date,
-    //     expiration_date: date,
-    //     notes: '',
-    //     changed: true,
-    //     showEditButton: false,
-    //   }
-
-    //   this.data.unshift(obj)
-    //   this.editedItem = obj
     
     },
+
     // editInventory(index) {
 
 
@@ -809,18 +906,115 @@ export default {
       })
 
     },
-    getLicenseBar(id) {
-      const conf = {
-        method: 'GET',
-        url: config.getTotalLicense + id,
-        headers: {
-            Accept: 'application/json',
+    getStatus() {
+
+            const conf = {
+                method: 'GET',
+                url: config.getLicenseStatus,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+
+                let status = []
+                
+                for(let i=0; i<res.data.status.length; i++) {
+                    status.push({
+                        id: res.data.status[i].id,
+                        label: res.data.status[i].name || '',
+                    })
+                }
+                this.statusOptions = status
+
+            })
+    },
+                // Filter key events
+    keyUpFilter() {
+    console.log('Key up')
+    clearTimeout(typingTimer);
+    typingTimer = setTimeout(this.doneTyping, doneTypingInterval);
+    },
+    keyDownFilter() {
+    console.log('Key down')
+    clearTimeout(typingTimer);
+    },
+    doneTyping() {
+    console.log('Typing done!')
+    if(this.filter.length > 1 || this.filter.length == 0) {
+        console.log('Send Request...')
+        this.filterLicense()
+    }
+    },
+    getCampusBySchoolId(id) {
+            
+
+            let arr = []
+            const conf = {
+                method: 'GET',
+                url: config.getCampuses + id,
+                headers: {
+                    Accept: 'application/json',
+                }
+            }
+
+            axios(conf).then(res => {
+                let campuses = res.data[0].campus
+                if(campuses.length) {
+                    for(let i=0; i<campuses.length; i++) {
+                        arr.push({
+                            id: campuses[i].id,
+                            label: campuses[i].name
+                        })
+                    }
+                }
+                
+                this.campusOptions = arr
+            })
+        },
+    filterLicense() {
+      this.loading = true
+
+        let uri = '?';
+
+        if(this.filter != '') {
+            uri += `search=${this.filter}&`
         }
-      }
-      axios(conf).then(res => {
-          this.barInfo = res.data
-          console.log('Bar info', this.barInfo)
-      })
+
+        if(this.filterVendor != '') {
+            uri += `supplier=${this.filterVendor.id}&`
+        }
+
+        if(this.filterStatus != '') {
+            uri += `status=${this.filterStatus.id}&`
+        }
+
+        if(this.filterCampusValue != '') {
+            uri += `campus=${this.filterCampusValue.id}&`
+        }
+
+        const conf = {
+            method: 'GET',
+            url: config.filterLicense + this.tab + '/' + this.$route.params.id + uri,
+            headers: {
+            Accept: 'application/json',
+            }
+        }
+
+        axios(conf).then(res => {
+            console.log('res', res)
+
+            this.pages = res.data.pagesCount
+            let data = res.data.license
+            let filteredData = this.parsingLicense(data)
+
+            this.data = filteredData
+            this.tempDataX = filteredData
+
+            this.loading = false
+        });
+
     },
   },
   watch: {
@@ -830,6 +1024,8 @@ export default {
 
     this.getLicense(this.$route.params.id, this.count, this.current)
     this.getAdditionalInfo(this.tab)
+    this.getStatus()
+    this.getCampusBySchoolId(this.$route.params.id)
   },
     computed: {
         // BUTTONS

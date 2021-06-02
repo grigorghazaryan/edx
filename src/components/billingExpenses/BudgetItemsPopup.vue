@@ -254,6 +254,7 @@ export default {
                     Accept: 'application/json',
                 },
                 data: {
+                    token: localStorage.getItem('access-token'),
                     budget_ids: budgetIds
                 }
             }

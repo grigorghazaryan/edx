@@ -6,12 +6,13 @@ const routes = [
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [
+      
       ...RouterTabRoutes,
       {path: '', name: 'Dashboard', meta: { title: 'Dashboard' }, component: () => import('pages/Dashboard.vue')},
       {path: '/Profile', name: 'Profile', meta: { title: 'User Profile' }, component: () => import('pages/UserProfile.vue')},
       {path: '/TreeTable', component: () => import('pages/TreeTable.vue')},
       {path: '/Tables', component: () => import('pages/Tables.vue')},
-      {path: '/Administration1', component: () => import('pages/Administration1.vue')},
+      // {path: '/Administration1', component: () => import('pages/Administration1.vue')},
       // Here Refactoring nedded! change static routes to nested ---------------------------
       {path: '/Allocations/Title1', name: 'Title 1', meta: { title: 'Title I' }, component: () => import('pages/Allocations/Title1.vue')},
       {path: '/Allocations/Title2', name: 'Title 2', meta: { title: 'Title II' }, component: () => import('pages/Allocations/Title2.vue')},

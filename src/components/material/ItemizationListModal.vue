@@ -420,8 +420,6 @@ export default {
                 })
             }
 
-
-
             const conf = {
                 method: 'POST',
                 url: config.addItemizationItem + this.id,
@@ -429,7 +427,8 @@ export default {
                     Accept: 'application/json',
                 },
                 data: {
-                    breakdown: breakdowns
+                    breakdown: breakdowns,
+                    token: localStorage.getItem('access-token'),
                 }
             }
 

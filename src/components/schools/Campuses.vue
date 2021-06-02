@@ -176,7 +176,8 @@ export default {
 
             let data = {
                 name: this.campus.name,
-                description: this.campus.description
+                description: this.campus.description,
+                token: localStorage.getItem('access-token'),
             }
 
             const conf = {

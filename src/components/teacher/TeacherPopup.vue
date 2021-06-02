@@ -1367,6 +1367,8 @@ export default {
             
             let data = {
 
+                token: localStorage.getItem('access-token'),
+
                 teacher_role_type_id: this.editedItem.role.id,
                 campus_id: this.editedItem.campus.id,
                 subcategory_id: this.editedItem.subcategory.id,
@@ -1432,6 +1434,8 @@ export default {
         editTeacher() {
 
             let data = {
+
+                token: localStorage.getItem('access-token'),
 
                 teacher_role_type_id: this.editedItem.role.id,
                 campus_id: this.editedItem.campus.id,

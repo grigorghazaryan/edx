@@ -350,6 +350,7 @@ export default {
             }
 
             let data = {
+                token: localStorage.getItem('access-token'),
                 address_line_1: this.address.address1,
                 address_line_2: this.address.address2,
                 city: this.address.city,
@@ -411,6 +412,7 @@ export default {
             }
             
             let data = {
+                token: localStorage.getItem('access-token'),
                 address_line_1: this.address.address1,
                 address_line_2: this.address.address2,
                 city: this.address.city,

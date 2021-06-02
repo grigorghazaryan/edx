@@ -5,7 +5,7 @@
       <q-breadcrumbs>
         <q-breadcrumbs-el icon="dashboard" label="Dashboard" to="/" />
         <q-breadcrumbs-el label="Budget" />
-        <q-breadcrumbs-el label="Teacher Costs" />
+        <q-breadcrumbs-el label="Professional Development" />
       </q-breadcrumbs>
     </div> -->
 
@@ -28,6 +28,7 @@
           <q-inner-loading showing color="primary" />
         </template>
 
+
         <!-- Table Header -->
         <template v-slot:top-right="props">
 
@@ -38,9 +39,10 @@
             v-model="filter"
             placeholder="Search"
             style="min-width: 250px; max-width: 250px"
+            @keyup="keyUpFilter" 
+            @keydown="keyDownFilter"
           >
-            <!-- @keyup="keyUpFilter" 
-            @keydown="keyDownFilter" -->
+            <!--  -->
             <template v-slot:append>
               <q-icon name="search" />
             </template>
@@ -62,6 +64,8 @@
           </q-btn>
           
         </template>
+
+        
 
         <!-- Table Body -->
         <template v-slot:body="props">
@@ -110,6 +114,7 @@
 
 import axios from 'axios'
 import config from '../../../config'
+let typingTimer, doneTypingInterval = 500;
 
 export default {
 
@@ -136,6 +141,17 @@ export default {
     }
   },
   methods: {
+    schoolsParsing(data) {
+        let schoolsArr = []
+        for(let i=0; i<data.length; i++) {
+          let obj = {
+            id: data[i].id,
+            name: data[i].school_name
+          }
+          schoolsArr.push(obj)
+        }
+        return schoolsArr
+    },
     getSchools(limit, page) {
 
       const conf = {
@@ -148,18 +164,17 @@ export default {
 
       axios(conf).then(res => {
         this.pages = res.data.pagesCount
-        let schoolsArr = []
-        for(let i=0; i<res.data.schools.length; i++) {
-          let obj = {
-            id: res.data.schools[i].id,
-            name: res.data.schools[i].school_name
-          }
-          schoolsArr.push(obj)
-        }
-        this.data = schoolsArr
+        let data = res.data.schools
+
+        let finalData = this.schoolsParsing(data)
+
+        this.data = finalData
         this.loading = false
+
       })
     },
+
+
     changeRoute(id, name) {
       this.$router.push({
         path: '/Teachers/' + id,
@@ -175,9 +190,64 @@ export default {
       this.current = 1
       this.getSchools(this.count, this.current)
     },
+
+
+    filterSchools() {
+      this.loading = true
+      console.log('send request')
+
+      const conf = {
+        method: 'GET',
+        url: config.filterSchool + this.filter,
+        headers: {
+          Accept: 'application/json',
+        }
+      }
+
+      axios(conf).then(res => {
+        this.pages = res.data.pagesCount
+        let data = res.data.schools
+
+        let filteredData = this.schoolsParsing(data)
+
+        this.data = filteredData
+        this.loading = false
+      })
+      .catch(err => {
+        this.loading = false
+      })
+
+
+    },
+    // Filter key events
+    keyUpFilter() {
+      clearTimeout(typingTimer);
+      typingTimer = setTimeout(this.doneTyping, doneTypingInterval);
+    },
+    keyDownFilter() {
+      clearTimeout(typingTimer);
+    },
+    doneTyping() {
+      if(this.filter.length > 1 || this.filter.length == 0) {
+        this.filterSchools()
+      }
+    }
+    
+
   },
   created() {
     this.getSchools(this.count, this.current)
+  },
+  computed: {
+    routeTab() {
+      if(this.$route.query.name) {
+        return `${this.$route.query.name}`
+      }else {
+        let name = this.$route.path.substring(1);
+        return name
+      }
+      
+    }
   }
 
 }

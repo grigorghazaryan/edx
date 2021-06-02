@@ -5,6 +5,7 @@
     :title="'Upload Document'"
     :icon="'upload_file'"
   >
+
     <q-card-section
       style="max-height: 60vh"
       class="scroll q-pt-none q-pb-none q-pr-none q-pl-none"
@@ -66,6 +67,7 @@
           color="primary"
           @click="emitClosePopup"
         ></q-btn>
+
         <q-btn
           flat
           :loading="loading"
@@ -73,6 +75,7 @@
           @click="addDocument"
           color="primary"
         ></q-btn>
+
       </div>
     </q-card-actions>
   </dialog-draggable>

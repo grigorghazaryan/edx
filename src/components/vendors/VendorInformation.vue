@@ -261,6 +261,7 @@ export default {
                     fax: this.fax,
                 },
                 url: this.url,
+                token: localStorage.getItem('access-token'),
             }
 
             const conf = {

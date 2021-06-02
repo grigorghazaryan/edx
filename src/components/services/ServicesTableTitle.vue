@@ -2263,6 +2263,8 @@ export default {
 
             const editData = {
 
+                token: localStorage.getItem('access-token'),
+
                 budget_unit_id: this.editedItem.qtyOptions?.id,
 
                 supplier_id: this.editedItem.provider && this.editedItem.provider.id,
@@ -2327,6 +2329,8 @@ export default {
             this.btnLoading = true;
 
             const editData = {
+
+                token: localStorage.getItem('access-token'),
 
                 budget_unit_id: this.editedItem.qtyOptions?.id,
                 quantity: this.editedItem.quantity,
@@ -2882,6 +2886,7 @@ export default {
         addParticipant() {
 
             let obj = {
+                token: localStorage.getItem('access-token'),
                 searchParties: this.attendingSearch,
                 summary_id: this.attendeeItem.id, 
                 type_id: this.attendeeItem.type.id, 
@@ -2975,6 +2980,7 @@ export default {
             }
 
             let data = {
+                token: localStorage.getItem('access-token'),
                 start_date: tempData.startdate,
                 end_date: tempData.endDate,
                 start_time: tempData.time1,
@@ -3024,6 +3030,7 @@ export default {
             }
 
             let data = {
+                token: localStorage.getItem('access-token'),
                 start_date: tempData.startdate,
                 end_date: tempData.endDate,
                 start_time: tempData.time1,
