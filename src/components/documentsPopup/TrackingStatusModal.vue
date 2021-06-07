@@ -47,7 +47,8 @@
         <q-card-actions class="row justify-end">
             <div>
                 <q-btn flat label="Cancel" color="primary" @click="emitClosePopup"></q-btn>
-                <q-btn flat label="Save" :disabled="!selectedStatus.id"  @click="addTrackingStatus" :loading="loading" color="primary"></q-btn>
+                <q-btn flat label="Save"   @click="addTrackingStatus" :loading="loading" color="primary"></q-btn>
+                <!-- :disabled="!selectedStatus.id" -->
             </div>
         </q-card-actions>
 
@@ -211,6 +212,13 @@ export default {
             if(val) {
                 this.getDocumentsStatus()
                 this.note = this.data.note
+
+                console.log('$$$$$$$$$$$$$$$$$$$$$')
+                console.log('$$$$$$$$$$$$$$$$$$$$$')
+                console.log('DATA', this.data)
+                console.log('$$$$$$$$$$$$$$$$$$$$$')
+                console.log('$$$$$$$$$$$$$$$$$$$$$')
+
                 if(this.data.status) {
                     this.selectedStatus = {
                         id: this.data.status.id,
@@ -222,6 +230,7 @@ export default {
                         label: null
                     }
                 }
+
             }
         },
 

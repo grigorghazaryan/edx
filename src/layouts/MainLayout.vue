@@ -80,7 +80,7 @@
 
           <!-- MANAGEMENT -->
 
-          <q-expansion-item v-if="!miniState && !isAdmin && !isUser"
+          <q-expansion-item v-if="!miniState"
             icon="settings"
             label="Management"
           >
@@ -108,7 +108,8 @@
                 </q-item-section>
               </q-item>
             </q-list>
-            <q-list class="bg-sidebar-opened edx-menu-toggle">
+
+            <q-list v-if="!isUser && !isAdmin" class="bg-sidebar-opened edx-menu-toggle">
               <q-item to="/TeachersXX" active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
                   <q-icon name="people"/>
@@ -118,7 +119,7 @@
                 </q-item-section>
               </q-item>
             </q-list>
-            <q-list class="bg-sidebar-opened edx-menu-toggle">
+            <q-list v-if="!isUser && !isAdmin" class="bg-sidebar-opened edx-menu-toggle">
               <q-item to="/SchoolYear" active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
                   <q-icon name="date_range"/>
@@ -130,7 +131,7 @@
             </q-list>
           </q-expansion-item>
 
-          <q-item v-if="miniState && !isAdmin" active-class="q-item-no-link-highlighting">
+          <q-item v-if="miniState" active-class="q-item-no-link-highlighting">
             <q-item-section avatar>
               <q-icon name="settings"/>
             </q-item-section>
@@ -162,7 +163,7 @@
                   </q-item-section>
                 </q-item>
               </q-list>
-              <q-list class="edx-sidebar-background edx-sidebar-menu-text" style="min-width: 100px">
+              <q-list v-if="!isUser && !isAdmin" class="edx-sidebar-background edx-sidebar-menu-text" style="min-width: 100px">
                 <q-item clickable  v-close-popup to="/TeachersXXX" active-class="q-item-no-link-highlighting">
                   <q-item-section avatar>
                     <q-icon name="people"/>
@@ -172,7 +173,7 @@
                   </q-item-section>
                 </q-item>
               </q-list>
-              <q-list class="edx-sidebar-background edx-sidebar-menu-text" style="min-width: 100px">
+              <q-list v-if="!isUser && !isAdmin" class="edx-sidebar-background edx-sidebar-menu-text" style="min-width: 100px">
                 <q-item clickable  v-close-popup to="/SchoolYear" active-class="q-item-no-link-highlighting">
                   <q-item-section avatar>
                     <q-icon name="date_range"/>
@@ -578,7 +579,7 @@
               </q-item>
             </q-list>
 
-            <q-list v-if="!isAdmin" class="bg-sidebar-opened edx-menu-toggle">
+            <q-list v-if="isSuperAdmin" class="bg-sidebar-opened edx-menu-toggle">
               <q-item to="/Teacher Assignments" 
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
@@ -778,7 +779,7 @@
 
           <!-- TRACKING -->
 
-          <q-expansion-item v-if="!miniState && !isUser"
+          <q-expansion-item v-if="!miniState"
             icon="published_with_changes"
             label="Tracking"
           >
@@ -823,11 +824,12 @@
           </q-item>
 
           <!-- REPORTING -->
-          <q-expansion-item v-if="!miniState && !isUser"
+          <q-expansion-item v-if="!miniState"
             icon="leaderboard"
             label="Reporting"
           >
-            <q-list class="bg-sidebar-opened edx-menu-toggle">
+
+            <q-list class="bg-sidebar-opened edx-menu-toggle" v-if="!isUser">
               <q-item to="/AllocationReports"
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
@@ -839,7 +841,7 @@
               </q-item>
             </q-list>
 
-            <q-list class="bg-sidebar-opened edx-menu-toggle">
+            <q-list class="bg-sidebar-opened edx-menu-toggle"  v-if="!isUser">
               <q-item to="/BillingReports" 
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
@@ -875,7 +877,7 @@
               </q-item>
             </q-list>
 
-            <q-list class="bg-sidebar-opened edx-menu-toggle">
+            <q-list class="bg-sidebar-opened edx-menu-toggle"  v-if="!isUser">
               <q-item to="/ReimbursementReports" 
               active-class="q-item-no-link-highlighting" class="sidebar-dropdown-bottom-menu">
                 <q-item-section avatar>
@@ -888,7 +890,7 @@
             </q-list>
           </q-expansion-item>
 
-          <q-item v-if="miniState && !isUser" active-class="q-item-no-link-highlighting">
+          <q-item v-if="miniState" active-class="q-item-no-link-highlighting">
             <q-item-section avatar>
               <q-icon name="leaderboard"/>
             </q-item-section>
@@ -899,7 +901,7 @@
               anchor="top right"
               self="top left"
             >
-              <q-list class="edx-sidebar-background edx-sidebar-menu-text" style="min-width: 100px">
+              <q-list  v-if="!isUser" class="edx-sidebar-background edx-sidebar-menu-text" style="min-width: 100px">
                 <q-item clickable  v-close-popup to="/AllocationReports" active-class="q-item-no-link-highlighting">
                   <q-item-section avatar>
                     <q-icon name="poll"/>
@@ -909,7 +911,7 @@
                   </q-item-section>
                 </q-item>
               </q-list>
-              <q-list class="edx-sidebar-background edx-sidebar-menu-text" style="min-width: 100px">
+              <q-list  v-if="!isUser" class="edx-sidebar-background edx-sidebar-menu-text" style="min-width: 100px">
                 <q-item clickable  v-close-popup to="/BillingReports" active-class="q-item-no-link-highlighting">
                   <q-item-section avatar>
                     <q-icon name="poll"/>
@@ -939,7 +941,7 @@
                   </q-item-section>
                 </q-item>
               </q-list>
-              <q-list class="edx-sidebar-background edx-sidebar-menu-text" style="min-width: 100px">
+              <q-list  v-if="!isUser" class="edx-sidebar-background edx-sidebar-menu-text" style="min-width: 100px">
                 <q-item clickable  v-close-popup to="/InventoryReports" active-class="q-item-no-link-highlighting">
                   <q-item-section avatar>
                     <q-icon name="poll"/>

@@ -1,12 +1,11 @@
 <template>
     <div class="q-pa-sm q-mt-sm q-gutter-sm">
-      
-      <InvoicingBar />
+
+      <InvoicingBar :update="update"/>
 
       <div class="q-mt-lg"> 
-        <InvoicingTable />
+        <InvoicingTable @dataChanged="dataChanged"/>
       </div>
-
 
     </div>
 </template>
@@ -21,6 +20,16 @@ export default {
   components: {
     InvoicingBar,
     InvoicingTable
+  },
+  data() {
+      return {
+          update: false,
+      }
+  },
+  methods: {
+    dataChanged() {
+      this.update = !this.update
+    }
   }
 }
 

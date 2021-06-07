@@ -392,6 +392,7 @@ export default {
         show(val) {
             this.$emit('togglePopup', val)
 
+
             if(val) {
                 
                 this.getAdditionalInfo(this.tab)
@@ -404,6 +405,7 @@ export default {
                         item_cost: '',
                         Item_name: '',
                         Supplier: { id: null, label: null },
+                        campus_uni: { id: null, label: 'N/A' },
                         purchase_date: '',
                         expiration_date: '',
                         note: ''
@@ -414,7 +416,8 @@ export default {
                 
             }
         }
-    }
+    },
+
 
 }
 

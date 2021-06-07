@@ -57,22 +57,26 @@
                         </div>
                     </div>
                     <div class="row">
+                            
                         <div class="col-md-3 q-pr-sm">
                             <div class="q-mb-md">
                                 <div class="text-subtitle2 q-mb-sm">Category</div>
-                                <q-select outlined dense 
-                                v-model="selectedCategory" 
-                                :options="optionsCategory"
-                                @input="filterBudgetItems" />
+                                <q-select @input="filterBudgetItems" bottom-slots v-model="selectedCategory" :options="optionsCategory" dense outlined>
+                                    <template v-slot:append>
+                                        <q-icon v-if="selectedCategory" name="close" @click.stop="clearCategory" class="cursor-pointer" />
+                                    </template>
+                                </q-select>
                             </div>
                         </div>
                         <div v-if="optionsSubcategory.length" class="col-md-3 q-pr-sm">
                             <div class="q-mb-md">
                                 <div class="text-subtitle2 q-mb-sm">Subcategory</div>
-                                <q-select outlined dense 
-                                v-model="selectedSubcategory" 
-                                :options="optionsSubcategory"
-                                @input="filterBudgetItems" />
+
+                                <q-select @input="filterBudgetItems" bottom-slots v-model="selectedSubcategory" :options="optionsSubcategory" dense outlined>
+                                    <template v-slot:append>
+                                        <q-icon v-if="selectedSubcategory" name="close" @click.stop="clearSubCategory" class="cursor-pointer" />
+                                    </template>
+                                </q-select>
                             </div>
                         </div>
                         <div v-if="optionsFundSource.length" class="col-md-3 q-pr-sm">
@@ -153,6 +157,7 @@
 import dialogDraggable from '../../components/DialogDraggable'
 import axios from 'axios'
 import config from '../../../config'
+import lodash from 'lodash'
 
 export default {
     props: {
@@ -169,7 +174,10 @@ export default {
         },
         allocation: {
             required: true
-        }
+        },
+        isEdit: {
+            required: true
+        },
 
     },
     data() {
@@ -237,6 +245,10 @@ export default {
             selectedFundSource: null,
             optionsFundSource: [],
 
+            selectedTransactionsForLocal: [],
+
+
+
         }
     },
     methods: {
@@ -244,32 +256,42 @@ export default {
             this.$emit('toggleBudgetItemsPopup', false)
         },
         addSelected() {
-            this.loading = true
-            let budgetIds = Array.from(this.selectedTransactions);
 
-            const conf = {
-                method: 'POST',
-                url: config.addSelected + this.invoiceId,
-                headers: {
-                    Accept: 'application/json',
-                },
-                data: {
-                    token: localStorage.getItem('access-token'),
-                    budget_ids: budgetIds
+            if(this.isEdit) {
+
+                this.loading = true
+                let budgetIds = Array.from(this.selectedTransactions);
+
+                const conf = {
+                    method: 'POST',
+                    url: config.addSelected + this.invoiceId,
+                    headers: {
+                        Accept: 'application/json',
+                    },
+                    data: {
+                        token: localStorage.getItem('access-token'),
+                        budget_ids: budgetIds
+                    }
                 }
-            }
 
-            axios(conf).then(res => {
-                
+                axios(conf).then(res => {
+                    
+                    this.$q.notify({
+                        message: 'Added!',
+                        type: 'positive',
+                    })
+                    
+                    this.loading = false
+                    this.emitClosePopup()
 
-                this.$q.notify({
-                    message: 'Added!',
-                    type: 'positive',
                 })
-                this.loading = false
+                
+            }else {
+
+                this.$emit('sendLocalData', this.selectedTransactionsForLocal)
                 this.emitClosePopup()
 
-            })
+            }
 
 
         },
@@ -292,6 +314,7 @@ export default {
             if(this.selectedSubcategory && this.selectedSubcategory.id) {
                 uri += `subcategory=${this.selectedSubcategory.id}&`
             }
+
             if(this.selectedFundSource && this.selectedFundSource.id) {
                 uri += `fundSource=${this.selectedFundSource.id}&`
             }
@@ -306,7 +329,7 @@ export default {
             }
 
             axios(conf).then(res => {
-                console.log('gggg', res.data.items)
+                console.log('gggg=====', res.data.items)
 
                 let budgetItems = res.data.items,
                     arr = []
@@ -319,7 +342,12 @@ export default {
                         type: budgetItems[i].category,
                         qty: budgetItems[i].quantity,
                         balance: budgetItems[i].unit_total_cost,
-                        select: false
+                        select: false,
+
+                        // added for local showing
+                        cost: budgetItems[i].unit_total_cost,
+                        description: budgetItems[i].name,
+                        amount: budgetItems[i].unit_total_cost,
                     })
                 }
 
@@ -328,13 +356,28 @@ export default {
         },
         calculateSelectedPrice(row) {
 
-            if(this.selectedTransactions.has(row.id)) {
-                this.selectedTransactions.delete(row.id) 
+            console.log(row)
+
+            if(!this.isEdit) {
+
+                let b = lodash.find(this.selectedTransactionsForLocal, ['id', row.id]);
+
+                if(lodash.isObject(b)){
+                    let index =  this.selectedTransactionsForLocal.indexOf(row)
+                    this.selectedTransactionsForLocal.splice(index, 1)
+                }else{
+                    this.selectedTransactionsForLocal.push(row)
+                }
+
             }else {
-                this.selectedTransactions.add(row.id)
+                if(this.selectedTransactions.has(row.id)) {
+                    this.selectedTransactions.delete(row.id) 
+                }else {
+                    this.selectedTransactions.add(row.id)
+                }
             }
 
-            console.log(this.selectedTransactions)
+            
         },
         getcategories() {
 
@@ -364,6 +407,7 @@ export default {
                 this.optionsCategory = arr
             })
         },
+
         filterBudgetItems() {
             this.getBudgetItems()
         },
@@ -449,13 +493,31 @@ export default {
             }
 
             return className
-        }
+        },
+        clearCategory() {
+
+            this.selectedCategory = null
+            // this.optionsCategory = []
+
+            this.selectedSubcategory = null
+            this.optionsSubcategory = []
+
+            this.selectedFundSource = null
+            this.optionsFundSource = []
+
+            this.getBudgetItems()
+
+        },
+        clearSubCategory() {
+
+            this.selectedSubcategory = null
+
+            this.getBudgetItems()
+
+        },
     },
     components: {
         dialogDraggable
-    },
-    created() {
-        
     },
     computed: {
         showPopup() {
@@ -474,7 +536,10 @@ export default {
     },
     watch: {
         show(val) {
+
             this.$emit('toggleBudgetItemsPopup', val)
+
+            this.selectedTransactionsForLocal = []
 
             if(val) {
 
@@ -492,7 +557,10 @@ export default {
         },
         selectedCategory(val) {
             this.getSubcategories(val.id)
-        }
+            if(val == '') {
+                this.optionsSubcategory = null
+            }
+        },
     }
 }
 </script>

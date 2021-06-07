@@ -183,10 +183,11 @@
                             :icon="qFab" 
                             :active-icon="qFavOpen" 
                             direction="left"
+                            v-if="props.row.status.id != 3"
                         >
                             <q-fab-action
                                 :icon="deleteIcon"
-                                color="edx-delete-btn" 
+                                color="edx-delete-btn"
                                 size=sm 
                                 no-caps
                                 round
@@ -711,6 +712,11 @@ export default {
         deleteIcon() {
             return ICONS.delete
         },
+    },
+    watch: {
+        data() {
+            this.$emit('dataChanged', true)
+        }
     }
 }
 

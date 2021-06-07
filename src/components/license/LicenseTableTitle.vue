@@ -69,7 +69,7 @@
               style="min-width: 150px; max-width: 150px"
               dense
               outlines
-              label="Status"
+              label="Type"
               :options="statusOptions"
               v-model="filterStatus"
             >
@@ -491,7 +491,7 @@ export default {
         {
           name: "status",
           align: "left",
-          label: "Status",
+          label: "Type",
           field: "status",
           sortable: true
         },
@@ -654,7 +654,7 @@ export default {
 
               data[i].is_subscription == 1 ? true : false
               data[i].supplier && ( data[i].inventory_supplier_uni = { id: data[i].supplier.id, label: data[i].supplier.company_name  })
-              data[i].campus && (data[i].campus_uni = { id: data[i].campus.id, label: data[i].campus.name  })
+              data[i].campus ? (data[i].campus_uni = { id: data[i].campus.id, label: data[i].campus.name  }) : (data[i].campus_uni = { id: null, label: 'N/A'  })
               data[i].status && (data[i].status = { id: data[i].status.id, label: data[i].status.name  })
 
             }

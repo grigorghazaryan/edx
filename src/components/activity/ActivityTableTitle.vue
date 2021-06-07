@@ -3175,7 +3175,6 @@ export default {
         },
         // tracking categories
         getTrackingCategories(title, categoryId) {
-            console.log('TRACKING CATEGORY')
 
             const conf = {
                 method: 'GET',
@@ -3201,7 +3200,7 @@ export default {
                     })
                 }
                 this.optionsCategoryTracking = categoryTrackingArr
-                console.log('TRACKING CATEGORY', this.optionsCategoryTracking)
+                console.log('TRACKING CATEGORY', categoryTrackingArr)
             })
         },
 
@@ -3531,15 +3530,25 @@ export default {
         },
 
         isShowActivityPopup(val) {
+
             if(!val) {
                 this.isEdit = false
                 this.isDuplicate = false
             }else {
+                console.log('#############')
+                console.log('#############')
+                console.log(this.tab, 1)
+                console.log('#############')
+                console.log('#############')
+                
                 this.getUnits();
                 this.getCampueses();
                 this.getStatus(parseInt(this.tab));
+
+                
                 this.getTrackingCategories(this.tab, 1);
             }
+
         },
 
     },

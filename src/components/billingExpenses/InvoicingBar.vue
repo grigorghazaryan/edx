@@ -92,6 +92,11 @@ import axios from 'axios'
 import config from '../../../config'
 
 export default {
+    props: {
+        update: {
+            required: true
+        }
+    },
     data() {
         return {
             barInfo: null,
@@ -113,6 +118,11 @@ export default {
     },
     created() {
         this.getInvoicingBar()
+    },
+    watch: {
+        update() {
+            this.getInvoicingBar()
+        }
     }
 }
 </script>

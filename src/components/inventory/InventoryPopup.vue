@@ -9,6 +9,8 @@
             
         > 
 
+        <h4>{{ editedData.status_uni }}</h4>
+
             <q-card-section style="max-height: 60vh" class="scroll q-pt-none q-pb-none q-pr-none q-pl-none">
                 <div class="q-pa-md">
                     <div class="row">
@@ -190,8 +192,11 @@
                                                 outlined
                                                 v-model="editedData.status_uni"
                                                 :options="optionsStatus"
+                                                :disabled="editedData.quantity == '' || editedData.quantity == 0 || editedData.quantity == null"
+                                                :readonly="editedData.quantity == '' || editedData.quantity == 0 || editedData.quantity == null"
                                             />
                                         </q-popup-edit>
+
 
                                         <div v-if="editedData.status_uni.label == 'On Premise'">
                                             <q-icon
@@ -425,7 +430,9 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                     <div class="text-subtitle2 q-mb-sm">Location within school</div> 
-                                                    <q-input dense outlined :disable="isEdit" :filled="isEdit" :readonly="isEdit" v-model="editedData.location" />
+                                                    <q-input dense outlined  disable filled readonly  v-model="editedData.location" />
+                                                    <!-- :readonly="isEdit" -->
+                                                    <!-- :disable="isEdit" -->
                                             </div>
                                         </div> 
                                     </div>
@@ -434,7 +441,7 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                     <div class="text-subtitle2 q-mb-sm">Location Note</div> 
-                                                    <q-input rows="5" type="textarea" dense outlined :disable="isEdit" :filled="isEdit" :readonly="isEdit"  v-model="editedData.location_information_note" />
+                                                    <q-input rows="5" type="textarea" dense outlined disable  filled readonly  v-model="editedData.location_information_note" />
                                             </div>
                                         </div> 
                                     </div>
@@ -447,27 +454,11 @@
                                                 <div class="text-subtitle2 q-mb-sm">Status Date</div>
                                                 
                                                 <q-input disable filled readonly  v-model="editedData.transition_date" dense outlined />
-
-                                                <!-- <q-popup-proxy>
-                                                    <q-date color="edx-pagination" v-model="editedData.transition_date" mask="MM/DD/YYYY">
-                                                        <div class="row items-center justify-end q-gutter-sm">
-                                                        <q-btn label="Cancel" color="primary" flat v-close-popup />
-                                                        <q-btn label="OK" color="primary" flat v-close-popup />
-                                                        </div>
-                                                    </q-date>
-                                                </q-popup-proxy> -->
                                             </div>
-                                            <div class="col-md-4 q-pr-sm" v-if="editedData.status_uni.label != 'Checked Out'">
+
+                                            <div class="col-md-4 q-pr-sm" v-if="editedData.status_uni.label != 'Checked Out' && editedData.status_uni.label != 'Stored'">
                                                 <div class="text-subtitle2 q-mb-sm">Show Until</div>
                                                 <q-input disable filled readonly v-model="editedData.visibility_date" dense outlined />
-                                                <!-- <q-popup-proxy>
-                                                    <q-date color="edx-pagination" v-model="editedData.visibility_date" mask="MM/DD/YYYY">
-                                                        <div class="row items-center justify-end q-gutter-sm">
-                                                        <q-btn label="Cancel" color="primary" flat v-close-popup />
-                                                        <q-btn label="OK" color="primary" flat v-close-popup />
-                                                        </div>
-                                                    </q-date>
-                                                </q-popup-proxy> -->
                                             </div>
                                         </div>
                                     </div>
@@ -511,10 +502,11 @@
         <!-- ############################ -->
         <!-- STATUS POPUPS -->
 
-        <dialog-draggable v-if="isEdit" :icon="'emoji_transportation'" :width="500" :modelDialog="onpremise" :title=" 'On Premise' " @onHide="onpremise=false">
+        <!-- v-if="isEdit" -->
+        <dialog-draggable  :icon="'emoji_transportation'" :width="500" :modelDialog="onpremise" :title=" 'On Premise' " @onHide="onpremise=false">
             <q-card>
                 
-            <q-toolbar>
+            <q-toolbar v-if="isEdit">
 
                 <!-- <q-avatar>
                 <span class="mdi mdi-school mdi-24px" style="color: blue"></span>
@@ -539,7 +531,7 @@
                     outlined 
                     dense 
                     v-model="statusChangeObject.quantity" 
-                    :disable="editedData.quantity <= 1" 
+                    :disable="editedData.quantity <= 1 || !isEdit" 
                     :rules="[ isEdit && (val => val <= editedData.quantity || 'Number cant be more than ' + editedData.quantity)]"
                     />
                 </div>
@@ -1235,20 +1227,21 @@
             </q-card>
         </dialog-draggable>
 
-        <dialog-draggable  v-if="isEdit" :icon="'inventory'" :width="700" :modelDialog="stored" :title=" 'Stored' " @onHide="stored=false">
+        <!-- v-if="isEdit" -->
+        <dialog-draggable   :icon="'inventory'" :width="700" :modelDialog="stored" :title=" 'Stored' " @onHide="stored=false">
                 <q-card>
-                <q-toolbar>
+                <q-toolbar v-if="isEdit">
 
                     <!-- <q-avatar>
                     <span class="mdi mdi-dolly mdi-red mdi-24px" style="color: blue"></span>
                     </q-avatar> -->
 
                     <q-toolbar-title class="row justify-between">
-                    <!-- Stored -->
-                    <div v-if="editedData.quantity > 1">
-                        {{ editedData.quantity - statusChangeObject.quantity }}
-                        left
-                    </div>
+                        <!-- Stored -->
+                        <div v-if="editedData.quantity > 1">
+                            {{ editedData.quantity - statusChangeObject.quantity }}
+                            left
+                        </div>
                     </q-toolbar-title>
 
                 </q-toolbar>
@@ -1262,12 +1255,12 @@
                         outlined 
                         dense 
                         v-model="statusChangeObject.quantity" 
-                        :disable="editedData.quantity <= 1" 
+                        :disable="editedData.quantity <= 1 || !isEdit" 
                         :rules="[ isEdit && (val => val <= editedData.quantity || 'Number cant be more than ' + editedData.quantity)]"
                         />
                     </div>
 
-                    <div class="col-3 q-pr-sm q-pl-sm">
+                    <!-- <div class="col-3 q-pr-sm q-pl-sm">
                         <div class="text-subtitle2 q-mb-sm">Show until</div>
                         <q-input dense outlined v-model="editedData.visibility_date">
                         <template v-slot:append>
@@ -1283,7 +1276,7 @@
                             </q-icon>
                         </template>
                         </q-input>
-                    </div>
+                    </div> -->
 
                     <div class="col-12 q-pr-sm q-pl-sm q-mt-md">
                         <div class="text-subtitle2 q-mb-sm">Note</div>
@@ -1457,11 +1450,23 @@ export default {
                 // Status
                 let statusArr = []
                 for(let i=0; i<res.data.status.length; i++) {
-                    let obj = {
-                        id: res.data.status[i].id,
-                        label: res.data.status[i].status_name
+                    let obj = {}
+                    if(!this.isEdit) {
+                        if(res.data.status[i].id == 1 || res.data.status[i].id == 7) {
+                            obj = {
+                                id: res.data.status[i].id,
+                                label: res.data.status[i].status_name
+                            }
+                            statusArr.push(obj)
+                        }
+                    }else {
+                        obj = {
+                            id: res.data.status[i].id,
+                            label: res.data.status[i].status_name
+                        }
+                        statusArr.push(obj)
                     }
-                    statusArr.push(obj)
+                    
                 }
                 this.optionsStatus = statusArr
 
@@ -1717,10 +1722,10 @@ export default {
 
         editInventory() {
 
-        
             const updateData = {
 
                 token: localStorage.getItem('access-token'),
+                needs_review: 1,
 
                 campus_id: this.editedData.campus_uni.id,
                 school_id: this.$route.params.id,
@@ -1739,7 +1744,7 @@ export default {
                 location_information_note: this.editedData.location_information_note,
                 note:  this.editedData.note,
                 purchase_date: this.editedData.purchase_date,
-                visibility_date : this.editedData.visibility_date,
+                // visibility_date : this.editedData.visibility_date,
 
                 transition_date : this.editedData.transition_date,
                 transition_information_note :  this.editedData.transition_information_note,
@@ -1754,6 +1759,7 @@ export default {
             const modifyData = {
 
                 token: localStorage.getItem('access-token'),
+                needs_review: 1,
 
                 campus_id: this.editedData.campus_uni.id,
                 school_id: this.$route.params.id,
@@ -1772,7 +1778,7 @@ export default {
                 location_information_note: this.editedData.location_information_note,
                 note:  this.editedData.note,
                 purchase_date: this.editedData.purchase_date,
-                visibility_date : this.editedData.visibility_date,
+                // visibility_date : this.editedData.visibility_date,
 
                 transition_date : this.editedData.transition_date,
                 transition_information_note :  this.editedData.transition_information_note,
@@ -1783,8 +1789,14 @@ export default {
 
             }
 
+            if(this.editedData.status_uni.id == 3 || this.editedData.status_uni.id == 4 || this.editedData.status_uni.id == 5 || this.editedData.status_uni.id == 6) {
+                updateData.visibility_date =  this.editedData.visibility_date
+                modifyData.visibility_date =  this.editedData.visibility_date
+            }
+
             let finalData = {}
 
+            // ADD
             if(!this.isEdit) {
 
                 updateData.schoolYearId = 21
@@ -1815,9 +1827,9 @@ export default {
 
                 })
 
-            } 
+            } //EDIT
             else {
-                
+
                 finalData.updateData = updateData
 
                 if(this.statusChanged) {
@@ -1862,6 +1874,7 @@ export default {
     },
     watch: {
         show(val) {
+
             this.$emit('togglePopup', val)
 
             if(val) {
@@ -1870,6 +1883,12 @@ export default {
                 this.getAdditionalInfo(this.tab)
                 this.getCampueses()
                 this.getSchools()
+
+                // if(this.isEdit) {
+                //     alert('edit')
+                // }else {
+                //     alert('!edit')
+                // }
             }
         },
         onpremise() { this.$refs.statusRef.$el.click() },

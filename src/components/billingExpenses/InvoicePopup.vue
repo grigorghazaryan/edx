@@ -23,6 +23,10 @@
                                     dense
                                     outlined
                                     input-debounce="0"
+
+                                    :readonly="invoiceStatus.id == 3 && isEdit" 
+                                    :filled="invoiceStatus.id == 3 && isEdit" 
+                                    :disable="invoiceStatus.id == 3 && isEdit"
                                 />
                             </div>
                         </div>
@@ -97,12 +101,17 @@
                             <div class="q-mb-lg" v-if="campusOptions.length">
                                 <div class="text-subtitle2 q-mb-sm">Campus</div>
                                 <q-select
-                                    :disable="!selectedSchool || isEdit"
+                                    
                                     class="q-mr-md w-100"
                                     outlined 
                                     dense 
                                     v-model="selectedCampus" 
                                     :options="campusOptions" 
+                                    
+                                    :disable="selectedSchool == '' || invoiceStatus.id == 3 &&  isEdit"
+                                    :readonly="selectedSchool == '' || invoiceStatus.id == 3 && isEdit" 
+                                    :filled="selectedSchool == '' || invoiceStatus.id == 3 &&  isEdit" 
+
                                 />
                             </div>
                         </div>
@@ -116,6 +125,7 @@
                                         <q-icon 
                                             :name="invoiceStatusIcon(invoiceStatus.id)" 
                                             :class="invoiceStatusIconColor(invoiceStatus.id)"
+                                            ref="ref"
                                         >
                                             <q-tooltip 
                                                 content-class="edx-tooltip"
@@ -129,17 +139,36 @@
                                             </q-tooltip>
                                         </q-icon>
 
-                                         {{invoiceStatus.label}}
+                                        {{invoiceStatus.label}}
 
-                                        <q-popup-edit  v-model="invoiceStatus" buttons>
+
+
+                                        <q-dialog v-model="showMarkAsPaidModal" persistent>
+                                            <q-card>
+                                                <q-card-section class="row items-center">
+                                                <!-- <q-avatar icon="signal_wifi_off" color="primary" text-color="white" /> -->
+                                                <span class="q-ml-sm">Invoices marked as paid will be locked and cannot be edited or modified.</span>
+                                                </q-card-section>
+
+                                                <q-card-actions align="right">
+                                                <q-btn flat label="Cancel" color="primary" @click="cancelMarkAsPaid" />
+                                                <q-btn flat label="Mark as Paid" color="primary" @click="markAsPaid" />
+                                                </q-card-actions>
+                                            </q-card>
+                                        </q-dialog>
+
+                                        <q-popup-edit  v-model="invoiceStatus" :buttons="this.invoiceStatus.id != 3 &&  isEdit">
                                             <div class="row">
                                                 <div class="col-md-12 q-pr-sm q-mb-md">
                                                     <div class="text-subtitle2 q-mb-sm">Change Invoice Status</div>
                                                     <div class="row cursor-pointer h-popup">
                                                         <q-select 
+                                                            :disable="this.invoiceStatus.id == 3 &&  isEdit"
+                                                            :readonly="this.invoiceStatus.id == 3 &&  isEdit"
                                                             class="w-100"
                                                             v-model="invoiceStatus" 
                                                             :options="invoiceStatusOptions"
+                                                            @input="changeInvoiceStatus"
                                                             outlined
                                                             dense
                                                         />
@@ -162,7 +191,10 @@
                                     <div>{{ billTo.state }} {{ billTo.city }} {{ billTo.zip }}</div>
                                     <div>{{ billTo.phone }}</div>
                                 </div>
-                                <div @click="showBillToModal">
+                                <div @click="showBillToModal" v-if="this.invoiceStatus.id != 3 && isEdit">
+                                    <q-icon :name="edit" class="edx-icon-edit cursor-pointer"/>
+                                </div>
+                                <div @click="showBillToModal" v-if="!isEdit">
                                     <q-icon :name="edit" class="edx-icon-edit cursor-pointer"/>
                                 </div>
                             </div>
@@ -178,14 +210,27 @@
                                         <template v-slot:body="props">
                                             <q-tr :props="props">
                                                 <q-td key="internalInvoice" :props="props">
-                                                    <q-input dense outlined v-model="props.row.internalInvoice" />
+                                                    <q-input 
+                                                        :readonly="invoiceStatus.id == 3 &&  isEdit"
+                                                        :filled="invoiceStatus.id == 3 &&  isEdit"
+                                                        :disable="invoiceStatus.id == 3 &&  isEdit"
+                                                        dense
+                                                        outlined
+                                                        v-model="props.row.internalInvoice"
+                                                    />
                                                 </q-td>
                                                 <q-td key="invoiceDate" :props="props">
-                                                    <q-input outlined class="q-mr-md" dense v-model="props.row.invoiceDate">
+                                                    <q-input 
+                                                        :readonly="invoiceStatus.id == 3 &&  isEdit"
+                                                        :filled="invoiceStatus.id == 3 &&  isEdit"
+                                                        :disable="invoiceStatus.id == 3 &&  isEdit" 
+                                                        outlined class="q-mr-md" dense v-model="props.row.invoiceDate">
                                                         <template v-slot:append>
                                                             <q-icon name="event" class="cursor-pointer">
                                                                 <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                                                <q-date color="edx-pagination" v-model="props.row.invoiceDate">
+                                                                <q-date 
+                                                                color="edx-pagination" 
+                                                                v-model="props.row.invoiceDate" mask="MM/DD/YYYY">
                                                                     <div class="row items-center justify-end">
                                                                     <q-btn v-close-popup label="Close" color="primary" flat />
                                                                     </div>
@@ -199,11 +244,14 @@
                                                     $ {{props.row.totalDue}}
                                                 </q-td>
                                                 <q-td key="dueDate" :props="props">
-                                                    <q-input outlined class="q-mr-md" dense v-model="props.row.dueDate">
+                                                    <q-input :readonly="invoiceStatus.id == 3 &&  isEdit"
+                                                        :filled="invoiceStatus.id == 3 &&  isEdit"
+                                                        :disable="invoiceStatus.id == 3 &&  isEdit"  outlined class="q-mr-md" dense v-model="props.row.dueDate">
                                                         <template v-slot:append>
                                                             <q-icon name="event" class="cursor-pointer">
                                                                 <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                                                <q-date color="edx-pagination" v-model="props.row.dueDate">
+                                                                <q-date 
+                                                                    color="edx-pagination" v-model="props.row.dueDate" mask="MM/DD/YYYY">
                                                                     <div class="row items-center justify-end">
                                                                     <q-btn v-close-popup label="Close" color="primary" flat />
                                                                     </div>
@@ -214,7 +262,11 @@
                                                     </q-input>
                                                 </q-td>
                                                 <q-td class="w-80px" key="terms" :props="props">
-                                                    <q-select outlined dense :options="termsOptions" v-model="internalInvoiceData[0].terms" />
+                                                    <q-select 
+                                                    :readonly="invoiceStatus.id == 3 &&  isEdit"
+                                                        :filled="invoiceStatus.id == 3 &&  isEdit"
+                                                        :disable="invoiceStatus.id == 3 &&  isEdit" 
+                                                    outlined dense :options="termsOptions" v-model="internalInvoiceData[0].terms" />
                                                 </q-td>
                                             </q-tr>
                                         </template>
@@ -260,7 +312,16 @@
                                                 {{props.row.amount}}
                                             </q-td>
                                             <q-td>
-                                                <q-btn @click="openDeleteModal(props.row)" icon="delete" class="bg-edx-delete-btn" size="sm" round>
+                                                <q-btn v-if="invoiceStatus.id != 3 &&  isEdit" @click="openDeleteModal(props.row)" icon="delete" class="bg-edx-delete-btn" size="sm" round>
+                                                    <q-tooltip 
+                                                        anchor="top middle" self="bottom middle" :offset="[10, 10]"
+                                                        transition-show="flip-right"
+                                                        transition-hide="flip-left"
+                                                    >
+                                                        <strong>Delete</strong>
+                                                    </q-tooltip>
+                                                </q-btn>
+                                                <q-btn v-if="!isEdit" @click="openDeleteModal(props.row)" icon="delete" class="bg-edx-delete-btn" size="sm" round>
                                                     <q-tooltip 
                                                         anchor="top middle" self="bottom middle" :offset="[10, 10]"
                                                         transition-show="flip-right"
@@ -276,14 +337,19 @@
                                 
                             </div>
                         </div>
-                        <div class="col-md-12">
+                        <div class="col-md-12" v-if="invoiceStatus.id != 3 && isEdit">
                             <div class="q-mt-md">
-                                <q-btn @click="showBudgetItemsPopup=true" icon="add" class="edx-add-btn" round/>
+                                <q-btn :disabled="title.id == null" :readonly="title.id == null" @click="showBudgetItemsPopup=true" icon="add" class="edx-add-btn" round/>
+                            </div>
+                        </div>
+                        <div class="col-md-12" v-if="!isEdit">
+                            <div class="q-mt-md">
+                                <q-btn :disabled="title.id == null" :readonly="title.id == null" @click="showBudgetItemsPopup=true" icon="add" class="edx-add-btn" round/>
                             </div>
                         </div>
                     </div>
 
-                    <div>
+                    <div class="q-mt-md">
                         <div class="row justify-end items-center q-mb-sm">
                             <div class="col-md-4 text-right q-mr-md">
                                 <div>Subtotal: </div>
@@ -298,12 +364,17 @@
                         <div class="row justify-end items-center q-mb-sm">
                             <div class="col-md-4 text-right q-mr-md">
                                 <div>
-                                    <q-checkbox size="sm" v-model="isTax" label="Tax:" />
+                                    <q-checkbox 
+                                        :readonly="invoiceStatus.id == 3 &&  isEdit"
+                                        :filled="invoiceStatus.id == 3 &&  isEdit"
+                                        :disable="invoiceStatus.id == 3 &&  isEdit" 
+                                    size="sm" v-model="isTax" label="Tax:" />
                                 </div>
                             </div>
                             <div class="col-md-2 text-left">
                                 <div>
-                                    <q-input :disable="!isTax" prefix="$" outlined dense v-model="calculatedTax" />
+                                    <q-input 
+                                    :disable="!isTax" prefix="$" outlined dense v-model="calculatedTax" />
                                     <q-popup-edit v-if="isTax" v-model="tax" buttons>
                                         <div class="row">
                                             <div class="col-md-12 q-mb-sm">
@@ -320,7 +391,11 @@
                         <div class="row justify-end items-center q-mb-sm">
                             <div class="col-md-4 text-right q-mr-md">
                                 <div>
-                                    <q-checkbox size="sm" v-model="isCharges" label="Shipping / Other Charges:" />
+                                    <q-checkbox
+                                    :readonly="invoiceStatus.id == 3 &&  isEdit"
+                                        :filled="invoiceStatus.id == 3 &&  isEdit"
+                                        :disable="invoiceStatus.id == 3 &&  isEdit" 
+                                     size="sm" v-model="isCharges" label="Shipping / Other Charges:" />
                                 </div>
                             </div>
                             <div class="col-md-2 text-left">
@@ -352,13 +427,21 @@
                         <div class="col-md-6 q-pr-sm">
                             <div class="q-mt-lg">
                                 <div class="text-subtitle2 q-mb-sm">Note</div>
-                                <q-input type="textarea" outlined v-model="note" />
+                                <q-input 
+                                :readonly="this.invoiceStatus.id == 3 &&  isEdit" 
+                                :filled="this.invoiceStatus.id == 3 &&  isEdit" 
+                                :disable="this.invoiceStatus.id == 3 &&  isEdit"
+                                type="textarea" outlined v-model="note" />
                             </div>
                         </div>
                         <div class="col-md-6 q-pl-sm">
                             <div class="q-mt-lg">
                                 <div class="text-subtitle2 q-mb-sm">Invoice Memo</div>
-                                <q-input type="textarea" outlined v-model="invoiceMemo" />
+                                <q-input  
+                                :readonly="this.invoiceStatus.id == 3 &&  isEdit" 
+                                :filled="this.invoiceStatus.id == 3 &&  isEdit" 
+                                :disable="this.invoiceStatus.id == 3 &&  isEdit"
+                                type="textarea" outlined v-model="invoiceMemo" />
                             </div>
                         </div>
                     </div>
@@ -369,8 +452,8 @@
             <q-card-actions class="row justify-end">
                 <div>
                     <q-btn flat label="Cancel" color="primary" @click="emitClosePopup"></q-btn>
-                    <q-btn v-if="!isEdit" @click="addInvoice" flat label="Add" color="primary"></q-btn>
-                    <q-btn v-else @click="editInvoice" flat label="Save" color="primary"></q-btn>
+                    <q-btn v-if="!isEdit" @click="addInvoice" :loading="loading" flat label="Add" color="primary"></q-btn>
+                    <q-btn v-else :disabled="invoiceStatus.id == 3 && isEdit && firstTimeStatusIsPaid" :loading="loading" @click="editInvoice" flat label="Save" color="primary"></q-btn>
                 </div>
             </q-card-actions>
 
@@ -389,13 +472,14 @@
             </q-card>
         </q-dialog>
 
-        
         <BudgetItemsPopup
             @toggleBudgetItemsPopup="toggleBudgetItemsPopup" 
+            @sendLocalData="sendLocalData"
             :show="showBudgetItemsPopup"
             :categoryId="title"
             :invoiceId="showBudgetItemsPopup ? id : null"
             :allocation="showBudgetItemsPopup ? title : null"
+            :isEdit="isEdit"
         />
 
         <BillToModal 
@@ -403,6 +487,7 @@
             :show="isShowBillToModal" 
             @receiveAddress="receiveAddress"
             :schoolId="selectedSchool"
+
         />
         
     </div>
@@ -437,6 +522,9 @@ export default {
     },
     data() {
         return {
+
+            firstTimeStatusIsPaid: false,
+            showMarkAsPaidModal: false,
 
             loading: false, 
             pagination: { rowsPerPage: 999 },
@@ -588,12 +676,23 @@ export default {
         }
     },
     methods: {
+        sendLocalData(data) {
+            console.log('I am local data from child', data)
+            // this.data = []
+            for(let i=0; i<data.length; i++) {
+                data[i].type = data[i].type.abbreviation
+            }
+            this.data = data
+        },
         emitClosePopup() {
             this.$emit('togglePopup', false)
         },
         toggleBudgetItemsPopup(bool) {
             this.showBudgetItemsPopup = bool
-            if(!bool) { this.getInvoiceById() } 
+            if(this.isEdit) {
+                if(!bool) { this.getInvoiceById() } 
+            }
+            // alert(bool)
         },
         receiveAddress(info) {
             console.log("NEW ADDRESS", info)
@@ -676,26 +775,39 @@ export default {
 
             this.loading = true
 
-            const conf = {
-                method: 'DELETE',
-                url: config.deleteBudget + this.invoiceId,
-                headers: {
-                    Accept: 'application/json',
-                }
-            }
+            if(this.isEdit) {
 
-            axios(conf).then(res => {
+                const conf = {
+                    method: 'DELETE',
+                    url: config.deleteBudget + this.invoiceId,
+                    headers: {
+                        Accept: 'application/json',
+                    }
+                }
+
+                axios(conf).then(res => {
+                    let index = this.data.findIndex( item => item.id == this.invoiceId )
+                    this.data.splice(index, 1)
+                        this.$q.notify({
+                            message: 'Deleted!',
+                            type: 'positive',
+                        })
+                        this.openDeletePopup = false
+                        this.loading = false
+                    })
+            }else {
                 let index = this.data.findIndex( item => item.id == this.invoiceId )
                 this.data.splice(index, 1)
-                    this.$q.notify({
-                        message: 'Deleted!',
-                        type: 'positive',
-                    })
-                    this.openDeletePopup = false
-                    this.loading = false
-                })
+                this.openDeletePopup = false
+                this.loading = false
+            }
+
+            
+
         },
         addInvoice() {
+
+            this.loading = true
             
             const data = {
 
@@ -738,13 +850,50 @@ export default {
 
             axios(conf).then(res => {
 
+                if(!this.isEdit) {
+
+                    // duplicate function //
+                    // RODO
+                    // Refactoring
+
+
+                    let id = res.data.invoice[0].id
+                    console.log('it is add ---- ud = ', id)
+
+                    let budgetIds = []
+                    if(this.data.length) {
+                        for(let i=0; i<this.data.length; i++) {
+                            budgetIds.push(this.data[i].id)
+                        }
+                    }
+                
+                    
+                    const conf = {
+                        method: 'POST',
+                        url: config.addSelected + id,
+                        headers: {
+                            Accept: 'application/json',
+                        },
+                        data: {
+                            token: localStorage.getItem('access-token'),
+                            budget_ids: budgetIds
+                        }
+                    }
+
+                    axios(conf).then(res => {
+                        
+                        this.$q.notify({
+                            message: 'Invoice Added!',
+                            type: 'positive',
+                        })
+
+                        this.loading = false
+
+                    })
+                }
+
                 let invoice = res.data.invoice[0]
                 this.$emit('addInvoice', invoice)
-
-                this.$q.notify({
-                    message: 'Invoice Added!',
-                    type: 'positive',
-                })
 
                 this.emitClosePopup()
             })
@@ -753,6 +902,8 @@ export default {
 
         },
         editInvoice() {
+
+            this.loading = true
 
             const data = {
 
@@ -792,6 +943,8 @@ export default {
             }
 
             axios(conf).then(res => {
+
+                this.loading = false
 
                 let invoice = res.data.invoice[0]
                 this.$emit('editInvoice', invoice)
@@ -836,6 +989,12 @@ export default {
                 this.invoiceStatus = {
                     id: data.invoice_status?.id,
                     label: data.invoice_status?.name
+                }
+
+                if(data.invoice_status.id && data.invoice_status.id == 3) {
+                    this.firstTimeStatusIsPaid = true
+                }else {
+                    this.firstTimeStatusIsPaid = false
                 }
                  
                 this.internalInvoiceData = []
@@ -898,7 +1057,6 @@ export default {
 
                 let arr = []
                 for(let i=0; i<lineItems.length; i++) {
-                     console.log('Rate',lineItems[i] )
                     arr.push({
                         id: lineItems[i].budget[0].id,
                         date: `${lineItems[i].budget[0].start_date}-${lineItems[i].budget[0].end_date}`,
@@ -1114,6 +1272,7 @@ export default {
         },
 
         resetState() {
+
             this.selectedSchool = null
             this.internalInvoiceData = [
                 {
@@ -1147,7 +1306,26 @@ export default {
             this.invoiceMemo = ''
             this.billTo = {}
 
-        }
+        },
+
+        changeInvoiceStatus() {
+            if(this.invoiceStatus.id == 3) {
+                this.showMarkAsPaidModal = true
+            }
+        },
+
+        markAsPaid() {
+            
+            this.showMarkAsPaidModal = false
+            this.$refs.ref.$el.click()
+            this.invoiceStatus = { id: 3, label: 'Paid' }
+
+        },
+
+        cancelMarkAsPaid() {
+            this.showMarkAsPaidModal = false
+            this.$refs.ref.$el.click()
+        },
 
     },
     computed: {
@@ -1190,6 +1368,7 @@ export default {
     watch: {
         show(val) {
             this.$emit('togglePopup', val)
+
             if(val && this.isEdit) {
                 this.getInvoiceById()
             }else {
@@ -1204,7 +1383,7 @@ export default {
             }else {
                 this.selectedCampus = null
             }
-        }
+        },
     },
     created() {
 
